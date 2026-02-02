@@ -1,0 +1,151 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:plot_id",
+ "creation": "2026-01-29 17:30:58.671493",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "plot_id",
+  "outgrower",
+  "plot_name",
+  "plot_type",
+  "section_break_1",
+  "polygon",
+  "geojson",
+  "section_break_2",
+  "area_acres",
+  "perimeter_meters",
+  "centroid_lat",
+  "centroid_lng",
+  "section_break_3",
+  "map_image",
+  "status"
+ ],
+ "fields": [
+  {
+   "fieldname": "plot_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Plot ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "outgrower",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Outgrower",
+   "options": "Outgrower",
+   "reqd": 1
+  },
+  {
+   "fieldname": "plot_name",
+   "fieldtype": "Data",
+   "label": "Plot Name",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "plot_type",
+   "fieldtype": "Select",
+   "label": "Plot Type",
+   "options": "Owned\nLeased\nShared",
+   "default": "Owned"
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "GPS Polygon"
+  },
+  {
+   "fieldname": "polygon",
+   "fieldtype": "Table",
+   "label": "Vertices",
+   "options": "Plot Vertex"
+  },
+  {
+   "fieldname": "geojson",
+   "fieldtype": "Code",
+   "label": "GeoJSON",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "Calculated Values"
+  },
+  {
+   "fieldname": "area_acres",
+   "fieldtype": "Float",
+   "label": "Area (Acres)",
+   "read_only": 1,
+   "precision": 2
+  },
+  {
+   "fieldname": "perimeter_meters",
+   "fieldtype": "Float",
+   "label": "Perimeter (Meters)",
+   "read_only": 1,
+   "precision": 2
+  },
+  {
+   "fieldname": "centroid_lat",
+   "fieldtype": "Float",
+   "label": "Centroid Latitude",
+   "read_only": 1,
+   "precision": 6
+  },
+  {
+   "fieldname": "centroid_lng",
+   "fieldtype": "Float",
+   "label": "Centroid Longitude",
+   "read_only": 1,
+   "precision": 6
+  },
+  {
+   "fieldname": "section_break_3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "map_image",
+   "fieldtype": "Attach Image",
+   "label": "Map Image"
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Active\nIdle"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-29 17:30:58.671493",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Farm Plot",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

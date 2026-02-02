@@ -1,0 +1,348 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"field-operations\",\"type\":\"card\",\"data\":{\"card_name\":\"Field Operations\",\"col\":4}},{\"id\":\"input-management\",\"type\":\"card\",\"data\":{\"card_name\":\"Input Management\",\"col\":4}},{\"id\":\"reference-data\",\"type\":\"card\",\"data\":{\"card_name\":\"Reference Data\",\"col\":4}},{\"id\":\"system-sync\",\"type\":\"card\",\"data\":{\"card_name\":\"System & Sync\",\"col\":4}}]",
+ "creation": "2026-02-02 00:00:00",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "field-ops",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "NASECO FieldOps",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Field Operations",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Outgrower",
+   "link_count": 0,
+   "link_to": "Outgrower",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Farm Plot",
+   "link_count": 0,
+   "link_to": "Farm Plot",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Crop Cycle",
+   "link_count": 0,
+   "link_to": "Crop Cycle",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Crop Cycle Stage",
+   "link_count": 0,
+   "link_to": "Crop Cycle Stage",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Field Visit",
+   "link_count": 0,
+   "link_to": "Field Visit",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Finding",
+   "link_count": 0,
+   "link_to": "Finding",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Input Management",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stage Input Request",
+   "link_count": 0,
+   "link_to": "Stage Input Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stage Input Dispatch",
+   "link_count": 0,
+   "link_to": "Stage Input Dispatch",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reference Data",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Crop",
+   "link_count": 0,
+   "link_to": "Crop",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Crop Variety",
+   "link_count": 0,
+   "link_to": "Crop Variety",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Season",
+   "link_count": 0,
+   "link_to": "Season",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Crop Recipe",
+   "link_count": 0,
+   "link_to": "Crop Recipe",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Visit Type",
+   "link_count": 0,
+   "link_to": "Visit Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Region",
+   "link_count": 0,
+   "link_to": "Region",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Unit",
+   "link_count": 0,
+   "link_to": "Unit",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Inspection Attribute",
+   "link_count": 0,
+   "link_to": "Inspection Attribute",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "System & Sync",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sync Log",
+   "link_count": 0,
+   "link_to": "Sync Log",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sync Conflict",
+   "link_count": 0,
+   "link_to": "Sync Conflict",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-02-02 12:37:16.833219",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "NASECO FieldOps",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 1.0,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "format": "{} Active",
+   "label": "Outgrower",
+   "link_to": "Outgrower",
+   "stats_filter": "{\"status\": \"Active\"}",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "format": "{} Plots",
+   "label": "Farm Plot",
+   "link_to": "Farm Plot",
+   "type": "DocType"
+  },
+  {
+   "color": "Orange",
+   "format": "{} Active",
+   "label": "Crop Cycle",
+   "link_to": "Crop Cycle",
+   "stats_filter": "{\"status\": \"ACTIVE\"}",
+   "type": "DocType"
+  },
+  {
+   "color": "Purple",
+   "format": "{} Visits",
+   "label": "Field Visit",
+   "link_to": "Field Visit",
+   "type": "DocType"
+  },
+  {
+   "color": "Red",
+   "format": "{} Findings",
+   "label": "Finding",
+   "link_to": "Finding",
+   "type": "DocType"
+  },
+  {
+   "color": "Yellow",
+   "format": "{} Pending",
+   "label": "Stage Input Request",
+   "link_to": "Stage Input Request",
+   "stats_filter": "{\"status\": [\"in\", [\"Pending\", \"Approved\", \"Partially Fulfilled\"]]}",
+   "type": "DocType"
+  },
+  {
+   "color": "Cyan",
+   "format": "{} Stages",
+   "label": "Crop Cycle Stage",
+   "link_to": "Crop Cycle Stage",
+   "type": "DocType"
+  },
+  {
+   "color": "Gray",
+   "format": "{} Dispatches",
+   "label": "Stage Input Dispatch",
+   "link_to": "Stage Input Dispatch",
+   "type": "DocType"
+  },
+  {
+   "color": "Pink",
+   "format": "{} Crops",
+   "label": "Crop",
+   "link_to": "Crop",
+   "type": "DocType"
+  },
+  {
+   "color": "Light Blue",
+   "format": "{} Varieties",
+   "label": "Crop Variety",
+   "link_to": "Crop Variety",
+   "type": "DocType"
+  },
+  {
+   "color": "Light Green",
+   "format": "{} Seasons",
+   "label": "Season",
+   "link_to": "Season",
+   "type": "DocType"
+  },
+  {
+   "color": "Dark Gray",
+   "format": "{} Conflicts",
+   "label": "Sync Conflict",
+   "link_to": "Sync Conflict",
+   "stats_filter": "{\"resolved\": 0}",
+   "type": "DocType"
+  }
+ ],
+ "title": "NASECO FieldOps"
+}
