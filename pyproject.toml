@@ -11,7 +11,7 @@ dependencies = [
     # "frappe~=16.0.0" # Installed and managed by bench.
 ]
 
-[tool.branch.dependencies]
+[tool.branch.frappe-dependencies]
 frappe = ">=15.0.0.0,<=16.0.0"
 
 [build-system]
