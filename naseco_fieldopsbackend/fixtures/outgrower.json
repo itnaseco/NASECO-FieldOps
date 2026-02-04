@@ -1,0 +1,18 @@
+[
+ {
+  "assigned_to": null,
+  "docstatus": 0,
+  "doctype": "Outgrower",
+  "email": "test@example.com",
+  "farmer_status": "Experienced",
+  "full_name": "John Test Farmer",
+  "modified": "2026-02-02 12:10:59.761119",
+  "name": "OG-TEST-001",
+  "outgrower_id": "OG-TEST-001",
+  "phone": "+256700123456",
+  "region": "Central",
+  "registration_date": "2023-01-15",
+  "status": "Active",
+  "years_since_registration": 3.0
+ }
+]

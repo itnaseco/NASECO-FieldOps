@@ -1,0 +1,53 @@
+[
+ {
+  "area_acres": 0.12,
+  "centroid_lat": 0.34775,
+  "centroid_lng": 32.58255,
+  "docstatus": 0,
+  "doctype": "Farm Plot",
+  "geojson": "{\n  \"type\": \"Feature\",\n  \"geometry\": {\n    \"type\": \"Polygon\",\n    \"coordinates\": [\n      [\n        [\n          32.5825,\n          0.3476\n        ],\n        [\n          32.5826,\n          0.3477\n        ],\n        [\n          32.5827,\n          0.3478\n        ],\n        [\n          32.5824,\n          0.3479\n        ],\n        [\n          32.5825,\n          0.3476\n        ]\n      ]\n    ]\n  },\n  \"properties\": {\n    \"plot_id\": \"PLOT-TEST-001\",\n    \"plot_name\": \"North Test Field\",\n    \"area_acres\": 0.12,\n    \"perimeter_meters\": 101.78\n  }\n}",
+  "map_image": null,
+  "modified": "2026-02-02 12:10:59.875709",
+  "name": "PLOT-TEST-001",
+  "outgrower": "OG-TEST-001",
+  "perimeter_meters": 101.78,
+  "plot_id": "PLOT-TEST-001",
+  "plot_name": "North Test Field",
+  "plot_type": "Owned",
+  "polygon": [
+   {
+    "latitude": 0.3476,
+    "longitude": 32.5825,
+    "order_index": 1,
+    "parent": "PLOT-TEST-001",
+    "parentfield": "polygon",
+    "parenttype": "Farm Plot"
+   },
+   {
+    "latitude": 0.3477,
+    "longitude": 32.5826,
+    "order_index": 2,
+    "parent": "PLOT-TEST-001",
+    "parentfield": "polygon",
+    "parenttype": "Farm Plot"
+   },
+   {
+    "latitude": 0.3478,
+    "longitude": 32.5827,
+    "order_index": 3,
+    "parent": "PLOT-TEST-001",
+    "parentfield": "polygon",
+    "parenttype": "Farm Plot"
+   },
+   {
+    "latitude": 0.3479,
+    "longitude": 32.5824,
+    "order_index": 4,
+    "parent": "PLOT-TEST-001",
+    "parentfield": "polygon",
+    "parenttype": "Farm Plot"
+   }
+  ],
+  "status": "Active"
+ }
+]
