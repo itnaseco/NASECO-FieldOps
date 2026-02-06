@@ -83,7 +83,7 @@ app_license = "mit"
 # ------------
 
 # before_install = "naseco_fieldopsbackend.install.before_install"
-# after_install = "naseco_fieldopsbackend.install.after_install"
+after_install = "naseco_fieldopsbackend.setup_fieldops.create_cust_fields"
 
 # Uninstallation
 # ------------
@@ -248,4 +248,3 @@ fixtures = [
 ]
 # Fixtures
 # ------------------
-
