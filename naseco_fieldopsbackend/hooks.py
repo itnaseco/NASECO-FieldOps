@@ -243,6 +243,5 @@ app_license = "mit"
 # }
 
 fixtures = [
-    {"dt": "Outgrower"},
-    {"dt": "Farm Plot"}
+    {"dt": "Outgrower"}
 ]
