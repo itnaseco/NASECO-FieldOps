@@ -814,7 +814,7 @@ def push_sync_data(data):
 					name = doc.name
 
 				results.append({"status": "success", "doctype": doctype, "name": name})
-				except Exception as e:
+			except Exception as e:
 				results.append({"status": "error", "doctype": record.get("doctype"), "error": str(e)})
 
 		frappe.db.commit()
