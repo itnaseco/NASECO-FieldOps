@@ -249,7 +249,3 @@ fixtures = [
 # Fixtures
 # ------------------
 
-fixtures = [
-	"Outgrower",
-	"Farm Plot",
-]
