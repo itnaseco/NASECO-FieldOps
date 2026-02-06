@@ -7,7 +7,7 @@ import json
 from datetime import datetime
 
 # Mobile <-> Frappe mappings
-STORE_TO_DOCTYPE = {
+BASE_STORE_TO_DOCTYPE = {
 	"outgrowers": "Outgrower",
 	"plots": "Farm Plot",
 	"crop_cycles": "Crop Cycle",
@@ -39,7 +39,30 @@ STORE_TO_DOCTYPE = {
 	"inspection_attributes": "Inspection Attribute",
 }
 
-DOCTYPE_TO_STORE = {v: k for k, v in STORE_TO_DOCTYPE.items()}
+STORE_TO_DOCTYPE = dict(BASE_STORE_TO_DOCTYPE)
+STORE_TO_DOCTYPE.update({
+	"OutGrower": "Outgrower",
+	"Plot": "Farm Plot",
+	"CropCycle": "Crop Cycle",
+	"CropCycleStage": "Crop Cycle Stage",
+	"Visit": "Field Visit",
+	"PlotCropAssignment": "Plot Crop Assignment",
+	"StageActivity": "Stage Activity",
+	"StageInputRequest": "Stage Input Request",
+	"StageInputDispatch": "Stage Input Dispatch",
+	"Crop": "Crop",
+	"Variety": "Crop Variety",
+	"Season": "Season",
+	"CropRecipe": "Crop Recipe",
+	"RecipeStage": "Recipe Stage",
+	"RecipeInput": "Recipe Input Item",
+	"VisitType": "Visit Type",
+	"Region": "Region",
+	"Unit": "Unit",
+	"InspectionAttribute": "Inspection Attribute",
+})
+
+DOCTYPE_TO_STORE = {v: k for k, v in BASE_STORE_TO_DOCTYPE.items()}
 
 ID_FIELD_MAP = {
 	"Outgrower": "outgrower_id",
@@ -396,7 +419,13 @@ def _reverse_id_field_name(doctype):
 
 
 def _resolve_doctype(store_or_doctype):
-	return STORE_TO_DOCTYPE.get(store_or_doctype, store_or_doctype)
+	if store_or_doctype in STORE_TO_DOCTYPE:
+		return STORE_TO_DOCTYPE.get(store_or_doctype)
+	if isinstance(store_or_doctype, str):
+		key = store_or_doctype.lower()
+		if key in STORE_TO_DOCTYPE:
+			return STORE_TO_DOCTYPE.get(key)
+	return store_or_doctype
 
 
 _meta_cache = {}
@@ -469,105 +498,89 @@ def _resolve_employee_fields(doctype, payload, result):
 @frappe.whitelist()
 def bulk_sync(data):
 	"""
-	Bulk create/update records from mobile app
+	Bulk create/update records from mobile app.
 
-	Args:
-		data: JSON string containing list of records to sync
-			  Format: [{"doctype": "DocType", "operation": "CREATE/UPDATE/DELETE", "doc": {...}}]
-
-	Returns:
-		JSON response with success/failure status for each record
+	Accepted formats:
+	- [{"doctype": "DocType", "operation": "CREATE/UPDATE/DELETE", "doc": {...}}]
+	- {"data": [{"storeName": "outgrowers", "recordId": "...", "payload": {...}, "operation": "SYNC"}]}
 	"""
 	try:
 		records = json.loads(data) if isinstance(data, str) else data
+		if isinstance(records, dict) and "data" in records:
+			records = records.get("data")
+
 		results = []
-
-		for record in records:
+		for record in records or []:
 			try:
-				doctype = record.get("doctype")
-				operation = record.get("operation")
-				doc_data = record.get("doc")
+				if record.get("storeName") or record.get("store_name") or record.get("payload"):
+					# Delegate to push_sync_data-style payloads
+					out = push_sync_data({"data": [record]})
+					results.extend(out.get("results", []))
+					continue
 
-				result = {
-					"doctype": doctype,
-					"operation": operation,
-					"status": "success"
-				}
+				doctype = record.get("doctype")
+				operation = (record.get("operation") or "").upper()
+				doc_data = record.get("doc") or {}
+
+				result = {"doctype": doctype, "operation": operation, "status": "success"}
 
 				if operation == "CREATE":
 					doc = frappe.get_doc(doc_data)
-					doc.insert(ignore_permissions=False)
+					doc.insert(ignore_permissions=True)
 					result["name"] = doc.name
-
 				elif operation == "UPDATE":
 					doc_name = doc_data.get("name")
-					if frappe.db.exists(doctype, doc_name):
+					if doc_name and frappe.db.exists(doctype, doc_name):
 						doc = frappe.get_doc(doctype, doc_name)
 						doc.update(doc_data)
-						doc.save(ignore_permissions=False)
+						doc.save(ignore_permissions=True)
 						result["name"] = doc.name
 					else:
-						# Document doesn't exist, create it
 						doc = frappe.get_doc(doc_data)
-						doc.insert(ignore_permissions=False)
+						doc.insert(ignore_permissions=True)
 						result["name"] = doc.name
-
 				elif operation == "DELETE":
 					doc_name = doc_data.get("name")
-					if frappe.db.exists(doctype, doc_name):
-						frappe.delete_doc(doctype, doc_name, ignore_permissions=False)
+					if doc_name and frappe.db.exists(doctype, doc_name):
+						frappe.delete_doc(doctype, doc_name, ignore_permissions=True)
 						result["name"] = doc_name
 					else:
 						result["status"] = "not_found"
 						result["message"] = f"Document {doctype} {doc_name} not found"
+				else:
+					result["status"] = "error"
+					result["message"] = f"Unknown operation: {operation}"
 
-				# Log successful sync
-				log_sync(frappe.session.user, doctype, doc_data.get("name"), operation, "Success")
-
+				log_sync(frappe.session.user, doctype, doc_data.get("name"), operation, result["status"])
+				results.append(result)
 			except Exception as e:
-				result["status"] = "error"
-				result["message"] = str(e)
-
-				# Log failed sync
-				log_sync(
-					frappe.session.user,
-					record.get("doctype"),
-					record.get("doc", {}).get("name"),
-					record.get("operation"),
-					"Failed",
-					str(e)
-				)
-
-			results.append(result)
+				results.append({"status": "error", "doctype": record.get("doctype"), "error": str(e)})
 
 		frappe.db.commit()
-		return {
-			"success": True,
-			"results": results
-		}
-
+		return {"success": True, "results": results}
 	except Exception as e:
 		frappe.db.rollback()
 		frappe.log_error(f"Bulk sync error: {str(e)}")
-		return {
-			"success": False,
-			"error": str(e)
-		}
+		return {"success": False, "error": str(e)}
 
 
 @frappe.whitelist()
-def get_modified_records(last_sync_timestamp, doctypes=None):
+def get_modified_records(last_sync_timestamp=None, doctypes=None, doctype=None, since=None):
 	"""
 	Get all records modified since last sync timestamp
 
 	Args:
 		last_sync_timestamp: ISO format timestamp of last sync
+		since: Alternative query param used by some clients
 		doctypes: Optional JSON list of doctypes to fetch. If None, fetches all synced doctypes.
+		doctype: Optional single doctype name
 
 	Returns:
 		JSON response with modified records grouped by doctype
 	"""
 	try:
+		if since and not last_sync_timestamp:
+			last_sync_timestamp = since
 		# Parse last sync timestamp
 		if isinstance(last_sync_timestamp, str):
 			last_sync = datetime.fromisoformat(last_sync_timestamp.replace('Z', '+00:00'))
@@ -583,7 +596,9 @@ def get_modified_records(last_sync_timestamp, doctypes=None):
 		]
 
 		# Parse doctypes filter
-		if doctypes:
+		if doctype:
+			target_doctypes = [doctype]
+		elif doctypes:
 			target_doctypes = json.loads(doctypes) if isinstance(doctypes, str) else doctypes
 		else:
 			target_doctypes = default_doctypes
@@ -620,6 +635,7 @@ def get_modified_records(last_sync_timestamp, doctypes=None):
 		return {
 			"success": True,
 			"modified_records": modified_records,
+			"data": modified_records,
 			"sync_timestamp": datetime.now().isoformat()
 		}
 
@@ -665,6 +681,7 @@ def get_reference_data():
 		return {
 			"success": True,
 			"reference_data": reference_data,
+			"data": reference_data,
 			"timestamp": datetime.now().isoformat()
 		}
 
@@ -765,7 +782,11 @@ def get_sync_data(last_sync=None, officer_region=None):
 			except Exception as e:
 				frappe.log_error(f"Error fetching reference {doctype}: {str(e)}")
 
-		return data
+		return {
+			"data": data,
+			"server_time": datetime.now().isoformat(),
+			"last_sync": last_sync,
+		}
 	except Exception as e:
 		frappe.log_error(f"Get sync data error: {str(e)}")
 		return {"error": str(e)}
@@ -789,10 +810,12 @@ def push_sync_data(data):
 				payload = record.get("payload") or record.get("doc") or {}
 				operation = (record.get("operation") or "SYNC").upper()
 				record_id = record.get("recordId") or payload.get("id") or payload.get("name")
+				force = record.get("force") or payload.get("force")
 
 				if operation == "DELETE":
 					if record_id and frappe.db.exists(doctype, record_id):
 						frappe.delete_doc(doctype, record_id, ignore_permissions=True)
+					log_sync(frappe.session.user, doctype, record_id, "DELETE", "Success")
 					results.append({"status": "deleted", "doctype": doctype, "name": record_id})
 					continue
 
@@ -805,6 +828,37 @@ def push_sync_data(data):
 				mapped["doctype"] = doctype
 				if mapped.get("name") and frappe.db.exists(doctype, mapped["name"]):
 					doc = frappe.get_doc(doctype, mapped["name"])
+
+					# Conflict check if client provides updatedAt
+					client_modified = payload.get("updatedAt")
+					if client_modified and not force:
+						client_dt = datetime.fromisoformat(str(client_modified).replace('Z', '+00:00'))
+						if doc.modified and doc.modified > client_dt:
+							# Log conflict for manual resolution
+							try:
+								conflict = frappe.get_doc({
+									"doctype": "Sync Conflict",
+									"doctype_name": doctype,
+									"doc_name": doc.name,
+									"user": frappe.session.user,
+									"mobile_data": json.dumps({
+										"modified": client_dt.isoformat(),
+										"payload": payload,
+									}),
+									"server_data": json.dumps({
+										"modified": doc.modified.isoformat() if doc.modified else None,
+										"doc": doc.as_dict(),
+									}),
+									"resolution": "Pending",
+									"resolved": 0,
+								})
+								conflict.insert(ignore_permissions=True)
+							except Exception:
+								frappe.log_error(f"Failed to log conflict for {doctype} {doc.name}")
+							log_sync(frappe.session.user, doctype, doc.name, operation, "Conflict")
+							results.append({"status": "conflict", "doctype": doctype, "name": doc.name})
+							continue
+
 					doc.update(mapped)
 					doc.save(ignore_permissions=True)
 					name = doc.name
@@ -813,6 +867,7 @@ def push_sync_data(data):
 					doc.insert(ignore_permissions=True)
 					name = doc.name
 
+				log_sync(frappe.session.user, doctype, name, operation, "Success")
 				results.append({"status": "success", "doctype": doctype, "name": name})
 			except Exception as e:
 				results.append({"status": "error", "doctype": record.get("doctype"), "error": str(e)})
@@ -827,19 +882,31 @@ def push_sync_data(data):
 def log_sync(user, doctype, doc_name, operation, status, error_message=None):
 	"""Helper function to log sync operations"""
 	try:
+		status_val = _normalize_sync_status(status)
 		sync_log = frappe.get_doc({
 			"doctype": "Sync Log",
 			"user": user,
 			"doctype_name": doctype,
 			"doc_name": doc_name,
 			"operation": operation,
-			"status": status,
+			"status": status_val,
 			"error_message": error_message,
 			"sync_timestamp": datetime.now()
 		})
 		sync_log.insert(ignore_permissions=True)
 	except Exception as e:
 		frappe.log_error(f"Error logging sync: {str(e)}")
+
+
+def _normalize_sync_status(status):
+	if not status:
+		return "Success"
+	val = str(status).lower()
+	if val in ("success", "deleted"):
+		return "Success"
+	if val in ("conflict",):
+		return "Conflict"
+	return "Failed"
 
 
 @frappe.whitelist()
