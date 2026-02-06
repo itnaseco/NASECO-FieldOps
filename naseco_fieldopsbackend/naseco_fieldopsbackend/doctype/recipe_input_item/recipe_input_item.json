@@ -8,7 +8,9 @@
  "field_order": [
   "input_name",
   "quantity",
-  "unit"
+  "unit",
+  "input_type",
+  "quantity_per_acre"
  ],
  "fields": [
   {
@@ -31,6 +33,16 @@
    "in_list_view": 1,
    "label": "Unit",
    "options": "Unit"
+  },
+  {
+   "fieldname": "input_type",
+   "fieldtype": "Data",
+   "label": "Input Type"
+  },
+  {
+   "fieldname": "quantity_per_acre",
+   "fieldtype": "Float",
+   "label": "Quantity Per Acre"
   }
  ],
  "index_web_pages_for_search": 1,

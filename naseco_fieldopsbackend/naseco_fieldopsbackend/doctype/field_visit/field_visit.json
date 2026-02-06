@@ -24,7 +24,11 @@
   "notes",
   "section_break_4",
   "findings",
-  "visit_status"
+  "visit_status",
+  "scheduled_date",
+  "status",
+  "completed",
+  "synced"
  ],
  "fields": [
   {
@@ -134,6 +138,30 @@
    "label": "Status",
    "options": "Draft\nSubmitted",
    "default": "Draft"
+  },
+  {
+   "fieldname": "scheduled_date",
+   "fieldtype": "Datetime",
+   "label": "Scheduled Date"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "scheduled\nin_progress\ncompleted\ncancelled",
+   "default": "completed"
+  },
+  {
+   "fieldname": "completed",
+   "fieldtype": "Check",
+   "label": "Completed",
+   "default": "0"
+  },
+  {
+   "fieldname": "synced",
+   "fieldtype": "Check",
+   "label": "Synced",
+   "default": "0"
   }
  ],
  "grid_page_length": 50,

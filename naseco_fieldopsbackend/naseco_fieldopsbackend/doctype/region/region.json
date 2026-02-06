@@ -6,7 +6,8 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "region_name"
+  "region_name",
+  "created_at"
  ],
  "fields": [
   {
@@ -15,6 +16,12 @@
    "in_list_view": 1,
    "label": "Region Name",
    "reqd": 1
+  },
+  {
+   "fieldname": "created_at",
+   "fieldtype": "Datetime",
+   "label": "Created At",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,

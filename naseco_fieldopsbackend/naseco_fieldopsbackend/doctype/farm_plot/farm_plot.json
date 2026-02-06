@@ -21,7 +21,11 @@
   "centroid_lng",
   "section_break_3",
   "map_image",
-  "status"
+  "status",
+  "notes",
+  "map_image_base64",
+  "photos",
+  "synced"
  ],
  "fields": [
   {
@@ -118,7 +122,29 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Active\nIdle"
+   "options": "Active\nIdle\nACTIVE\nIDLE"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "map_image_base64",
+   "fieldtype": "Long Text",
+   "label": "Map Image (Base64)"
+  },
+  {
+   "fieldname": "photos",
+   "fieldtype": "Table",
+   "label": "Photos",
+   "options": "Plot Photo"
+  },
+  {
+   "fieldname": "synced",
+   "fieldtype": "Check",
+   "label": "Synced",
+   "default": "0"
   }
  ],
  "grid_page_length": 50,

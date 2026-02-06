@@ -21,7 +21,11 @@
   "section_break_3",
   "requested_by",
   "request_date",
-  "notes"
+  "notes",
+  "input_type",
+  "quantity",
+  "requested_date",
+  "synced"
  ],
  "fields": [
   {
@@ -116,6 +120,27 @@
    "fieldname": "notes",
    "fieldtype": "Text",
    "label": "Notes"
+  },
+  {
+   "fieldname": "input_type",
+   "fieldtype": "Data",
+   "label": "Input Type"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Float",
+   "label": "Quantity"
+  },
+  {
+   "fieldname": "requested_date",
+   "fieldtype": "Date",
+   "label": "Requested Date"
+  },
+  {
+   "fieldname": "synced",
+   "fieldtype": "Check",
+   "label": "Synced",
+   "default": "0"
   }
  ],
  "index_web_pages_for_search": 1,

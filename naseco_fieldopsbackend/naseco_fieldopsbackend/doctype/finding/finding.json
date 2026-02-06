@@ -18,7 +18,8 @@
   "section_break_2",
   "remarks",
   "photos",
-  "timestamp"
+  "timestamp",
+  "synced"
  ],
  "fields": [
   {
@@ -95,6 +96,12 @@
    "fieldtype": "Datetime",
    "label": "Timestamp",
    "reqd": 1
+  },
+  {
+   "fieldname": "synced",
+   "fieldtype": "Check",
+   "label": "Synced",
+   "default": "0"
   }
  ],
  "index_web_pages_for_search": 1,

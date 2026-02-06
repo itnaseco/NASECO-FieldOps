@@ -7,7 +7,8 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "crop_name"
+  "crop_name",
+  "crop_id"
  ],
  "fields": [
   {
@@ -16,6 +17,12 @@
    "in_list_view": 1,
    "label": "Crop Name",
    "reqd": 1
+  },
+  {
+   "fieldname": "crop_id",
+   "fieldtype": "Data",
+   "label": "Crop ID",
+   "unique": 1
   }
  ],
  "grid_page_length": 50,

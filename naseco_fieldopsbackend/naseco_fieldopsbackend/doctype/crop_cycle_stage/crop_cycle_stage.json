@@ -19,7 +19,9 @@
   "completion_percentage",
   "section_break_3",
   "inputs",
-  "notes"
+  "notes",
+  "stage_id",
+  "crop"
  ],
  "fields": [
   {
@@ -96,6 +98,18 @@
    "fieldname": "notes",
    "fieldtype": "Text",
    "label": "Notes"
+  },
+  {
+   "fieldname": "stage_id",
+   "fieldtype": "Data",
+   "label": "Stage ID",
+   "unique": 1
+  },
+  {
+   "fieldname": "crop",
+   "fieldtype": "Link",
+   "label": "Crop",
+   "options": "Crop"
   }
  ],
  "index_web_pages_for_search": 1,

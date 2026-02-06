@@ -16,7 +16,10 @@
   "farmer_status",
   "region",
   "assigned_to",
-  "status"
+  "status",
+  "address",
+  "assigned_supervisor",
+  "synced"
  ],
  "fields": [
   {
@@ -82,7 +85,24 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Active\nInactive\nBlacklisted"
+   "options": "Active\nInactive\nSuspended\nBlacklisted"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address"
+  },
+  {
+   "fieldname": "assigned_supervisor",
+   "fieldtype": "Link",
+   "label": "Assigned Supervisor",
+   "options": "User"
+  },
+  {
+   "fieldname": "synced",
+   "fieldtype": "Check",
+   "label": "Synced",
+   "default": "0"
   }
  ],
  "grid_page_length": 50,

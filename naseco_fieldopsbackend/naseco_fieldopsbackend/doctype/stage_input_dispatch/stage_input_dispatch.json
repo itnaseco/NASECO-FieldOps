@@ -20,7 +20,11 @@
   "section_break_3",
   "dispatched_by",
   "received_by",
-  "notes"
+  "notes",
+  "input_type",
+  "quantity",
+  "request_id",
+  "synced"
  ],
  "fields": [
   {
@@ -107,6 +111,28 @@
    "fieldname": "notes",
    "fieldtype": "Text",
    "label": "Notes"
+  },
+  {
+   "fieldname": "input_type",
+   "fieldtype": "Data",
+   "label": "Input Type"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Float",
+   "label": "Quantity"
+  },
+  {
+   "fieldname": "request_id",
+   "fieldtype": "Link",
+   "label": "Request ID",
+   "options": "Stage Input Request"
+  },
+  {
+   "fieldname": "synced",
+   "fieldtype": "Check",
+   "label": "Synced",
+   "default": "0"
   }
  ],
  "index_web_pages_for_search": 1,

@@ -6,7 +6,9 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "type_name"
+  "type_name",
+  "visit_type_id",
+  "description"
  ],
  "fields": [
   {
@@ -15,6 +17,17 @@
    "in_list_view": 1,
    "label": "Type Name",
    "reqd": 1
+  },
+  {
+   "fieldname": "visit_type_id",
+   "fieldtype": "Data",
+   "label": "Visit Type ID",
+   "unique": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Description"
   }
  ],
  "grid_page_length": 50,

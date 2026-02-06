@@ -8,7 +8,8 @@
  "field_order": [
   "season_name",
   "start_date",
-  "end_date"
+  "end_date",
+  "season_id"
  ],
  "fields": [
   {
@@ -27,6 +28,12 @@
    "fieldname": "end_date",
    "fieldtype": "Date",
    "label": "End Date"
+  },
+  {
+   "fieldname": "season_id",
+   "fieldtype": "Data",
+   "label": "Season ID",
+   "unique": 1
   }
  ],
  "grid_page_length": 50,

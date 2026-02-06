@@ -8,7 +8,9 @@
  "field_order": [
   "recipe_name",
   "crop",
-  "stages"
+  "stages",
+  "recipe_id",
+  "inputs"
  ],
  "fields": [
   {
@@ -31,6 +33,18 @@
    "fieldtype": "Table",
    "label": "Stages",
    "options": "Recipe Stage"
+  },
+  {
+   "fieldname": "recipe_id",
+   "fieldtype": "Data",
+   "label": "Recipe ID",
+   "unique": 1
+  },
+  {
+   "fieldname": "inputs",
+   "fieldtype": "Table",
+   "label": "Inputs",
+   "options": "Recipe Input Item"
   }
  ],
  "grid_page_length": 50,

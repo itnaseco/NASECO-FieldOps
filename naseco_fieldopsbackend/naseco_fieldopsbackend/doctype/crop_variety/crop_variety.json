@@ -9,7 +9,10 @@
  "field_order": [
   "variety_name",
   "crop",
-  "maturity_days"
+  "maturity_days",
+  "variety_id",
+  "maturity_period_days",
+  "description"
  ],
  "fields": [
   {
@@ -31,6 +34,22 @@
    "fieldname": "maturity_days",
    "fieldtype": "Int",
    "label": "Maturity Days"
+  },
+  {
+   "fieldname": "variety_id",
+   "fieldtype": "Data",
+   "label": "Variety ID",
+   "unique": 1
+  },
+  {
+   "fieldname": "maturity_period_days",
+   "fieldtype": "Int",
+   "label": "Maturity Period (Days)"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Description"
   }
  ],
  "grid_page_length": 50,

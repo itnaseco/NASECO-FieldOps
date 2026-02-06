@@ -19,7 +19,9 @@
   "actual_harvest_date",
   "section_break_2",
   "current_stage",
-  "status"
+  "status",
+  "next_inspection_date",
+  "synced"
  ],
  "fields": [
   {
@@ -102,6 +104,17 @@
    "label": "Status",
    "options": "PLANNED\nACTIVE\nCOMPLETED",
    "read_only": 1
+  },
+  {
+   "fieldname": "next_inspection_date",
+   "fieldtype": "Date",
+   "label": "Next Inspection Date"
+  },
+  {
+   "fieldname": "synced",
+   "fieldtype": "Check",
+   "label": "Synced",
+   "default": "0"
   }
  ],
  "grid_page_length": 50,
