@@ -10,6 +10,7 @@
   "quantity",
   "unit",
   "input_type",
+  "recipe_stage",
   "quantity_per_acre"
  ],
  "fields": [
@@ -38,6 +39,12 @@
    "fieldname": "input_type",
    "fieldtype": "Data",
    "label": "Input Type"
+  },
+  {
+   "fieldname": "recipe_stage",
+   "fieldtype": "Link",
+   "label": "Recipe Stage",
+   "options": "Recipe Stage"
   },
   {
    "fieldname": "quantity_per_acre",
