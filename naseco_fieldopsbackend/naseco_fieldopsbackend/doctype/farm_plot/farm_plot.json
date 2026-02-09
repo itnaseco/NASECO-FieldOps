@@ -132,7 +132,9 @@
   {
    "fieldname": "map_image_base64",
    "fieldtype": "Long Text",
-   "label": "Map Image (Base64)"
+   "label": "Map Image (Base64)",
+   "hidden": 1,
+   "read_only": 1
   },
   {
    "fieldname": "photos",

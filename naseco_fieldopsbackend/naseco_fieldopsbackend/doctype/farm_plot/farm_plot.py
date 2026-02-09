@@ -1,10 +1,15 @@
 # Copyright (c) 2026, Naseco and contributors
 # For license information, please see license.txt
 
+import base64
+import json
+import math
+import re
+import time
+
 import frappe
 from frappe.model.document import Document
-import math
-import json
+from frappe.utils.file_manager import save_file
 
 
 class FarmPlot(Document):
@@ -13,6 +18,50 @@ class FarmPlot(Document):
 		if self.polygon and len(self.polygon) >= 3:
 			self.calculate_geospatial_values()
 			self.generate_geojson()
+
+	def after_insert(self):
+		self._ensure_map_image_from_base64()
+
+	def on_update(self):
+		self._ensure_map_image_from_base64()
+
+	def _ensure_map_image_from_base64(self):
+		if not self.map_image_base64 or self.map_image:
+			return
+
+		b64 = (self.map_image_base64 or "").strip()
+		if not b64:
+			return
+
+		mime = None
+		data = b64
+		match = re.match(r"^data:(image/[^;]+);base64,(.*)$", b64, flags=re.IGNORECASE | re.DOTALL)
+		if match:
+			mime = match.group(1).lower()
+			data = match.group(2)
+
+		try:
+			content = base64.b64decode(data)
+		except Exception:
+			frappe.log_error("Invalid base64 map image for Farm Plot")
+			return
+
+		ext_map = {
+			"image/png": ".png",
+			"image/jpeg": ".jpg",
+			"image/jpg": ".jpg",
+			"image/webp": ".webp",
+			"image/gif": ".gif",
+		}
+		ext = ext_map.get(mime, ".png")
+		filename = f"plot_{self.plot_id or self.name or 'map'}_{int(time.time())}{ext}"
+
+		try:
+			file_doc = save_file(filename, content, self.doctype, self.name, is_private=0)
+			if file_doc and file_doc.file_url:
+				frappe.db.set_value(self.doctype, self.name, "map_image", file_doc.file_url, update_modified=False)
+		except Exception:
+			frappe.log_error("Failed to save map image file from base64")
 
 	def calculate_geospatial_values(self):
 		"""Calculate area (acres), perimeter (meters), and centroid from GPS vertices"""
