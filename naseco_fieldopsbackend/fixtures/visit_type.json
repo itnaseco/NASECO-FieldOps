@@ -1,0 +1,58 @@
+[
+ {
+  "description": null,
+  "doctype": "Visit Type",
+  "name": "Training Visit",
+  "type_name": "Training Visit",
+  "visit_type_id": null
+ },
+ {
+  "description": null,
+  "doctype": "Visit Type",
+  "name": "Pest/Disease Check",
+  "type_name": "Pest/Disease Check",
+  "visit_type_id": null
+ },
+ {
+  "description": null,
+  "doctype": "Visit Type",
+  "name": "Harvest Inspection",
+  "type_name": "Harvest Inspection",
+  "visit_type_id": null
+ },
+ {
+  "description": null,
+  "doctype": "Visit Type",
+  "name": "Pre-Harvest Assessment",
+  "type_name": "Pre-Harvest Assessment",
+  "visit_type_id": null
+ },
+ {
+  "description": null,
+  "doctype": "Visit Type",
+  "name": "Mid-Season Check",
+  "type_name": "Mid-Season Check",
+  "visit_type_id": null
+ },
+ {
+  "description": null,
+  "doctype": "Visit Type",
+  "name": "Planting Inspection",
+  "type_name": "Planting Inspection",
+  "visit_type_id": null
+ },
+ {
+  "description": null,
+  "doctype": "Visit Type",
+  "name": "Emergency Visit",
+  "type_name": "Emergency Visit",
+  "visit_type_id": null
+ },
+ {
+  "description": null,
+  "doctype": "Visit Type",
+  "name": "Routine Inspection",
+  "type_name": "Routine Inspection",
+  "visit_type_id": null
+ }
+]

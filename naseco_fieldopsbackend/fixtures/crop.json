@@ -1,0 +1,74 @@
+[
+ {
+  "creation": "2026-02-02 11:36:17.750395",
+  "crop_id": "crop_maize",
+  "crop_name": "Maize",
+  "docstatus": 0,
+  "doctype": "Crop",
+  "idx": 0,
+  "modified": "2026-02-09 15:23:19.462251",
+  "modified_by": "Administrator",
+  "name": "Maize",
+  "owner": "Administrator"
+ },
+ {
+  "creation": "2026-02-02 11:36:17.773696",
+  "crop_id": null,
+  "crop_name": "Sunflower",
+  "docstatus": 0,
+  "doctype": "Crop",
+  "idx": 0,
+  "modified": "2026-02-02 11:36:17.773696",
+  "modified_by": "Administrator",
+  "name": "Sunflower",
+  "owner": "Administrator"
+ },
+ {
+  "creation": "2026-02-02 11:36:17.770508",
+  "crop_id": null,
+  "crop_name": "Groundnuts",
+  "docstatus": 0,
+  "doctype": "Crop",
+  "idx": 0,
+  "modified": "2026-02-02 11:36:17.770508",
+  "modified_by": "Administrator",
+  "name": "Groundnuts",
+  "owner": "Administrator"
+ },
+ {
+  "creation": "2026-02-02 11:36:17.767596",
+  "crop_id": null,
+  "crop_name": "Beans",
+  "docstatus": 0,
+  "doctype": "Crop",
+  "idx": 0,
+  "modified": "2026-02-02 11:36:17.767596",
+  "modified_by": "Administrator",
+  "name": "Beans",
+  "owner": "Administrator"
+ },
+ {
+  "creation": "2026-02-02 11:36:17.762460",
+  "crop_id": null,
+  "crop_name": "Soybean",
+  "docstatus": 0,
+  "doctype": "Crop",
+  "idx": 0,
+  "modified": "2026-02-02 11:36:17.762460",
+  "modified_by": "Administrator",
+  "name": "Soybean",
+  "owner": "Administrator"
+ },
+ {
+  "creation": "2026-02-02 11:36:17.756749",
+  "crop_id": null,
+  "crop_name": "Rice",
+  "docstatus": 0,
+  "doctype": "Crop",
+  "idx": 0,
+  "modified": "2026-02-02 11:36:17.756749",
+  "modified_by": "Administrator",
+  "name": "Rice",
+  "owner": "Administrator"
+ }
+]

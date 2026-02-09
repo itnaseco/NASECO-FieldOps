@@ -1,0 +1,82 @@
+[
+ {
+  "attribute_name": "Soil Moisture",
+  "attribute_type": "Text",
+  "description": null,
+  "doctype": "Inspection Attribute",
+  "name": "Soil Moisture",
+  "unit": "%"
+ },
+ {
+  "attribute_name": "Crop Health Score",
+  "attribute_type": "Numeric",
+  "description": null,
+  "doctype": "Inspection Attribute",
+  "name": "Crop Health Score",
+  "unit": null
+ },
+ {
+  "attribute_name": "Expected Yield",
+  "attribute_type": "Numeric",
+  "description": null,
+  "doctype": "Inspection Attribute",
+  "name": "Expected Yield",
+  "unit": "kg"
+ },
+ {
+  "attribute_name": "Flowering Stage",
+  "attribute_type": "Boolean",
+  "description": null,
+  "doctype": "Inspection Attribute",
+  "name": "Flowering Stage",
+  "unit": null
+ },
+ {
+  "attribute_name": "Weed Pressure",
+  "attribute_type": "Text",
+  "description": null,
+  "doctype": "Inspection Attribute",
+  "name": "Weed Pressure",
+  "unit": null
+ },
+ {
+  "attribute_name": "Disease Symptoms",
+  "attribute_type": "Text",
+  "description": null,
+  "doctype": "Inspection Attribute",
+  "name": "Disease Symptoms",
+  "unit": null
+ },
+ {
+  "attribute_name": "Pest Presence",
+  "attribute_type": "Boolean",
+  "description": null,
+  "doctype": "Inspection Attribute",
+  "name": "Pest Presence",
+  "unit": null
+ },
+ {
+  "attribute_name": "Leaf Color",
+  "attribute_type": "Text",
+  "description": null,
+  "doctype": "Inspection Attribute",
+  "name": "Leaf Color",
+  "unit": null
+ },
+ {
+  "attribute_name": "Plant Population",
+  "attribute_type": "Numeric",
+  "description": null,
+  "doctype": "Inspection Attribute",
+  "name": "Plant Population",
+  "unit": "pieces"
+ },
+ {
+  "attribute_name": "Plant Height",
+  "attribute_type": "Numeric",
+  "description": null,
+  "doctype": "Inspection Attribute",
+  "name": "Plant Height",
+  "unit": "cm"
+ }
+]

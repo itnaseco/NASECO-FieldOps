@@ -1,0 +1,32 @@
+[
+ {
+  "created_at": null,
+  "doctype": "Region",
+  "name": "Western",
+  "region_name": "Western"
+ },
+ {
+  "created_at": null,
+  "doctype": "Region",
+  "name": "Eastern",
+  "region_name": "Eastern"
+ },
+ {
+  "created_at": null,
+  "doctype": "Region",
+  "name": "Southern",
+  "region_name": "Southern"
+ },
+ {
+  "created_at": null,
+  "doctype": "Region",
+  "name": "Central",
+  "region_name": "Central"
+ },
+ {
+  "created_at": null,
+  "doctype": "Region",
+  "name": "Northern",
+  "region_name": "Northern"
+ }
+]
