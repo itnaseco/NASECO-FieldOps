@@ -7,12 +7,9 @@ function set_stage_options(frm) {
     .filter((v) => v);
   const options = stages.join("\n");
 
-  const grid = frm.fields_dict.inputs && frm.fields_dict.inputs.grid;
+  const grid = frm.get_field("inputs") && frm.get_field("inputs").grid;
   if (grid) {
-    const df = grid.get_field("recipe_stage");
-    if (df) {
-      df.options = options;
-    }
+    grid.update_docfield_property("recipe_stage", "options", options);
     grid.refresh();
   }
 }
@@ -60,6 +57,9 @@ frappe.ui.form.on("Recipe Stage", {
 });
 
 frappe.ui.form.on("Recipe Input Item", {
+  form_render(frm, cdt, cdn) {
+    set_stage_options(frm);
+  },
   recipe_stage(frm, cdt, cdn) {
     const row = locals[cdt][cdn];
     const stages = frm.doc.stages || [];
