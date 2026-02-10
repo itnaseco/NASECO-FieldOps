@@ -7,13 +7,11 @@
  "engine": "InnoDB",
  "field_order": [
   "input_name",
-  "quantity",
+  "quantity_per_acre",
   "unit",
-  "input_type",
-  "stage_name",
-  "stage_index",
   "recipe_stage",
-  "quantity_per_acre"
+  "stage_index",
+  "input_type"
  ],
  "fields": [
   {
@@ -21,13 +19,6 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Input Name",
-   "reqd": 1
-  },
-  {
-   "fieldname": "quantity",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Quantity",
    "reqd": 1
   },
   {
@@ -43,20 +34,15 @@
    "label": "Input Type"
   },
   {
-   "fieldname": "stage_name",
-   "fieldtype": "Data",
-   "label": "Stage Name"
+   "fieldname": "recipe_stage",
+   "fieldtype": "Select",
+   "label": "Recipe Stage",
+   "options": ""
   },
   {
    "fieldname": "stage_index",
    "fieldtype": "Int",
    "label": "Stage Order"
-  },
-  {
-   "fieldname": "recipe_stage",
-   "fieldtype": "Link",
-   "label": "Recipe Stage",
-   "options": "Recipe Stage"
   },
   {
    "fieldname": "quantity_per_acre",
