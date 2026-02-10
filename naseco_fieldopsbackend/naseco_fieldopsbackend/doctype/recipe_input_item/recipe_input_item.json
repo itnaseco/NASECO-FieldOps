@@ -10,6 +10,8 @@
   "quantity",
   "unit",
   "input_type",
+  "stage_name",
+  "stage_index",
   "recipe_stage",
   "quantity_per_acre"
  ],
@@ -39,6 +41,16 @@
    "fieldname": "input_type",
    "fieldtype": "Data",
    "label": "Input Type"
+  },
+  {
+   "fieldname": "stage_name",
+   "fieldtype": "Data",
+   "label": "Stage Name"
+  },
+  {
+   "fieldname": "stage_index",
+   "fieldtype": "Int",
+   "label": "Stage Order"
   },
   {
    "fieldname": "recipe_stage",
