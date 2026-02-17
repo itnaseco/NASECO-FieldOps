@@ -547,6 +547,20 @@ def _parse_iso_datetime(value):
 	return None
 
 
+def _get_identity_emails(args):
+	emails = set()
+	for key in (
+		"attendance_user_email",
+		"attendance_user",
+		"attendance_user_id",
+		"user_email",
+		"user_id",
+		"assigned_to",
+	):
+		emails.update(_as_list(args.get(key)))
+	return sorted(emails)
+
+
 def _get_attendance_employee_ids(args):
 	def _vals(keys):
 		out = []
@@ -575,7 +589,7 @@ def _get_attendance_employee_ids(args):
 		source_sets.append(valid_ids)
 
 	# 2) Email fields (attendance-specific first, then legacy fallback)
-	attendance_emails = _vals(("attendance_user_email", "attendance_user"))
+	attendance_emails = _vals(("attendance_user_email", "attendance_user", "attendance_user_id"))
 	legacy_emails = _vals(("user_email", "user_id"))
 	email_values = attendance_emails or legacy_emails
 	if not email_values:
@@ -621,6 +635,37 @@ def _build_attendance_filters(args, modified_since=None):
 	]
 	if modified_since:
 		filters.append(["modified", ">", modified_since])
+	return filters
+
+
+def _build_employee_checkin_filters(args, modified_since=None):
+	meta = _get_meta("Employee Checkin")
+	filters = []
+
+	employee_ids = _get_attendance_employee_ids(args)
+	if employee_ids and meta.has_field("employee"):
+		filters.append(["employee", "in", employee_ids])
+	else:
+		emails = _get_identity_emails(args)
+		# Fallback for deployments with custom user fields on Employee Checkin
+		if emails and meta.has_field("user_id"):
+			filters.append(["user_id", "in", emails])
+		elif emails and meta.has_field("user_email"):
+			filters.append(["user_email", "in", emails])
+
+	if not filters:
+		return None
+
+	# If month window is sent, constrain checkins by checkin time too.
+	start_dt = _parse_iso_datetime(args.get("attendance_month_start"))
+	end_dt = _parse_iso_datetime(args.get("attendance_month_end"))
+	if start_dt and end_dt and meta.has_field("time"):
+		filters.append(["time", ">=", start_dt.strftime("%Y-%m-%d %H:%M:%S")])
+		filters.append(["time", "<", end_dt.strftime("%Y-%m-%d %H:%M:%S")])
+
+	if modified_since:
+		filters.append(["modified", ">", modified_since])
+
 	return filters
 
 
@@ -740,6 +785,11 @@ def get_modified_records(last_sync_timestamp=None, doctypes=None, doctype=None, 
 				filters = []
 				if doctype == "Attendance":
 					filters = _build_attendance_filters(args, last_sync)
+					if not filters:
+						modified_records[doctype] = []
+						continue
+				elif doctype == "Employee Checkin":
+					filters = _build_employee_checkin_filters(args, last_sync)
 					if not filters:
 						modified_records[doctype] = []
 						continue
@@ -890,6 +940,12 @@ def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 
 			if doctype == "Attendance":
 				filters = _build_attendance_filters(args, last_sync_dt)
+				store = DOCTYPE_TO_STORE.get(doctype, doctype)
+				if not filters:
+					data[store] = []
+					continue
+			elif doctype == "Employee Checkin":
+				filters = _build_employee_checkin_filters(args, last_sync_dt)
 				store = DOCTYPE_TO_STORE.get(doctype, doctype)
 				if not filters:
 					data[store] = []
