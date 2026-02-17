@@ -495,6 +495,135 @@ def _resolve_employee_fields(doctype, payload, result):
 	return result
 
 
+def _get_request_args(kwargs=None):
+	args = {}
+	try:
+		form_dict = dict(getattr(frappe.local, "form_dict", {}) or {})
+		args.update(form_dict)
+	except Exception:
+		pass
+	try:
+		if getattr(frappe, "request", None):
+			args.update(dict(frappe.request.args or {}))
+			args.update(dict(frappe.request.form or {}))
+	except Exception:
+		pass
+	args.update(kwargs or {})
+	return args
+
+
+def _as_list(value):
+	if value is None:
+		return []
+	if isinstance(value, (list, tuple, set)):
+		return [str(v).strip() for v in value if str(v).strip()]
+	if isinstance(value, str):
+		v = value.strip()
+		if not v:
+			return []
+		if v.startswith("[") and v.endswith("]"):
+			try:
+				parsed = json.loads(v)
+				if isinstance(parsed, list):
+					return [str(x).strip() for x in parsed if str(x).strip()]
+			except Exception:
+				pass
+		if "," in v:
+			return [x.strip() for x in v.split(",") if x.strip()]
+		return [v]
+	return [str(value).strip()]
+
+
+def _parse_iso_datetime(value):
+	if not value:
+		return None
+	if isinstance(value, datetime):
+		return value
+	if isinstance(value, str):
+		try:
+			return datetime.fromisoformat(value.replace("Z", "+00:00"))
+		except Exception:
+			return None
+	return None
+
+
+def _get_attendance_employee_ids(args):
+	def _vals(keys):
+		out = []
+		for key in keys:
+			out.extend(_as_list(args.get(key)))
+		return [v for v in out if v]
+
+	def _resolve_by_email(values):
+		if not values:
+			return set()
+		rows = frappe.get_all("Employee", filters={"user_id": ["in", list(set(values))]}, fields=["name"])
+		return {r.name for r in rows}
+
+	def _resolve_by_name(values):
+		if not values:
+			return set()
+		rows = frappe.get_all("Employee", filters={"employee_name": ["in", list(set(values))]}, fields=["name"])
+		return {r.name for r in rows}
+
+	source_sets = []
+
+	# 1) Explicit employee ids
+	explicit_ids = _vals(("attendance_employee_id", "attendance_employee", "employee_id"))
+	if explicit_ids:
+		valid_ids = {emp for emp in explicit_ids if frappe.db.exists("Employee", emp)}
+		source_sets.append(valid_ids)
+
+	# 2) Email fields (attendance-specific first, then legacy fallback)
+	attendance_emails = _vals(("attendance_user_email", "attendance_user"))
+	legacy_emails = _vals(("user_email", "user_id"))
+	email_values = attendance_emails or legacy_emails
+	if not email_values:
+		# assigned_to is a final legacy fallback only
+		email_values = _vals(("assigned_to",))
+	if email_values:
+		source_sets.append(_resolve_by_email(email_values))
+
+	# 3) Full name fields
+	full_names = _vals(("attendance_employee_name", "full_name"))
+	if full_names:
+		source_sets.append(_resolve_by_name(full_names))
+
+	# Optional fallback to current logged-in user email
+	if not source_sets and getattr(frappe.session, "user", None) and frappe.session.user not in ("Guest", "Administrator"):
+		source_sets.append(_resolve_by_email([frappe.session.user]))
+
+	if not source_sets:
+		return []
+
+	# Strict combination: intersection of all provided identity sources
+	resolved = source_sets[0]
+	for s in source_sets[1:]:
+		resolved = resolved.intersection(s)
+
+	return sorted(resolved)
+
+
+def _build_attendance_filters(args, modified_since=None):
+	employee_ids = _get_attendance_employee_ids(args)
+	if not employee_ids:
+		return None
+
+	start_dt = _parse_iso_datetime(args.get("attendance_month_start"))
+	end_dt = _parse_iso_datetime(args.get("attendance_month_end"))
+	if not start_dt or not end_dt:
+		return None
+
+	filters = [
+		["employee", "in", employee_ids],
+		["attendance_date", ">=", start_dt.date().isoformat()],
+		["attendance_date", "<", end_dt.date().isoformat()],
+	]
+	if modified_since:
+		filters.append(["modified", ">", modified_since])
+	return filters
+
+
 @frappe.whitelist()
 def bulk_sync(data):
 	"""
@@ -565,7 +694,7 @@ def bulk_sync(data):
 
 
 @frappe.whitelist()
-def get_modified_records(last_sync_timestamp=None, doctypes=None, doctype=None, since=None):
+def get_modified_records(last_sync_timestamp=None, doctypes=None, doctype=None, since=None, **kwargs):
 	"""
 	Get all records modified since last sync timestamp
 
@@ -579,6 +708,7 @@ def get_modified_records(last_sync_timestamp=None, doctypes=None, doctype=None, 
 		JSON response with modified records grouped by doctype
 	"""
 	try:
+		args = _get_request_args(kwargs)
 		if since and not last_sync_timestamp:
 			last_sync_timestamp = since
 		# Parse last sync timestamp
@@ -607,12 +737,19 @@ def get_modified_records(last_sync_timestamp=None, doctypes=None, doctype=None, 
 
 		for doctype in target_doctypes:
 			try:
+				filters = []
+				if doctype == "Attendance":
+					filters = _build_attendance_filters(args, last_sync)
+					if not filters:
+						modified_records[doctype] = []
+						continue
+				elif last_sync:
+					filters = [["modified", ">", last_sync]]
+
 				# Get modified records
 				records = frappe.get_all(
 					doctype,
-					filters=[
-						["modified", ">", last_sync]
-					],
+					filters=filters,
 					fields=["*"],
 					order_by="modified asc"
 				)
@@ -626,7 +763,7 @@ def get_modified_records(last_sync_timestamp=None, doctypes=None, doctype=None, 
 					except Exception as e:
 						frappe.log_error(f"Error fetching {doctype} {record.name}: {str(e)}")
 
-				if full_records:
+				if full_records or doctype == "Attendance":
 					modified_records[doctype] = full_records
 
 			except Exception as e:
@@ -696,11 +833,12 @@ def get_reference_data():
 
 
 @frappe.whitelist()
-def get_sync_data(last_sync=None, officer_region=None):
+def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 	"""
 	Get all synced data since last_sync. Returns data grouped by store name.
 	"""
 	try:
+		args = _get_request_args(kwargs)
 		if last_sync:
 			last_sync_dt = datetime.fromisoformat(str(last_sync).replace('Z', '+00:00'))
 		else:
@@ -749,7 +887,14 @@ def get_sync_data(last_sync=None, officer_region=None):
 
 		for doctype in sync_doctypes:
 			filters = []
-			if last_sync_dt:
+
+			if doctype == "Attendance":
+				filters = _build_attendance_filters(args, last_sync_dt)
+				store = DOCTYPE_TO_STORE.get(doctype, doctype)
+				if not filters:
+					data[store] = []
+					continue
+			elif last_sync_dt:
 				filters.append(["modified", ">", last_sync_dt])
 
 			if officer_region and doctype == "Outgrower":
