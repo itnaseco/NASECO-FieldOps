@@ -19,6 +19,8 @@
   "status",
   "address",
   "assigned_supervisor",
+  "bank_account",
+  "outgrower_type",
   "synced"
  ],
  "fields": [
@@ -97,6 +99,17 @@
    "fieldtype": "Link",
    "label": "Assigned Supervisor",
    "options": "User"
+  },
+  {
+   "fieldname": "bank_account",
+   "fieldtype": "Data",
+   "label": "Bank Account"
+  },
+  {
+   "fieldname": "outgrower_type",
+   "fieldtype": "Select",
+   "label": "Outgrower Type",
+   "options": "Individual\nGroup\nCooperative\nCompany"
   },
   {
    "fieldname": "synced",

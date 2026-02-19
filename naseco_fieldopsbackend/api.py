@@ -90,6 +90,8 @@ MOBILE_FIELD_MAP = {
 		"yearsSinceRegistration": "years_since_registration",
 		"assignedTo": "assigned_to",
 		"assignedSupervisor": "assigned_supervisor",
+		"bankAccount": "bank_account",
+		"outgrowerType": "outgrower_type",
 	},
 	"Farm Plot": {
 		"plotId": "plot_id",
@@ -273,6 +275,9 @@ MOBILE_FIELD_MAP = {
 
 
 def _map_mobile_to_doc(doctype, payload):
+	if doctype == "Outgrower":
+		payload = _normalize_outgrower_payload(payload)
+
 	mapping = MOBILE_FIELD_MAP.get(doctype, {})
 	result = {}
 	for key, value in (payload or {}).items():
@@ -408,6 +413,8 @@ def _map_doc_to_mobile(doctype, doc_dict):
 		mobile_id_field = _reverse_id_field_name(doctype)
 		if mobile_id_field:
 			result[mobile_id_field] = doc_dict.get(ID_FIELD_MAP[doctype])
+	if doctype == "Outgrower":
+		_enrich_outgrower_aliases(result)
 	return result
 
 
@@ -493,6 +500,29 @@ def _resolve_employee_fields(doctype, payload, result):
 				result.setdefault("amount", (payload or {}).get("amount"))
 
 	return result
+
+
+def _normalize_outgrower_payload(payload):
+	data = dict(payload or {})
+	if "bank_account" not in data and "bankAccount" in data:
+		data["bank_account"] = data.get("bankAccount")
+	if "outgrower_type" not in data and "outgrowerType" in data:
+		data["outgrower_type"] = data.get("outgrowerType")
+	return data
+
+
+def _enrich_outgrower_aliases(record):
+	if not isinstance(record, dict):
+		return record
+	if "bank_account" in record and "bankAccount" not in record:
+		record["bankAccount"] = record.get("bank_account")
+	if "bankAccount" in record and "bank_account" not in record:
+		record["bank_account"] = record.get("bankAccount")
+	if "outgrower_type" in record and "outgrowerType" not in record:
+		record["outgrowerType"] = record.get("outgrower_type")
+	if "outgrowerType" in record and "outgrower_type" not in record:
+		record["outgrower_type"] = record.get("outgrowerType")
+	return record
 
 
 def _get_request_args(kwargs=None):
@@ -695,6 +725,8 @@ def bulk_sync(data):
 				doctype = record.get("doctype")
 				operation = (record.get("operation") or "").upper()
 				doc_data = record.get("doc") or {}
+				if doctype == "Outgrower":
+					doc_data = _normalize_outgrower_payload(doc_data)
 
 				result = {"doctype": doctype, "operation": operation, "status": "success"}
 
@@ -809,7 +841,10 @@ def get_modified_records(last_sync_timestamp=None, doctypes=None, doctype=None, 
 				for record in records:
 					try:
 						doc = frappe.get_doc(doctype, record.name)
-						full_records.append(doc.as_dict())
+						doc_dict = doc.as_dict()
+						if doctype == "Outgrower":
+							doc_dict = _enrich_outgrower_aliases(doc_dict)
+						full_records.append(doc_dict)
 					except Exception as e:
 						frappe.log_error(f"Error fetching {doctype} {record.name}: {str(e)}")
 
@@ -1009,6 +1044,8 @@ def push_sync_data(data):
 				store = record.get("storeName") or record.get("store_name") or record.get("doctype")
 				doctype = _resolve_doctype(store)
 				payload = record.get("payload") or record.get("doc") or {}
+				if doctype == "Outgrower":
+					payload = _normalize_outgrower_payload(payload)
 				operation = (record.get("operation") or "SYNC").upper()
 				record_id = record.get("recordId") or payload.get("id") or payload.get("name")
 				force = record.get("force") or payload.get("force")
