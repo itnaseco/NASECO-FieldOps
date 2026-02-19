@@ -21,7 +21,9 @@
   "assigned_supervisor",
   "bank_account",
   "outgrower_type",
-  "synced"
+  "synced",
+  "section_break_farm_plots",
+  "farm_plots_html"
  ],
  "fields": [
   {
@@ -116,6 +118,16 @@
    "fieldtype": "Check",
    "label": "Synced",
    "default": "0"
+  },
+  {
+   "fieldname": "section_break_farm_plots",
+   "fieldtype": "Section Break",
+   "label": "Farm Plots"
+  },
+  {
+   "fieldname": "farm_plots_html",
+   "fieldtype": "HTML",
+   "label": "Farm Plots Display"
   }
  ],
  "grid_page_length": 50,

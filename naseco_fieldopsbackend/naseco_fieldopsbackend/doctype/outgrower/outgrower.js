@@ -18,10 +18,8 @@ frappe.ui.form.on("Outgrower", {
 });
 
 function render_plots_section(frm) {
-	// Remove existing section if it exists
-	if (frm.plots_section) {
-		frm.plots_section.remove();
-	}
+	const wrapper = get_plots_wrapper(frm);
+	wrapper.empty();
 
 	// Fetch plots for this outgrower
 	frappe.call({
@@ -127,11 +125,12 @@ function display_plots(frm, plots) {
 		</div>
 	`;
 
-	// Add section to form
-	frm.plots_section = $(html).appendTo(frm.fields_dict.status.$wrapper.parent());
+	const wrapper = get_plots_wrapper(frm);
+	wrapper.empty();
+	$(html).appendTo(wrapper);
 
 	// Add click handlers
-	frm.plots_section.find('.plot-item').on('click', function() {
+	wrapper.find('.plot-item').on('click', function() {
 		let plot_name = $(this).data('plot-name');
 		frappe.set_route('Form', 'Farm Plot', plot_name);
 	});
@@ -157,13 +156,22 @@ function display_empty_state(frm) {
 		</div>
 	`;
 
-	// Add section to form
-	frm.plots_section = $(html).appendTo(frm.fields_dict.status.$wrapper.parent());
+	const wrapper = get_plots_wrapper(frm);
+	wrapper.empty();
+	$(html).appendTo(wrapper);
 
 	// Add click handler for create button
-	frm.plots_section.find('.create-first-plot').on('click', function() {
+	wrapper.find('.create-first-plot').on('click', function() {
 		frappe.new_doc('Farm Plot', {
 			outgrower: frm.doc.name
 		});
 	});
+}
+
+function get_plots_wrapper(frm) {
+	if (frm.fields_dict.farm_plots_html && frm.fields_dict.farm_plots_html.$wrapper) {
+		return frm.fields_dict.farm_plots_html.$wrapper;
+	}
+	// Fallback for older schema not yet migrated
+	return frm.fields_dict.status.$wrapper.parent();
 }
