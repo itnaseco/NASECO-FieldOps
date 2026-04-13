@@ -244,7 +244,8 @@ app_license = "mit"
 
 fixtures = [
     {"dt": "Outgrower"},
-    {"dt": "Farm Plot"}
+    {"dt": "Farm Plot"},
+    {"dt": "Custom Field", "filters": {"module": "NASECO ERP"}}
 ]
 # Fixtures
 # ------------------

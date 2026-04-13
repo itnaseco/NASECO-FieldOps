@@ -3,17 +3,21 @@
   "address": null,
   "assigned_supervisor": null,
   "assigned_to": null,
+  "bank_account": null,
+  "docstatus": 0,
   "doctype": "Outgrower",
   "email": "test@example.com",
   "farmer_status": "Experienced",
   "full_name": "John Test Farmer",
+  "modified": "2026-04-08 15:43:28.075871",
   "name": "OG-TEST-001",
   "outgrower_id": "OG-TEST-001",
+  "outgrower_type": null,
   "phone": "+256700123456",
   "region": "Central",
   "registration_date": "2023-01-15",
   "status": "Active",
   "synced": 0,
-  "years_since_registration": 3.1
+  "years_since_registration": 3.2
  }
 ]
