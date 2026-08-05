@@ -1,0 +1,80 @@
+[
+ {
+  "desk_access": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 0,
+  "modified": "2026-07-26 12:30:00.000000",
+  "name": "Outgrower Supervisor",
+  "restrict_to_domain": null,
+  "role_name": "Outgrower Supervisor",
+  "two_factor_auth": 0
+ },
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 0,
+  "modified": "2026-07-26 12:30:00.000000",
+  "name": "Outgrower Manager",
+  "restrict_to_domain": null,
+  "role_name": "Outgrower Manager",
+  "two_factor_auth": 0
+ },
+ {
+  "desk_access": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 0,
+  "modified": "2026-07-31 18:00:00.000000",
+  "name": "Quality Inspector",
+  "restrict_to_domain": null,
+  "role_name": "Quality Inspector",
+  "two_factor_auth": 0
+ },
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 0,
+  "modified": "2026-07-31 18:00:00.000000",
+  "name": "FieldOps Finance Approver",
+  "restrict_to_domain": null,
+  "role_name": "FieldOps Finance Approver",
+  "two_factor_auth": 0
+ },
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 0,
+  "modified": "2026-07-31 18:00:00.000000",
+  "name": "FieldOps Stores User",
+  "restrict_to_domain": null,
+  "role_name": "FieldOps Stores User",
+  "two_factor_auth": 0
+ },
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 0,
+  "modified": "2026-07-31 18:00:00.000000",
+  "name": "FieldOps Operations Approver",
+  "restrict_to_domain": null,
+  "role_name": "FieldOps Operations Approver",
+  "two_factor_auth": 0
+ }
+]

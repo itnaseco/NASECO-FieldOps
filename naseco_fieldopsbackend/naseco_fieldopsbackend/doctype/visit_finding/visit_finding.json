@@ -28,9 +28,10 @@
   },
   {
    "fieldname": "unit",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Unit"
+   "label": "Unit",
+   "options": "UOM"
   },
   {
    "fieldname": "remarks",

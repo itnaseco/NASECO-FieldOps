@@ -8,7 +8,7 @@ app_license = "mit"
 # Apps
 # ------------------
 
-# required_apps = []
+required_apps = ["erpnext"]
 
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
@@ -125,6 +125,29 @@ app_license = "mit"
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
 
+permission_query_conditions = {
+	"Outgrower": "naseco_fieldopsbackend.permissions.outgrower_query",
+	"Farm Plot": "naseco_fieldopsbackend.permissions.farm_plot_query",
+	"Crop Cycle": "naseco_fieldopsbackend.permissions.crop_cycle_query",
+	"Stage Activity": "naseco_fieldopsbackend.permissions.stage_activity_query",
+	"Agronomy Report": "naseco_fieldopsbackend.permissions.agronomy_report_query",
+	"Inspection": "naseco_fieldopsbackend.permissions.inspection_query",
+	"Field Corrective Action": "naseco_fieldopsbackend.permissions.corrective_action_query",
+	"Crop Production Lot": "naseco_fieldopsbackend.permissions.production_lot_query",
+	"Seed Harvest Quality Assessment": "naseco_fieldopsbackend.permissions.harvest_quality_query",
+}
+has_permission = {
+	"Outgrower": "naseco_fieldopsbackend.permissions.has_permission",
+	"Farm Plot": "naseco_fieldopsbackend.permissions.has_permission",
+	"Crop Cycle": "naseco_fieldopsbackend.permissions.has_permission",
+	"Stage Activity": "naseco_fieldopsbackend.permissions.has_permission",
+	"Agronomy Report": "naseco_fieldopsbackend.permissions.has_permission",
+	"Inspection": "naseco_fieldopsbackend.permissions.has_permission",
+	"Field Corrective Action": "naseco_fieldopsbackend.permissions.has_permission",
+	"Crop Production Lot": "naseco_fieldopsbackend.permissions.has_permission",
+	"Seed Harvest Quality Assessment": "naseco_fieldopsbackend.permissions.has_permission",
+}
+
 # DocType Class
 # ---------------
 # Override standard doctype classes
@@ -137,24 +160,37 @@ app_license = "mit"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Stock Entry": {
+		"before_validate": "naseco_fieldopsbackend.fieldops_finance.populate_stock_entry_context",
+		"before_submit": "naseco_fieldopsbackend.fieldops_finance.populate_stock_entry_context",
+		"on_submit": "naseco_fieldopsbackend.fieldops_finance.sync_input_request_from_stock",
+		"on_cancel": "naseco_fieldopsbackend.fieldops_finance.sync_input_request_from_stock",
+	},
+	"Payment Entry": {
+		"on_submit": "naseco_fieldopsbackend.fieldops_finance.sync_advance_request_from_payment",
+		"on_cancel": "naseco_fieldopsbackend.fieldops_finance.sync_advance_request_from_payment",
+	},
+	"Purchase Receipt": {
+		"before_validate": "naseco_fieldopsbackend.fieldops_finance.populate_purchase_receipt_context",
+	},
+	"Purchase Invoice": {
+		"on_submit": "naseco_fieldopsbackend.fieldops_finance.sync_settlement_from_invoice",
+		"on_cancel": "naseco_fieldopsbackend.fieldops_finance.sync_settlement_from_invoice",
+	},
+}
 
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
 # 	"all": [
 # 		"naseco_fieldopsbackend.tasks.all"
 # 	],
-# 	"daily": [
-# 		"naseco_fieldopsbackend.tasks.daily"
-# 	],
+	"daily": [
+		"naseco_fieldopsbackend.lifecycle_tasks.update_active_crop_cycle_stages",
+		"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.season.season.update_season_statuses",
+	],
 # 	"hourly": [
 # 		"naseco_fieldopsbackend.tasks.hourly"
 # 	],
@@ -164,7 +200,7 @@ app_license = "mit"
 # 	"monthly": [
 # 		"naseco_fieldopsbackend.tasks.monthly"
 # 	],
-# }
+}
 
 # Testing
 # -------
@@ -243,6 +279,10 @@ app_license = "mit"
 # }
 
 fixtures = [
+    {"dt": "Role", "filters": {"name": ["in", [
+        "Outgrower Supervisor", "Outgrower Manager", "Quality Inspector",
+        "FieldOps Finance Approver", "FieldOps Stores User", "FieldOps Operations Approver"
+    ]]}},
     {"dt": "Outgrower"},
     {"dt": "Farm Plot"},
     {"dt": "Custom Field", "filters": {"module": "NASECO ERP"}},

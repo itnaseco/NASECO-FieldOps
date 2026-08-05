@@ -1,0 +1,103 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "resource_role",
+  "user",
+  "region",
+  "target_outgrowers",
+  "target_acres",
+  "target_activities",
+  "target_inspections",
+  "actual_assignments",
+  "actual_completions",
+  "utilization_percent",
+  "active",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "resource_role",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Resource Role",
+   "options": "Outgrower Supervisor\nQuality Inspector",
+   "reqd": 1
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "User",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "region",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Region",
+   "options": "Region",
+   "reqd": 1
+  },
+  {
+   "fieldname": "target_outgrowers",
+   "fieldtype": "Int",
+   "label": "Target Outgrowers",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "target_acres",
+   "fieldtype": "Float",
+   "label": "Target Acres",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "target_activities",
+   "fieldtype": "Int",
+   "label": "Target Activities",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "target_inspections",
+   "fieldtype": "Int",
+   "label": "Target Inspections",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "actual_assignments",
+   "fieldtype": "Int",
+   "label": "Actual Assignments",
+   "read_only": 1
+  },
+  {
+   "fieldname": "actual_completions",
+   "fieldtype": "Int",
+   "label": "Actual Completions",
+   "read_only": 1
+  },
+  {
+   "fieldname": "utilization_percent",
+   "fieldtype": "Percent",
+   "label": "Completion %",
+   "read_only": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "label": "Active"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "istable": 1,
+ "module": "Naseco FieldOpsBackend",
+ "name": "Season Resource Allocation",
+ "permissions": []
+}

@@ -1,26 +1,37 @@
 {
  "actions": [],
- "allow_rename": 1,
- "autoname": "format:IND-{####}",
- "creation": "2026-02-02 00:00:00.000000",
+ "autoname": "format:IND-{YYYY}-{#####}",
+ "creation": "2026-07-26 00:00:00.000000",
  "doctype": "DocType",
- "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "dispatch_id",
   "input_request",
-  "section_break_1",
+  "input_request_item",
+  "stock_entry",
+  "stock_entry_detail",
   "crop_cycle",
   "stage",
-  "input_name",
-  "section_break_2",
+  "item_code",
+  "item_name",
   "quantity_dispatched",
   "unit",
+  "valuation_rate",
+  "recoverable_amount",
+  "acknowledgement_section",
   "dispatch_date",
-  "section_break_3",
   "dispatched_by",
   "received_by",
+  "received_by_name",
+  "received_at",
+  "geolocation",
+  "gps_accuracy_meters",
+  "gps_quality_status",
+  "delivery_photo",
+  "receiver_signature",
   "notes",
+  "legacy_section",
+  "dispatch_id",
+  "input_name",
   "input_type",
   "quantity",
   "request_id",
@@ -28,23 +39,36 @@
  ],
  "fields": [
   {
-   "fieldname": "dispatch_id",
-   "fieldtype": "Data",
-   "label": "Dispatch ID",
-   "unique": 1
-  },
-  {
    "fieldname": "input_request",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Input Request",
+   "label": "Stage Input Request",
    "options": "Stage Input Request",
+   "read_only": 1,
    "reqd": 1
   },
   {
-   "fieldname": "section_break_1",
-   "fieldtype": "Section Break",
-   "label": "Reference"
+   "fieldname": "input_request_item",
+   "fieldtype": "Data",
+   "label": "Request Item Row",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "stock_entry",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Submitted Stock Entry",
+   "options": "Stock Entry",
+   "reqd": 1
+  },
+  {
+   "fieldname": "stock_entry_detail",
+   "fieldtype": "Data",
+   "label": "Stock Entry Item Row",
+   "read_only": 1,
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "crop_cycle",
@@ -56,46 +80,64 @@
   {
    "fieldname": "stage",
    "fieldtype": "Link",
-   "label": "Stage",
+   "label": "Crop Cycle Stage",
    "options": "Crop Cycle Stage",
    "read_only": 1
   },
   {
-   "fieldname": "input_name",
-   "fieldtype": "Data",
-   "label": "Input Name",
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Input Item",
+   "options": "Item",
    "read_only": 1
   },
   {
-   "fieldname": "section_break_2",
-   "fieldtype": "Section Break",
-   "label": "Dispatch Details"
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "label": "Item Name",
+   "read_only": 1
   },
   {
    "fieldname": "quantity_dispatched",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Quantity Dispatched",
-   "reqd": 1
+   "label": "Issued Quantity",
+   "read_only": 1
   },
   {
    "fieldname": "unit",
    "fieldtype": "Link",
-   "label": "Unit",
-   "options": "Unit"
+   "label": "UOM",
+   "options": "UOM",
+   "read_only": 1
   },
   {
+   "fieldname": "valuation_rate",
+   "fieldtype": "Currency",
+   "label": "Valuation Rate",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recoverable_amount",
+   "fieldtype": "Currency",
+   "label": "Recoverable Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "acknowledgement_section",
+   "fieldtype": "Section Break",
+   "label": "Field Acknowledgement"
+  },
+  {
+   "default": "Today",
    "fieldname": "dispatch_date",
    "fieldtype": "Date",
    "label": "Dispatch Date",
-   "default": "Today"
+   "reqd": 1
   },
   {
-   "fieldname": "section_break_3",
-   "fieldtype": "Section Break",
-   "label": "Personnel"
-  },
-  {
+   "default": "__user",
    "fieldname": "dispatched_by",
    "fieldtype": "Link",
    "label": "Dispatched By",
@@ -104,46 +146,113 @@
   {
    "fieldname": "received_by",
    "fieldtype": "Link",
-   "label": "Received By",
+   "label": "Received By User",
    "options": "User"
   },
   {
+   "fieldname": "received_by_name",
+   "fieldtype": "Data",
+   "label": "Receiver Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "received_at",
+   "fieldtype": "Datetime",
+   "label": "Received At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "geolocation",
+   "fieldtype": "Geolocation",
+   "label": "Delivery Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "gps_accuracy_meters",
+   "fieldtype": "Float",
+   "label": "GPS Accuracy (m)",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "gps_quality_status",
+   "fieldtype": "Select",
+   "label": "GPS Quality",
+   "options": "Good\nMarginal\nPoor",
+   "read_only": 1
+  },
+  {
+   "fieldname": "delivery_photo",
+   "fieldtype": "Attach Image",
+   "label": "Delivery Photo"
+  },
+  {
+   "fieldname": "receiver_signature",
+   "fieldtype": "Signature",
+   "label": "Receiver Signature",
+   "reqd": 1
+  },
+  {
    "fieldname": "notes",
-   "fieldtype": "Text",
+   "fieldtype": "Small Text",
    "label": "Notes"
+  },
+  {
+   "fieldname": "legacy_section",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "label": "Legacy Mobile Fields"
+  },
+  {
+   "fieldname": "dispatch_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Dispatch ID",
+   "unique": 1
+  },
+  {
+   "fieldname": "input_name",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Input Name"
   },
   {
    "fieldname": "input_type",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Input Type"
   },
   {
    "fieldname": "quantity",
    "fieldtype": "Float",
+   "hidden": 1,
    "label": "Quantity"
   },
   {
    "fieldname": "request_id",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Request ID",
    "options": "Stage Input Request"
   },
   {
+   "default": "0",
    "fieldname": "synced",
    "fieldtype": "Check",
-   "label": "Synced",
-   "default": "0"
+   "hidden": 1,
+   "label": "Synced"
   }
  ],
- "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2026-02-02 00:00:00.000000",
+ "modified": "2026-07-26 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Naseco FieldOpsBackend",
  "name": "Stage Input Dispatch",
  "owner": "Administrator",
  "permissions": [
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -153,11 +262,37 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Outgrower Supervisor",
+   "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
+ "title_field": "item_name",
  "track_changes": 1
 }

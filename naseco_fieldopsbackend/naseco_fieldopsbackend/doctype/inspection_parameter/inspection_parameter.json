@@ -1,0 +1,125 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:parameter_name",
+ "creation": "2026-07-25 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "parameter_name",
+  "parameter_code",
+  "parameter_group",
+  "data_type",
+  "unit",
+  "applies_to",
+  "measurement_scope",
+  "calculation_method",
+  "denominator_basis",
+  "requires_take_counts",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "parameter_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Parameter Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "parameter_code",
+   "fieldtype": "Data",
+   "label": "Parameter Code",
+   "unique": 1
+  },
+  {
+   "fieldname": "parameter_group",
+   "fieldtype": "Select",
+   "label": "Parameter Group",
+   "options": "Planting\nIsolation\nPurity\nDisease\nWeed\nDetassling\nHarvest\nInspection Quality"
+  },
+  {
+   "fieldname": "data_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Data Type",
+   "options": "Number\nCount\nPercent\nScore\nYes/No\nText\nDate\nRatio",
+   "reqd": 1
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "Unit",
+   "options": "UOM"
+  },
+  {
+   "default": "Both",
+   "fieldname": "applies_to",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Applies To",
+   "options": "Farmer\nOutgrower Supervisor\nBoth\nInspection Quality",
+   "reqd": 1
+  },
+  {
+   "default": "Inspection Take",
+   "fieldname": "measurement_scope",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Measurement Scope",
+   "options": "Inspection Take\nInspection",
+   "reqd": 1
+  },
+  {
+   "default": "Direct Value",
+   "fieldname": "calculation_method",
+   "fieldtype": "Select",
+   "label": "Calculation Method",
+   "options": "Direct Value\nCumulative Incidence\nCategorical",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.calculation_method=='Cumulative Incidence'",
+   "fieldname": "denominator_basis",
+   "fieldtype": "Select",
+   "label": "Denominator Basis",
+   "options": "Total Plants Counted"
+  },
+  {
+   "default": "0",
+   "fieldname": "requires_take_counts",
+   "fieldtype": "Check",
+   "label": "Requires Take Counts"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Description"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Inspection Parameter",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

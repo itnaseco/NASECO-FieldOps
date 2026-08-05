@@ -1,0 +1,131 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:report_name",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "report_name",
+  "report_number",
+  "stage_name",
+  "window_start_day",
+  "window_end_day",
+  "active",
+  "standards_section",
+  "template_version",
+  "overall_pass_threshold_percent",
+  "critical_failure_override",
+  "parameters",
+  "instructions"
+ ],
+ "fields": [
+  {
+   "fieldname": "report_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Report Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "report_number",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Report Number",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "stage_name",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Crop Cycle Stage",
+   "options": "Field Verification & Contracting\nPlanting\nCrop Emergence / Germination\nVegetative\nPre-flowering\nFlowering\nPre-harvest\nHarvest\nDelivery",
+   "reqd": 1
+  },
+  {
+   "fieldname": "window_start_day",
+   "fieldtype": "Int",
+   "label": "Window Start Day",
+   "reqd": 1
+  },
+  {
+   "fieldname": "window_end_day",
+   "fieldtype": "Int",
+   "label": "Window End Day",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Active"
+  },
+  {
+   "fieldname": "standards_section",
+   "fieldtype": "Section Break",
+   "label": "Evaluation Standard"
+  },
+  {
+   "default": "1",
+   "fieldname": "template_version",
+   "fieldtype": "Int",
+   "label": "Template Version",
+   "reqd": 1
+  },
+  {
+   "default": "100",
+   "fieldname": "overall_pass_threshold_percent",
+   "fieldtype": "Percent",
+   "label": "Overall Pass Threshold",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "critical_failure_override",
+   "fieldtype": "Check",
+   "label": "Critical Failure Overrides Score"
+  },
+  {
+   "fieldname": "parameters",
+   "fieldtype": "Table",
+   "label": "Report Parameters",
+   "options": "Agronomy Report Parameter",
+   "reqd": 1
+  },
+  {
+   "fieldname": "instructions",
+   "fieldtype": "Text Editor",
+   "label": "Instructions"
+  }
+ ],
+ "links": [],
+ "module": "Naseco FieldOpsBackend",
+ "name": "Agronomy Report Template",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager"
+  },
+  {
+   "read": 1,
+   "role": "Outgrower Supervisor"
+  }
+ ],
+ "sort_field": "report_number",
+ "sort_order": "ASC",
+ "track_changes": 1
+}

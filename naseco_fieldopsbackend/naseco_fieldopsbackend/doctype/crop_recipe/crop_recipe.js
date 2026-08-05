@@ -67,4 +67,52 @@ frappe.ui.form.on("Recipe Input Item", {
     row.stage_index = match ? match.order_index || match.idx : null;
     frm.refresh_field("inputs");
   },
+  item_code(frm, cdt, cdn) {
+    const row = locals[cdt][cdn];
+    if (!row.item_code) return;
+    frappe.db.get_value('Item', row.item_code, ['item_name', 'stock_uom'])
+      .then((r) => {
+        if (!r.message) return;
+        frappe.model.set_value(cdt, cdn, 'input_name', r.message.item_name);
+        frappe.model.set_value(cdt, cdn, 'unit', r.message.stock_uom);
+        frappe.model.set_value(cdt, cdn, 'stock_uom', r.message.stock_uom);
+        frappe.model.set_value(cdt, cdn, 'conversion_factor', 1);
+      });
+  },
+  unit(frm, cdt, cdn) {
+    const row = locals[cdt][cdn];
+    if (!row.item_code || !row.unit) return;
+    frappe.call({
+      method: 'naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.stage_input_request.stage_input_request.get_item_uom_details',
+      args: { item_code: row.item_code, uom: row.unit },
+      callback({ message }) {
+        if (!message) return;
+        frappe.model.set_value(cdt, cdn, 'stock_uom', message.stock_uom);
+        frappe.model.set_value(cdt, cdn, 'conversion_factor', message.conversion_factor);
+        frappe.model.set_value(
+          cdt,
+          cdn,
+          'stock_quantity_per_acre',
+          flt(row.quantity_per_acre) * flt(message.conversion_factor)
+        );
+      }
+    });
+  },
+  quantity_per_acre(frm, cdt, cdn) {
+    const row = locals[cdt][cdn];
+    frappe.model.set_value(
+      cdt,
+      cdn,
+      'stock_quantity_per_acre',
+      flt(row.quantity_per_acre) * flt(row.conversion_factor || 1)
+    );
+  },
+  recovery_policy(frm, cdt, cdn) {
+    const row = locals[cdt][cdn];
+    if (row.recovery_policy === 'Fully Recoverable') {
+      frappe.model.set_value(cdt, cdn, 'recoverable_percent', 100);
+    } else if (['Company Subsidy', 'Non-Recoverable'].includes(row.recovery_policy)) {
+      frappe.model.set_value(cdt, cdn, 'recoverable_percent', 0);
+    }
+  },
 });

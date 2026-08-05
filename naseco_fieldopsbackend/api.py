@@ -6,19 +6,42 @@ from frappe import _
 import json
 from datetime import datetime
 
+from naseco_fieldopsbackend.uom import normalize_uom
+from naseco_fieldopsbackend.roles import (
+	OUTGROWER_MANAGER_ROLE,
+	OUTGROWER_SUPERVISOR_ROLE,
+	QUALITY_INSPECTOR_ROLE,
+	QUALITY_MANAGER_ROLE,
+)
+
 # Mobile <-> Frappe mappings
 BASE_STORE_TO_DOCTYPE = {
 	"outgrowers": "Outgrower",
 	"plots": "Farm Plot",
 	"crop_cycles": "Crop Cycle",
+	"outgrower_production_contracts": "Outgrower Production Contract",
+	"production_contract_templates": "Production Contract Template",
+	"outgrower_pricing_policies": "Outgrower Pricing Policy",
 	"crop_cycle_stages": "Crop Cycle Stage",
+	"crop_production_lots": "Crop Production Lot",
+	"seed_harvest_quality_assessments": "Seed Harvest Quality Assessment",
 	"visits": "Field Visit",
-	"findings": "Finding",
+	"inspections": "Inspection",
+	"inspection_templates": "Inspection Template",
+	"inspection_parameters": "Inspection Parameter",
+	"inspection_standards": "Inspection Standard",
+	"agronomy_activity_templates": "Agronomy Activity Template",
+	"agronomy_report_templates": "Agronomy Report Template",
+	"agronomy_reports": "Agronomy Report",
+	"field_corrective_actions": "Field Corrective Action",
+	"corrective_actions": "Field Corrective Action",
 	"plot_crop_assignments": "Plot Crop Assignment",
 	"plot_assignments": "Plot Crop Assignment",
 	"stage_activities": "Stage Activity",
 	"stage_input_requests": "Stage Input Request",
 	"stage_input_dispatches": "Stage Input Dispatch",
+	"crop_cycle_advance_requests": "Crop Cycle Advance Request",
+	"crop_cycle_settlements": "Crop Cycle Settlement",
 	"attendance": "Attendance",
 	"employee_checkins": "Employee Checkin",
 	"expense_requests": "Expense Claim",
@@ -35,7 +58,7 @@ BASE_STORE_TO_DOCTYPE = {
 	"recipe_inputs": "Recipe Input Item",
 	"visit_types": "Visit Type",
 	"regions": "Region",
-	"units": "Unit",
+	"units": "UOM",
 	"inspection_attributes": "Inspection Attribute",
 }
 
@@ -44,12 +67,27 @@ STORE_TO_DOCTYPE.update({
 	"OutGrower": "Outgrower",
 	"Plot": "Farm Plot",
 	"CropCycle": "Crop Cycle",
+	"OutgrowerProductionContract": "Outgrower Production Contract",
+	"ProductionContractTemplate": "Production Contract Template",
+	"OutgrowerPricingPolicy": "Outgrower Pricing Policy",
 	"CropCycleStage": "Crop Cycle Stage",
+	"CropProductionLot": "Crop Production Lot",
+	"SeedHarvestQualityAssessment": "Seed Harvest Quality Assessment",
 	"Visit": "Field Visit",
+	"Inspection": "Inspection",
+	"InspectionTemplate": "Inspection Template",
+	"InspectionParameter": "Inspection Parameter",
+	"InspectionStandard": "Inspection Standard",
+	"AgronomyActivityTemplate": "Agronomy Activity Template",
+	"AgronomyReportTemplate": "Agronomy Report Template",
+	"AgronomyReport": "Agronomy Report",
+	"FieldCorrectiveAction": "Field Corrective Action",
 	"PlotCropAssignment": "Plot Crop Assignment",
 	"StageActivity": "Stage Activity",
 	"StageInputRequest": "Stage Input Request",
 	"StageInputDispatch": "Stage Input Dispatch",
+	"CropCycleAdvanceRequest": "Crop Cycle Advance Request",
+	"CropCycleSettlement": "Crop Cycle Settlement",
 	"Crop": "Crop",
 	"Variety": "Crop Variety",
 	"Season": "Season",
@@ -58,9 +96,126 @@ STORE_TO_DOCTYPE.update({
 	"RecipeInput": "Recipe Input Item",
 	"VisitType": "Visit Type",
 	"Region": "Region",
-	"Unit": "Unit",
+	"Unit": "UOM",
+	"UOM": "UOM",
 	"InspectionAttribute": "Inspection Attribute",
 })
+
+MOBILE_REFERENCE_DOCTYPES = {
+	"Crop",
+	"Crop Variety",
+	"Season",
+	"Crop Recipe",
+	"Visit Type",
+	"Region",
+	"UOM",
+	"Inspection Attribute",
+	"Inspection Parameter",
+	"Inspection Template",
+	"Inspection Standard",
+	"Agronomy Activity Template",
+	"Agronomy Report Template",
+	"Crop Cycle Stage",
+}
+MOBILE_CONTEXT_DOCTYPES = {
+	"Outgrower",
+	"Farm Plot",
+	"Crop Cycle",
+	"Outgrower Production Contract",
+	"Crop Production Lot",
+}
+MOBILE_ROLE_READ = {
+	OUTGROWER_SUPERVISOR_ROLE: MOBILE_CONTEXT_DOCTYPES
+	| {
+		"Agronomy Report",
+		"Field Corrective Action",
+		"Plot Crop Assignment",
+		"Stage Activity",
+		"Stage Input Request",
+		"Stage Input Dispatch",
+	},
+	QUALITY_INSPECTOR_ROLE: MOBILE_CONTEXT_DOCTYPES
+	| {
+		"Inspection",
+		"Field Corrective Action",
+		"Seed Harvest Quality Assessment",
+	},
+}
+MOBILE_ROLE_WRITE = {
+	OUTGROWER_SUPERVISOR_ROLE: {
+		"Agronomy Report",
+		"Field Corrective Action",
+		"Stage Activity",
+		"Stage Input Request",
+	},
+	QUALITY_INSPECTOR_ROLE: {
+		"Inspection",
+		"Field Corrective Action",
+		"Seed Harvest Quality Assessment",
+	},
+}
+MOBILE_ROLE_CREATE = {
+	OUTGROWER_SUPERVISOR_ROLE: {"Stage Input Request"},
+	QUALITY_INSPECTOR_ROLE: {"Seed Harvest Quality Assessment"},
+}
+MOBILE_SERVER_OWNED_FIELDS = {
+	"Inspection": {
+		"status",
+		"assigned_to",
+		"qa_review_status",
+		"qa_reviewed_by",
+		"qa_reviewed_on",
+		"qa_review_notes",
+		"reinspection_of",
+		"reinspection_reason",
+		"sampling_protocol_version",
+		"results",
+		"completed_take_count",
+		"farmer_compliance_percent",
+		"farmer_compliance_status",
+		"supervisor_compliance_percent",
+		"supervisor_compliance_status",
+		"field_certification_status",
+		"controls_completed",
+		"cumulative_total_plants",
+	},
+	"Agronomy Report": {
+		"status",
+		"report_template",
+		"report_number",
+		"crop_cycle",
+		"stage",
+		"stage_name",
+		"production_contract",
+		"plot",
+		"outgrower",
+		"crop",
+		"variety",
+		"season",
+		"production_category",
+		"assigned_supervisor",
+		"window_start_date",
+		"window_end_date",
+		"overall_result",
+		"pass_percentage",
+		"evaluated_parameter_count",
+		"passed_parameter_count",
+		"failed_parameter_count",
+		"critical_failure_count",
+		"evaluated_at",
+		"template_version",
+		"overall_pass_threshold_percent",
+		"critical_failure_override",
+		"summary",
+		"corrective_action_required",
+		"corrective_action",
+		"corrective_action_due_date",
+		"submitted_by",
+		"submitted_at",
+	},
+	"Seed Harvest Quality Assessment": {"assessment_status", "verified_by"},
+	"Field Corrective Action": {"verified_by", "verified_on", "closed_on"},
+}
 
 DOCTYPE_TO_STORE = {v: k for k, v in BASE_STORE_TO_DOCTYPE.items()}
 
@@ -68,9 +223,12 @@ ID_FIELD_MAP = {
 	"Outgrower": "outgrower_id",
 	"Farm Plot": "plot_id",
 	"Crop Cycle": "crop_cycle_id",
+	"Crop Production Lot": "name",
+	"Seed Harvest Quality Assessment": "name",
 	"Crop Cycle Stage": "stage_id",
+	"Agronomy Report": "name",
 	"Field Visit": "visit_id",
-	"Finding": "finding_id",
+	"Inspection": "inspection_id",
 	"Plot Crop Assignment": "assignment_id",
 	"Stage Activity": "activity_id",
 	"Stage Input Request": "request_id",
@@ -91,7 +249,15 @@ MOBILE_FIELD_MAP = {
 		"assignedTo": "assigned_to",
 		"assignedSupervisor": "assigned_supervisor",
 		"bankAccount": "bank_account",
+		"defaultBankAccount": "default_bank_account",
+		"nationalId": "national_id",
+		"village": "village",
+		"subCounty": "sub_county",
+		"district": "district",
+		"eligibilityStatus": "eligibility_status",
+		"consecutiveLowPuritySeasons": "consecutive_low_purity_seasons",
 		"outgrowerType": "outgrower_type",
+		"supplierId": "supplier",
 	},
 	"Farm Plot": {
 		"plotId": "plot_id",
@@ -116,20 +282,146 @@ MOBILE_FIELD_MAP = {
 	"Season": {
 		"seasonId": "season_id",
 		"seasonName": "season_name",
+		"seasonStatus": "season_status",
+		"startDate": "start_date",
+		"endDate": "end_date",
 	},
 	"Crop Cycle": {
 		"cropCycleId": "crop_cycle_id",
+		"productionContractId": "production_contract",
 		"plotId": "plot",
 		"cropId": "crop",
 		"varietyId": "variety",
 		"seasonId": "season",
 		"startDate": "start_date",
+		"plantingDate": "planting_date",
+		"productionCategory": "production_category",
+		"samplingProtocolVersion": "sampling_protocol_version",
 		"expectedHarvestDate": "expected_harvest_date",
 		"currentStageId": "current_stage",
 		"nextInspectionDate": "next_inspection_date",
+		"companyId": "company",
+		"supplierId": "supplier",
+		"pricingPolicyId": "pricing_policy",
+		"contractedAreaAcres": "contracted_area_acres",
+		"contractedQuotaQty": "contracted_quota_qty",
+		"harvestItemId": "harvest_item",
+		"harvestUom": "harvest_uom",
+		"expectedYieldQty": "expected_yield_qty",
+		"contractRate": "contract_rate",
+		"expectedHarvestValue": "expected_harvest_value",
+		"maxExposurePercent": "max_exposure_percent",
+		"purchaseOrderId": "purchase_order",
+		"recoverableStockValue": "recoverable_stock_value",
+		"cashAdvanced": "cash_advanced",
+		"pendingCashAdvance": "pending_cash_advance",
+		"totalExposure": "total_exposure",
+		"availableAdvanceCapacity": "available_advance_capacity",
+		"actualHarvestValue": "actual_harvest_value",
+		"forecastNetPayable": "forecast_net_payable",
+	},
+	"Outgrower Production Contract": {
+		"productionContractId": "name",
+		"contractTemplateId": "contract_template",
+		"contractTemplateVersion": "template_version",
+		"pricingPolicyId": "pricing_policy",
+		"pricingPolicyVersion": "pricing_policy_version",
+		"outgrowerId": "outgrower",
+		"supplierId": "supplier",
+		"companyId": "company",
+		"plotId": "farm_plot",
+		"cropCycleId": "linked_crop_cycle",
+		"seasonId": "season",
+		"cropId": "crop",
+		"varietyId": "variety",
+		"productionCategory": "production_category",
+		"cropRecipeId": "crop_recipe",
+		"contractStartDate": "contract_start_date",
+		"contractEndDate": "contract_end_date",
+		"plantingStartDate": "planting_start_date",
+		"plantingEndDate": "planting_end_date",
+		"expectedHarvestDate": "expected_harvest_date",
+		"harvestItemId": "harvest_item",
+		"harvestUom": "harvest_uom",
+		"expectedYieldQty": "expected_yield_qty",
+		"pricingMethod": "pricing_method",
+		"contractRate": "contract_rate",
+		"currency": "currency",
+		"expectedHarvestValue": "expected_harvest_value",
+		"maxExposurePercent": "max_exposure_percent",
+		"defaultRecoveryPolicy": "default_recovery_policy",
+		"minimumFarmerCompliancePercent": "minimum_farmer_compliance_percent",
+		"minimumSupervisorCompliancePercent": "minimum_supervisor_compliance_percent",
+		"requiredIsolationQuality": "required_isolation_quality",
+		"targetTakeSpacingM": "target_take_spacing_m",
+		"contractedAreaAcres": "contracted_area_acres",
+		"quotaKgPerAcre": "quota_kg_per_acre",
+		"contractedQuotaQty": "contracted_quota_qty",
+		"parentSeedItemId": "parent_seed_item",
+		"parentSeedQty": "planned_parent_seed_qty",
+		"parentSeedUom": "parent_seed_uom",
+		"agreementDate": "agreement_date",
+		"isSigned": "is_signed",
+		"signedOn": "signed_on",
+		"erpnextContractId": "erpnext_contract",
+	},
+	"Crop Production Lot": {
+		"lotId": "name",
+		"lotNumber": "lot_number",
+		"status": "status",
+		"cropCycleId": "crop_cycle",
+		"productionContractId": "production_contract",
+		"plotId": "plot",
+		"outgrowerId": "outgrower",
+		"seasonId": "season",
+		"cropId": "crop",
+		"varietyId": "variety",
+		"plantingStartDate": "planting_start_date",
+		"plantingEndDate": "planting_end_date",
+		"areaAcres": "area_acres",
+		"acceptedAreaAcres": "accepted_area_acres",
+		"rejectedAreaAcres": "rejected_area_acres",
+		"parentSeedItemId": "parent_seed_item",
+		"parentSeedBatchId": "parent_seed_batch",
+		"harvestBatchId": "harvest_batch",
+		"deliveredQty": "delivered_qty",
+	},
+	"Seed Harvest Quality Assessment": {
+		"assessmentId": "name",
+		"assessmentStatus": "assessment_status",
+		"cropCycleId": "crop_cycle",
+		"productionContractId": "production_contract",
+		"productionLotId": "production_lot",
+		"outgrowerId": "outgrower",
+		"seasonId": "season",
+		"pricingPolicyId": "pricing_policy",
+		"purchaseReceiptId": "purchase_receipt",
+		"purchaseReceiptItemId": "purchase_receipt_item",
+		"qualityInspectionId": "quality_inspection",
+		"itemCode": "item_code",
+		"batchNo": "batch_no",
+		"deliveryDate": "delivery_date",
+		"grossQty": "gross_qty",
+		"uom": "uom",
+		"moisturePercent": "moisture_percent",
+		"netDryQty": "net_dry_qty",
+		"germinationPercent": "germination_percent",
+		"geneticPurityPercent": "genetic_purity_percent",
+		"vigorPercent": "vigor_percent",
+		"undersizePercent": "undersize_percent",
+		"rejectPercent": "reject_percent",
+		"disposition": "disposition",
+		"eligibleAreaAcres": "eligible_area_acres",
+		"provisionalYieldKgPerAcre": "provisional_yield_kg_per_acre",
+		"provisionalPricingBand": "provisional_pricing_band",
+		"provisionalPriceBasis": "provisional_price_basis",
+		"provisionalPayableValue": "provisional_payable_value",
+		"potentialBonusAmount": "potential_bonus_amount",
+		"bonusStatus": "bonus_status",
 	},
 	"Crop Cycle Stage": {
 		"stageId": "stage_id",
+		"stageCode": "stage_code",
 		"cropId": "crop",
 		"stageName": "stage_name",
 		"orderIndex": "order_index",
@@ -151,19 +443,259 @@ MOBILE_FIELD_MAP = {
 		"gpsLng": "gps_lng",
 		"scheduledDate": "scheduled_date",
 	},
-	"Finding": {
-		"findingId": "finding_id",
-		"visitId": "visit",
+	"Inspection": {
+		"inspectionId": "inspection_id",
+		"inspectionTemplateId": "inspection_template",
+		"inspectionType": "inspection_type",
+		"cropCycleId": "crop_cycle",
+		"productionContractId": "production_contract",
+		"plotId": "plot",
+		"outgrowerId": "outgrower",
+		"cropId": "crop",
+		"seasonId": "season",
+		"productionCategory": "production_category",
+		"scheduledDate": "scheduled_date",
+		"startedAt": "started_at",
+		"completedAt": "completed_at",
+		"assignedTo": "assigned_to",
+		"requiredTakeCount": "required_take_count",
+		"completedTakeCount": "completed_take_count",
+		"cumulativeTotalPlants": "cumulative_total_plants",
+		"controlsCompleted": "controls_completed",
+		"farmerCompliancePercent": "farmer_compliance_percent",
+		"farmerComplianceStatus": "farmer_compliance_status",
+		"supervisorCompliancePercent": "supervisor_compliance_percent",
+		"supervisorComplianceStatus": "supervisor_compliance_status",
+		"fieldCertificationStatus": "field_certification_status",
+		"targetTakeSpacingM": "target_take_spacing_m",
+		"minimumTakeSpacingStandardM": "minimum_take_spacing_standard_m",
+		"maximumTakeSpacingStandardM": "maximum_take_spacing_standard_m",
+		"averageTakeSpacingM": "average_take_spacing_m",
+		"medianTakeSpacingM": "median_take_spacing_m",
+		"minimumObservedTakeSpacingM": "minimum_observed_take_spacing_m",
+		"maximumObservedTakeSpacingM": "maximum_observed_take_spacing_m",
+		"spacingPairCount": "spacing_pair_count",
+		"spacingCompliantCount": "spacing_compliant_count",
+		"spacingCompliancePercent": "spacing_compliance_percent",
+		"averageGpsAccuracyM": "average_gps_accuracy_m",
+		"worstGpsAccuracyM": "worst_gps_accuracy_m",
+		"lowAccuracyTakeCount": "low_accuracy_take_count",
+		"positioningOverrideCount": "positioning_override_count",
+		"totalTakePathDistanceM": "total_take_path_distance_m",
+		"takesOutsidePlot": "takes_outside_plot",
+		"inspectionQualityScore": "inspection_quality_score",
+		"inspectionMapGeojson": "inspection_map_geojson",
+	},
+	"Inspection Take": {
+		"takeNumber": "take_number",
+		"totalPlantsCounted": "total_plants_counted",
+		"gpsAccuracyMeters": "gps_accuracy_meters",
+		"gpsQualityStatus": "gps_quality_status",
+		"locationSampleCount": "location_sample_count",
+		"locationCaptureDurationSeconds": "location_capture_duration_seconds",
+		"locationSource": "location_source",
+		"capturedAt": "captured_at",
+		"capturedBy": "captured_by",
+		"attributeCount": "attribute_count",
+		"takeStatus": "take_status",
+		"insidePlotBoundary": "inside_plot_boundary",
+		"distanceFromPreviousTakeM": "distance_from_previous_take_m",
+		"spacingStatus": "spacing_status",
+		"positioningOverride": "positioning_override",
+		"positioningOverrideReason": "positioning_override_reason",
+		"positioningOverrideBy": "positioning_override_by",
+	},
+	"Inspection Take Result": {
+		"takeNumber": "take_number",
+		"observedCount": "observed_count",
+		"measuredValue": "measured_value",
+		"textValue": "text_value",
+		"resultStatus": "result_status",
+		"correctiveActionRequired": "corrective_action_required",
+	},
+	"Inspection Result": {
+		"aggregationMethod": "aggregation_method",
+		"observationCount": "observation_count",
+		"passedCount": "passed_count",
+		"failedCount": "failed_count",
+		"passPercent": "pass_percent",
+		"cumulativeObservedCount": "cumulative_observed_count",
+		"cumulativeTotalPlants": "cumulative_total_plants",
+		"incidencePercent": "incidence_percent",
+		"measuredValue": "measured_value",
+		"textValue": "text_value",
+		"resultStatus": "result_status",
+		"correctiveActionRequired": "corrective_action_required",
+		"dueDate": "due_date",
+	},
+	"Inspection Observation": {
+		"measuredValue": "measured_value",
+		"textValue": "text_value",
+		"resultStatus": "result_status",
+		"correctiveActionRequired": "corrective_action_required",
+		"capturedBy": "captured_by",
+		"capturedAt": "captured_at",
+	},
+	"Inspection Template": {
+		"templateName": "template_name",
+		"inspectionType": "inspection_type",
+		"cropStage": "crop_stage",
+		"dueDaysFromPlanting": "due_days_from_planting",
+		"dueWindowEndDays": "due_window_end_days",
+		"countsPerHectare": "counts_per_hectare",
+		"defaultAssignedTo": "default_assigned_to",
+	},
+	"Inspection Parameter": {
+		"parameterName": "parameter_name",
+		"parameterCode": "parameter_code",
+		"parameterGroup": "parameter_group",
+		"dataType": "data_type",
+		"options": "options",
+		"appliesTo": "applies_to",
+		"measurementScope": "measurement_scope",
+		"calculationMethod": "calculation_method",
+		"denominatorBasis": "denominator_basis",
+		"requiresTakeCounts": "requires_take_counts",
+	},
+	"Inspection Standard": {
+		"inspectionTemplateId": "inspection_template",
+		"productionCategory": "production_category",
+		"comparisonRule": "comparison_rule",
+		"aggregationMethod": "aggregation_method",
+		"minimumValue": "minimum_value",
+		"maximumValue": "maximum_value",
+		"expectedText": "expected_text",
+		"goodLabel": "good_label",
+		"poorLabel": "poor_label",
+		"autoRejectOnFail": "auto_reject_on_fail",
+		"correctiveActionOnFail": "corrective_action_on_fail",
+		"standardNotes": "standard_notes",
+	},
+	"Agronomy Activity Template": {
+		"activityName": "activity_name",
+		"cropRecipeId": "crop_recipe",
+		"stageName": "stage_name",
+		"dayOffsetFromPlanting": "day_offset_from_planting",
+		"dayOffsetEnd": "day_offset_end",
+		"responsibleParty": "responsible_party",
+		"inspectionRelated": "inspection_related",
+		"evidenceRequired": "evidence_required",
+	},
+	"Agronomy Report Template": {
+		"reportName": "report_name",
+		"reportNumber": "report_number",
+		"stageName": "stage_name",
+		"windowStartDay": "window_start_day",
+		"windowEndDay": "window_end_day",
+		"templateVersion": "template_version",
+		"overallPassThresholdPercent": "overall_pass_threshold_percent",
+		"criticalFailureOverride": "critical_failure_override",
+	},
+	"Agronomy Report Parameter": {
+		"parameterCode": "parameter_code",
+		"parameterLabel": "parameter_label",
+		"sectionName": "section_name",
+		"dataType": "data_type",
+		"evaluationMode": "evaluation_mode",
+		"comparisonRule": "comparison_rule",
+		"minimumValue": "minimum_value",
+		"maximumValue": "maximum_value",
+		"expectedValue": "expected_value",
+		"severity": "severity",
+		"weight": "weight",
+		"allowNotApplicable": "allow_not_applicable",
+		"responsibleParty": "responsible_party",
+		"correctiveActionOnFail": "corrective_action_on_fail",
+		"failureAction": "failure_action",
+		"correctiveActionDueDays": "corrective_action_due_days",
+	},
+	"Agronomy Report": {
+		"reportTemplateId": "report_template",
+		"reportNumber": "report_number",
 		"cropCycleId": "crop_cycle",
 		"stageId": "stage",
+		"stageName": "stage_name",
+		"productionContractId": "production_contract",
+		"plotId": "plot",
+		"outgrowerId": "outgrower",
+		"assignedSupervisor": "assigned_supervisor",
+		"windowStartDate": "window_start_date",
+		"windowEndDate": "window_end_date",
+		"reportDate": "report_date",
+		"calendarWeek": "calendar_week",
+		"plantingWeek": "planting_week",
+		"gpsAccuracyMeters": "gps_accuracy_meters",
+		"locationCapturedAt": "location_captured_at",
+		"insidePlotBoundary": "inside_plot_boundary",
+		"overallResult": "overall_result",
+		"passPercentage": "pass_percentage",
+		"evaluatedParameterCount": "evaluated_parameter_count",
+		"passedParameterCount": "passed_parameter_count",
+		"failedParameterCount": "failed_parameter_count",
+		"criticalFailureCount": "critical_failure_count",
+		"evaluatedAt": "evaluated_at",
+		"templateVersion": "template_version",
+		"overallPassThresholdPercent": "overall_pass_threshold_percent",
+		"criticalFailureOverride": "critical_failure_override",
+		"fieldNotes": "field_notes",
+		"correctiveActionRequired": "corrective_action_required",
+		"correctiveAction": "corrective_action",
+		"correctiveActionDueDate": "corrective_action_due_date",
+		"submittedBy": "submitted_by",
+		"submittedAt": "submitted_at",
+	},
+	"Agronomy Report Result": {
+		"parameterCode": "parameter_code",
+		"parameterLabel": "parameter_label",
+		"sectionName": "section_name",
+		"dataType": "data_type",
+		"responsibleParty": "responsible_party",
+		"numericValue": "numeric_value",
+		"valueCaptured": "value_captured",
+		"textValue": "text_value",
+		"dateValue": "date_value",
+		"options": "options",
+		"templateVersion": "template_version",
+		"evaluationMode": "evaluation_mode",
+		"comparisonRule": "comparison_rule",
+		"minimumValue": "minimum_value",
+		"maximumValue": "maximum_value",
+		"expectedValue": "expected_value",
+		"severity": "severity",
+		"weight": "weight",
+		"allowNotApplicable": "allow_not_applicable",
+		"correctiveActionOnFail": "corrective_action_on_fail",
+		"failureAction": "failure_action",
+		"correctiveActionDueDays": "corrective_action_due_days",
+		"resultStatus": "result_status",
+		"evaluationMessage": "evaluation_message",
+	},
+	"Field Corrective Action": {
+		"sourceType": "source_type",
+		"sourceName": "source_name",
+		"sourceParameter": "source_parameter",
+		"agronomyReportId": "agronomy_report",
+		"cropCycleId": "crop_cycle",
+		"plotId": "plot",
+		"outgrowerId": "outgrower",
+		"responsibleParty": "responsible_party",
+		"assignedTo": "assigned_to",
+		"dueDate": "due_date",
+		"resolutionNotes": "resolution_notes",
+		"closedOn": "closed_on",
 	},
 	"Stage Activity": {
 		"activityId": "activity_id",
 		"cropCycleId": "crop_cycle",
 		"stageId": "stage",
 		"visitId": "visit",
+		"assignedTo": "assigned_to",
 		"activityDate": "activity_date",
+		"dueDate": "due_date",
 		"durationHours": "duration_hours",
+		"activityTemplateId": "activity_template",
+		"completionNotes": "completion_notes",
+		"completedOn": "completed_on",
 	},
 	"Stage Input Request": {
 		"requestId": "request_id",
@@ -172,6 +704,36 @@ MOBILE_FIELD_MAP = {
 		"inputType": "input_type",
 		"quantity": "quantity",
 		"requestedDate": "requested_date",
+		"requestDate": "request_date",
+		"requiredBy": "required_by",
+		"outgrowerId": "outgrower",
+		"supplierId": "supplier",
+		"sourceWarehouseId": "source_warehouse",
+		"materialRequestId": "material_request",
+		"totalRequestedValue": "total_requested_value",
+		"totalApprovedValue": "total_approved_value",
+	},
+	"Stage Input Request Item": {
+		"recipeInputItemId": "recipe_input_item",
+		"itemCode": "item_code",
+		"itemName": "item_name",
+		"requestedQty": "requested_qty",
+		"approvedQty": "approved_qty",
+		"conversionFactor": "conversion_factor",
+		"stockUom": "stock_uom",
+		"requestedStockQty": "requested_stock_qty",
+		"approvedStockQty": "approved_stock_qty",
+		"issuedQty": "issued_qty",
+		"issuedStockQty": "issued_stock_qty",
+		"remainingQty": "remaining_qty",
+		"remainingStockQty": "remaining_stock_qty",
+		"sourceWarehouseId": "source_warehouse",
+		"estimatedRate": "estimated_rate",
+		"estimatedAmount": "estimated_amount",
+		"recoveryPolicy": "recovery_policy",
+		"recoverablePercent": "recoverable_percent",
+		"recoveryRateBasis": "recovery_rate_basis",
+		"contractRecoveryRate": "contract_recovery_rate",
 	},
 	"Stage Input Dispatch": {
 		"dispatchId": "dispatch_id",
@@ -181,6 +743,51 @@ MOBILE_FIELD_MAP = {
 		"quantity": "quantity",
 		"dispatchDate": "dispatch_date",
 		"requestId": "request_id",
+		"inputRequestId": "input_request",
+		"inputRequestItemId": "input_request_item",
+		"stockEntryId": "stock_entry",
+		"stockEntryDetailId": "stock_entry_detail",
+		"itemCode": "item_code",
+		"quantityDispatched": "quantity_dispatched",
+		"receivedBy": "received_by",
+		"receivedByName": "received_by_name",
+		"receivedAt": "received_at",
+		"gpsAccuracyMeters": "gps_accuracy_meters",
+		"gpsQualityStatus": "gps_quality_status",
+		"deliveryPhoto": "delivery_photo",
+		"receiverSignature": "receiver_signature",
+	},
+	"Crop Cycle Advance Request": {
+		"cropCycleId": "crop_cycle",
+		"outgrowerId": "outgrower",
+		"supplierId": "supplier",
+		"companyId": "company",
+		"purchaseOrderId": "purchase_order",
+		"requestDate": "request_date",
+		"requestedAmount": "requested_amount",
+		"approvedAmount": "approved_amount",
+		"paidAmount": "paid_amount",
+		"paymentDate": "payment_date",
+		"paymentEntryId": "payment_entry",
+		"exposureLimit": "exposure_limit",
+		"currentExposure": "current_exposure",
+		"availableCapacity": "available_capacity",
+	},
+	"Crop Cycle Settlement": {
+		"cropCycleId": "crop_cycle",
+		"outgrowerId": "outgrower",
+		"supplierId": "supplier",
+		"purchaseOrderId": "purchase_order",
+		"purchaseInvoiceId": "purchase_invoice",
+		"postingDate": "posting_date",
+		"grossHarvestValue": "gross_harvest_value",
+		"stockRecoveryDue": "stock_recovery_due",
+		"stockRecoveryToDeduct": "stock_recovery_to_deduct",
+		"cashAdvanceAvailable": "cash_advance_available",
+		"cashAdvanceToAllocate": "cash_advance_to_allocate",
+		"invoiceTotal": "invoice_total",
+		"netPayable": "net_payable",
+		"unrecoveredBalance": "unrecovered_balance",
 	},
 	"Crop Recipe": {
 		"recipeId": "recipe_id",
@@ -204,8 +811,8 @@ MOBILE_FIELD_MAP = {
 	"Region": {
 		"name": "region_name",
 	},
-	"Unit": {
-		"unitName": "unit_name",
+	"UOM": {
+		"unitName": "uom_name",
 	},
 	"Inspection Attribute": {
 		"attributeName": "attribute_name",
@@ -328,6 +935,52 @@ def _map_mobile_to_doc(doctype, payload):
 				stage_doc["inputs"] = inputs
 				result["stages"].append(stage_doc)
 			continue
+		if key == "takes" and doctype == "Inspection":
+			result["takes"] = []
+			nested_readings = []
+			for index, row in enumerate(value or [], start=1):
+				take = _map_mobile_child_to_doc("Inspection Take", row)
+				take_number = take.get("take_number") or index
+				take["take_number"] = take_number
+				result["takes"].append(take)
+				for reading in row.get("readings") or row.get("attributes") or row.get("results") or []:
+					mapped = _map_mobile_child_to_doc("Inspection Take Result", reading)
+					mapped["take_number"] = mapped.get("take_number") or take_number
+					nested_readings.append(mapped)
+			if nested_readings:
+				result.setdefault("take_results", []).extend(nested_readings)
+			continue
+		if key in ("takeResults", "take_results") and doctype == "Inspection":
+			result.setdefault("take_results", []).extend(
+				[_map_mobile_child_to_doc("Inspection Take Result", row) for row in value or []]
+			)
+			continue
+		if key in ("inspectionObservations", "inspection_observations") and doctype == "Inspection":
+			result["inspection_observations"] = [
+				_map_mobile_child_to_doc("Inspection Observation", row) for row in value or []
+			]
+			continue
+		if key == "results" and doctype == "Inspection":
+			# Inspection Results are server-generated aggregates. Legacy result
+			# payloads are accepted only when they identify their Inspection Take.
+			for row in value or []:
+				if row.get("takeNumber") or row.get("take_number"):
+					result.setdefault("take_results", []).append(
+						_map_mobile_child_to_doc("Inspection Take Result", row)
+					)
+			continue
+		if key == "items" and doctype == "Stage Input Request":
+			result["items"] = [
+				_map_mobile_child_to_doc("Stage Input Request Item", row)
+				for row in value or []
+			]
+			continue
+		if key == "results" and doctype == "Agronomy Report":
+			result["results"] = [
+				_map_mobile_child_to_doc("Agronomy Report Result", row)
+				for row in value or []
+			]
+			continue
 
 		fieldname = mapping.get(key, key)
 		result[fieldname] = value
@@ -353,6 +1006,16 @@ def _map_mobile_to_doc(doctype, payload):
 		result["visit_status"] = "Submitted" if result.get("status") == "completed" else "Draft"
 
 	result = _resolve_employee_fields(doctype, payload, result)
+	return _filter_fields(doctype, result)
+
+
+def _map_mobile_child_to_doc(doctype, payload):
+	mapping = MOBILE_FIELD_MAP.get(doctype, {})
+	result = {}
+	for key, value in (payload or {}).items():
+		if key in ("doctype", "name", "owner", "creation", "modified", "modified_by", "docstatus"):
+			continue
+		result[mapping.get(key, key)] = value
 	return _filter_fields(doctype, result)
 
 
@@ -405,6 +1068,38 @@ def _map_doc_to_mobile(doctype, doc_dict):
 				stages.append(stage)
 			result["stages"] = stages
 			continue
+		if key == "takes" and doctype == "Inspection":
+			result["takes"] = [_map_doc_to_mobile("Inspection Take", row) for row in value or []]
+			continue
+		if key == "take_results" and doctype == "Inspection":
+			result["takeResults"] = [
+				_map_doc_to_mobile("Inspection Take Result", row) for row in value or []
+			]
+			continue
+		if key == "inspection_observations" and doctype == "Inspection":
+			result["inspectionObservations"] = [
+				_map_doc_to_mobile("Inspection Observation", row) for row in value or []
+			]
+			continue
+		if key == "results" and doctype == "Inspection":
+			result["results"] = [_map_doc_to_mobile("Inspection Result", row) for row in value or []]
+			continue
+		if key == "items" and doctype == "Stage Input Request":
+			result["items"] = [
+				_map_doc_to_mobile("Stage Input Request Item", row)
+				for row in value or []
+			]
+			continue
+		if key == "results" and doctype == "Agronomy Report":
+			result["results"] = [
+				_map_doc_to_mobile("Agronomy Report Result", row) for row in value or []
+			]
+			continue
+		if key == "parameters" and doctype == "Agronomy Report Template":
+			result["parameters"] = [
+				_map_doc_to_mobile("Agronomy Report Parameter", row) for row in value or []
+			]
+			continue
 
 		result[reverse.get(key, key)] = value
 
@@ -415,6 +1110,12 @@ def _map_doc_to_mobile(doctype, doc_dict):
 			result[mobile_id_field] = doc_dict.get(ID_FIELD_MAP[doctype])
 	if doctype == "Outgrower":
 		_enrich_outgrower_aliases(result)
+	if doctype == "Inspection":
+		readings_by_take = {}
+		for reading in result.get("takeResults", []):
+			readings_by_take.setdefault(reading.get("takeNumber"), []).append(reading)
+		for take in result.get("takes", []):
+			take["readings"] = readings_by_take.get(take.get("takeNumber"), [])
 	return result
 
 
@@ -425,14 +1126,227 @@ def _reverse_id_field_name(doctype):
 	return None
 
 
-def _resolve_doctype(store_or_doctype):
+def _resolve_doctype(store_or_doctype, strict=False):
 	if store_or_doctype in STORE_TO_DOCTYPE:
 		return STORE_TO_DOCTYPE.get(store_or_doctype)
+	if store_or_doctype in set(STORE_TO_DOCTYPE.values()):
+		return store_or_doctype
 	if isinstance(store_or_doctype, str):
 		key = store_or_doctype.lower()
 		if key in STORE_TO_DOCTYPE:
 			return STORE_TO_DOCTYPE.get(key)
+	if strict:
+		frappe.throw(_("Unsupported mobile data type: {0}").format(store_or_doctype))
 	return store_or_doctype
+
+
+def _mobile_roles(user=None):
+	user = user or frappe.session.user
+	return set(frappe.get_roles(user))
+
+
+def _mobile_has_management_access(roles=None):
+	roles = roles or _mobile_roles()
+	return bool(
+		{"System Manager", OUTGROWER_MANAGER_ROLE, QUALITY_MANAGER_ROLE}.intersection(roles)
+	) or frappe.session.user == "Administrator"
+
+
+def _mobile_allowed_doctypes(mode="read"):
+	roles = _mobile_roles()
+	if _mobile_has_management_access(roles):
+		return set(STORE_TO_DOCTYPE.values())
+	allowed = set(MOBILE_REFERENCE_DOCTYPES) if mode == "read" else set()
+	role_map = MOBILE_ROLE_READ if mode == "read" else MOBILE_ROLE_WRITE
+	for role, doctypes in role_map.items():
+		if role in roles:
+			allowed.update(doctypes)
+	return allowed
+
+
+def _require_mobile_doctype(doctype, mode="read"):
+	if doctype not in _mobile_allowed_doctypes(mode):
+		frappe.throw(
+			_("You are not permitted to {0} {1} from the mobile client.").format(
+				mode, doctype
+			),
+			frappe.PermissionError,
+		)
+
+
+def _mobile_scope_names(doctype, user=None):
+	user = user or frappe.session.user
+	roles = _mobile_roles(user)
+	if _mobile_has_management_access(roles) or doctype in MOBILE_REFERENCE_DOCTYPES:
+		return None
+
+	supervisor = OUTGROWER_SUPERVISOR_ROLE in roles
+	inspector = QUALITY_INSPECTOR_ROLE in roles
+	outgrowers = set()
+	cycles = set()
+
+	if supervisor:
+		outgrowers.update(
+			frappe.get_all(
+				"Outgrower", filters={"assigned_supervisor": user}, pluck="name"
+			)
+		)
+	if inspector:
+		inspections = frappe.get_all(
+			"Inspection",
+			filters={"assigned_to": user},
+			fields=["name", "outgrower", "crop_cycle"],
+		)
+		outgrowers.update(row.outgrower for row in inspections if row.outgrower)
+		cycles.update(row.crop_cycle for row in inspections if row.crop_cycle)
+
+	plots = set(
+		frappe.get_all(
+			"Farm Plot",
+			filters={"outgrower": ["in", list(outgrowers)]},
+			pluck="name",
+		)
+	) if outgrowers else set()
+	cycles.update(
+		frappe.get_all(
+			"Crop Cycle", filters={"plot": ["in", list(plots)]}, pluck="name"
+		)
+		if plots
+		else []
+	)
+
+	if doctype == "Outgrower":
+		return outgrowers
+	if doctype == "Farm Plot":
+		return plots
+	if doctype in ("Crop Cycle", "Outgrower Production Contract"):
+		if doctype == "Crop Cycle":
+			return cycles
+		return set(
+			frappe.get_all(
+				doctype, filters={"linked_crop_cycle": ["in", list(cycles)]}, pluck="name"
+			)
+		) if cycles else set()
+	if doctype == "Inspection":
+		return set(
+			frappe.get_all(
+				doctype, filters={"assigned_to": user}, pluck="name"
+			)
+		)
+	if doctype == "Agronomy Report":
+		return set(
+			frappe.get_all(
+				doctype, filters={"assigned_supervisor": user}, pluck="name"
+			)
+		)
+	if doctype == "Stage Activity":
+		return set(frappe.get_all(doctype, filters={"assigned_to": user}, pluck="name"))
+	if doctype == "Field Corrective Action":
+		filters = (
+			[["verification_assigned_to", "=", user]]
+			if inspector and not supervisor
+			else [["assigned_to", "=", user]]
+		)
+		return set(frappe.get_all(doctype, filters=filters, pluck="name"))
+	if doctype in ("Stage Input Request", "Stage Input Dispatch", "Crop Production Lot"):
+		return set(
+			frappe.get_all(
+				doctype, filters={"crop_cycle": ["in", list(cycles)]}, pluck="name"
+			)
+		) if cycles else set()
+	if doctype == "Seed Harvest Quality Assessment":
+		return set(frappe.get_all(doctype, filters={"inspected_by": user}, pluck="name"))
+	if doctype == "Plot Crop Assignment":
+		return set(
+			frappe.get_all(
+				doctype, filters={"crop_cycle": ["in", list(cycles)]}, pluck="name"
+			)
+		) if cycles else set()
+	return set()
+
+
+def _mobile_record_is_in_scope(doctype, name=None, values=None):
+	names = _mobile_scope_names(doctype)
+	if names is None:
+		return True
+	if name and name in names:
+		return True
+	values = values or {}
+	user = frappe.session.user
+	if doctype == "Stage Input Request":
+		return values.get("crop_cycle") in (_mobile_scope_names("Crop Cycle") or set())
+	if doctype == "Seed Harvest Quality Assessment":
+		return values.get("inspected_by") in (None, "", user) and values.get(
+			"crop_cycle"
+		) in (_mobile_scope_names("Crop Cycle") or set())
+	return False
+
+
+def _authorize_mobile_write(doctype, operation, name=None, values=None):
+	_require_mobile_doctype(doctype, "write")
+	if operation == "DELETE":
+		frappe.throw(_("Mobile clients cannot delete FieldOps records."), frappe.PermissionError)
+	roles = _mobile_roles()
+	if operation == "CREATE" and not _mobile_has_management_access(roles):
+		allowed = set()
+		for role, doctypes in MOBILE_ROLE_CREATE.items():
+			if role in roles:
+				allowed.update(doctypes)
+		if doctype not in allowed:
+			frappe.throw(
+				_("Mobile users cannot create {0}; use the assigned schedule.").format(doctype),
+				frappe.PermissionError,
+			)
+	if not _mobile_record_is_in_scope(doctype, name, values):
+		frappe.throw(
+			_("This {0} is outside your FieldOps assignment.").format(doctype),
+			frappe.PermissionError,
+		)
+
+
+def _strip_server_owned_mobile_fields(doctype, values):
+	values = dict(values or {})
+	for fieldname in MOBILE_SERVER_OWNED_FIELDS.get(doctype, set()):
+		values.pop(fieldname, None)
+	if doctype == "Inspection":
+		for take in values.get("takes") or []:
+			take["captured_by"] = frappe.session.user
+			if take.get("positioning_override"):
+				take["positioning_override_by"] = frappe.session.user
+		for observation in values.get("inspection_observations") or []:
+			observation["captured_by"] = frappe.session.user
+			observation["captured_at"] = frappe.utils.now_datetime()
+	if doctype == "Agronomy Report" and "results" in values:
+		raw_fields = {
+			"parameter_code", "value_captured", "numeric_value", "text_value", "date_value", "remarks"
+		}
+		raw_results = []
+		for row in values.get("results") or []:
+			filtered = {key: value for key, value in row.items() if key in raw_fields}
+			if "value_captured" not in filtered:
+				filtered["value_captured"] = int(
+					any(
+						fieldname in row and row.get(fieldname) not in (None, "")
+						for fieldname in ("numeric_value", "text_value", "date_value")
+					)
+				)
+			raw_results.append(filtered)
+		values["results"] = raw_results
+	if doctype == "Seed Harvest Quality Assessment":
+		values["inspected_by"] = frappe.session.user
+	return values
+
+
+def _normalize_uom_doc_data(data):
+	data = dict(data or {})
+	uom_name = normalize_uom(data.get("uom_name") or data.get("unitName") or data.get("name"))
+	data["doctype"] = "UOM"
+	data["uom_name"] = uom_name
+	if data.get("name"):
+		data["name"] = uom_name
+	data.pop("unit_name", None)
+	data.pop("unitName", None)
+	return data
 
 
 _meta_cache = {}
@@ -722,20 +1636,25 @@ def bulk_sync(data):
 					results.extend(out.get("results", []))
 					continue
 
-				doctype = record.get("doctype")
+				doctype = _resolve_doctype(record.get("doctype"), strict=True)
 				operation = (record.get("operation") or "").upper()
 				doc_data = record.get("doc") or {}
 				if doctype == "Outgrower":
 					doc_data = _normalize_outgrower_payload(doc_data)
+				if doctype == "UOM":
+					doc_data = _normalize_uom_doc_data(doc_data)
+				doc_data = _strip_server_owned_mobile_fields(doctype, doc_data)
+				doc_name = doc_data.get("name")
+				_authorize_mobile_write(doctype, operation, doc_name, doc_data)
 
 				result = {"doctype": doctype, "operation": operation, "status": "success"}
 
 				if operation == "CREATE":
+					doc_data["doctype"] = doctype
 					doc = frappe.get_doc(doc_data)
 					doc.insert(ignore_permissions=True)
 					result["name"] = doc.name
 				elif operation == "UPDATE":
-					doc_name = doc_data.get("name")
 					if doc_name and frappe.db.exists(doctype, doc_name):
 						doc = frappe.get_doc(doctype, doc_name)
 						doc.update(doc_data)
@@ -746,7 +1665,6 @@ def bulk_sync(data):
 						doc.insert(ignore_permissions=True)
 						result["name"] = doc.name
 				elif operation == "DELETE":
-					doc_name = doc_data.get("name")
 					if doc_name and frappe.db.exists(doctype, doc_name):
 						frappe.delete_doc(doctype, doc_name, ignore_permissions=True)
 						result["name"] = doc_name
@@ -797,7 +1715,8 @@ def get_modified_records(last_sync_timestamp=None, doctypes=None, doctype=None, 
 		# Default synced doctypes
 		default_doctypes = [
 			"Outgrower", "Farm Plot", "Crop Cycle", "Crop Cycle Stage",
-			"Field Visit", "Finding", "Plot Crop Assignment", "Stage Activity",
+			"Field Visit", "Inspection", "Agronomy Report", "Field Corrective Action",
+			"Plot Crop Assignment", "Stage Activity",
 			"Stage Input Request", "Stage Input Dispatch",
 			"Attendance", "Leave Application", "Employee Advance", "Expense Claim"
 		]
@@ -809,11 +1728,18 @@ def get_modified_records(last_sync_timestamp=None, doctypes=None, doctype=None, 
 			target_doctypes = json.loads(doctypes) if isinstance(doctypes, str) else doctypes
 		else:
 			target_doctypes = default_doctypes
+		target_doctypes = [
+			item
+			for item in target_doctypes
+			if _resolve_doctype(item, strict=True) in _mobile_allowed_doctypes("read")
+		]
 
 		modified_records = {}
 
-		for doctype in target_doctypes:
+		for requested_doctype in target_doctypes:
 			try:
+				doctype = _resolve_doctype(requested_doctype, strict=True)
+				_require_mobile_doctype(doctype, "read")
 				filters = []
 				if doctype == "Attendance":
 					filters = _build_attendance_filters(args, last_sync)
@@ -827,6 +1753,12 @@ def get_modified_records(last_sync_timestamp=None, doctypes=None, doctype=None, 
 						continue
 				elif last_sync:
 					filters = [["modified", ">", last_sync]]
+				scope_names = _mobile_scope_names(doctype)
+				if scope_names is not None:
+					if not scope_names:
+						modified_records[doctype] = []
+						continue
+					filters.append(["name", "in", list(scope_names)])
 
 				# Get modified records
 				records = frappe.get_all(
@@ -888,17 +1820,37 @@ def get_reference_data():
 			"Crop Recipe": ["*"],
 			"Visit Type": ["*"],
 			"Region": ["*"],
-			"Unit": ["*"],
+			"UOM": ["*"],
 			"Inspection Attribute": ["*"],
+			"Inspection Parameter": ["*"],
+			"Inspection Template": ["*"],
+			"Inspection Standard": ["*"],
+			"Agronomy Activity Template": ["*"],
+			"Agronomy Report Template": ["*"],
 			"Crop Cycle Stage": ["*"]
 		}
 
 		for doctype, fields in reference_doctypes.items():
 			try:
+				_require_mobile_doctype(doctype, "read")
 				records = frappe.get_all(doctype, fields=fields)
-				reference_data[doctype] = records
+				response_key = "Unit" if doctype == "UOM" else doctype
+				if doctype == "UOM":
+					records = [
+						{
+							**record,
+							"unit_name": record.get("uom_name"),
+							"unitName": record.get("uom_name"),
+						}
+						for record in records
+					]
+				reference_data[response_key] = records
 			except Exception as e:
 				frappe.log_error(f"Error fetching reference {doctype}: {str(e)}")
+
+		positioning_settings = _get_mobile_positioning_settings()
+		reference_data["FieldOps Settings"] = positioning_settings
+		reference_data["positioningSettings"] = positioning_settings
 
 		return {
 			"success": True,
@@ -918,6 +1870,35 @@ def get_reference_data():
 
 
 @frappe.whitelist()
+def get_inspection_positioning_settings():
+	"""Return the server-owned QA positioning standard for mobile clients."""
+	return {
+		"success": True,
+		"data": _get_mobile_positioning_settings(),
+	}
+
+
+def _get_mobile_positioning_settings():
+	from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.inspection.inspection import (
+		get_positioning_settings,
+	)
+
+	settings = get_positioning_settings()
+	return {
+		"targetTakeSpacingM": settings.target_take_spacing_m,
+		"minimumTakeSpacingM": settings.minimum_take_spacing_m,
+		"maximumTakeSpacingM": settings.maximum_take_spacing_m,
+		"minimumSpacingCompliancePercent": settings.minimum_spacing_compliance_percent,
+		"preferredGpsAccuracyM": settings.preferred_gps_accuracy_m,
+		"maximumGpsAccuracyM": settings.maximum_gps_accuracy_m,
+		"minimumLocationSamples": settings.minimum_location_samples,
+		"locationCaptureTimeoutSeconds": settings.location_capture_timeout_seconds,
+		"maximumLocationAgeSeconds": settings.maximum_location_age_seconds,
+		"allowPositioningOverride": settings.allow_positioning_override,
+	}
+
+
+@frappe.whitelist()
 def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 	"""
 	Get all synced data since last_sync. Returns data grouped by store name.
@@ -929,23 +1910,27 @@ def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 		else:
 			last_sync_dt = None
 
-		# Main synced doctypes
+		# Main synced doctypes are filtered again by role and assignment below.
 		sync_doctypes = [
 			"Outgrower",
 			"Farm Plot",
 			"Crop Cycle",
 			"Crop Cycle Stage",
 			"Field Visit",
-			"Finding",
+			"Inspection",
+			"Agronomy Report",
+			"Field Corrective Action",
 			"Plot Crop Assignment",
 			"Stage Activity",
 			"Stage Input Request",
 			"Stage Input Dispatch",
-			"Attendance",
-			"Employee Checkin",
-			"Expense Claim",
-			"Leave Application",
-			"Employee Advance",
+			"Crop Production Lot",
+			"Seed Harvest Quality Assessment",
+		]
+		sync_doctypes = [
+			doctype
+			for doctype in sync_doctypes
+			if doctype in _mobile_allowed_doctypes("read")
 		]
 
 		# Reference doctypes (always include)
@@ -956,8 +1941,13 @@ def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 			"Crop Recipe",
 			"Visit Type",
 			"Region",
-			"Unit",
+			"UOM",
 			"Inspection Attribute",
+			"Inspection Parameter",
+			"Inspection Template",
+			"Inspection Standard",
+			"Agronomy Activity Template",
+			"Agronomy Report Template",
 			"Crop Cycle Stage",
 		]
 
@@ -987,6 +1977,12 @@ def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 					continue
 			elif last_sync_dt:
 				filters.append(["modified", ">", last_sync_dt])
+			scope_names = _mobile_scope_names(doctype)
+			if scope_names is not None:
+				if not scope_names:
+					data[DOCTYPE_TO_STORE.get(doctype, doctype)] = []
+					continue
+				filters.append(["name", "in", list(scope_names)])
 
 			if officer_region and doctype == "Outgrower":
 				filters.append(["region", "=", officer_region])
@@ -1008,6 +2004,7 @@ def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 		# Always include reference data
 		for doctype in reference_doctypes:
 			try:
+				_require_mobile_doctype(doctype, "read")
 				records = frappe.get_all(doctype, fields=["name"], order_by="modified asc")
 				full_docs = [
 					_map_doc_to_mobile(doctype, frappe.get_doc(doctype, row.name).as_dict())
@@ -1042,28 +2039,36 @@ def push_sync_data(data):
 		for record in records or []:
 			try:
 				store = record.get("storeName") or record.get("store_name") or record.get("doctype")
-				doctype = _resolve_doctype(store)
+				doctype = _resolve_doctype(store, strict=True)
 				payload = record.get("payload") or record.get("doc") or {}
 				if doctype == "Outgrower":
 					payload = _normalize_outgrower_payload(payload)
 				operation = (record.get("operation") or "SYNC").upper()
 				record_id = record.get("recordId") or payload.get("id") or payload.get("name")
 				force = record.get("force") or payload.get("force")
-
-				if operation == "DELETE":
-					if record_id and frappe.db.exists(doctype, record_id):
-						frappe.delete_doc(doctype, record_id, ignore_permissions=True)
-					log_sync(frappe.session.user, doctype, record_id, "DELETE", "Success")
-					results.append({"status": "deleted", "doctype": doctype, "name": record_id})
-					continue
+				if doctype == "UOM":
+					record_id = normalize_uom(record_id or payload.get("unitName") or payload.get("uom_name"))
 
 				mapped = _map_mobile_to_doc(doctype, payload)
+				mapped = _strip_server_owned_mobile_fields(doctype, mapped)
+				if doctype == "UOM":
+					mapped["uom_name"] = normalize_uom(mapped.get("uom_name") or record_id)
 				if record_id:
 					mapped["name"] = record_id
 				elif ID_FIELD_MAP.get(doctype) and mapped.get(ID_FIELD_MAP[doctype]):
 					mapped["name"] = mapped[ID_FIELD_MAP[doctype]]
 
 				mapped["doctype"] = doctype
+				effective_operation = (
+					"UPDATE"
+					if mapped.get("name") and frappe.db.exists(doctype, mapped["name"])
+					else "CREATE"
+				)
+				if operation == "DELETE":
+					effective_operation = "DELETE"
+				_authorize_mobile_write(
+					doctype, effective_operation, mapped.get("name"), mapped
+				)
 				if mapped.get("name") and frappe.db.exists(doctype, mapped["name"]):
 					doc = frappe.get_doc(doctype, mapped["name"])
 

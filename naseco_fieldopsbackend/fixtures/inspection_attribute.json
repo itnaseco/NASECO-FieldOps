@@ -5,7 +5,7 @@
   "description": null,
   "doctype": "Inspection Attribute",
   "name": "Soil Moisture",
-  "unit": "%"
+  "unit": "Percent"
  },
  {
   "attribute_name": "Crop Health Score",
@@ -21,7 +21,7 @@
   "description": null,
   "doctype": "Inspection Attribute",
   "name": "Expected Yield",
-  "unit": "kg"
+  "unit": "Kg"
  },
  {
   "attribute_name": "Flowering Stage",
@@ -69,7 +69,7 @@
   "description": null,
   "doctype": "Inspection Attribute",
   "name": "Plant Population",
-  "unit": "pieces"
+  "unit": "Nos"
  },
  {
   "attribute_name": "Plant Height",
@@ -77,6 +77,6 @@
   "description": null,
   "doctype": "Inspection Attribute",
   "name": "Plant Height",
-  "unit": "cm"
+  "unit": "Centimeter"
  }
 ]

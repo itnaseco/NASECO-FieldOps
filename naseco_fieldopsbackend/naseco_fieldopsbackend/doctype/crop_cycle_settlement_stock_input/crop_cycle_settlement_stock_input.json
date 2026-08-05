@@ -1,0 +1,96 @@
+{
+ "actions": [],
+ "creation": "2026-07-26 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "stock_entry",
+  "stock_entry_detail",
+  "posting_date",
+  "item_code",
+  "qty",
+  "uom",
+  "recovery_policy",
+  "recoverable_percent",
+  "recovery_rate",
+  "recoverable_amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "stock_entry",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Stock Entry",
+   "options": "Stock Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stock_entry_detail",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Stock Entry Detail",
+   "read_only": 1
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Issue Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Input Item",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Issued Quantity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recovery_policy",
+   "fieldtype": "Data",
+   "label": "Recovery Policy",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recoverable_percent",
+   "fieldtype": "Percent",
+   "label": "Recoverable %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recovery_rate",
+   "fieldtype": "Currency",
+   "label": "Recovery Rate",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recoverable_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Recoverable Amount",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "modified": "2026-07-26 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Crop Cycle Settlement Stock Input",
+ "owner": "Administrator",
+ "permissions": []
+}

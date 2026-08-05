@@ -1,0 +1,417 @@
+{
+ "actions": [],
+ "autoname": "format:AGR-{YYYY}-{#####}",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "report_template",
+  "report_number",
+  "crop_cycle",
+  "stage",
+  "stage_name",
+  "status",
+  "context_section",
+  "production_contract",
+  "plot",
+  "outgrower",
+  "crop",
+  "variety",
+  "season",
+  "production_category",
+  "assigned_supervisor",
+  "schedule_section",
+  "window_start_date",
+  "window_end_date",
+  "report_date",
+  "calendar_week",
+  "planting_week",
+  "location_section",
+  "location",
+  "latitude",
+  "longitude",
+  "gps_accuracy_meters",
+  "location_captured_at",
+  "inside_plot_boundary",
+  "observations_section",
+  "results",
+  "summary_section",
+  "overall_result",
+  "pass_percentage",
+  "evaluated_parameter_count",
+  "passed_parameter_count",
+  "failed_parameter_count",
+  "critical_failure_count",
+  "evaluated_at",
+  "template_version",
+  "overall_pass_threshold_percent",
+  "critical_failure_override",
+  "field_notes",
+  "summary",
+  "corrective_action_required",
+  "corrective_action",
+  "corrective_action_due_date",
+  "submitted_by",
+  "submitted_at",
+  "synced"
+ ],
+ "fields": [
+  {
+   "fieldname": "report_template",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Agronomy Report Template",
+   "options": "Agronomy Report Template",
+   "reqd": 1
+  },
+  {
+   "fieldname": "report_number",
+   "fieldtype": "Int",
+   "label": "Report Number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "crop_cycle",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Crop Cycle",
+   "options": "Crop Cycle",
+   "reqd": 1
+  },
+  {
+   "fieldname": "stage",
+   "fieldtype": "Link",
+   "label": "Crop Cycle Stage",
+   "options": "Crop Cycle Stage",
+   "reqd": 1
+  },
+  {
+   "fieldname": "stage_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Stage",
+   "read_only": 1
+  },
+  {
+   "default": "Scheduled",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Scheduled\nIn Progress\nSubmitted\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "context_section",
+   "fieldtype": "Section Break",
+   "label": "Production Context"
+  },
+  {
+   "fieldname": "production_contract",
+   "fieldtype": "Link",
+   "label": "Production Contract",
+   "options": "Outgrower Production Contract",
+   "read_only": 1
+  },
+  {
+   "fieldname": "plot",
+   "fieldtype": "Link",
+   "label": "Farm Plot",
+   "options": "Farm Plot",
+   "read_only": 1
+  },
+  {
+   "fieldname": "outgrower",
+   "fieldtype": "Link",
+   "label": "Outgrower",
+   "options": "Outgrower",
+   "read_only": 1
+  },
+  {
+   "fieldname": "crop",
+   "fieldtype": "Link",
+   "label": "Crop",
+   "options": "Crop",
+   "read_only": 1
+  },
+  {
+   "fieldname": "variety",
+   "fieldtype": "Link",
+   "label": "Variety",
+   "options": "Crop Variety",
+   "read_only": 1
+  },
+  {
+   "fieldname": "season",
+   "fieldtype": "Link",
+   "label": "Season",
+   "options": "Season",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_category",
+   "fieldtype": "Select",
+   "label": "Production Category",
+   "options": "Basic\nCertified",
+   "read_only": 1
+  },
+  {
+   "fieldname": "assigned_supervisor",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Outgrower Supervisor",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "schedule_section",
+   "fieldtype": "Section Break",
+   "label": "Reporting Window"
+  },
+  {
+   "fieldname": "window_start_date",
+   "fieldtype": "Date",
+   "label": "Window Start",
+   "read_only": 1
+  },
+  {
+   "fieldname": "window_end_date",
+   "fieldtype": "Date",
+   "label": "Window End",
+   "read_only": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "report_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Report Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "calendar_week",
+   "fieldtype": "Int",
+   "label": "Calendar Week",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planting_week",
+   "fieldtype": "Int",
+   "label": "Planting Week",
+   "read_only": 1
+  },
+  {
+   "fieldname": "location_section",
+   "fieldtype": "Section Break",
+   "label": "Report Location"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Geolocation",
+   "label": "Location Map"
+  },
+  {
+   "fieldname": "latitude",
+   "fieldtype": "Float",
+   "label": "Latitude",
+   "precision": "8",
+   "reqd": 1
+  },
+  {
+   "fieldname": "longitude",
+   "fieldtype": "Float",
+   "label": "Longitude",
+   "precision": "8",
+   "reqd": 1
+  },
+  {
+   "fieldname": "gps_accuracy_meters",
+   "fieldtype": "Float",
+   "label": "GPS Accuracy (m)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "location_captured_at",
+   "fieldtype": "Datetime",
+   "label": "Location Captured At"
+  },
+  {
+   "fieldname": "inside_plot_boundary",
+   "fieldtype": "Check",
+   "label": "Inside Plot Boundary",
+   "read_only": 1
+  },
+  {
+   "fieldname": "observations_section",
+   "fieldtype": "Section Break",
+   "label": "Agronomy Observations"
+  },
+  {
+   "fieldname": "results",
+   "fieldtype": "Table",
+   "label": "Report Results",
+   "options": "Agronomy Report Result",
+   "reqd": 1
+  },
+  {
+   "fieldname": "summary_section",
+   "fieldtype": "Section Break",
+   "label": "Summary and Follow-up"
+  },
+  {
+   "default": "Not Evaluated",
+   "fieldname": "overall_result",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Overall Result",
+   "options": "Not Evaluated\nPass\nFail",
+   "read_only": 1
+  },
+  {
+   "fieldname": "pass_percentage",
+   "fieldtype": "Percent",
+   "label": "Pass Percentage",
+   "read_only": 1
+  },
+  {
+   "fieldname": "evaluated_parameter_count",
+   "fieldtype": "Int",
+   "label": "Evaluated Parameters",
+   "read_only": 1
+  },
+  {
+   "fieldname": "passed_parameter_count",
+   "fieldtype": "Int",
+   "label": "Passed Parameters",
+   "read_only": 1
+  },
+  {
+   "fieldname": "failed_parameter_count",
+   "fieldtype": "Int",
+   "label": "Failed Parameters",
+   "read_only": 1
+  },
+  {
+   "fieldname": "critical_failure_count",
+   "fieldtype": "Int",
+   "label": "Critical Failures",
+   "read_only": 1
+  },
+  {
+   "fieldname": "evaluated_at",
+   "fieldtype": "Datetime",
+   "label": "Evaluated At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "template_version",
+   "fieldtype": "Int",
+   "label": "Template Version",
+   "read_only": 1
+  },
+  {
+   "fieldname": "overall_pass_threshold_percent",
+   "fieldtype": "Percent",
+   "label": "Pass Threshold",
+   "read_only": 1
+  },
+  {
+   "fieldname": "critical_failure_override",
+   "fieldtype": "Check",
+   "label": "Critical Failure Overrides Score",
+   "read_only": 1
+  },
+  {
+   "fieldname": "field_notes",
+   "fieldtype": "Small Text",
+   "label": "Field Notes"
+  },
+  {
+   "fieldname": "summary",
+   "fieldtype": "Text Editor",
+   "label": "Comprehensive Summary",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "corrective_action_required",
+   "fieldtype": "Check",
+   "label": "Corrective Action Required",
+   "read_only": 1
+  },
+  {
+   "depends_on": "corrective_action_required",
+   "fieldname": "corrective_action",
+   "fieldtype": "Text",
+   "label": "Corrective Action",
+   "read_only": 1
+  },
+  {
+   "depends_on": "corrective_action_required",
+   "fieldname": "corrective_action_due_date",
+   "fieldtype": "Date",
+   "label": "Corrective Action Due Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "submitted_by",
+   "fieldtype": "Link",
+   "label": "Submitted By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "submitted_at",
+   "fieldtype": "Datetime",
+   "label": "Submitted At",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "synced",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Synced"
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "module": "Naseco FieldOpsBackend",
+ "name": "Agronomy Report",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "print": 1,
+   "read": 1,
+   "role": "Outgrower Supervisor",
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "window_start_date",
+ "sort_order": "ASC",
+ "track_changes": 1
+}

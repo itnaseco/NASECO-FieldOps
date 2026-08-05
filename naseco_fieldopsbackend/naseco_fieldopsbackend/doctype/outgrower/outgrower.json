@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:outgrower_id",
+ "autoname": "H.-.####",
  "creation": "2026-01-29 17:30:58.443218",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -9,16 +9,26 @@
  "field_order": [
   "outgrower_id",
   "full_name",
+  "identity_section",
+  "national_id",
   "phone",
   "email",
+  "village",
+  "sub_county",
+  "district",
+  "address",
   "registration_date",
   "years_since_registration",
   "farmer_status",
+  "eligibility_status",
+  "consecutive_low_purity_seasons",
   "region",
   "assigned_to",
   "status",
-  "address",
   "assigned_supervisor",
+  "finance_section",
+  "supplier",
+  "default_bank_account",
   "bank_account",
   "outgrower_type",
   "synced",
@@ -29,10 +39,8 @@
   {
    "fieldname": "outgrower_id",
    "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Outgrower ID",
-   "reqd": 1,
-   "unique": 1
+   "hidden": 1,
+   "label": "Outgrower ID"
   },
   {
    "fieldname": "full_name",
@@ -40,6 +48,18 @@
    "in_list_view": 1,
    "label": "Full Name",
    "reqd": 1
+  },
+  {
+   "fieldname": "identity_section",
+   "fieldtype": "Section Break",
+   "label": "Identity and Contact Details"
+  },
+  {
+   "fieldname": "national_id",
+   "fieldtype": "Data",
+   "label": "National Identification Number",
+   "set_only_once": 1,
+   "unique": 1
   },
   {
    "fieldname": "phone",
@@ -53,6 +73,26 @@
    "options": "Email"
   },
   {
+   "fieldname": "village",
+   "fieldtype": "Data",
+   "label": "Village"
+  },
+  {
+   "fieldname": "sub_county",
+   "fieldtype": "Data",
+   "label": "Subcounty"
+  },
+  {
+   "fieldname": "district",
+   "fieldtype": "Data",
+   "label": "District"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Postal or Physical Address"
+  },
+  {
    "fieldname": "registration_date",
    "fieldtype": "Date",
    "label": "Registration Date",
@@ -62,14 +102,30 @@
    "fieldname": "years_since_registration",
    "fieldtype": "Float",
    "label": "Years Since Registration",
-   "read_only": 1,
-   "precision": 1
+   "precision": "1",
+   "read_only": 1
   },
   {
    "fieldname": "farmer_status",
    "fieldtype": "Select",
    "label": "Farmer Status",
    "options": "Beginner\nIntermediate\nExperienced\nExpert",
+   "read_only": 1
+  },
+  {
+   "default": "Eligible",
+   "fieldname": "eligibility_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Production Eligibility",
+   "options": "Eligible\nUnder Review\nIneligible",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "consecutive_low_purity_seasons",
+   "fieldtype": "Int",
+   "label": "Consecutive Low-Purity Seasons",
    "read_only": 1
   },
   {
@@ -92,20 +148,40 @@
    "options": "Active\nInactive\nSuspended\nBlacklisted"
   },
   {
-   "fieldname": "address",
-   "fieldtype": "Small Text",
-   "label": "Address"
-  },
-  {
+   "description": "Only enabled System Users with the Outgrower Supervisor role can be selected.",
    "fieldname": "assigned_supervisor",
    "fieldtype": "Link",
    "label": "Assigned Supervisor",
    "options": "User"
   },
   {
+   "fieldname": "finance_section",
+   "fieldtype": "Section Break",
+   "label": "Supplier and Payment Details"
+  },
+  {
+   "description": "Supplier used for harvest procurement and crop-cycle advance settlement.",
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier",
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "description": "ERPNext Bank Account used for supplier payments.",
+   "fieldname": "default_bank_account",
+   "fieldtype": "Link",
+   "label": "Bank Account",
+   "options": "Bank Account"
+  },
+  {
+   "depends_on": "eval:doc.bank_account",
    "fieldname": "bank_account",
    "fieldtype": "Data",
-   "label": "Bank Account"
+   "hidden": 1,
+   "label": "Legacy Bank Account Number",
+   "read_only": 1
   },
   {
    "fieldname": "outgrower_type",
@@ -114,10 +190,10 @@
    "options": "Individual\nGroup\nCooperative\nCompany"
   },
   {
+   "default": "0",
    "fieldname": "synced",
    "fieldtype": "Check",
-   "label": "Synced",
-   "default": "0"
+   "label": "Synced"
   },
   {
    "fieldname": "section_break_farm_plots",
@@ -133,10 +209,11 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-01-29 17:30:58.443218",
+ "modified": "2026-08-04 11:11:10.962968",
  "modified_by": "Administrator",
  "module": "Naseco FieldOpsBackend",
  "name": "Outgrower",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -148,6 +225,17 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager",
    "share": 1,
    "write": 1
   }

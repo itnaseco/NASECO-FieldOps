@@ -1,0 +1,104 @@
+.season-command-centre {
+	padding: 8px 0 28px;
+	color: var(--text-color);
+}
+
+.cc-heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 18px;
+}
+
+.cc-heading h2 {
+	font-size: 22px;
+	margin: 0 0 3px;
+	letter-spacing: 0;
+}
+
+.cc-metrics {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+	border-top: 1px solid var(--border-color);
+	border-left: 1px solid var(--border-color);
+	margin-bottom: 22px;
+}
+
+.cc-metric {
+	min-height: 92px;
+	padding: 14px;
+	border-right: 1px solid var(--border-color);
+	border-bottom: 1px solid var(--border-color);
+	background: var(--fg-color);
+}
+
+.cc-label,
+.cc-target {
+	color: var(--text-muted);
+	font-size: 12px;
+}
+
+.cc-value {
+	font-size: 21px;
+	font-weight: 600;
+	margin-top: 7px;
+	letter-spacing: 0;
+}
+
+.cc-currency {
+	font-size: 18px;
+}
+
+.cc-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 18px;
+}
+
+.cc-panel {
+	min-width: 0;
+	border: 1px solid var(--border-color);
+	border-radius: 6px;
+	background: var(--fg-color);
+	overflow: hidden;
+}
+
+.cc-panel h3 {
+	font-size: 14px;
+	font-weight: 600;
+	margin: 0;
+	padding: 12px 14px;
+	border-bottom: 1px solid var(--border-color);
+	letter-spacing: 0;
+}
+
+.cc-panel .table {
+	margin: 0;
+}
+
+.cc-panel td,
+.cc-panel th {
+	white-space: nowrap;
+	font-size: 12px;
+}
+
+.cc-report-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	padding: 14px;
+}
+
+.cc-empty {
+	border: 1px dashed var(--border-color);
+	padding: 28px;
+	text-align: center;
+	color: var(--text-muted);
+}
+
+@media (max-width: 900px) {
+	.cc-grid {
+		grid-template-columns: 1fr;
+	}
+}

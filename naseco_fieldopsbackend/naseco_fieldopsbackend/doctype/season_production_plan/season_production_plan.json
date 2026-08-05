@@ -1,0 +1,530 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "format:SPP-{season}-{#####}",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "plan_title",
+  "season",
+  "company",
+  "plan_version",
+  "status",
+  "calendar_status",
+  "governance_section",
+  "outgrower_manager",
+  "quality_manager",
+  "finance_approver",
+  "stores_responsible",
+  "cost_center",
+  "project",
+  "budget",
+  "maximum_exposure_percent",
+  "targets_section",
+  "production_targets",
+  "baseline_section",
+  "target_outgrowers",
+  "target_plots",
+  "target_acres",
+  "planned_production_qty",
+  "planned_procurement_value",
+  "parent_seed_required_qty",
+  "planned_input_cost",
+  "input_section",
+  "input_requirements",
+  "stock_coverage_percent",
+  "resource_section",
+  "resource_allocations",
+  "planned_supervisors",
+  "planned_inspectors",
+  "milestone_section",
+  "milestones",
+  "readiness_section",
+  "readiness_items",
+  "readiness_score",
+  "mandatory_readiness_complete",
+  "actuals_section",
+  "contracted_outgrowers",
+  "contracted_plots",
+  "contracted_acres",
+  "planted_acres",
+  "forecast_production_qty",
+  "delivered_net_dry_qty",
+  "verified_inspection_count",
+  "total_inspection_count",
+  "qa_coverage_percent",
+  "recoverable_input_value",
+  "cash_advance_value",
+  "current_exposure_value",
+  "assessed_harvest_value",
+  "settled_net_payable",
+  "deferred_bonus_liability",
+  "variance_section",
+  "acreage_achievement_percent",
+  "production_achievement_percent",
+  "forecast_variance_qty",
+  "notes",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "plan_title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Plan Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "season",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Season",
+   "options": "Season",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "plan_version",
+   "fieldtype": "Data",
+   "label": "Plan Version",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Operational Status",
+   "options": "Draft\nUnder Review\nAwaiting Approval\nApproved\nActive\nClosing\nClosed\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "season.season_status",
+   "fieldname": "calendar_status",
+   "fieldtype": "Data",
+   "label": "Calendar Status",
+   "read_only": 1
+  },
+  {
+   "fieldname": "governance_section",
+   "fieldtype": "Section Break",
+   "label": "Governance and Financial Control"
+  },
+  {
+   "fieldname": "outgrower_manager",
+   "fieldtype": "Link",
+   "label": "Outgrower Manager",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quality_manager",
+   "fieldtype": "Link",
+   "label": "Quality Manager",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "finance_approver",
+   "fieldtype": "Link",
+   "label": "Finance Approver",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "stores_responsible",
+   "fieldtype": "Link",
+   "label": "Stores Responsible",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "fieldname": "budget",
+   "fieldtype": "Link",
+   "label": "Budget",
+   "options": "Budget"
+  },
+  {
+   "default": "70",
+   "fieldname": "maximum_exposure_percent",
+   "fieldtype": "Percent",
+   "label": "Maximum Exposure %",
+   "reqd": 1
+  },
+  {
+   "fieldname": "targets_section",
+   "fieldtype": "Section Break",
+   "label": "Production Targets"
+  },
+  {
+   "fieldname": "production_targets",
+   "fieldtype": "Table",
+   "label": "Targets by Region, Crop, Variety and Category",
+   "options": "Season Production Target",
+   "reqd": 1
+  },
+  {
+   "fieldname": "baseline_section",
+   "fieldtype": "Section Break",
+   "label": "Approved Baseline"
+  },
+  {
+   "fieldname": "target_outgrowers",
+   "fieldtype": "Int",
+   "label": "Target Outgrowers",
+   "read_only": 1
+  },
+  {
+   "fieldname": "target_plots",
+   "fieldtype": "Int",
+   "label": "Target Plots",
+   "read_only": 1
+  },
+  {
+   "fieldname": "target_acres",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Target Acres",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planned_production_qty",
+   "fieldtype": "Float",
+   "label": "Planned Production (Kg)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planned_procurement_value",
+   "fieldtype": "Currency",
+   "label": "Planned Procurement Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "parent_seed_required_qty",
+   "fieldtype": "Float",
+   "label": "Parent Seed Required Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planned_input_cost",
+   "fieldtype": "Currency",
+   "label": "Planned Input Cost",
+   "read_only": 1
+  },
+  {
+   "fieldname": "input_section",
+   "fieldtype": "Section Break",
+   "label": "Season Input Requirements"
+  },
+  {
+   "fieldname": "input_requirements",
+   "fieldtype": "Table",
+   "label": "Aggregated Item Requirements",
+   "options": "Season Input Requirement"
+  },
+  {
+   "fieldname": "stock_coverage_percent",
+   "fieldtype": "Percent",
+   "label": "Overall Stock Coverage %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "resource_section",
+   "fieldtype": "Section Break",
+   "label": "Mobile Workforce Allocation"
+  },
+  {
+   "fieldname": "resource_allocations",
+   "fieldtype": "Table",
+   "label": "Supervisor and Inspector Allocations",
+   "options": "Season Resource Allocation"
+  },
+  {
+   "fieldname": "planned_supervisors",
+   "fieldtype": "Int",
+   "label": "Allocated Supervisors",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planned_inspectors",
+   "fieldtype": "Int",
+   "label": "Allocated Quality Inspectors",
+   "read_only": 1
+  },
+  {
+   "fieldname": "milestone_section",
+   "fieldtype": "Section Break",
+   "label": "Season Milestones"
+  },
+  {
+   "fieldname": "milestones",
+   "fieldtype": "Table",
+   "label": "Milestones",
+   "options": "Season Milestone"
+  },
+  {
+   "fieldname": "readiness_section",
+   "fieldtype": "Section Break",
+   "label": "Readiness and Approval Evidence"
+  },
+  {
+   "fieldname": "readiness_items",
+   "fieldtype": "Table",
+   "label": "Readiness Checklist",
+   "options": "Season Readiness Item"
+  },
+  {
+   "fieldname": "readiness_score",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Readiness Score",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mandatory_readiness_complete",
+   "fieldtype": "Check",
+   "label": "Mandatory Readiness Complete",
+   "read_only": 1
+  },
+  {
+   "fieldname": "actuals_section",
+   "fieldtype": "Section Break",
+   "label": "System-Derived Forecast and Actuals"
+  },
+  {
+   "fieldname": "contracted_outgrowers",
+   "fieldtype": "Int",
+   "label": "Contracted Outgrowers",
+   "read_only": 1
+  },
+  {
+   "fieldname": "contracted_plots",
+   "fieldtype": "Int",
+   "label": "Contracted Plots",
+   "read_only": 1
+  },
+  {
+   "fieldname": "contracted_acres",
+   "fieldtype": "Float",
+   "label": "Contracted Acres",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planted_acres",
+   "fieldtype": "Float",
+   "label": "Planted Acres",
+   "read_only": 1
+  },
+  {
+   "fieldname": "forecast_production_qty",
+   "fieldtype": "Float",
+   "label": "Current Forecast Production (Kg)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "delivered_net_dry_qty",
+   "fieldtype": "Float",
+   "label": "Delivered Net Dry Qty (Kg)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "verified_inspection_count",
+   "fieldtype": "Int",
+   "label": "Verified Inspections",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_inspection_count",
+   "fieldtype": "Int",
+   "label": "Total Inspections",
+   "read_only": 1
+  },
+  {
+   "fieldname": "qa_coverage_percent",
+   "fieldtype": "Percent",
+   "label": "QA Coverage %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recoverable_input_value",
+   "fieldtype": "Currency",
+   "label": "Recoverable Input Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cash_advance_value",
+   "fieldtype": "Currency",
+   "label": "Cash Advances",
+   "read_only": 1
+  },
+  {
+   "fieldname": "current_exposure_value",
+   "fieldtype": "Currency",
+   "label": "Current Exposure",
+   "read_only": 1
+  },
+  {
+   "fieldname": "assessed_harvest_value",
+   "fieldtype": "Currency",
+   "label": "Assessed Harvest Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "settled_net_payable",
+   "fieldtype": "Currency",
+   "label": "Settled Net Payable",
+   "read_only": 1
+  },
+  {
+   "fieldname": "deferred_bonus_liability",
+   "fieldtype": "Currency",
+   "label": "Potential Deferred Bonus",
+   "read_only": 1
+  },
+  {
+   "fieldname": "variance_section",
+   "fieldtype": "Section Break",
+   "label": "Plan Variance"
+  },
+  {
+   "fieldname": "acreage_achievement_percent",
+   "fieldtype": "Percent",
+   "label": "Contracted Acreage Achievement %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_achievement_percent",
+   "fieldtype": "Percent",
+   "label": "Delivered Production Achievement %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "forecast_variance_qty",
+   "fieldtype": "Float",
+   "label": "Forecast Variance (Kg)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text",
+   "label": "Management Notes"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Season Production Plan",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [
+  {
+   "link_doctype": "Outgrower Production Contract",
+   "link_fieldname": "season"
+  },
+  {
+   "link_doctype": "Crop Cycle",
+   "link_fieldname": "season"
+  },
+  {
+   "link_doctype": "Inspection",
+   "link_fieldname": "season"
+  }
+ ],
+ "module": "Naseco FieldOpsBackend",
+ "name": "Season Production Plan",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager"
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "FieldOps Finance Approver"
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "FieldOps Stores User"
+  },
+  {
+   "cancel": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "FieldOps Operations Approver",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "plan_title",
+ "track_changes": 1
+}

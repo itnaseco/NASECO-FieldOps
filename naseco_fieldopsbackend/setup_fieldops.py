@@ -28,7 +28,7 @@ def create_doctypes():
             "fields": [
                 {"fieldname": "attribute", "label": "Attribute", "fieldtype": "Data", "reqd": 1, "in_list_view": 1},
                 {"fieldname": "value", "label": "Value", "fieldtype": "Data", "reqd": 1, "in_list_view": 1},
-                {"fieldname": "unit", "label": "Unit", "fieldtype": "Data", "in_list_view": 1},
+                {"fieldname": "unit", "label": "Unit", "fieldtype": "Link", "options": "UOM", "in_list_view": 1},
                 {"fieldname": "remarks", "label": "Remarks", "fieldtype": "Data"}
             ]
         }
@@ -60,8 +60,17 @@ def create_doctypes():
             "custom": 0,
             "fields": [
                 {"fieldname": "season_name", "label": "Season Name", "fieldtype": "Data", "reqd": 1},
-                {"fieldname": "start_date", "label": "Start Date", "fieldtype": "Date"},
-                {"fieldname": "end_date", "label": "End Date", "fieldtype": "Date"}
+                {"fieldname": "season_id", "label": "Season ID", "fieldtype": "Data", "unique": 1},
+                {
+                    "fieldname": "season_status",
+                    "label": "Status",
+                    "fieldtype": "Select",
+                    "options": "Not Started\nOngoing\nEnded",
+                    "default": "Not Started",
+                    "read_only": 1,
+                },
+                {"fieldname": "start_date", "label": "Start Date", "fieldtype": "Date", "reqd": 1},
+                {"fieldname": "end_date", "label": "End Date", "fieldtype": "Date", "reqd": 1}
             ]
         },
         {
@@ -82,14 +91,6 @@ def create_doctypes():
             "custom": 0,
             "fields": [{"fieldname": "type_name", "label": "Type Name", "fieldtype": "Data", "reqd": 1}]
         },
-        {
-            "doctype": "DocType",
-            "name": "Unit",
-            "module": "Naseco FieldOpsBackend",
-            "custom": 0,
-            "fields": [{"fieldname": "unit_name", "label": "Unit Name", "fieldtype": "Data", "reqd": 1}]
-        },
-        
         # Core Entities
         {
             "doctype": "DocType",
@@ -139,7 +140,7 @@ def create_doctypes():
             "autoname": "field:crop_cycle_id",
             "fields": [
                 {"fieldname": "crop_cycle_id", "label": "Cycle ID", "fieldtype": "Data", "reqd": 1, "unique": 1},
-                {"fieldname": "plot", "label": "Plot", "fieldtype": "Link", "options": "Farm Plot", "reqd": 1},
+                {"fieldname": "plot", "label": "Plot", "fieldtype": "Link", "options": "Farm Plot", "reqd": 1, "unique": 1},
                 {"fieldname": "crop", "label": "Crop", "fieldtype": "Link", "options": "Crop", "reqd": 1},
                 {"fieldname": "variety", "label": "Variety", "fieldtype": "Link", "options": "Crop Variety"},
                 {"fieldname": "season", "label": "Season", "fieldtype": "Link", "options": "Season"},

@@ -1,0 +1,152 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:ISTD-{#####}",
+ "creation": "2026-07-25 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "inspection_template",
+  "parameter",
+  "production_category",
+  "mandatory",
+  "section_break_1",
+  "comparison_rule",
+  "aggregation_method",
+  "minimum_value",
+  "maximum_value",
+  "expected_text",
+  "unit",
+  "good_label",
+  "poor_label",
+  "auto_reject_on_fail",
+  "corrective_action_on_fail",
+  "standard_notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "inspection_template",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Inspection Template",
+   "options": "Inspection Template",
+   "reqd": 1
+  },
+  {
+   "fieldname": "parameter",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Parameter",
+   "options": "Inspection Parameter",
+   "reqd": 1
+  },
+  {
+   "fieldname": "production_category",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Production Category",
+   "options": "Basic\nCertified",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "mandatory",
+   "fieldtype": "Check",
+   "label": "Mandatory"
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Rule"
+  },
+  {
+   "fieldname": "comparison_rule",
+   "fieldtype": "Select",
+   "label": "Comparison Rule",
+   "options": "At Least\nAt Most\nBetween\nEquals\nYes Is Pass\nNo Is Pass\nIsolation Distance",
+   "reqd": 1
+  },
+  {
+   "default": "Worst Case",
+   "fieldname": "aggregation_method",
+   "fieldtype": "Select",
+   "label": "Take Aggregation Method",
+   "options": "Worst Case\nAverage\nMinimum\nMaximum\nSum\nAll Must Pass\nCumulative Incidence",
+   "reqd": 1
+  },
+  {
+   "fieldname": "minimum_value",
+   "fieldtype": "Float",
+   "label": "Minimum Value"
+  },
+  {
+   "fieldname": "maximum_value",
+   "fieldtype": "Float",
+   "label": "Maximum Value"
+  },
+  {
+   "fieldname": "expected_text",
+   "fieldtype": "Data",
+   "label": "Expected Text"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "Unit",
+   "options": "UOM"
+  },
+  {
+   "default": "Good",
+   "fieldname": "good_label",
+   "fieldtype": "Data",
+   "label": "Good Label"
+  },
+  {
+   "default": "Poor",
+   "fieldname": "poor_label",
+   "fieldtype": "Data",
+   "label": "Poor Label"
+  },
+  {
+   "default": "0",
+   "fieldname": "auto_reject_on_fail",
+   "fieldtype": "Check",
+   "label": "Auto Reject on Fail"
+  },
+  {
+   "default": "1",
+   "fieldname": "corrective_action_on_fail",
+   "fieldtype": "Check",
+   "label": "Corrective Action on Fail"
+  },
+  {
+   "fieldname": "standard_notes",
+   "fieldtype": "Text",
+   "label": "Standard Notes"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Inspection Standard",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

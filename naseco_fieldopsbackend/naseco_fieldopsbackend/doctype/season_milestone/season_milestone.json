@@ -1,0 +1,68 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "milestone",
+  "planned_start_date",
+  "planned_end_date",
+  "responsible_user",
+  "status",
+  "actual_completion_date",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "milestone",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Milestone",
+   "options": "Planning Approval\nGrower Contracting\nParent Seed Allocation\nInput Procurement\nPlanting\nCrop Emergence\nVegetative\nPre-flowering\nFlowering\nPre-harvest\nHarvest\nDelivery\nSettlement\nSeason Closure",
+   "reqd": 1
+  },
+  {
+   "fieldname": "planned_start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Planned Start",
+   "reqd": 1
+  },
+  {
+   "fieldname": "planned_end_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Planned End",
+   "reqd": 1
+  },
+  {
+   "fieldname": "responsible_user",
+   "fieldtype": "Link",
+   "label": "Responsible User",
+   "options": "User"
+  },
+  {
+   "default": "Not Started",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Not Started\nIn Progress\nCompleted\nDelayed\nCancelled",
+   "reqd": 1
+  },
+  {
+   "fieldname": "actual_completion_date",
+   "fieldtype": "Date",
+   "label": "Actual Completion"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "istable": 1,
+ "module": "Naseco FieldOpsBackend",
+ "name": "Season Milestone",
+ "permissions": []
+}

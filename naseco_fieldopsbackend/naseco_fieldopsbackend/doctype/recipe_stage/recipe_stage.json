@@ -6,13 +6,25 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "stage_code",
   "stage_name",
   "order_index",
+  "start_day_offset",
+  "end_day_offset",
   "duration_days",
+  "agronomy_report_template",
   "description",
   "inputs"
  ],
  "fields": [
+  {
+   "fieldname": "stage_code",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Stage Code",
+   "options": "FIELD_VERIFICATION\nPLANTING\nEMERGENCE\nVEGETATIVE\nPRE_FLOWERING\nFLOWERING\nPRE_HARVEST\nHARVEST\nDELIVERY",
+   "reqd": 1
+  },
   {
    "fieldname": "stage_name",
    "fieldtype": "Data",
@@ -32,6 +44,26 @@
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "Duration (Days)"
+  },
+  {
+   "fieldname": "start_day_offset",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Start Day Offset",
+   "reqd": 1
+  },
+  {
+   "fieldname": "end_day_offset",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "End Day Offset",
+   "reqd": 1
+  },
+  {
+   "fieldname": "agronomy_report_template",
+   "fieldtype": "Link",
+   "label": "Agronomy Report Template",
+   "options": "Agronomy Report Template"
   },
   {
    "fieldname": "description",

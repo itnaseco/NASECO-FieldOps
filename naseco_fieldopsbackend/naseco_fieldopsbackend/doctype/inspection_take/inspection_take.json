@@ -1,0 +1,177 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-07-25 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "take_number",
+  "total_plants_counted",
+  "latitude",
+  "longitude",
+  "gps_accuracy_meters",
+  "gps_quality_status",
+  "location_sample_count",
+  "location_capture_duration_seconds",
+  "location_source",
+  "captured_at",
+  "captured_by",
+  "attribute_count",
+  "take_status",
+  "inside_plot_boundary",
+  "distance_from_previous_take_m",
+  "spacing_status",
+  "positioning_override",
+  "positioning_override_reason",
+  "positioning_override_by",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "take_number",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Take Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "total_plants_counted",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Total Plants Counted"
+  },
+  {
+   "fieldname": "latitude",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Latitude",
+   "precision": "8",
+   "reqd": 1
+  },
+  {
+   "fieldname": "longitude",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Longitude",
+   "precision": "8",
+   "reqd": 1
+  },
+  {
+   "fieldname": "gps_accuracy_meters",
+   "fieldtype": "Float",
+   "label": "GPS Accuracy (m)"
+  },
+  {
+   "fieldname": "gps_quality_status",
+   "fieldtype": "Select",
+   "label": "GPS Quality",
+   "options": "Poor\nAcceptable\nGood",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "location_sample_count",
+   "fieldtype": "Int",
+   "label": "Location Samples",
+   "read_only": 1
+  },
+  {
+   "fieldname": "location_capture_duration_seconds",
+   "fieldtype": "Float",
+   "label": "Location Capture Duration (seconds)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "location_source",
+   "fieldtype": "Data",
+   "label": "Location Source",
+   "read_only": 1
+  },
+  {
+   "fieldname": "captured_at",
+   "fieldtype": "Datetime",
+   "label": "Captured At"
+  },
+  {
+   "fieldname": "captured_by",
+   "fieldtype": "Link",
+   "label": "Captured By",
+   "options": "User"
+  },
+  {
+   "default": "0",
+   "fieldname": "attribute_count",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Attributes Captured",
+   "read_only": 1
+  },
+  {
+   "default": "Incomplete",
+   "fieldname": "take_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Take Status",
+   "options": "Incomplete\nComplete",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "inside_plot_boundary",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Inside Plot Boundary"
+  },
+  {
+   "fieldname": "distance_from_previous_take_m",
+   "fieldtype": "Float",
+   "label": "Distance From Previous Take (m)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "spacing_status",
+   "fieldtype": "Select",
+   "label": "Spacing Status",
+   "options": "First Take\nWithin Standard\nToo Close\nToo Far",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "positioning_override",
+   "fieldtype": "Check",
+   "label": "Positioning Override",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.positioning_override",
+   "fieldname": "positioning_override_reason",
+   "fieldtype": "Small Text",
+   "label": "Override Reason",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.positioning_override",
+   "fieldname": "positioning_override_by",
+   "fieldtype": "Link",
+   "label": "Override By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "istable": 1,
+ "modified": "2026-07-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Inspection Take",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

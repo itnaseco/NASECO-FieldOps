@@ -7,9 +7,11 @@
  "engine": "InnoDB",
  "field_order": [
   "season_name",
+  "season_id",
+  "season_status",
+  "period_section",
   "start_date",
-  "end_date",
-  "season_id"
+  "end_date"
  ],
  "fields": [
   {
@@ -20,26 +22,61 @@
    "reqd": 1
   },
   {
-   "fieldname": "start_date",
-   "fieldtype": "Date",
-   "label": "Start Date"
-  },
-  {
-   "fieldname": "end_date",
-   "fieldtype": "Date",
-   "label": "End Date"
-  },
-  {
    "fieldname": "season_id",
    "fieldtype": "Data",
    "label": "Season ID",
    "unique": 1
+  },
+  {
+   "default": "Not Started",
+   "fieldname": "season_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Not Started\nOngoing\nEnded",
+   "read_only": 1
+  },
+  {
+   "fieldname": "period_section",
+   "fieldtype": "Section Break",
+   "label": "Season Period"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Start Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "End Date",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2026-01-29 17:30:57.466025",
+ "links": [
+  {
+   "link_doctype": "Season Production Plan",
+   "link_fieldname": "season"
+  },
+  {
+   "link_doctype": "Outgrower Production Contract",
+   "link_fieldname": "season"
+  },
+  {
+   "link_doctype": "Crop Cycle",
+   "link_fieldname": "season"
+  },
+  {
+   "link_doctype": "Inspection",
+   "link_fieldname": "season"
+  }
+ ],
+ "modified": "2026-07-31 12:00:00",
  "modified_by": "Administrator",
  "module": "Naseco FieldOpsBackend",
  "name": "Season",
@@ -56,6 +93,40 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager"
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager"
+  },
+  {
+   "read": 1,
+   "role": "Quality Inspector"
+  },
+  {
+   "read": 1,
+   "role": "Outgrower Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "FieldOps Finance Approver"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "FieldOps Stores User"
   }
  ],
  "row_format": "Dynamic",

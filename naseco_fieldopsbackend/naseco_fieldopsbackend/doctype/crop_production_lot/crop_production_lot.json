@@ -1,0 +1,278 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "format:CPL-{YYYY}-{#####}",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "lot_number",
+  "status",
+  "crop_cycle",
+  "production_contract",
+  "plot",
+  "outgrower",
+  "season",
+  "crop",
+  "variety",
+  "planting_section",
+  "planting_start_date",
+  "planting_end_date",
+  "area_acres",
+  "assigned_supervisor",
+  "parent_seed_section",
+  "parent_seed_item",
+  "parent_seed_batch",
+  "parent_seed_qty",
+  "parent_seed_uom",
+  "field_section",
+  "accepted_area_acres",
+  "rejected_area_acres",
+  "field_certification_status",
+  "rejected_area_geojson",
+  "harvest_section",
+  "crib_ready_date",
+  "collection_due_date",
+  "harvest_batch",
+  "delivered_qty",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "lot_number",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Lot Number",
+   "reqd": 1
+  },
+  {
+   "default": "Planned",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Planned\nPlanted\nInspected\nHarvest Ready\nDelivered\nRejected\nClosed",
+   "reqd": 1
+  },
+  {
+   "fieldname": "crop_cycle",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Crop Cycle",
+   "options": "Crop Cycle",
+   "reqd": 1
+  },
+  {
+   "fieldname": "production_contract",
+   "fieldtype": "Link",
+   "label": "Production Contract",
+   "options": "Outgrower Production Contract",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "plot",
+   "fieldtype": "Link",
+   "label": "Farm Plot",
+   "options": "Farm Plot",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "outgrower",
+   "fieldtype": "Link",
+   "label": "Outgrower",
+   "options": "Outgrower",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "season",
+   "fieldtype": "Link",
+   "label": "Season",
+   "options": "Season",
+   "read_only": 1
+  },
+  {
+   "fieldname": "crop",
+   "fieldtype": "Link",
+   "label": "Crop",
+   "options": "Crop",
+   "read_only": 1
+  },
+  {
+   "fieldname": "variety",
+   "fieldtype": "Link",
+   "label": "Variety",
+   "options": "Crop Variety",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planting_section",
+   "fieldtype": "Section Break",
+   "label": "Five-Day Planting Lot"
+  },
+  {
+   "fieldname": "planting_start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Planting Started",
+   "reqd": 1
+  },
+  {
+   "fieldname": "planting_end_date",
+   "fieldtype": "Date",
+   "label": "Planting Completed",
+   "reqd": 1
+  },
+  {
+   "fieldname": "area_acres",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Lot Area (Acres)",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "assigned_supervisor",
+   "fieldtype": "Link",
+   "label": "Outgrower Supervisor",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "parent_seed_section",
+   "fieldtype": "Section Break",
+   "label": "Parent Seed Traceability"
+  },
+  {
+   "fieldname": "parent_seed_item",
+   "fieldtype": "Link",
+   "label": "Parent Seed Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "parent_seed_batch",
+   "fieldtype": "Link",
+   "label": "Parent Seed Batch",
+   "options": "Batch"
+  },
+  {
+   "fieldname": "parent_seed_qty",
+   "fieldtype": "Float",
+   "label": "Parent Seed Allocated",
+   "non_negative": 1
+  },
+  {
+   "fetch_from": "parent_seed_item.stock_uom",
+   "fieldname": "parent_seed_uom",
+   "fieldtype": "Link",
+   "label": "Parent Seed UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "field_section",
+   "fieldtype": "Section Break",
+   "label": "Field Certification Outcome"
+  },
+  {
+   "fieldname": "accepted_area_acres",
+   "fieldtype": "Float",
+   "label": "Accepted Area (Acres)",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "rejected_area_acres",
+   "fieldtype": "Float",
+   "label": "Rejected Area (Acres)",
+   "non_negative": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "field_certification_status",
+   "fieldtype": "Select",
+   "label": "Field Certification Status",
+   "options": "Pending\nAccepted\nCorrective Action Required\nPartially Rejected\nRejected"
+  },
+  {
+   "fieldname": "rejected_area_geojson",
+   "fieldtype": "Code",
+   "label": "Rejected Area Geometry",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "harvest_section",
+   "fieldtype": "Section Break",
+   "label": "Harvest, Storage and Collection"
+  },
+  {
+   "fieldname": "crib_ready_date",
+   "fieldtype": "Date",
+   "label": "Crib Reported Ready"
+  },
+  {
+   "fieldname": "collection_due_date",
+   "fieldtype": "Date",
+   "label": "Company Collection Due",
+   "read_only": 1
+  },
+  {
+   "fieldname": "harvest_batch",
+   "fieldtype": "Link",
+   "label": "Harvest Batch",
+   "options": "Batch"
+  },
+  {
+   "fieldname": "delivered_qty",
+   "fieldtype": "Float",
+   "label": "Delivered Quantity",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text",
+   "label": "Lot Notes"
+  }
+ ],
+ "module": "Naseco FieldOpsBackend",
+ "name": "Crop Production Lot",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Supervisor",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "planting_start_date",
+ "sort_order": "DESC",
+ "title_field": "crop_cycle"
+}

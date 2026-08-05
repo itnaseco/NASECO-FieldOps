@@ -1,0 +1,161 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-07-25 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "parameter",
+  "responsibility",
+  "aggregation_method",
+  "observation_count",
+  "passed_count",
+  "failed_count",
+  "pass_percent",
+  "cumulative_observed_count",
+  "cumulative_total_plants",
+  "incidence_percent",
+  "measured_value",
+  "text_value",
+  "unit",
+  "result_status",
+  "corrective_action_required",
+  "due_date",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "parameter",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Parameter",
+   "options": "Inspection Parameter",
+   "reqd": 1
+  },
+  {
+   "default": "Both",
+   "fieldname": "responsibility",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Responsibility",
+   "options": "Farmer\nOutgrower Supervisor\nBoth\nInspection Quality",
+   "reqd": 1
+  },
+  {
+   "fieldname": "aggregation_method",
+   "fieldtype": "Data",
+   "label": "Aggregation Method",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "observation_count",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Observations",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "passed_count",
+   "fieldtype": "Int",
+   "label": "Passed",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "failed_count",
+   "fieldtype": "Int",
+   "label": "Failed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "pass_percent",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Take Pass %",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cumulative_observed_count",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Cumulative Observed Count",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cumulative_total_plants",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Cumulative Total Plants",
+   "read_only": 1
+  },
+  {
+   "fieldname": "incidence_percent",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Cumulative Incidence %",
+   "precision": "6",
+   "read_only": 1
+  },
+  {
+   "fieldname": "measured_value",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Aggregated Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "text_value",
+   "fieldtype": "Data",
+   "label": "Aggregated Text",
+   "read_only": 1
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "Unit",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "default": "Not Evaluated",
+   "fieldname": "result_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Result Status",
+   "options": "Not Evaluated\nPass\nFail\nGood\nPoor\nCorrective Action Required\nAuto Reject",
+   "reqd": 1,
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "corrective_action_required",
+   "fieldtype": "Check",
+   "label": "Corrective Action Required"
+  },
+  {
+   "fieldname": "due_date",
+   "fieldtype": "Date",
+   "label": "Corrective Action Due Date"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  }
+ ],
+ "istable": 1,
+ "modified": "2026-07-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Inspection Result",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

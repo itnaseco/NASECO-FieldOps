@@ -1,0 +1,380 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "field:policy_name",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "policy_name",
+  "policy_version",
+  "status",
+  "scope_section",
+  "season",
+  "crop",
+  "production_category",
+  "currency",
+  "effective_from",
+  "effective_to",
+  "yield_section",
+  "quota_kg_per_acre",
+  "minimum_seed_yield_kg_per_acre",
+  "excess_rate_per_kg",
+  "grain_item",
+  "grain_rate_per_kg",
+  "advance_valuation_rate",
+  "pricing_bands",
+  "quality_section",
+  "moisture_target_percent",
+  "minimum_germination_percent",
+  "screen_size_mm",
+  "undersize_threshold_percent",
+  "screen_weight_deduction_percent",
+  "reject_threshold_percent",
+  "reject_value_deduction_percent",
+  "bonus_section",
+  "high_bonus_purity_threshold",
+  "high_bonus_rate_per_kg",
+  "standard_bonus_purity_threshold",
+  "standard_bonus_rate_per_kg",
+  "bonus_payment_days",
+  "bonus_requires_approval",
+  "commercial_section",
+  "payment_due_days",
+  "late_interest_percent_per_month",
+  "collection_due_days",
+  "blacklist_purity_threshold",
+  "blacklist_consecutive_seasons",
+  "resolution_notes",
+  "approved_by",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "policy_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Policy Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "policy_version",
+   "fieldtype": "Data",
+   "label": "Version",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nActive\nRetired\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "scope_section",
+   "fieldtype": "Section Break",
+   "label": "Policy Scope"
+  },
+  {
+   "fieldname": "season",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Season",
+   "options": "Season",
+   "reqd": 1
+  },
+  {
+   "fieldname": "crop",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Crop",
+   "options": "Crop",
+   "reqd": 1
+  },
+  {
+   "fieldname": "production_category",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Seed Category",
+   "options": "Basic\nCertified",
+   "reqd": 1
+  },
+  {
+   "default": "UGX",
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "effective_from",
+   "fieldtype": "Date",
+   "label": "Effective From",
+   "reqd": 1
+  },
+  {
+   "fieldname": "effective_to",
+   "fieldtype": "Date",
+   "label": "Effective To",
+   "reqd": 1
+  },
+  {
+   "fieldname": "yield_section",
+   "fieldtype": "Section Break",
+   "label": "Yield and Price Rules"
+  },
+  {
+   "default": "1000",
+   "fieldname": "quota_kg_per_acre",
+   "fieldtype": "Float",
+   "label": "Contract Quota (kg/acre)",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "default": "800",
+   "fieldname": "minimum_seed_yield_kg_per_acre",
+   "fieldtype": "Float",
+   "label": "Minimum Seed Yield (kg/acre)",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "default": "1600",
+   "fieldname": "excess_rate_per_kg",
+   "fieldtype": "Currency",
+   "label": "Excess Production Rate per kg",
+   "non_negative": 1,
+   "options": "currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "grain_item",
+   "fieldtype": "Link",
+   "label": "Grain Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "grain_rate_per_kg",
+   "fieldtype": "Currency",
+   "label": "Fallback Grain Rate per kg",
+   "non_negative": 1,
+   "options": "currency"
+  },
+  {
+   "default": "1600",
+   "description": "Conservative rate used for advance exposure before final laboratory quality is known.",
+   "fieldname": "advance_valuation_rate",
+   "fieldtype": "Currency",
+   "label": "Advance Valuation Rate per kg",
+   "non_negative": 1,
+   "options": "currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "pricing_bands",
+   "fieldtype": "Table",
+   "label": "Yield and Genetic-Purity Pricing Bands",
+   "options": "Outgrower Pricing Band",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quality_section",
+   "fieldtype": "Section Break",
+   "label": "Harvest Quality Rules"
+  },
+  {
+   "default": "13",
+   "fieldname": "moisture_target_percent",
+   "fieldtype": "Percent",
+   "label": "Target Moisture %"
+  },
+  {
+   "default": "95",
+   "fieldname": "minimum_germination_percent",
+   "fieldtype": "Percent",
+   "label": "Minimum Germination %"
+  },
+  {
+   "default": "8",
+   "fieldname": "screen_size_mm",
+   "fieldtype": "Float",
+   "label": "Screen Size (mm)",
+   "non_negative": 1
+  },
+  {
+   "default": "5",
+   "fieldname": "undersize_threshold_percent",
+   "fieldtype": "Percent",
+   "label": "Maximum Seed Below Screen Size %"
+  },
+  {
+   "default": "5",
+   "fieldname": "screen_weight_deduction_percent",
+   "fieldtype": "Percent",
+   "label": "Screen Failure Deduction %"
+  },
+  {
+   "default": "1",
+   "fieldname": "reject_threshold_percent",
+   "fieldtype": "Percent",
+   "label": "Maximum Rejects %"
+  },
+  {
+   "default": "5",
+   "fieldname": "reject_value_deduction_percent",
+   "fieldtype": "Percent",
+   "label": "Reject Penalty %"
+  },
+  {
+   "fieldname": "bonus_section",
+   "fieldtype": "Section Break",
+   "label": "Deferred Genetic-Purity Bonus"
+  },
+  {
+   "default": "95",
+   "description": "Strictly greater than this threshold.",
+   "fieldname": "high_bonus_purity_threshold",
+   "fieldtype": "Percent",
+   "label": "High Bonus Purity Threshold %"
+  },
+  {
+   "default": "100",
+   "fieldname": "high_bonus_rate_per_kg",
+   "fieldtype": "Currency",
+   "label": "High Bonus per kg",
+   "options": "currency"
+  },
+  {
+   "default": "85",
+   "description": "Strictly greater than this threshold.",
+   "fieldname": "standard_bonus_purity_threshold",
+   "fieldtype": "Percent",
+   "label": "Standard Bonus Purity Threshold %"
+  },
+  {
+   "default": "50",
+   "fieldname": "standard_bonus_rate_per_kg",
+   "fieldtype": "Currency",
+   "label": "Standard Bonus per kg",
+   "options": "currency"
+  },
+  {
+   "default": "150",
+   "fieldname": "bonus_payment_days",
+   "fieldtype": "Int",
+   "label": "Bonus Payment Due After Delivery (Days)",
+   "non_negative": 1
+  },
+  {
+   "default": "1",
+   "description": "Potential bonus is recorded but excluded from initial settlement until QA approval.",
+   "fieldname": "bonus_requires_approval",
+   "fieldtype": "Check",
+   "label": "Bonus Requires QA Approval"
+  },
+  {
+   "fieldname": "commercial_section",
+   "fieldtype": "Section Break",
+   "label": "Commercial Deadlines and Eligibility"
+  },
+  {
+   "default": "75",
+   "fieldname": "payment_due_days",
+   "fieldtype": "Int",
+   "label": "Seed Payment Due After Receipt (Days)",
+   "non_negative": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "late_interest_percent_per_month",
+   "fieldtype": "Percent",
+   "label": "Late Interest per Month %"
+  },
+  {
+   "default": "30",
+   "fieldname": "collection_due_days",
+   "fieldtype": "Int",
+   "label": "Collection Due After Crib Ready (Days)",
+   "non_negative": 1
+  },
+  {
+   "default": "85",
+   "fieldname": "blacklist_purity_threshold",
+   "fieldtype": "Percent",
+   "label": "Eligibility Review Purity Threshold %"
+  },
+  {
+   "default": "2",
+   "fieldname": "blacklist_consecutive_seasons",
+   "fieldtype": "Int",
+   "label": "Consecutive Seasons Before Eligibility Review",
+   "non_negative": 1
+  },
+  {
+   "description": "Records approved interpretations of ambiguous contract wording and pricing boundaries.",
+   "fieldname": "resolution_notes",
+   "fieldtype": "Text Editor",
+   "label": "Approved Rule Interpretations",
+   "reqd": 1
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Approved By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Outgrower Pricing Policy",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 1,
+ "module": "Naseco FieldOpsBackend",
+ "name": "Outgrower Pricing Policy",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "policy_name"
+}

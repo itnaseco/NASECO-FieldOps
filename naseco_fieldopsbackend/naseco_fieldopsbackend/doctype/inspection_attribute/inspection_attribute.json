@@ -30,7 +30,7 @@
    "fieldname": "unit",
    "fieldtype": "Link",
    "label": "Unit",
-   "options": "Unit"
+   "options": "UOM"
   },
   {
    "fieldname": "description",

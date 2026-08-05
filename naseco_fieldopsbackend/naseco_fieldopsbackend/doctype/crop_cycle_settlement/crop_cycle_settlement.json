@@ -1,0 +1,358 @@
+{
+ "actions": [],
+ "autoname": "format:CCS-{YYYY}-{#####}",
+ "creation": "2026-07-26 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "crop_cycle",
+  "production_contract",
+  "status",
+  "company",
+  "outgrower",
+  "supplier",
+  "purchase_order",
+  "purchase_invoice",
+  "posting_date",
+  "currency",
+  "pricing_policy",
+  "payment_due_date",
+  "bonus_review_due_date",
+  "harvest_section",
+  "harvest_receipts",
+  "receipt_book_value",
+  "pricing_section",
+  "pricing_lines",
+  "quality_deductions",
+  "potential_deferred_bonus",
+  "gross_harvest_value",
+  "recovery_section",
+  "stock_inputs",
+  "stock_recovery_due",
+  "stock_recovery_to_deduct",
+  "stock_recovery_shortfall",
+  "cash_advances",
+  "cash_advance_available",
+  "cash_advance_to_allocate",
+  "cash_advance_shortfall",
+  "adjustments_section",
+  "adjustments",
+  "other_additions",
+  "other_deductions",
+  "summary_section",
+  "invoice_total",
+  "net_payable",
+  "unrecovered_balance",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "crop_cycle",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Crop Cycle",
+   "options": "Crop Cycle",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "production_contract",
+   "fieldtype": "Link",
+   "label": "Production Contract",
+   "options": "Outgrower Production Contract",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nPrepared\nInvoice Draft\nPosted\nPaid\nShortfall\nInvoice Cancelled\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "outgrower",
+   "fieldtype": "Link",
+   "label": "Outgrower",
+   "options": "Outgrower",
+   "read_only": 1
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier",
+   "read_only": 1
+  },
+  {
+   "fieldname": "purchase_order",
+   "fieldtype": "Link",
+   "label": "Harvest Purchase Order",
+   "options": "Purchase Order",
+   "read_only": 1
+  },
+  {
+   "fieldname": "purchase_invoice",
+   "fieldtype": "Link",
+   "label": "Settlement Purchase Invoice",
+   "options": "Purchase Invoice",
+   "read_only": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Settlement Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "pricing_policy",
+   "fieldtype": "Link",
+   "label": "Pricing Policy",
+   "options": "Outgrower Pricing Policy",
+   "read_only": 1
+  },
+  {
+   "fieldname": "payment_due_date",
+   "fieldtype": "Date",
+   "label": "Payment Due Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "bonus_review_due_date",
+   "fieldtype": "Date",
+   "label": "Bonus Review Due Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "harvest_section",
+   "fieldtype": "Section Break",
+   "label": "Accepted Harvest"
+  },
+  {
+   "fieldname": "harvest_receipts",
+   "fieldtype": "Table",
+   "label": "Submitted Purchase Receipts",
+   "options": "Crop Cycle Harvest Receipt",
+   "read_only": 1
+  },
+  {
+   "fieldname": "receipt_book_value",
+   "fieldtype": "Currency",
+   "label": "Purchase Receipt Book Value",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "pricing_section",
+   "fieldtype": "Section Break",
+   "label": "Contract Quality Pricing"
+  },
+  {
+   "fieldname": "pricing_lines",
+   "fieldtype": "Table",
+   "label": "Production Lot Pricing",
+   "options": "Crop Cycle Settlement Pricing Line",
+   "read_only": 1
+  },
+  {
+   "fieldname": "quality_deductions",
+   "fieldtype": "Currency",
+   "label": "Quality Deductions",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "potential_deferred_bonus",
+   "fieldtype": "Currency",
+   "label": "Potential Deferred Bonus",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "gross_harvest_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Initial Harvest Payable",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recovery_section",
+   "fieldtype": "Section Break",
+   "label": "Input and Advance Recovery"
+  },
+  {
+   "fieldname": "stock_inputs",
+   "fieldtype": "Table",
+   "label": "Recoverable Stock Inputs",
+   "options": "Crop Cycle Settlement Stock Input",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stock_recovery_due",
+   "fieldtype": "Currency",
+   "label": "Stock Recovery Due",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stock_recovery_to_deduct",
+   "fieldtype": "Currency",
+   "label": "Stock Recovery to Deduct",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stock_recovery_shortfall",
+   "fieldtype": "Currency",
+   "label": "Stock Recovery Shortfall",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cash_advances",
+   "fieldtype": "Table",
+   "label": "Paid Supplier Advances",
+   "options": "Crop Cycle Settlement Cash Advance",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cash_advance_available",
+   "fieldtype": "Currency",
+   "label": "Cash Advances Available",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cash_advance_to_allocate",
+   "fieldtype": "Currency",
+   "label": "Cash Advances to Allocate",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cash_advance_shortfall",
+   "fieldtype": "Currency",
+   "label": "Unallocated Cash Advance",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "adjustments_section",
+   "fieldtype": "Section Break",
+   "label": "Quality and Commercial Adjustments"
+  },
+  {
+   "fieldname": "adjustments",
+   "fieldtype": "Table",
+   "label": "Adjustments",
+   "options": "Crop Cycle Settlement Adjustment"
+  },
+  {
+   "fieldname": "other_additions",
+   "fieldtype": "Currency",
+   "label": "Other Additions",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "other_deductions",
+   "fieldtype": "Currency",
+   "label": "Other Deductions",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "summary_section",
+   "fieldtype": "Section Break",
+   "label": "Settlement Summary"
+  },
+  {
+   "fieldname": "invoice_total",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Invoice Total after Deductions",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "net_payable",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Net Payable to Outgrower",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "unrecovered_balance",
+   "fieldtype": "Currency",
+   "label": "Unrecovered Balance",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Manager Notes"
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-07-26 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Crop Cycle Settlement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "crop_cycle",
+ "track_changes": 1
+}

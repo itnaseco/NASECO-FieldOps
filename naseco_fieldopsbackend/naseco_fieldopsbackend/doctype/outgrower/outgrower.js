@@ -2,14 +2,102 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Outgrower", {
+	setup(frm) {
+		frm.set_query('assigned_supervisor', () => ({
+			query: 'naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.outgrower.outgrower.outgrower_supervisor_query'
+		}));
+		frm.set_query('default_bank_account', () => ({
+			filters: {
+				party_type: 'Supplier',
+				party: frm.doc.supplier,
+				disabled: 0
+			}
+		}));
+	},
+
 	refresh(frm) {
 		// Add custom button to create new plot for this outgrower
 		if (!frm.is_new()) {
+			if (!frm.doc.supplier) {
+				frm.add_custom_button(__('Create Supplier'), function() {
+					frappe.call({
+						method: 'naseco_fieldopsbackend.fieldops_finance.ensure_outgrower_supplier',
+						args: { outgrower: frm.doc.name },
+						freeze: true,
+						freeze_message: __('Creating Supplier...'),
+						callback(r) {
+							if (r.message) {
+								frappe.show_alert({
+									message: __('Supplier {0} created', [r.message]),
+									indicator: 'green'
+								});
+								frm.reload_doc();
+							}
+						}
+					});
+				}, __('Actions'));
+			} else {
+				frm.add_custom_button(__('Open Supplier'), function() {
+					frappe.set_route('Form', 'Supplier', frm.doc.supplier);
+				}, __('Navigate'));
+
+				if (frm.doc.default_bank_account) {
+					frm.add_custom_button(__('Open Bank Account'), function() {
+						frappe.set_route('Form', 'Bank Account', frm.doc.default_bank_account);
+					}, __('Navigate'));
+				} else {
+					frm.add_custom_button(__('Create Bank Account'), function() {
+						frappe.new_doc('Bank Account', {
+							account_name: frm.doc.full_name,
+							party_type: 'Supplier',
+							party: frm.doc.supplier
+						});
+					}, __('Actions'));
+				}
+			}
+
 			frm.add_custom_button(__('Create New Plot'), function() {
 				frappe.new_doc('Farm Plot', {
 					outgrower: frm.doc.name
 				});
 			}, __('Actions'));
+
+			frm.add_custom_button(__('New Production Contract'), function() {
+				frappe.new_doc('Outgrower Production Contract', {
+					outgrower: frm.doc.name,
+					supplier: frm.doc.supplier
+				});
+			}, __('Actions'));
+
+			frm.add_custom_button(__('View Production Contracts'), function() {
+				frappe.set_route('List', 'Outgrower Production Contract', {
+					outgrower: frm.doc.name
+				});
+			}, __('Navigate'));
+
+			frm.add_custom_button(__('View Inspections'), function() {
+				frappe.set_route('List', 'Inspection', {
+					outgrower: frm.doc.name
+				});
+			}, __('Actions'));
+
+			frm.add_custom_button(__('View Corrective Actions'), function() {
+				frappe.set_route('List', 'Field Corrective Action', {
+					outgrower: frm.doc.name
+				});
+			}, __('Actions'));
+
+			frm.add_custom_button(__('View Advance Requests'), function() {
+				frappe.set_route('List', 'Crop Cycle Advance Request', {
+					outgrower: frm.doc.name
+				});
+			}, __('Navigate'));
+
+			frm.add_custom_button(__('View Settlements'), function() {
+				frappe.set_route('List', 'Crop Cycle Settlement', {
+					outgrower: frm.doc.name
+				});
+			}, __('Navigate'));
 
 			// Display list of plots for this outgrower
 			render_plots_section(frm);

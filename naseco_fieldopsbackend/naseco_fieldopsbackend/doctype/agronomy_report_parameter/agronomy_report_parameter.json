@@ -1,0 +1,174 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "parameter_code",
+  "parameter_label",
+  "section_name",
+  "data_type",
+  "options",
+  "unit",
+  "mandatory",
+  "evaluation_section",
+  "evaluation_mode",
+  "comparison_rule",
+  "minimum_value",
+  "maximum_value",
+  "expected_value",
+  "severity",
+  "weight",
+  "allow_not_applicable",
+  "responsible_party",
+  "corrective_action_on_fail",
+  "failure_action",
+  "corrective_action_due_days",
+  "help_text"
+ ],
+ "fields": [
+  {
+   "fieldname": "parameter_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Parameter Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "parameter_label",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Parameter",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_name",
+   "fieldtype": "Data",
+   "label": "Section"
+  },
+  {
+   "default": "Data",
+   "fieldname": "data_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Data Type",
+   "options": "Data\nLong Text\nNumber\nCount\nPercent\nDate\nYes/No\nGood/Poor\nSelect",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.data_type==\"Select\"",
+   "fieldname": "options",
+   "fieldtype": "Small Text",
+   "label": "Options"
+  },
+  {
+   "depends_on": "eval:[\"Number\", \"Count\", \"Percent\"].includes(doc.data_type)",
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
+  },
+  {
+   "default": "1",
+   "fieldname": "mandatory",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Mandatory"
+  },
+  {
+   "fieldname": "evaluation_section",
+   "fieldtype": "Section Break",
+   "label": "Automated Evaluation"
+  },
+  {
+   "default": "Informational",
+   "fieldname": "evaluation_mode",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Evaluation Mode",
+   "options": "Informational\nRule Based",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.evaluation_mode==\"Rule Based\"",
+   "fieldname": "comparison_rule",
+   "fieldtype": "Select",
+   "label": "Comparison Rule",
+   "options": "At Least\nAt Most\nBetween\nEquals\nExpected Value\nYes Is Pass\nNo Is Pass\nGood Is Pass\nPoor Is Pass\nWithin Report Window"
+  },
+  {
+   "depends_on": "eval:doc.evaluation_mode==\"Rule Based\" && [\"At Least\", \"Between\"].includes(doc.comparison_rule)",
+   "fieldname": "minimum_value",
+   "fieldtype": "Float",
+   "label": "Minimum Passing Value"
+  },
+  {
+   "depends_on": "eval:doc.evaluation_mode==\"Rule Based\" && [\"At Most\", \"Between\"].includes(doc.comparison_rule)",
+   "fieldname": "maximum_value",
+   "fieldtype": "Float",
+   "label": "Maximum Passing Value"
+  },
+  {
+   "depends_on": "eval:doc.evaluation_mode==\"Rule Based\" && [\"Equals\", \"Expected Value\"].includes(doc.comparison_rule)",
+   "fieldname": "expected_value",
+   "fieldtype": "Data",
+   "label": "Expected Passing Value"
+  },
+  {
+   "default": "Standard",
+   "depends_on": "eval:doc.evaluation_mode==\"Rule Based\"",
+   "fieldname": "severity",
+   "fieldtype": "Select",
+   "label": "Failure Severity",
+   "options": "Advisory\nStandard\nCritical"
+  },
+  {
+   "default": "1",
+   "depends_on": "eval:doc.evaluation_mode==\"Rule Based\"",
+   "fieldname": "weight",
+   "fieldtype": "Float",
+   "label": "Evaluation Weight"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_not_applicable",
+   "fieldtype": "Check",
+   "label": "Allow Not Applicable"
+  },
+  {
+   "default": "Outgrower Supervisor",
+   "fieldname": "responsible_party",
+   "fieldtype": "Select",
+   "label": "Responsible Party",
+   "options": "Farmer\nOutgrower Supervisor\nBoth"
+  },
+  {
+   "default": "0",
+   "fieldname": "corrective_action_on_fail",
+   "fieldtype": "Check",
+   "label": "Corrective Action on Failure"
+  },
+  {
+   "depends_on": "corrective_action_on_fail",
+   "fieldname": "failure_action",
+   "fieldtype": "Small Text",
+   "label": "Required Action on Failure"
+  },
+  {
+   "default": "3",
+   "depends_on": "corrective_action_on_fail",
+   "fieldname": "corrective_action_due_days",
+   "fieldtype": "Int",
+   "label": "Corrective Action Due In (Days)"
+  },
+  {
+   "fieldname": "help_text",
+   "fieldtype": "Small Text",
+   "label": "Guidance"
+  }
+ ],
+ "istable": 1,
+ "module": "Naseco FieldOpsBackend",
+ "name": "Agronomy Report Parameter",
+ "permissions": []
+}

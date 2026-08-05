@@ -1,0 +1,212 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "region",
+  "crop",
+  "variety",
+  "production_category",
+  "crop_recipe",
+  "contract_template",
+  "pricing_policy",
+  "target_outgrowers",
+  "target_plots",
+  "target_acres",
+  "planned_yield_kg_per_acre",
+  "planned_production_qty",
+  "planning_rate",
+  "planned_procurement_value",
+  "parent_seed_item",
+  "parent_seed_warehouse",
+  "parent_seed_uom",
+  "parent_seed_rate_per_acre",
+  "parent_seed_required_qty",
+  "planting_window_from",
+  "planting_window_to",
+  "expected_harvest_date",
+  "harvest_warehouse",
+  "planned_supervisors",
+  "planned_inspectors",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "region",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Region",
+   "options": "Region",
+   "reqd": 1
+  },
+  {
+   "fieldname": "crop",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Crop",
+   "options": "Crop",
+   "reqd": 1
+  },
+  {
+   "fieldname": "variety",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Variety",
+   "options": "Crop Variety"
+  },
+  {
+   "fieldname": "production_category",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Seed Category",
+   "options": "Basic\nCertified",
+   "reqd": 1
+  },
+  {
+   "fieldname": "crop_recipe",
+   "fieldtype": "Link",
+   "label": "Crop Recipe",
+   "options": "Crop Recipe",
+   "reqd": 1
+  },
+  {
+   "fieldname": "contract_template",
+   "fieldtype": "Link",
+   "label": "Contract Template",
+   "options": "Production Contract Template",
+   "reqd": 1
+  },
+  {
+   "fieldname": "pricing_policy",
+   "fieldtype": "Link",
+   "label": "Pricing Policy",
+   "options": "Outgrower Pricing Policy",
+   "reqd": 1
+  },
+  {
+   "fieldname": "target_outgrowers",
+   "fieldtype": "Int",
+   "label": "Target Outgrowers",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "target_plots",
+   "fieldtype": "Int",
+   "label": "Target Plots",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "target_acres",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Target Acres",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "planned_yield_kg_per_acre",
+   "fieldtype": "Float",
+   "label": "Planned Yield (kg/acre)",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "planned_production_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Planned Production (Kg)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planning_rate",
+   "fieldtype": "Currency",
+   "label": "Planning Rate per Kg",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "planned_procurement_value",
+   "fieldtype": "Currency",
+   "label": "Planned Procurement Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "parent_seed_item",
+   "fieldtype": "Link",
+   "label": "Parent Seed Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "parent_seed_warehouse",
+   "fieldtype": "Link",
+   "label": "Parent Seed Source Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fetch_from": "parent_seed_item.stock_uom",
+   "fieldname": "parent_seed_uom",
+   "fieldtype": "Link",
+   "label": "Parent Seed UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "parent_seed_rate_per_acre",
+   "fieldtype": "Float",
+   "label": "Parent Seed Qty per Acre",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "parent_seed_required_qty",
+   "fieldtype": "Float",
+   "label": "Parent Seed Required Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planting_window_from",
+   "fieldtype": "Date",
+   "label": "Planting Window From",
+   "reqd": 1
+  },
+  {
+   "fieldname": "planting_window_to",
+   "fieldtype": "Date",
+   "label": "Planting Window To",
+   "reqd": 1
+  },
+  {
+   "fieldname": "expected_harvest_date",
+   "fieldtype": "Date",
+   "label": "Expected Harvest Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "harvest_warehouse",
+   "fieldtype": "Link",
+   "label": "Harvest Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "planned_supervisors",
+   "fieldtype": "Int",
+   "label": "Planned Supervisors",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "planned_inspectors",
+   "fieldtype": "Int",
+   "label": "Planned Inspectors",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Planning Notes"
+  }
+ ],
+ "istable": 1,
+ "module": "Naseco FieldOpsBackend",
+ "name": "Season Production Target",
+ "permissions": []
+}

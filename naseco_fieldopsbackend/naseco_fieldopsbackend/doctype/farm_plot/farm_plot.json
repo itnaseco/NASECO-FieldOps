@@ -19,6 +19,8 @@
   "perimeter_meters",
   "centroid_lat",
   "centroid_lng",
+  "section_break_crop_cycles",
+  "crop_cycles_html",
   "section_break_3",
   "map_image",
   "status",
@@ -60,12 +62,12 @@
   {
    "fieldname": "section_break_1",
    "fieldtype": "Section Break",
-   "label": "GPS Polygon"
+   "label": "Plot Polygon Coordinates"
   },
   {
    "fieldname": "polygon",
    "fieldtype": "Table",
-   "label": "Vertices",
+   "label": "Coordinates",
    "options": "Plot Vertex"
   },
   {
@@ -78,35 +80,41 @@
   {
    "fieldname": "section_break_2",
    "fieldtype": "Section Break",
-   "label": "Calculated Values"
+   "label": "Plot Measurements"
   },
   {
    "fieldname": "area_acres",
    "fieldtype": "Float",
    "label": "Area (Acres)",
-   "read_only": 1,
    "precision": 2
   },
   {
    "fieldname": "perimeter_meters",
    "fieldtype": "Float",
    "label": "Perimeter (Meters)",
-   "read_only": 1,
    "precision": 2
   },
   {
    "fieldname": "centroid_lat",
    "fieldtype": "Float",
    "label": "Centroid Latitude",
-   "read_only": 1,
    "precision": 6
   },
   {
    "fieldname": "centroid_lng",
    "fieldtype": "Float",
    "label": "Centroid Longitude",
-   "read_only": 1,
    "precision": 6
+  },
+  {
+   "fieldname": "section_break_crop_cycles",
+   "fieldtype": "Section Break",
+   "label": "Crop Cycle"
+  },
+  {
+   "fieldname": "crop_cycles_html",
+   "fieldtype": "HTML",
+   "label": "Crop Cycle"
   },
   {
    "fieldname": "section_break_3",
@@ -167,6 +175,17 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager",
    "share": 1,
    "write": 1
   }

@@ -1,0 +1,217 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "field:template_name",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "template_name",
+  "template_version",
+  "status",
+  "scope_section",
+  "season",
+  "crop",
+  "production_category",
+  "pricing_policy",
+  "effective_from",
+  "effective_to",
+  "reference_section",
+  "agreement_title",
+  "seed_handbook_reference",
+  "legal_reference",
+  "company_responsibilities",
+  "farmer_responsibilities",
+  "supervisor_responsibilities",
+  "quality_terms",
+  "input_recovery_terms",
+  "termination_terms",
+  "approved_by",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "template_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Template Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "template_version",
+   "fieldtype": "Data",
+   "label": "Version",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nActive\nRetired\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "scope_section",
+   "fieldtype": "Section Break",
+   "label": "Template Scope"
+  },
+  {
+   "fieldname": "season",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Season",
+   "options": "Season",
+   "reqd": 1
+  },
+  {
+   "fieldname": "crop",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Crop",
+   "options": "Crop",
+   "reqd": 1
+  },
+  {
+   "fieldname": "production_category",
+   "fieldtype": "Select",
+   "label": "Seed Category",
+   "options": "Basic\nCertified",
+   "reqd": 1
+  },
+  {
+   "fieldname": "pricing_policy",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Pricing Policy",
+   "options": "Outgrower Pricing Policy",
+   "reqd": 1
+  },
+  {
+   "fieldname": "effective_from",
+   "fieldtype": "Date",
+   "label": "Effective From",
+   "reqd": 1
+  },
+  {
+   "fieldname": "effective_to",
+   "fieldtype": "Date",
+   "label": "Effective To",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reference_section",
+   "fieldtype": "Section Break",
+   "label": "Agreement References and Terms"
+  },
+  {
+   "default": "Out Growers Agreement for Seed Production",
+   "fieldname": "agreement_title",
+   "fieldtype": "Data",
+   "label": "Agreement Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "seed_handbook_reference",
+   "fieldtype": "Data",
+   "label": "Seed Production Handbook Reference",
+   "reqd": 1
+  },
+  {
+   "fieldname": "legal_reference",
+   "fieldtype": "Small Text",
+   "label": "Legal and Certification References",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company_responsibilities",
+   "fieldtype": "Text Editor",
+   "label": "Company Responsibilities",
+   "reqd": 1
+  },
+  {
+   "fieldname": "farmer_responsibilities",
+   "fieldtype": "Text Editor",
+   "label": "Outgrower Responsibilities",
+   "reqd": 1
+  },
+  {
+   "fieldname": "supervisor_responsibilities",
+   "fieldtype": "Text Editor",
+   "label": "Outgrower Supervisor Responsibilities",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quality_terms",
+   "fieldtype": "Text Editor",
+   "label": "Quality and Certification Terms",
+   "reqd": 1
+  },
+  {
+   "fieldname": "input_recovery_terms",
+   "fieldtype": "Text Editor",
+   "label": "Input and Advance Recovery Terms",
+   "reqd": 1
+  },
+  {
+   "fieldname": "termination_terms",
+   "fieldtype": "Text Editor",
+   "label": "Termination and Crop Ownership Terms",
+   "reqd": 1
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Approved By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Production Contract Template",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 1,
+ "module": "Naseco FieldOpsBackend",
+ "name": "Production Contract Template",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "title_field": "template_name"
+}

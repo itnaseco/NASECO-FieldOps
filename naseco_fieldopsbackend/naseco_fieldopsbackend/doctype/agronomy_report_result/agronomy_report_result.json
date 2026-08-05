@@ -1,0 +1,231 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "parameter_code",
+  "parameter_label",
+  "section_name",
+  "data_type",
+  "options",
+  "mandatory",
+  "responsible_party",
+  "value_captured",
+  "numeric_value",
+  "text_value",
+  "date_value",
+  "unit",
+  "standard_section",
+  "template_version",
+  "evaluation_mode",
+  "comparison_rule",
+  "minimum_value",
+  "maximum_value",
+  "expected_value",
+  "severity",
+  "weight",
+  "allow_not_applicable",
+  "corrective_action_on_fail",
+  "failure_action",
+  "corrective_action_due_days",
+  "result_status",
+  "evaluation_message",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "parameter_code",
+   "fieldtype": "Data",
+   "label": "Parameter Code",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "parameter_label",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Parameter",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_name",
+   "fieldtype": "Data",
+   "label": "Section",
+   "read_only": 1
+  },
+  {
+   "fieldname": "data_type",
+   "fieldtype": "Data",
+   "label": "Data Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "options",
+   "fieldtype": "Small Text",
+   "hidden": 1,
+   "label": "Allowed Values",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mandatory",
+   "fieldtype": "Check",
+   "label": "Mandatory",
+   "read_only": 1
+  },
+  {
+   "fieldname": "responsible_party",
+   "fieldtype": "Data",
+   "label": "Responsible Party",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "value_captured",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Value Captured",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:[\"Number\", \"Count\", \"Percent\"].includes(doc.data_type)",
+   "fieldname": "numeric_value",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Observed Numeric Value",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:![\"Number\", \"Count\", \"Percent\", \"Date\"].includes(doc.data_type)",
+   "fieldname": "text_value",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Observed Value",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.data_type==\"Date\"",
+   "fieldname": "date_value",
+   "fieldtype": "Date",
+   "label": "Observed Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "standard_section",
+   "fieldtype": "Section Break",
+   "label": "Standard Snapshot"
+  },
+  {
+   "fieldname": "template_version",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Template Version",
+   "read_only": 1
+  },
+  {
+   "default": "Informational",
+   "fieldname": "evaluation_mode",
+   "fieldtype": "Data",
+   "label": "Evaluation Mode",
+   "read_only": 1
+  },
+  {
+   "fieldname": "comparison_rule",
+   "fieldtype": "Data",
+   "label": "Comparison Rule",
+   "read_only": 1
+  },
+  {
+   "fieldname": "minimum_value",
+   "fieldtype": "Float",
+   "label": "Minimum Passing Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "maximum_value",
+   "fieldtype": "Float",
+   "label": "Maximum Passing Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "expected_value",
+   "fieldtype": "Data",
+   "label": "Expected Passing Value",
+   "read_only": 1
+  },
+  {
+   "default": "Standard",
+   "fieldname": "severity",
+   "fieldtype": "Data",
+   "label": "Failure Severity",
+   "read_only": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "weight",
+   "fieldtype": "Float",
+   "label": "Evaluation Weight",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_not_applicable",
+   "fieldtype": "Check",
+   "label": "Allow Not Applicable",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "corrective_action_on_fail",
+   "fieldtype": "Check",
+   "label": "Corrective Action on Failure",
+   "read_only": 1
+  },
+  {
+   "fieldname": "failure_action",
+   "fieldtype": "Small Text",
+   "label": "Required Action on Failure",
+   "read_only": 1
+  },
+  {
+   "fieldname": "corrective_action_due_days",
+   "fieldtype": "Int",
+   "label": "Corrective Action Due In (Days)",
+   "read_only": 1
+  },
+  {
+   "default": "Not Evaluated",
+   "fieldname": "result_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Result",
+   "options": "Not Evaluated\nPass\nFail\nInformational\nNot Applicable",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "evaluation_message",
+   "fieldtype": "Small Text",
+   "label": "Evaluation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "module": "Naseco FieldOpsBackend",
+ "name": "Agronomy Report Result",
+ "permissions": []
+}

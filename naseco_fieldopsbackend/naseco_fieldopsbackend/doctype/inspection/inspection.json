@@ -1,0 +1,554 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "format:INSP-{#####}",
+ "creation": "2026-07-25 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "inspection_id",
+  "inspection_template",
+  "inspection_type",
+  "crop_cycle",
+  "production_contract",
+  "plot",
+  "outgrower",
+  "crop",
+  "season",
+  "production_category",
+  "sampling_protocol_version",
+  "section_break_1",
+  "scheduled_date",
+  "started_at",
+  "completed_at",
+  "assigned_to",
+  "status",
+  "qa_review_section",
+  "qa_review_status",
+  "qa_reviewed_by",
+  "qa_reviewed_on",
+  "qa_review_notes",
+  "reinspection_of",
+  "reinspection_reason",
+  "section_break_2",
+  "plot_area_hectares",
+  "required_take_count",
+  "completed_take_count",
+  "cumulative_total_plants",
+  "takes",
+  "take_results",
+  "inspection_controls_section",
+  "controls_completed",
+  "inspection_observations",
+  "section_break_3",
+  "results",
+  "section_break_4",
+  "farmer_compliance_percent",
+  "farmer_compliance_status",
+  "supervisor_compliance_percent",
+  "supervisor_compliance_status",
+  "field_certification_status",
+  "hectares_under_corrective_action",
+  "hectares_rejected",
+  "hectares_accepted",
+  "recommendation",
+  "section_break_5",
+  "target_take_spacing_m",
+  "minimum_take_spacing_standard_m",
+  "maximum_take_spacing_standard_m",
+  "average_take_spacing_m",
+  "median_take_spacing_m",
+  "minimum_observed_take_spacing_m",
+  "maximum_observed_take_spacing_m",
+  "spacing_pair_count",
+  "spacing_compliant_count",
+  "spacing_compliance_percent",
+  "average_gps_accuracy_m",
+  "worst_gps_accuracy_m",
+  "low_accuracy_take_count",
+  "positioning_override_count",
+  "total_take_path_distance_m",
+  "takes_outside_plot",
+  "inspection_quality_score",
+  "inspection_map_geojson",
+  "synced"
+ ],
+ "fields": [
+  {
+   "fieldname": "inspection_id",
+   "fieldtype": "Data",
+   "label": "Inspection ID",
+   "unique": 1
+  },
+  {
+   "fieldname": "inspection_template",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Inspection Template",
+   "options": "Inspection Template"
+  },
+  {
+   "fieldname": "inspection_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Inspection Type",
+   "options": "Pre-flowering\n1st Flowering\n2nd Flowering\n3rd Flowering\nPre-harvest",
+   "reqd": 1
+  },
+  {
+   "fieldname": "crop_cycle",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Crop Cycle",
+   "options": "Crop Cycle",
+   "reqd": 1
+  },
+  {
+   "fieldname": "production_contract",
+   "fieldtype": "Link",
+   "label": "Production Contract",
+   "options": "Outgrower Production Contract",
+   "read_only": 1
+  },
+  {
+   "fieldname": "plot",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Plot",
+   "options": "Farm Plot"
+  },
+  {
+   "fieldname": "outgrower",
+   "fieldtype": "Link",
+   "label": "Outgrower",
+   "options": "Outgrower"
+  },
+  {
+   "fieldname": "crop",
+   "fieldtype": "Link",
+   "label": "Crop",
+   "options": "Crop"
+  },
+  {
+   "fieldname": "season",
+   "fieldtype": "Link",
+   "label": "Season",
+   "options": "Season"
+  },
+  {
+   "fieldname": "production_category",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Production Category",
+   "options": "Basic\nCertified",
+   "reqd": 1
+  },
+  {
+   "default": "Cumulative Counts V2",
+   "fieldname": "sampling_protocol_version",
+   "fieldtype": "Select",
+   "label": "Sampling Protocol",
+   "options": "Legacy Percentage V1\nCumulative Counts V2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Schedule"
+  },
+  {
+   "fieldname": "scheduled_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Scheduled Date"
+  },
+  {
+   "fieldname": "started_at",
+   "fieldtype": "Datetime",
+   "label": "Started At"
+  },
+  {
+   "fieldname": "completed_at",
+   "fieldtype": "Datetime",
+   "label": "Completed At"
+  },
+  {
+   "fieldname": "assigned_to",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Assigned To",
+   "options": "User"
+  },
+  {
+   "default": "Scheduled",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Scheduled\nIn Progress\nAwaiting QA Review\nVerified\nReinspection Required\nCancelled"
+  },
+  {
+   "fieldname": "qa_review_section",
+   "fieldtype": "Section Break",
+   "label": "Quality Manager Review"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "qa_review_status",
+   "fieldtype": "Select",
+   "label": "QA Review Status",
+   "options": "Pending\nVerified\nReinspection Required",
+   "read_only": 1
+  },
+  {
+   "fieldname": "qa_reviewed_by",
+   "fieldtype": "Link",
+   "label": "Reviewed By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "qa_reviewed_on",
+   "fieldtype": "Datetime",
+   "label": "Reviewed On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "qa_review_notes",
+   "fieldtype": "Text",
+   "label": "QA Review Notes",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reinspection_of",
+   "fieldtype": "Link",
+   "label": "Reinspection Of",
+   "options": "Inspection",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reinspection_reason",
+   "fieldtype": "Small Text",
+   "label": "Reinspection Reason",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "Takes"
+  },
+  {
+   "fieldname": "plot_area_hectares",
+   "fieldtype": "Float",
+   "label": "Plot Area (Ha)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "required_take_count",
+   "fieldtype": "Int",
+   "label": "Required Take Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "completed_take_count",
+   "fieldtype": "Int",
+   "label": "Completed Take Count",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cumulative_total_plants",
+   "fieldtype": "Int",
+   "label": "Cumulative Total Plants",
+   "read_only": 1
+  },
+  {
+   "fieldname": "takes",
+   "fieldtype": "Table",
+   "label": "Inspection Takes",
+   "options": "Inspection Take",
+   "read_only": 1
+  },
+  {
+   "fieldname": "take_results",
+   "fieldtype": "Table",
+   "label": "Take Attribute Values",
+   "options": "Inspection Take Result",
+   "read_only": 1
+  },
+  {
+   "fieldname": "inspection_controls_section",
+   "fieldtype": "Section Break",
+   "label": "Inspection-Level Controls"
+  },
+  {
+   "default": "0",
+   "fieldname": "controls_completed",
+   "fieldtype": "Check",
+   "label": "Mandatory Controls Completed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "inspection_observations",
+   "fieldtype": "Table",
+   "label": "Inspection-Level Observations",
+   "options": "Inspection Observation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_3",
+   "fieldtype": "Section Break",
+   "label": "Aggregated Inspection Results"
+  },
+  {
+   "fieldname": "results",
+   "fieldtype": "Table",
+   "label": "Aggregated Inspection Results",
+   "options": "Inspection Result",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break",
+   "label": "Compliance Summary"
+  },
+  {
+   "fieldname": "farmer_compliance_percent",
+   "fieldtype": "Percent",
+   "label": "Farmer Compliance %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "farmer_compliance_status",
+   "fieldtype": "Select",
+   "label": "Farmer Compliance Status",
+   "options": "Non-Compliant\nImprovements Required\nCompliant",
+   "read_only": 1
+  },
+  {
+   "fieldname": "supervisor_compliance_percent",
+   "fieldtype": "Percent",
+   "label": "Supervisor Compliance %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "supervisor_compliance_status",
+   "fieldtype": "Select",
+   "label": "Supervisor Compliance Status",
+   "options": "Non-Compliant\nImprovements Required\nCompliant",
+   "read_only": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "field_certification_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Field Certification Status",
+   "options": "Pending\nApproved\nCorrective Action Required\nPartially Rejected\nRejected"
+  },
+  {
+   "fieldname": "hectares_under_corrective_action",
+   "fieldtype": "Float",
+   "label": "Ha Under Corrective Action"
+  },
+  {
+   "fieldname": "hectares_rejected",
+   "fieldtype": "Float",
+   "label": "Ha Rejected"
+  },
+  {
+   "fieldname": "hectares_accepted",
+   "fieldtype": "Float",
+   "label": "Ha Accepted",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recommendation",
+   "fieldtype": "Text",
+   "label": "Recommendation"
+  },
+  {
+   "fieldname": "section_break_5",
+   "fieldtype": "Section Break",
+   "label": "Inspection Quality"
+  },
+  {
+   "fieldname": "target_take_spacing_m",
+   "fieldtype": "Float",
+   "label": "Target Take Spacing (m)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "minimum_take_spacing_standard_m",
+   "fieldtype": "Float",
+   "label": "Minimum Spacing Standard (m)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "maximum_take_spacing_standard_m",
+   "fieldtype": "Float",
+   "label": "Maximum Spacing Standard (m)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "average_take_spacing_m",
+   "fieldtype": "Float",
+   "label": "Average Take Spacing (m)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "median_take_spacing_m",
+   "fieldtype": "Float",
+   "label": "Median Take Spacing (m)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "minimum_observed_take_spacing_m",
+   "fieldtype": "Float",
+   "label": "Minimum Observed Spacing (m)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "maximum_observed_take_spacing_m",
+   "fieldtype": "Float",
+   "label": "Maximum Observed Spacing (m)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "spacing_pair_count",
+   "fieldtype": "Int",
+   "label": "Spacing Pair Count",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "spacing_compliant_count",
+   "fieldtype": "Int",
+   "label": "Compliant Spacing Pairs",
+   "read_only": 1
+  },
+  {
+   "fieldname": "spacing_compliance_percent",
+   "fieldtype": "Percent",
+   "label": "Spacing Compliance %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "average_gps_accuracy_m",
+   "fieldtype": "Float",
+   "label": "Average GPS Accuracy (m)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "worst_gps_accuracy_m",
+   "fieldtype": "Float",
+   "label": "Worst GPS Accuracy (m)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "low_accuracy_take_count",
+   "fieldtype": "Int",
+   "label": "Low Accuracy Takes",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "positioning_override_count",
+   "fieldtype": "Int",
+   "label": "Positioning Overrides",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_take_path_distance_m",
+   "fieldtype": "Float",
+   "label": "Total Take Path Distance (m)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "takes_outside_plot",
+   "fieldtype": "Int",
+   "label": "Takes Outside Plot",
+   "read_only": 1
+  },
+  {
+   "fieldname": "inspection_quality_score",
+   "fieldtype": "Select",
+   "label": "Inspection Quality Score",
+   "options": "Poor\nAcceptable\nGood",
+   "read_only": 1
+  },
+  {
+   "fieldname": "inspection_map_geojson",
+   "fieldtype": "Code",
+   "label": "Inspection Map GeoJSON",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "synced",
+   "fieldtype": "Check",
+   "label": "Synced"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Inspection",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector",
+   "write": 1
+  },
+  {
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager"
+  },
+  {
+   "print": 1,
+   "read": 1,
+   "role": "Outgrower Supervisor"
+  }
+ ],
+ "sort_field": "scheduled_date",
+ "sort_order": "ASC",
+ "states": [],
+ "track_changes": 1
+}

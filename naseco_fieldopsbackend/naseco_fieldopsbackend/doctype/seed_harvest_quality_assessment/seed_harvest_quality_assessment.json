@@ -1,0 +1,383 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "format:SHQA-{YYYY}-{#####}",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "assessment_status",
+  "crop_cycle",
+  "production_contract",
+  "production_lot",
+  "outgrower",
+  "season",
+  "pricing_policy",
+  "receipt_section",
+  "purchase_receipt",
+  "purchase_receipt_item",
+  "quality_inspection",
+  "item_code",
+  "batch_no",
+  "delivery_date",
+  "quantity_section",
+  "gross_qty",
+  "uom",
+  "moisture_percent",
+  "moisture_target_percent",
+  "moisture_adjustment_method",
+  "net_dry_qty",
+  "quality_section",
+  "germination_percent",
+  "genetic_purity_percent",
+  "vigor_percent",
+  "undersize_percent",
+  "reject_percent",
+  "laboratory_certificate",
+  "laboratory_reference",
+  "disposition",
+  "quality_decision_notes",
+  "pricing_section",
+  "eligible_area_acres",
+  "provisional_yield_kg_per_acre",
+  "provisional_pricing_band",
+  "provisional_price_basis",
+  "provisional_payable_value",
+  "potential_bonus_amount",
+  "bonus_status",
+  "inspected_by",
+  "verified_by",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "default": "Draft",
+   "fieldname": "assessment_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Assessment Status",
+   "options": "Draft\nPending Laboratory Review\nSeed Accepted\nAccepted as Grain\nRejected\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "crop_cycle",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Crop Cycle",
+   "options": "Crop Cycle",
+   "reqd": 1
+  },
+  {
+   "fieldname": "production_contract",
+   "fieldtype": "Link",
+   "label": "Production Contract",
+   "options": "Outgrower Production Contract",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "production_lot",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Production Lot",
+   "options": "Crop Production Lot",
+   "reqd": 1
+  },
+  {
+   "fieldname": "outgrower",
+   "fieldtype": "Link",
+   "label": "Outgrower",
+   "options": "Outgrower",
+   "read_only": 1
+  },
+  {
+   "fieldname": "season",
+   "fieldtype": "Link",
+   "label": "Season",
+   "options": "Season",
+   "read_only": 1
+  },
+  {
+   "fieldname": "pricing_policy",
+   "fieldtype": "Link",
+   "label": "Pricing Policy",
+   "options": "Outgrower Pricing Policy",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "receipt_section",
+   "fieldtype": "Section Break",
+   "label": "ERPNext Receipt and Quality Inspection"
+  },
+  {
+   "fieldname": "purchase_receipt",
+   "fieldtype": "Link",
+   "label": "Purchase Receipt",
+   "options": "Purchase Receipt",
+   "reqd": 1
+  },
+  {
+   "fieldname": "purchase_receipt_item",
+   "fieldtype": "Data",
+   "label": "Purchase Receipt Item Row",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quality_inspection",
+   "fieldtype": "Link",
+   "label": "Quality Inspection",
+   "options": "Quality Inspection"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "label": "Delivered Item",
+   "options": "Item",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "batch_no",
+   "fieldtype": "Link",
+   "label": "Harvest Batch",
+   "options": "Batch"
+  },
+  {
+   "default": "Today",
+   "fieldname": "delivery_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Delivery Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quantity_section",
+   "fieldtype": "Section Break",
+   "label": "Delivered and Net Dry Quantity"
+  },
+  {
+   "fieldname": "gross_qty",
+   "fieldtype": "Float",
+   "label": "Gross Accepted Quantity",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "moisture_percent",
+   "fieldtype": "Percent",
+   "label": "Measured Moisture %"
+  },
+  {
+   "fieldname": "moisture_target_percent",
+   "fieldtype": "Percent",
+   "label": "Contract Moisture Target %",
+   "read_only": 1
+  },
+  {
+   "default": "Normalize Down to Target",
+   "fieldname": "moisture_adjustment_method",
+   "fieldtype": "Select",
+   "label": "Moisture Adjustment Method",
+   "options": "No Adjustment\nNormalize Down to Target",
+   "reqd": 1
+  },
+  {
+   "fieldname": "net_dry_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Net Dry Quantity",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "quality_section",
+   "fieldtype": "Section Break",
+   "label": "Seed-Lot Laboratory Results"
+  },
+  {
+   "fieldname": "germination_percent",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Germination %"
+  },
+  {
+   "fieldname": "genetic_purity_percent",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Genetic Purity %"
+  },
+  {
+   "fieldname": "vigor_percent",
+   "fieldtype": "Percent",
+   "label": "Vigour %"
+  },
+  {
+   "description": "Percentage of seed below the policy screen size.",
+   "fieldname": "undersize_percent",
+   "fieldtype": "Percent",
+   "label": "Below Screen Size %"
+  },
+  {
+   "fieldname": "reject_percent",
+   "fieldtype": "Percent",
+   "label": "Rejects %"
+  },
+  {
+   "fieldname": "laboratory_certificate",
+   "fieldtype": "Attach",
+   "label": "Laboratory or NSCS Certificate"
+  },
+  {
+   "fieldname": "laboratory_reference",
+   "fieldtype": "Data",
+   "label": "Laboratory Reference"
+  },
+  {
+   "default": "Seed",
+   "fieldname": "disposition",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Commercial Disposition",
+   "options": "Seed\nGrain\nRejected",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quality_decision_notes",
+   "fieldtype": "Text",
+   "label": "Quality Decision Notes"
+  },
+  {
+   "fieldname": "pricing_section",
+   "fieldtype": "Section Break",
+   "label": "Provisional Contract Pricing"
+  },
+  {
+   "fieldname": "eligible_area_acres",
+   "fieldtype": "Float",
+   "label": "Eligible Area (Acres)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "provisional_yield_kg_per_acre",
+   "fieldtype": "Float",
+   "label": "Provisional Yield (kg/acre)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "provisional_pricing_band",
+   "fieldtype": "Data",
+   "label": "Provisional Pricing Band",
+   "read_only": 1
+  },
+  {
+   "fieldname": "provisional_price_basis",
+   "fieldtype": "Data",
+   "label": "Provisional Price Basis",
+   "read_only": 1
+  },
+  {
+   "fieldname": "provisional_payable_value",
+   "fieldtype": "Currency",
+   "label": "Provisional Initial Payable",
+   "read_only": 1
+  },
+  {
+   "fieldname": "potential_bonus_amount",
+   "fieldtype": "Currency",
+   "label": "Potential Deferred Bonus",
+   "read_only": 1
+  },
+  {
+   "default": "Not Eligible",
+   "fieldname": "bonus_status",
+   "fieldtype": "Select",
+   "label": "Bonus Status",
+   "options": "Not Eligible\nPending QA Approval\nApproved\nInvoiced\nPaid\nRejected",
+   "read_only": 1
+  },
+  {
+   "default": "user",
+   "fieldname": "inspected_by",
+   "fieldtype": "Link",
+   "label": "Inspected By",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "verified_by",
+   "fieldtype": "Link",
+   "label": "Verified By",
+   "options": "User"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Seed Harvest Quality Assessment",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 1,
+ "module": "Naseco FieldOpsBackend",
+ "name": "Seed Harvest Quality Assessment",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector",
+   "write": 1
+  }
+ ],
+ "sort_field": "delivery_date",
+ "sort_order": "DESC"
+}

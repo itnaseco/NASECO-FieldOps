@@ -1,0 +1,138 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:activity_name",
+ "creation": "2026-07-25 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "activity_name",
+  "crop_recipe",
+  "stage_name",
+  "day_offset_from_planting",
+  "day_offset_end",
+  "responsible_party",
+  "priority",
+  "mandatory",
+  "evidence_required",
+  "inspection_related",
+  "active",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "activity_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Activity Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "crop_recipe",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Crop Recipe",
+   "options": "Crop Recipe"
+  },
+  {
+   "fieldname": "stage_name",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Crop Cycle Stage",
+   "options": "Field Verification & Contracting\nPlanting\nCrop Emergence / Germination\nVegetative\nPre-flowering\nFlowering\nPre-harvest\nHarvest\nDelivery",
+   "reqd": 1
+  },
+  {
+   "fieldname": "day_offset_from_planting",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Day Offset From Planting",
+   "reqd": 1
+  },
+  {
+   "fieldname": "day_offset_end",
+   "fieldtype": "Int",
+   "label": "Day Offset End"
+  },
+  {
+   "default": "Supervisor / Farmer",
+   "fieldname": "responsible_party",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Responsible Party",
+   "options": "Supervisor / Farmer\nSupervisor / Farmer / QA\nFarmer\nQA"
+  },
+  {
+   "default": "0",
+   "fieldname": "inspection_related",
+   "fieldtype": "Check",
+   "label": "Inspection Related"
+  },
+  {
+   "default": "Medium",
+   "fieldname": "priority",
+   "fieldtype": "Select",
+   "label": "Priority",
+   "options": "Low\nMedium\nHigh",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "mandatory",
+   "fieldtype": "Check",
+   "label": "Mandatory"
+  },
+  {
+   "default": "0",
+   "fieldname": "evidence_required",
+   "fieldtype": "Check",
+   "label": "Evidence Required"
+  },
+  {
+   "default": "1",
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Active"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Description"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Agronomy Activity Template",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager"
+  },
+  {
+   "read": 1,
+   "role": "Outgrower Supervisor"
+  }
+ ],
+ "sort_field": "day_offset_from_planting",
+ "sort_order": "ASC",
+ "states": []
+}

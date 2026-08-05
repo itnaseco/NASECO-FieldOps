@@ -1,0 +1,102 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:template_name",
+ "creation": "2026-07-25 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "template_name",
+  "inspection_type",
+  "crop_stage",
+  "due_days_from_planting",
+  "due_window_end_days",
+  "counts_per_hectare",
+  "default_assigned_to",
+  "active",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "template_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Template Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "inspection_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Inspection Type",
+   "options": "Pre-flowering\n1st Flowering\n2nd Flowering\n3rd Flowering\nPre-harvest",
+   "reqd": 1
+  },
+  {
+   "fieldname": "crop_stage",
+   "fieldtype": "Data",
+   "label": "Crop Stage"
+  },
+  {
+   "fieldname": "due_days_from_planting",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Due Days From Planting",
+   "reqd": 1
+  },
+  {
+   "fieldname": "due_window_end_days",
+   "fieldtype": "Int",
+   "label": "Due Window End Days"
+  },
+  {
+   "default": "4",
+   "fieldname": "counts_per_hectare",
+   "fieldtype": "Float",
+   "label": "Counts Per Hectare"
+  },
+  {
+   "fieldname": "default_assigned_to",
+   "fieldtype": "Link",
+   "label": "Default QA Inspector",
+   "options": "User"
+  },
+  {
+   "default": "1",
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Active"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Description"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Inspection Template",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "due_days_from_planting",
+ "sort_order": "ASC",
+ "states": []
+}

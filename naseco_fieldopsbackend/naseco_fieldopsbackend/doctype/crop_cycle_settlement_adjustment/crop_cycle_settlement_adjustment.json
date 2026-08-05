@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "creation": "2026-07-26 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "adjustment_type",
+  "description",
+  "add_or_deduct",
+  "account",
+  "amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "adjustment_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Adjustment Type",
+   "options": "Quality Deduction\nQuality Bonus\nCommercial Adjustment\nOther"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "reqd": 1
+  },
+  {
+   "default": "Deduct",
+   "fieldname": "add_or_deduct",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Add or Deduct",
+   "options": "Add\nDeduct",
+   "reqd": 1
+  },
+  {
+   "fieldname": "account",
+   "fieldtype": "Link",
+   "label": "Account",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount",
+   "reqd": 1
+  }
+ ],
+ "istable": 1,
+ "modified": "2026-07-26 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Crop Cycle Settlement Adjustment",
+ "owner": "Administrator",
+ "permissions": []
+}

@@ -1,0 +1,73 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "readiness_area",
+  "requirement",
+  "mandatory",
+  "responsible_user",
+  "due_date",
+  "status",
+  "evidence",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "readiness_area",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Readiness Area",
+   "options": "Production Targets\nGrowers and Plots\nContracts and Pricing\nCrop Recipes\nQuality Standards\nParent Seed and Inputs\nWarehouses\nSupervisor Capacity\nInspector Capacity\nFinance and Exposure",
+   "reqd": 1
+  },
+  {
+   "fieldname": "requirement",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Requirement",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "mandatory",
+   "fieldtype": "Check",
+   "label": "Mandatory"
+  },
+  {
+   "fieldname": "responsible_user",
+   "fieldtype": "Link",
+   "label": "Responsible User",
+   "options": "User"
+  },
+  {
+   "fieldname": "due_date",
+   "fieldtype": "Date",
+   "label": "Due Date"
+  },
+  {
+   "default": "Not Started",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Not Started\nIn Progress\nReady\nBlocked\nNot Applicable",
+   "reqd": 1
+  },
+  {
+   "fieldname": "evidence",
+   "fieldtype": "Attach",
+   "label": "Evidence"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "istable": 1,
+ "module": "Naseco FieldOpsBackend",
+ "name": "Season Readiness Item",
+ "permissions": []
+}

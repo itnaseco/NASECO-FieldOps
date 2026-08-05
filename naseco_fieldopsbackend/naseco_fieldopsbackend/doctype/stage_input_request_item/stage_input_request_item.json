@@ -1,0 +1,183 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "recipe_input_item",
+  "item_code",
+  "item_name",
+  "requested_qty",
+  "approved_qty",
+  "uom",
+  "conversion_factor",
+  "stock_uom",
+  "requested_stock_qty",
+  "approved_stock_qty",
+  "source_warehouse",
+  "issued_qty",
+  "issued_stock_qty",
+  "remaining_qty",
+  "remaining_stock_qty",
+  "estimated_rate",
+  "estimated_amount",
+  "recovery_policy",
+  "recoverable_percent",
+  "recovery_rate_basis",
+  "contract_recovery_rate"
+ ],
+ "fields": [
+  {
+   "fieldname": "recipe_input_item",
+   "fieldtype": "Data",
+   "label": "Recipe Input Row",
+   "read_only": 1
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "item_code.item_name",
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "label": "Item Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "requested_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Requested Qty",
+   "reqd": 1
+  },
+  {
+   "fieldname": "approved_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Approved Qty"
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Request UOM",
+   "options": "UOM",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "description": "Number of Stock UOM units represented by one Request UOM.",
+   "fieldname": "conversion_factor",
+   "fieldtype": "Float",
+   "label": "Conversion Factor",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "item_code.stock_uom",
+   "fieldname": "stock_uom",
+   "fieldtype": "Link",
+   "label": "Stock UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "requested_stock_qty",
+   "fieldtype": "Float",
+   "label": "Requested Stock Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "approved_stock_qty",
+   "fieldtype": "Float",
+   "label": "Approved Stock Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "source_warehouse",
+   "fieldtype": "Link",
+   "label": "Source Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "issued_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Issued Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "issued_stock_qty",
+   "fieldtype": "Float",
+   "label": "Issued Stock Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remaining_qty",
+   "fieldtype": "Float",
+   "label": "Remaining Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remaining_stock_qty",
+   "fieldtype": "Float",
+   "label": "Remaining Stock Qty",
+   "read_only": 1
+  },
+  {
+   "description": "Estimated value per Stock UOM.",
+   "fieldname": "estimated_rate",
+   "fieldtype": "Currency",
+   "label": "Estimated Stock UOM Rate"
+  },
+  {
+   "fieldname": "estimated_amount",
+   "fieldtype": "Currency",
+   "label": "Estimated Amount",
+   "read_only": 1
+  },
+  {
+   "default": "Fully Recoverable",
+   "fieldname": "recovery_policy",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Recovery Policy",
+   "options": "Fully Recoverable\nPartially Recoverable\nCompany Subsidy\nNon-Recoverable\nReturnable",
+   "reqd": 1
+  },
+  {
+   "default": "100",
+   "fieldname": "recoverable_percent",
+   "fieldtype": "Percent",
+   "label": "Recoverable %"
+  },
+  {
+   "default": "Actual Valuation",
+   "fieldname": "recovery_rate_basis",
+   "fieldtype": "Select",
+   "label": "Recovery Rate Basis",
+   "options": "Actual Valuation\nStandard Rate\nContract Rate"
+  },
+  {
+   "fieldname": "contract_recovery_rate",
+   "fieldtype": "Currency",
+   "label": "Contract Recovery Rate"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-07-26 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Stage Input Request Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,220 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:FCA-{#####}",
+ "creation": "2026-07-25 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "source_type",
+  "source_name",
+  "source_parameter",
+  "inspection",
+  "agronomy_report",
+  "crop_cycle",
+  "plot",
+  "outgrower",
+  "parameter",
+  "responsible_party",
+  "assigned_to",
+  "verification_assigned_to",
+  "due_date",
+  "status",
+  "description",
+  "resolution_notes",
+  "response_on",
+  "verified_by",
+  "verified_on",
+  "verification_notes",
+  "closed_on"
+ ],
+ "fields": [
+  {
+   "default": "Inspection",
+   "fieldname": "source_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Source Type",
+   "options": "Inspection\nAgronomy Report",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_name",
+   "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
+   "label": "Source Document",
+   "options": "source_type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_parameter",
+   "fieldtype": "Data",
+   "label": "Source Parameter"
+  },
+  {
+   "fieldname": "inspection",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Inspection",
+   "options": "Inspection"
+  },
+  {
+   "fieldname": "agronomy_report",
+   "fieldtype": "Link",
+   "label": "Agronomy Report",
+   "options": "Agronomy Report"
+  },
+  {
+   "fieldname": "crop_cycle",
+   "fieldtype": "Link",
+   "label": "Crop Cycle",
+   "options": "Crop Cycle"
+  },
+  {
+   "fieldname": "plot",
+   "fieldtype": "Link",
+   "label": "Plot",
+   "options": "Farm Plot"
+  },
+  {
+   "fieldname": "outgrower",
+   "fieldtype": "Link",
+   "label": "Outgrower",
+   "options": "Outgrower"
+  },
+  {
+   "fieldname": "parameter",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Parameter",
+   "options": "Inspection Parameter"
+  },
+  {
+   "fieldname": "responsible_party",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Responsible Party",
+   "options": "Farmer\nOutgrower Supervisor\nBoth\nInspection Quality",
+   "reqd": 1
+  },
+  {
+   "fieldname": "assigned_to",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Assigned To",
+   "options": "User"
+  },
+  {
+   "fieldname": "verification_assigned_to",
+   "fieldtype": "Link",
+   "label": "Verification Inspector",
+   "options": "User"
+  },
+  {
+   "fieldname": "due_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Due Date"
+  },
+  {
+   "default": "Open",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Open\nIn Progress\nResponded\nVerified\nClosed\nCancelled"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "resolution_notes",
+   "fieldtype": "Text",
+   "label": "Resolution Notes"
+  },
+  {
+   "fieldname": "response_on",
+   "fieldtype": "Datetime",
+   "label": "Responded On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "verified_by",
+   "fieldtype": "Link",
+   "label": "Verified By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "verified_on",
+   "fieldtype": "Datetime",
+   "label": "Verified On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "verification_notes",
+   "fieldtype": "Text",
+   "label": "Verification Notes"
+  },
+  {
+   "fieldname": "closed_on",
+   "fieldtype": "Datetime",
+   "label": "Closed On"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Field Corrective Action",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager"
+  },
+  {
+   "read": 1,
+   "role": "Outgrower Supervisor",
+   "write": 1
+  }
+ ],
+ "sort_field": "due_date",
+ "sort_order": "ASC",
+ "states": [],
+ "track_changes": 1
+}

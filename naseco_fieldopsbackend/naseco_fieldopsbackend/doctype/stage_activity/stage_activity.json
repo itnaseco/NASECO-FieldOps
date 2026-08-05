@@ -2,7 +2,7 @@
  "actions": [],
  "allow_rename": 1,
  "autoname": "field:activity_id",
- "creation": "2026-02-06 00:00:00.000000",
+ "creation": "2026-02-06 00:00:00",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -10,11 +10,20 @@
   "activity_id",
   "crop_cycle",
   "stage",
+  "activity_template",
   "visit",
+  "assigned_to",
   "title",
   "description",
   "activity_date",
+  "due_date",
   "duration_hours",
+  "priority",
+  "mandatory",
+  "evidence",
+  "completion_notes",
+  "completed_on",
+  "status",
   "synced"
  ],
  "fields": [
@@ -39,10 +48,24 @@
    "options": "Crop Cycle Stage"
   },
   {
+   "fieldname": "activity_template",
+   "fieldtype": "Link",
+   "label": "Activity Template",
+   "options": "Agronomy Activity Template",
+   "read_only": 1
+  },
+  {
    "fieldname": "visit",
    "fieldtype": "Link",
    "label": "Visit",
    "options": "Field Visit"
+  },
+  {
+   "fieldname": "assigned_to",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Assigned To",
+   "options": "User"
   },
   {
    "fieldname": "title",
@@ -61,20 +84,64 @@
    "label": "Activity Date"
   },
   {
+   "fieldname": "due_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Due Date"
+  },
+  {
    "fieldname": "duration_hours",
    "fieldtype": "Float",
    "label": "Duration (Hours)"
   },
   {
+   "default": "Medium",
+   "fieldname": "priority",
+   "fieldtype": "Select",
+   "label": "Priority",
+   "options": "Low\nMedium\nHigh"
+  },
+  {
+   "default": "1",
+   "fieldname": "mandatory",
+   "fieldtype": "Check",
+   "label": "Mandatory"
+  },
+  {
+   "fieldname": "evidence",
+   "fieldtype": "Attach",
+   "label": "Completion Evidence"
+  },
+  {
+   "fieldname": "completion_notes",
+   "fieldtype": "Text",
+   "label": "Completion Notes"
+  },
+  {
+   "fieldname": "completed_on",
+   "fieldtype": "Datetime",
+   "label": "Completed On",
+   "read_only": 1
+  },
+  {
+   "default": "Scheduled",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Scheduled\nIn Progress\nCompleted\nCancelled"
+  },
+  {
+   "default": "0",
    "fieldname": "synced",
    "fieldtype": "Check",
-   "label": "Synced",
-   "default": "0"
+   "label": "Synced"
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2026-02-06 00:00:00.000000",
+ "modified": "2026-07-25 23:12:22.725583",
  "modified_by": "Administrator",
  "module": "Naseco FieldOpsBackend",
  "name": "Stage Activity",
@@ -91,9 +158,29 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Outgrower Supervisor",
+   "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_seen": 1,
+ "track_views": 1
 }

@@ -1,0 +1,678 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "format:OPC-{YYYY}-{#####}",
+ "creation": "2026-07-27 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "status",
+  "outgrower",
+  "supplier",
+  "company",
+  "farm_plot",
+  "linked_crop_cycle",
+  "contract_template",
+  "template_version",
+  "pricing_policy",
+  "pricing_policy_version",
+  "legal_snapshot_section",
+  "grower_name_snapshot",
+  "national_id_snapshot",
+  "phone_snapshot",
+  "village_snapshot",
+  "sub_county_snapshot",
+  "district_snapshot",
+  "supervisor_snapshot",
+  "plot_id_snapshot",
+  "plot_geojson_snapshot",
+  "production_section",
+  "season",
+  "crop",
+  "variety",
+  "production_category",
+  "crop_recipe",
+  "period_section",
+  "agreement_date",
+  "contract_start_date",
+  "contract_end_date",
+  "planting_start_date",
+  "planting_end_date",
+  "actual_planting_date",
+  "expected_harvest_date",
+  "commercial_section",
+  "harvest_item",
+  "harvest_uom",
+  "expected_yield_qty",
+  "pricing_method",
+  "contract_rate",
+  "pricing_formula",
+  "currency",
+  "expected_harvest_value",
+  "contracted_area_acres",
+  "quota_kg_per_acre",
+  "contracted_quota_qty",
+  "max_exposure_percent",
+  "payment_terms_template",
+  "parent_seed_section",
+  "parent_seed_item",
+  "parent_seed_uom",
+  "planned_parent_seed_qty",
+  "parent_seed_rate",
+  "planned_parent_seed_value",
+  "recovery_section",
+  "default_recovery_policy",
+  "input_recovery_terms",
+  "quality_section",
+  "minimum_farmer_compliance_percent",
+  "minimum_supervisor_compliance_percent",
+  "required_isolation_quality",
+  "target_take_spacing_m",
+  "quality_standard_terms",
+  "obligations_section",
+  "agreement_title",
+  "seed_handbook_reference",
+  "legal_reference",
+  "company_obligations",
+  "farmer_obligations",
+  "supervisor_obligations",
+  "termination_terms",
+  "approval_section",
+  "eligibility_override_reason",
+  "eligibility_override_approved_by",
+  "is_signed",
+  "signed_on",
+  "company_signatory",
+  "farmer_signature",
+  "company_signature",
+  "signatories",
+  "supporting_document",
+  "erpnext_contract",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "allow_on_submit": 1,
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nActive\nFulfilled\nSuspended\nTerminated\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "outgrower",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Outgrower",
+   "options": "Outgrower",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "outgrower.supplier",
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "farm_plot",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Farm Plot",
+   "options": "Farm Plot",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "linked_crop_cycle",
+   "fieldtype": "Link",
+   "label": "Crop Cycle",
+   "options": "Crop Cycle",
+   "read_only": 1
+  },
+  {
+   "fieldname": "contract_template",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Contract Template",
+   "options": "Production Contract Template"
+  },
+  {
+   "fieldname": "template_version",
+   "fieldtype": "Data",
+   "label": "Template Version",
+   "read_only": 1
+  },
+  {
+   "fieldname": "pricing_policy",
+   "fieldtype": "Link",
+   "label": "Pricing Policy",
+   "options": "Outgrower Pricing Policy"
+  },
+  {
+   "fieldname": "pricing_policy_version",
+   "fieldtype": "Data",
+   "label": "Pricing Policy Version",
+   "read_only": 1
+  },
+  {
+   "fieldname": "legal_snapshot_section",
+   "fieldtype": "Section Break",
+   "label": "Signed Party and Field Snapshot"
+  },
+  {
+   "fieldname": "grower_name_snapshot",
+   "fieldtype": "Data",
+   "label": "Contracted Grower Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "national_id_snapshot",
+   "fieldtype": "Data",
+   "label": "National Identification Number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "phone_snapshot",
+   "fieldtype": "Data",
+   "label": "Contracted Telephone",
+   "read_only": 1
+  },
+  {
+   "fieldname": "village_snapshot",
+   "fieldtype": "Data",
+   "label": "Village",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sub_county_snapshot",
+   "fieldtype": "Data",
+   "label": "Subcounty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "district_snapshot",
+   "fieldtype": "Data",
+   "label": "District",
+   "read_only": 1
+  },
+  {
+   "fieldname": "supervisor_snapshot",
+   "fieldtype": "Link",
+   "label": "Outgrower Supervisor",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "plot_id_snapshot",
+   "fieldtype": "Data",
+   "label": "Contracted Field Number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "plot_geojson_snapshot",
+   "fieldtype": "Code",
+   "label": "Contracted Field Geometry",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_section",
+   "fieldtype": "Section Break",
+   "label": "Production Scope"
+  },
+  {
+   "fieldname": "season",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Season",
+   "options": "Season",
+   "reqd": 1
+  },
+  {
+   "fieldname": "crop",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Crop",
+   "options": "Crop",
+   "reqd": 1
+  },
+  {
+   "fieldname": "variety",
+   "fieldtype": "Link",
+   "label": "Variety",
+   "options": "Crop Variety",
+   "reqd": 1
+  },
+  {
+   "fieldname": "production_category",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Seed Category",
+   "options": "Basic\nCertified",
+   "reqd": 1
+  },
+  {
+   "fieldname": "crop_recipe",
+   "fieldtype": "Link",
+   "label": "Crop Recipe",
+   "options": "Crop Recipe",
+   "reqd": 1
+  },
+  {
+   "fieldname": "period_section",
+   "fieldtype": "Section Break",
+   "label": "Contract and Production Period"
+  },
+  {
+   "default": "Today",
+   "fieldname": "agreement_date",
+   "fieldtype": "Date",
+   "label": "Agreement Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "contract_start_date",
+   "fieldtype": "Date",
+   "label": "Contract Start Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "contract_end_date",
+   "fieldtype": "Date",
+   "label": "Contract End Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "planting_start_date",
+   "fieldtype": "Date",
+   "label": "Planting Window From",
+   "reqd": 1
+  },
+  {
+   "fieldname": "planting_end_date",
+   "fieldtype": "Date",
+   "label": "Planting Window To",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "actual_planting_date",
+   "fieldtype": "Date",
+   "label": "Actual Planting Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "expected_harvest_date",
+   "fieldtype": "Date",
+   "label": "Expected Harvest Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "commercial_section",
+   "fieldtype": "Section Break",
+   "label": "Harvest, Pricing and Exposure"
+  },
+  {
+   "fieldname": "harvest_item",
+   "fieldtype": "Link",
+   "label": "Harvest Item",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "harvest_item.stock_uom",
+   "fieldname": "harvest_uom",
+   "fieldtype": "Link",
+   "label": "Harvest UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "expected_yield_qty",
+   "fieldtype": "Float",
+   "label": "Expected Harvest Quantity",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "default": "Fixed Rate",
+   "fieldname": "pricing_method",
+   "fieldtype": "Select",
+   "label": "Pricing Method",
+   "options": "Fixed Rate\nMarket Rate\nFormula",
+   "reqd": 1
+  },
+  {
+   "fieldname": "contract_rate",
+   "fieldtype": "Currency",
+   "label": "Agreed Operational Rate",
+   "options": "currency",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.pricing_method==\"Formula\"",
+   "fieldname": "pricing_formula",
+   "fieldtype": "Small Text",
+   "label": "Pricing Formula"
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "expected_harvest_value",
+   "fieldtype": "Currency",
+   "label": "Expected Harvest Value",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "description": "Contractual area used for quota, yield and settlement calculations.",
+   "fieldname": "contracted_area_acres",
+   "fieldtype": "Float",
+   "label": "Contracted Area (Acres)",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "default": "1000",
+   "fieldname": "quota_kg_per_acre",
+   "fieldtype": "Float",
+   "label": "Contract Quota (kg/acre)",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "contracted_quota_qty",
+   "fieldtype": "Float",
+   "label": "Contracted Quota Quantity",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "default": "70",
+   "description": "Maximum combined recoverable inputs and cash advances as a percentage of expected harvest value.",
+   "fieldname": "max_exposure_percent",
+   "fieldtype": "Percent",
+   "label": "Maximum Exposure %"
+  },
+  {
+   "fieldname": "payment_terms_template",
+   "fieldtype": "Link",
+   "label": "Payment Terms Template",
+   "options": "Payment Terms Template"
+  },
+  {
+   "fieldname": "parent_seed_section",
+   "fieldtype": "Section Break",
+   "label": "Parent Seed Commitment"
+  },
+  {
+   "fieldname": "parent_seed_item",
+   "fieldtype": "Link",
+   "label": "Parent Seed Item",
+   "options": "Item"
+  },
+  {
+   "fetch_from": "parent_seed_item.stock_uom",
+   "fieldname": "parent_seed_uom",
+   "fieldtype": "Link",
+   "label": "Parent Seed UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planned_parent_seed_qty",
+   "fieldtype": "Float",
+   "label": "Planned Parent Seed Quantity",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "parent_seed_rate",
+   "fieldtype": "Currency",
+   "label": "Parent Seed Rate",
+   "non_negative": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "planned_parent_seed_value",
+   "fieldtype": "Currency",
+   "label": "Planned Parent Seed Value",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recovery_section",
+   "fieldtype": "Section Break",
+   "label": "Input and Advance Recovery"
+  },
+  {
+   "default": "Fully Recoverable",
+   "fieldname": "default_recovery_policy",
+   "fieldtype": "Select",
+   "label": "Default Input Recovery Policy",
+   "options": "Fully Recoverable\nPartially Recoverable\nCompany Subsidy\nNon-Recoverable\nReturnable",
+   "reqd": 1
+  },
+  {
+   "fieldname": "input_recovery_terms",
+   "fieldtype": "Text",
+   "label": "Input and Cash Advance Recovery Terms",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quality_section",
+   "fieldtype": "Section Break",
+   "label": "Quality Assurance Standards"
+  },
+  {
+   "default": "80",
+   "fieldname": "minimum_farmer_compliance_percent",
+   "fieldtype": "Percent",
+   "label": "Minimum Farmer Compliance %"
+  },
+  {
+   "default": "80",
+   "fieldname": "minimum_supervisor_compliance_percent",
+   "fieldtype": "Percent",
+   "label": "Minimum Supervisor Compliance %"
+  },
+  {
+   "default": "Good",
+   "fieldname": "required_isolation_quality",
+   "fieldtype": "Select",
+   "label": "Required Isolation Distance Rating",
+   "options": "Poor\nGood",
+   "reqd": 1
+  },
+  {
+   "default": "5",
+   "fieldname": "target_take_spacing_m",
+   "fieldtype": "Float",
+   "label": "Target Inspection Take Spacing (m)",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "quality_standard_terms",
+   "fieldtype": "Text Editor",
+   "label": "Quality Standard Terms",
+   "reqd": 1
+  },
+  {
+   "fieldname": "obligations_section",
+   "fieldtype": "Section Break",
+   "label": "Responsibilities and Termination"
+  },
+  {
+   "fieldname": "agreement_title",
+   "fieldtype": "Data",
+   "label": "Agreement Title",
+   "read_only": 1
+  },
+  {
+   "fieldname": "seed_handbook_reference",
+   "fieldtype": "Data",
+   "label": "Seed Production Handbook Reference",
+   "read_only": 1
+  },
+  {
+   "fieldname": "legal_reference",
+   "fieldtype": "Small Text",
+   "label": "Legal and Certification References",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company_obligations",
+   "fieldtype": "Text Editor",
+   "label": "Company Responsibilities",
+   "reqd": 1
+  },
+  {
+   "fieldname": "farmer_obligations",
+   "fieldtype": "Text Editor",
+   "label": "Farmer Obligations",
+   "reqd": 1
+  },
+  {
+   "fieldname": "supervisor_obligations",
+   "fieldtype": "Text Editor",
+   "label": "Outgrower Supervisor Obligations",
+   "reqd": 1
+  },
+  {
+   "fieldname": "termination_terms",
+   "fieldtype": "Text Editor",
+   "label": "Suspension and Termination Terms",
+   "reqd": 1
+  },
+  {
+   "fieldname": "approval_section",
+   "fieldtype": "Section Break",
+   "label": "Approval and Signatures"
+  },
+  {
+   "depends_on": "eval:doc.eligibility_override_approved_by",
+   "fieldname": "eligibility_override_reason",
+   "fieldtype": "Small Text",
+   "label": "Eligibility Override Reason"
+  },
+  {
+   "fieldname": "eligibility_override_approved_by",
+   "fieldtype": "Link",
+   "label": "Eligibility Override Approved By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_signed",
+   "fieldtype": "Check",
+   "label": "Signed by Both Parties"
+  },
+  {
+   "fieldname": "signed_on",
+   "fieldtype": "Datetime",
+   "label": "Signed On"
+  },
+  {
+   "fieldname": "company_signatory",
+   "fieldtype": "Link",
+   "label": "Company Signatory",
+   "options": "User"
+  },
+  {
+   "fieldname": "farmer_signature",
+   "fieldtype": "Signature",
+   "label": "Farmer Signature"
+  },
+  {
+   "fieldname": "company_signature",
+   "fieldtype": "Signature",
+   "label": "Company Signature"
+  },
+  {
+   "fieldname": "signatories",
+   "fieldtype": "Table",
+   "label": "Agreement Signatories",
+   "options": "Production Contract Signatory"
+  },
+  {
+   "fieldname": "supporting_document",
+   "fieldtype": "Attach",
+   "label": "Signed Contract Attachment"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "erpnext_contract",
+   "fieldtype": "Link",
+   "label": "Supplier Contract",
+   "options": "Contract",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Outgrower Production Contract",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-07-27 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Outgrower Production Contract",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

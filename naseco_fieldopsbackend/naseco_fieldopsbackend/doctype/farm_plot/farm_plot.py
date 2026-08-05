@@ -8,16 +8,25 @@ import re
 import time
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
+from frappe.utils import flt
 from frappe.utils.file_manager import save_file
 
 
 class FarmPlot(Document):
+	def validate(self):
+		self.validate_and_normalize_polygon()
+		self.validate_geospatial_values()
+
 	def before_save(self):
-		"""Calculate area, perimeter, and centroid from polygon vertices"""
+		"""Calculate missing measurements while preserving values entered in Desk."""
 		if self.polygon and len(self.polygon) >= 3:
-			self.calculate_geospatial_values()
+			if self.flags.get("force_geospatial_calculation") or not self.has_geospatial_values():
+				self.calculate_geospatial_values()
 			self.generate_geojson()
+		elif not self.has_geospatial_values():
+			self.clear_geospatial_values()
 
 	def after_insert(self):
 		self._ensure_map_image_from_base64()
@@ -62,6 +71,92 @@ class FarmPlot(Document):
 				frappe.db.set_value(self.doctype, self.name, "map_image", file_doc.file_url, update_modified=False)
 		except Exception:
 			frappe.log_error("Failed to save map image file from base64")
+
+	def validate_and_normalize_polygon(self):
+		if not self.polygon:
+			return
+
+		ordered_vertices = sorted(
+			self.polygon,
+			key=lambda row: (row.order_index or row.idx or 0, row.idx or 0),
+		)
+		self.polygon = ordered_vertices
+
+		unique_coordinates = set()
+		first_coordinate = None
+		for index, vertex in enumerate(self.polygon, start=1):
+			if vertex.latitude in (None, ""):
+				frappe.throw(_("Latitude is required in coordinate row {0}.").format(index))
+			if vertex.longitude in (None, ""):
+				frappe.throw(_("Longitude is required in coordinate row {0}.").format(index))
+
+			latitude = flt(vertex.latitude)
+			longitude = flt(vertex.longitude)
+
+			if not -90 <= latitude <= 90:
+				frappe.throw(
+					_("Latitude in coordinate row {0} must be between -90 and 90.").format(index)
+				)
+			if not -180 <= longitude <= 180:
+				frappe.throw(
+					_("Longitude in coordinate row {0} must be between -180 and 180.").format(index)
+				)
+
+			coordinate = (round(latitude, 8), round(longitude, 8))
+			is_closing_coordinate = (
+				index == len(self.polygon)
+				and len(self.polygon) > 3
+				and coordinate == first_coordinate
+			)
+			if coordinate in unique_coordinates and not is_closing_coordinate:
+				frappe.throw(
+					_("Coordinate row {0} duplicates another polygon vertex.").format(index)
+				)
+
+			first_coordinate = first_coordinate or coordinate
+			unique_coordinates.add(coordinate)
+			vertex.latitude = latitude
+			vertex.longitude = longitude
+			vertex.order_index = index
+			vertex.idx = index
+
+		if len(unique_coordinates) < 3:
+			frappe.throw(_("A plot polygon requires at least three unique coordinates."))
+
+	def validate_geospatial_values(self):
+		if self.area_acres not in (None, "") and flt(self.area_acres) < 0:
+			frappe.throw(_("Area cannot be negative."))
+		if self.perimeter_meters not in (None, "") and flt(self.perimeter_meters) < 0:
+			frappe.throw(_("Perimeter cannot be negative."))
+
+		has_latitude = self.centroid_lat not in (None, "")
+		has_longitude = self.centroid_lng not in (None, "")
+		if has_latitude != has_longitude:
+			frappe.throw(
+				_("Both Centroid Latitude and Centroid Longitude are required when either is entered.")
+			)
+		if has_latitude and not -90 <= flt(self.centroid_lat) <= 90:
+			frappe.throw(_("Centroid Latitude must be between -90 and 90."))
+		if has_longitude and not -180 <= flt(self.centroid_lng) <= 180:
+			frappe.throw(_("Centroid Longitude must be between -180 and 180."))
+
+	def has_geospatial_values(self):
+		return any(
+			value not in (None, "")
+			for value in (
+				self.area_acres,
+				self.perimeter_meters,
+				self.centroid_lat,
+				self.centroid_lng,
+			)
+		)
+
+	def clear_geospatial_values(self):
+		self.area_acres = 0
+		self.perimeter_meters = 0
+		self.centroid_lat = None
+		self.centroid_lng = None
+		self.geojson = None
 
 	def calculate_geospatial_values(self):
 		"""Calculate area (acres), perimeter (meters), and centroid from GPS vertices"""
@@ -186,8 +281,8 @@ class FarmPlot(Document):
 			return
 
 		coordinates = [[float(v.longitude), float(v.latitude)] for v in self.polygon]
-		# Close the polygon by adding the first point at the end
-		coordinates.append(coordinates[0])
+		if coordinates[-1] != coordinates[0]:
+			coordinates.append(coordinates[0])
 
 		geojson = {
 			"type": "Feature",
@@ -204,3 +299,21 @@ class FarmPlot(Document):
 		}
 
 		self.geojson = json.dumps(geojson, indent=2)
+
+
+@frappe.whitelist()
+def recalculate_plot_measurements(farm_plot):
+	doc = frappe.get_doc("Farm Plot", farm_plot)
+	doc.check_permission("write")
+	if len(doc.polygon or []) < 3:
+		frappe.throw(_("At least three polygon coordinates are required to calculate plot measurements."))
+
+	doc.validate_and_normalize_polygon()
+	doc.flags.force_geospatial_calculation = True
+	doc.save()
+	return {
+		"area_acres": doc.area_acres,
+		"perimeter_meters": doc.perimeter_meters,
+		"centroid_lat": doc.centroid_lat,
+		"centroid_lng": doc.centroid_lng,
+	}

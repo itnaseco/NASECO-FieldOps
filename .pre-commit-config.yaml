@@ -63,6 +63,15 @@ repos:
                 naseco_fieldopsbackend/public/js/lib/.*
             )$
 
+  - repo: local
+    hooks:
+      - id: update-executive-process-overview
+        name: Update executive process overview
+        entry: python3 tools/update_executive_process_overview.py
+        language: system
+        pass_filenames: false
+        files: ^(naseco_fieldopsbackend/|tools/update_executive_process_overview.py|\.pre-commit-config\.yaml)
+
 ci:
     autoupdate_schedule: weekly
     skip: []

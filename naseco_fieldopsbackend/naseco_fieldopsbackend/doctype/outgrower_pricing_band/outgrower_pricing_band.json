@@ -1,0 +1,74 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "band_name",
+  "minimum_yield_kg_per_acre",
+  "maximum_yield_kg_per_acre",
+  "minimum_purity_percent",
+  "maximum_purity_percent",
+  "price_basis",
+  "rate_per_kg"
+ ],
+ "fields": [
+  {
+   "fieldname": "band_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Pricing Band",
+   "reqd": 1
+  },
+  {
+   "description": "Inclusive lower yield boundary.",
+   "fieldname": "minimum_yield_kg_per_acre",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Minimum Yield (kg/acre)",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "description": "Exclusive upper yield boundary. Leave zero for no upper limit.",
+   "fieldname": "maximum_yield_kg_per_acre",
+   "fieldtype": "Float",
+   "label": "Maximum Yield (kg/acre)",
+   "non_negative": 1
+  },
+  {
+   "description": "Inclusive lower genetic-purity boundary.",
+   "fieldname": "minimum_purity_percent",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Minimum Genetic Purity %"
+  },
+  {
+   "description": "Exclusive upper genetic-purity boundary. Leave zero for no upper limit.",
+   "fieldname": "maximum_purity_percent",
+   "fieldtype": "Percent",
+   "label": "Maximum Genetic Purity %"
+  },
+  {
+   "default": "Fixed Rate",
+   "fieldname": "price_basis",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Price Basis",
+   "options": "Fixed Rate\nGrain Price",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.price_basis==\"Fixed Rate\"",
+   "fieldname": "rate_per_kg",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Rate per kg",
+   "non_negative": 1
+  }
+ ],
+ "istable": 1,
+ "module": "Naseco FieldOpsBackend",
+ "name": "Outgrower Pricing Band",
+ "permissions": []
+}

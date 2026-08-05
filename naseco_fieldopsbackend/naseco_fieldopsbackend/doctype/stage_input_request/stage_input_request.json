@@ -1,7 +1,7 @@
 {
  "actions": [],
- "allow_rename": 1,
- "autoname": "format:INR-{####}",
+ "allow_rename": 0,
+ "autoname": "format:INR-{#####}",
  "creation": "2026-02-02 00:00:00.000000",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -9,19 +9,30 @@
  "field_order": [
   "request_id",
   "crop_cycle",
+  "production_contract",
   "stage",
-  "section_break_1",
+  "company",
+  "outgrower",
+  "supplier",
+  "request_section",
+  "requested_by",
+  "request_date",
+  "required_by",
+  "source_warehouse",
+  "status",
+  "items_section",
+  "items",
+  "totals_section",
+  "total_requested_value",
+  "total_approved_value",
+  "material_request",
+  "notes",
+  "legacy_section",
   "input_name",
   "quantity_needed",
   "unit",
-  "section_break_2",
   "quantity_dispatched",
   "quantity_remaining",
-  "status",
-  "section_break_3",
-  "requested_by",
-  "request_date",
-  "notes",
   "input_type",
   "quantity",
   "requested_date",
@@ -31,7 +42,7 @@
   {
    "fieldname": "request_id",
    "fieldtype": "Data",
-   "label": "Request ID",
+   "label": "External Request ID",
    "unique": 1
   },
   {
@@ -43,78 +54,121 @@
    "reqd": 1
   },
   {
+   "fieldname": "production_contract",
+   "fieldtype": "Link",
+   "label": "Production Contract",
+   "options": "Outgrower Production Contract",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
    "fieldname": "stage",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Stage",
+   "label": "Crop Cycle Stage",
    "options": "Crop Cycle Stage"
   },
   {
-   "fieldname": "section_break_1",
-   "fieldtype": "Section Break",
-   "label": "Input Details"
-  },
-  {
-   "fieldname": "input_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Input Name",
-   "reqd": 1
-  },
-  {
-   "fieldname": "quantity_needed",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Quantity Needed",
-   "reqd": 1
-  },
-  {
-   "fieldname": "unit",
+   "fieldname": "company",
    "fieldtype": "Link",
-   "label": "Unit",
-   "options": "Unit"
-  },
-  {
-   "fieldname": "section_break_2",
-   "fieldtype": "Section Break",
-   "label": "Fulfillment"
-  },
-  {
-   "fieldname": "quantity_dispatched",
-   "fieldtype": "Float",
-   "label": "Quantity Dispatched",
+   "label": "Company",
+   "options": "Company",
    "read_only": 1,
-   "default": "0"
+   "reqd": 1
   },
   {
-   "fieldname": "quantity_remaining",
-   "fieldtype": "Float",
-   "label": "Quantity Remaining",
+   "fieldname": "outgrower",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Outgrower",
+   "options": "Outgrower",
    "read_only": 1
   },
   {
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "Status",
-   "options": "Pending\nApproved\nPartially Fulfilled\nFulfilled\nRejected",
-   "default": "Pending"
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Outgrower Supplier",
+   "options": "Supplier",
+   "read_only": 1
   },
   {
-   "fieldname": "section_break_3",
+   "fieldname": "request_section",
    "fieldtype": "Section Break",
-   "label": "Request Info"
+   "label": "Request and Approval"
   },
   {
    "fieldname": "requested_by",
    "fieldtype": "Link",
    "label": "Requested By",
-   "options": "User"
+   "options": "User",
+   "read_only": 1
   },
   {
+   "default": "Today",
    "fieldname": "request_date",
    "fieldtype": "Date",
    "label": "Request Date",
-   "default": "Today"
+   "reqd": 1
+  },
+  {
+   "fieldname": "required_by",
+   "fieldtype": "Date",
+   "label": "Required By",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_warehouse",
+   "fieldtype": "Link",
+   "label": "Default Source Warehouse",
+   "options": "Warehouse",
+   "reqd": 1
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nPending Approval\nApproved\nPartially Fulfilled\nFulfilled\nRejected\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "items_section",
+   "fieldtype": "Section Break",
+   "label": "Stock Inputs"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Requested Inputs",
+   "options": "Stage Input Request Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "totals_section",
+   "fieldtype": "Section Break",
+   "label": "Fulfilment Documents"
+  },
+  {
+   "fieldname": "total_requested_value",
+   "fieldtype": "Currency",
+   "label": "Estimated Requested Value",
+   "options": "Company:company:default_currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_approved_value",
+   "fieldtype": "Currency",
+   "label": "Estimated Approved Value",
+   "options": "Company:company:default_currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "material_request",
+   "fieldtype": "Link",
+   "label": "Material Request",
+   "options": "Material Request",
+   "read_only": 1
   },
   {
    "fieldname": "notes",
@@ -122,36 +176,83 @@
    "label": "Notes"
   },
   {
+   "collapsible": 1,
+   "fieldname": "legacy_section",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "label": "Legacy Mobile Compatibility"
+  },
+  {
+   "fieldname": "input_name",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Legacy Input Name"
+  },
+  {
+   "fieldname": "quantity_needed",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Legacy Quantity Needed"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Legacy Unit",
+   "options": "UOM"
+  },
+  {
+   "default": "0",
+   "fieldname": "quantity_dispatched",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Legacy Quantity Dispatched",
+   "read_only": 1
+  },
+  {
+   "fieldname": "quantity_remaining",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Legacy Quantity Remaining",
+   "read_only": 1
+  },
+  {
    "fieldname": "input_type",
    "fieldtype": "Data",
-   "label": "Input Type"
+   "hidden": 1,
+   "label": "Legacy Input Type"
   },
   {
    "fieldname": "quantity",
    "fieldtype": "Float",
-   "label": "Quantity"
+   "hidden": 1,
+   "label": "Legacy Quantity"
   },
   {
    "fieldname": "requested_date",
    "fieldtype": "Date",
-   "label": "Requested Date"
+   "hidden": 1,
+   "label": "Legacy Requested Date"
   },
   {
+   "default": "0",
    "fieldname": "synced",
    "fieldtype": "Check",
-   "label": "Synced",
-   "default": "0"
+   "hidden": 1,
+   "label": "Synced"
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2026-02-02 00:00:00.000000",
+ "modified": "2026-07-26 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Naseco FieldOpsBackend",
  "name": "Stage Input Request",
  "owner": "Administrator",
  "permissions": [
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -161,6 +262,26 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Outgrower Supervisor",
    "write": 1
   }
  ],

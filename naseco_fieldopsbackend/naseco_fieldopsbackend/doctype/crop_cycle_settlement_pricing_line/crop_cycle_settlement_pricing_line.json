@@ -1,0 +1,193 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "production_lot",
+  "assessment_count",
+  "net_dry_qty",
+  "uom",
+  "eligible_area_acres",
+  "yield_kg_per_acre",
+  "genetic_purity_percent",
+  "germination_percent",
+  "undersize_percent",
+  "reject_percent",
+  "pricing_band",
+  "price_basis",
+  "base_quota_qty",
+  "base_rate",
+  "excess_qty",
+  "excess_rate",
+  "grain_qty",
+  "gross_value",
+  "screen_deduction",
+  "reject_deduction",
+  "initial_payable_value",
+  "potential_bonus_rate",
+  "potential_bonus_amount",
+  "bonus_status"
+ ],
+ "fields": [
+  {
+   "fieldname": "production_lot",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Production Lot",
+   "options": "Crop Production Lot",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "assessment_count",
+   "fieldtype": "Int",
+   "label": "Assessments",
+   "read_only": 1
+  },
+  {
+   "fieldname": "net_dry_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Net Dry Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "eligible_area_acres",
+   "fieldtype": "Float",
+   "label": "Eligible Area (Acres)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "yield_kg_per_acre",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Yield (kg/acre)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "genetic_purity_percent",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Genetic Purity %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "germination_percent",
+   "fieldtype": "Percent",
+   "label": "Germination %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "undersize_percent",
+   "fieldtype": "Percent",
+   "label": "Below Screen Size %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reject_percent",
+   "fieldtype": "Percent",
+   "label": "Rejects %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "pricing_band",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Pricing Band",
+   "read_only": 1
+  },
+  {
+   "fieldname": "price_basis",
+   "fieldtype": "Data",
+   "label": "Price Basis",
+   "read_only": 1
+  },
+  {
+   "fieldname": "base_quota_qty",
+   "fieldtype": "Float",
+   "label": "Base Quota Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "base_rate",
+   "fieldtype": "Currency",
+   "label": "Base Rate",
+   "read_only": 1
+  },
+  {
+   "fieldname": "excess_qty",
+   "fieldtype": "Float",
+   "label": "Excess Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "excess_rate",
+   "fieldtype": "Currency",
+   "label": "Excess Rate",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grain_qty",
+   "fieldtype": "Float",
+   "label": "Grain Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "gross_value",
+   "fieldtype": "Currency",
+   "label": "Gross Contract Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "screen_deduction",
+   "fieldtype": "Currency",
+   "label": "Screen Deduction",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reject_deduction",
+   "fieldtype": "Currency",
+   "label": "Reject Deduction",
+   "read_only": 1
+  },
+  {
+   "fieldname": "initial_payable_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Initial Payable",
+   "read_only": 1
+  },
+  {
+   "fieldname": "potential_bonus_rate",
+   "fieldtype": "Currency",
+   "label": "Potential Bonus Rate",
+   "read_only": 1
+  },
+  {
+   "fieldname": "potential_bonus_amount",
+   "fieldtype": "Currency",
+   "label": "Potential Deferred Bonus",
+   "read_only": 1
+  },
+  {
+   "default": "Pending QA Approval",
+   "fieldname": "bonus_status",
+   "fieldtype": "Select",
+   "label": "Bonus Status",
+   "options": "Not Eligible\nPending QA Approval\nApproved\nInvoiced\nPaid\nRejected",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "module": "Naseco FieldOpsBackend",
+ "name": "Crop Cycle Settlement Pricing Line",
+ "permissions": []
+}

@@ -1,0 +1,92 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "parameter",
+  "responsibility",
+  "measured_value",
+  "text_value",
+  "unit",
+  "result_status",
+  "corrective_action_required",
+  "captured_by",
+  "captured_at",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "parameter",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Parameter",
+   "options": "Inspection Parameter",
+   "reqd": 1
+  },
+  {
+   "default": "Both",
+   "fieldname": "responsibility",
+   "fieldtype": "Select",
+   "label": "Responsibility",
+   "options": "Farmer\nOutgrower Supervisor\nBoth\nInspection Quality",
+   "reqd": 1
+  },
+  {
+   "fieldname": "measured_value",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Measured Value"
+  },
+  {
+   "fieldname": "text_value",
+   "fieldtype": "Data",
+   "label": "Text Value"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
+  },
+  {
+   "default": "Not Evaluated",
+   "fieldname": "result_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Result",
+   "options": "Not Evaluated\nPass\nFail\nGood\nPoor\nCorrective Action Required\nAuto Reject",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "corrective_action_required",
+   "fieldtype": "Check",
+   "label": "Corrective Action Required",
+   "read_only": 1
+  },
+  {
+   "fieldname": "captured_by",
+   "fieldtype": "Link",
+   "label": "Captured By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "captured_at",
+   "fieldtype": "Datetime",
+   "label": "Captured At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  }
+ ],
+ "istable": 1,
+ "module": "Naseco FieldOpsBackend",
+ "name": "Inspection Observation",
+ "permissions": []
+}

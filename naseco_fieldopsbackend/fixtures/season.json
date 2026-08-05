@@ -1,23 +1,9 @@
 [
  {
-  "creation": "2026-02-09 16:35:47.540411",
-  "docstatus": 0,
-  "doctype": "Season",
-  "end_date": null,
-  "idx": 0,
-  "modified": "2026-02-09 16:35:47.540411",
-  "modified_by": "Administrator",
-  "name": "Main Season",
-  "owner": "Administrator",
-  "season_id": "season_main",
-  "season_name": "Main Season",
-  "start_date": null
- },
- {
   "creation": "2026-02-02 11:36:17.871289",
   "docstatus": 0,
   "doctype": "Season",
-  "end_date": "2026-08-31",
+  "end_date": "2026-07-14",
   "idx": 0,
   "modified": "2026-02-02 11:36:17.871289",
   "modified_by": "Administrator",
@@ -26,6 +12,20 @@
   "season_id": null,
   "season_name": "Season A 2026",
   "start_date": "2026-03-01"
+ },
+ {
+  "creation": "2026-07-30 00:00:00.000000",
+  "docstatus": 0,
+  "doctype": "Season",
+  "end_date": "2027-01-31",
+  "idx": 0,
+  "modified": "2026-07-30 00:00:00.000000",
+  "modified_by": "Administrator",
+  "name": "2026 B",
+  "owner": "Administrator",
+  "season_id": "season_2026_b",
+  "season_name": "2026 B",
+  "start_date": "2026-07-15"
  },
  {
   "creation": "2026-02-02 11:36:17.866713",
