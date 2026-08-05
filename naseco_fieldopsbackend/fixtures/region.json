@@ -1,31 +1,41 @@
 [
  {
   "created_at": null,
+  "docstatus": 0,
   "doctype": "Region",
+  "modified": "2026-08-05 12:44:50.484231",
   "name": "Western",
   "region_name": "Western"
  },
  {
   "created_at": null,
+  "docstatus": 0,
   "doctype": "Region",
+  "modified": "2026-08-05 12:44:50.498653",
   "name": "Eastern",
   "region_name": "Eastern"
  },
  {
   "created_at": null,
+  "docstatus": 0,
   "doctype": "Region",
+  "modified": "2026-08-05 12:44:50.511355",
   "name": "Southern",
   "region_name": "Southern"
  },
  {
   "created_at": null,
+  "docstatus": 0,
   "doctype": "Region",
+  "modified": "2026-08-05 12:44:50.541134",
   "name": "Central",
   "region_name": "Central"
  },
  {
   "created_at": null,
+  "docstatus": 0,
   "doctype": "Region",
+  "modified": "2026-08-05 12:44:50.556386",
   "name": "Northern",
   "region_name": "Northern"
  }

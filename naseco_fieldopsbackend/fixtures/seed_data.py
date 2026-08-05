@@ -14,8 +14,8 @@ from naseco_fieldopsbackend.roles import ensure_fieldops_roles
 from naseco_fieldopsbackend.uom import ensure_fieldops_uoms
 
 
-def execute():
-	"""Seed reference data for NASECO FieldOps"""
+def execute(include_demo=0):
+	"""Seed FieldOps reference data; operational demo records are opt-in."""
 	print("\n" + "="*60)
 	print("Seeding Reference Data for NASECO FieldOps")
 	print("="*60 + "\n")
@@ -38,8 +38,9 @@ def execute():
 		seed_inspection_standards()
 		seed_agronomy_report_templates()
 		seed_agronomy_activity_templates()
-		seed_sample_season_production_plan()
-		seed_sample_fieldops_data()
+		if cint(include_demo):
+			seed_sample_season_production_plan()
+			seed_sample_fieldops_data()
 
 		print("\n" + "="*60)
 		print("Seeding Completed Successfully!")
@@ -48,6 +49,11 @@ def execute():
 		print(f"\n✗ Seeding failed: {str(e)}")
 		frappe.db.rollback()
 		raise
+
+
+def execute_demo():
+	"""Explicitly install the non-production sample plan, farmer and field records."""
+	execute(include_demo=1)
 
 
 def seed_regions():

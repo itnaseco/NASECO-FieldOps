@@ -83,7 +83,9 @@ required_apps = ["erpnext"]
 # ------------
 
 # before_install = "naseco_fieldopsbackend.install.before_install"
-# after_install = "naseco_fieldopsbackend.setup_fieldops.create_cust_fields"
+after_install = "naseco_fieldopsbackend.deployment.after_install"
+after_sync = "naseco_fieldopsbackend.deployment.after_sync"
+after_migrate = "naseco_fieldopsbackend.deployment.after_migrate"
 
 # Uninstallation
 # ------------
@@ -278,15 +280,6 @@ scheduler_events = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 
-fixtures = [
-    {"dt": "Role", "filters": {"name": ["in", [
-        "Outgrower Supervisor", "Outgrower Manager", "Quality Inspector",
-        "FieldOps Finance Approver", "FieldOps Stores User", "FieldOps Operations Approver"
-    ]]}},
-    {"dt": "Outgrower"},
-    {"dt": "Farm Plot"},
-    {"dt": "Custom Field", "filters": {"module": "NASECO ERP"}},
-    {'dt': "Client Script", 'filters': {"module": "NASECO ERP"}}
-]
+from naseco_fieldopsbackend.deployment import FIXTURES as fixtures
 # Fixtures
 # ------------------

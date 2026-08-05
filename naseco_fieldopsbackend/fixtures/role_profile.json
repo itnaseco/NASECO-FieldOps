@@ -1,0 +1,131 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2026-08-05 17:50:34.191282",
+  "name": "FieldOps Outgrower Manager",
+  "role_profile": "FieldOps Outgrower Manager",
+  "roles": [
+   {
+    "parent": "FieldOps Outgrower Manager",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Outgrower Manager"
+   }
+  ]
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2026-08-05 17:50:34.216126",
+  "name": "FieldOps Quality Manager",
+  "role_profile": "FieldOps Quality Manager",
+  "roles": [
+   {
+    "parent": "FieldOps Quality Manager",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Quality Manager"
+   }
+  ]
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2026-08-05 17:50:34.223422",
+  "name": "FieldOps Quality Inspector",
+  "role_profile": "FieldOps Quality Inspector",
+  "roles": [
+   {
+    "parent": "FieldOps Quality Inspector",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Quality Inspector"
+   }
+  ]
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2026-08-05 17:50:34.238758",
+  "name": "FieldOps Mobile Supervisor",
+  "role_profile": "FieldOps Mobile Supervisor",
+  "roles": [
+   {
+    "parent": "FieldOps Mobile Supervisor",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Outgrower Supervisor"
+   }
+  ]
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2026-08-05 17:50:34.252705",
+  "name": "FieldOps Finance",
+  "role_profile": "FieldOps Finance",
+  "roles": [
+   {
+    "parent": "FieldOps Finance",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "FieldOps Finance Approver"
+   },
+   {
+    "parent": "FieldOps Finance",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Accounts User"
+   },
+   {
+    "parent": "FieldOps Finance",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Purchase User"
+   }
+  ]
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2026-08-05 17:50:34.284017",
+  "name": "FieldOps Stores",
+  "role_profile": "FieldOps Stores",
+  "roles": [
+   {
+    "parent": "FieldOps Stores",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "FieldOps Stores User"
+   },
+   {
+    "parent": "FieldOps Stores",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Stock User"
+   },
+   {
+    "parent": "FieldOps Stores",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Purchase User"
+   }
+  ]
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2026-08-05 17:50:34.297392",
+  "name": "FieldOps Operations Approver",
+  "role_profile": "FieldOps Operations Approver",
+  "roles": [
+   {
+    "parent": "FieldOps Operations Approver",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "FieldOps Operations Approver"
+   }
+  ]
+ }
+]

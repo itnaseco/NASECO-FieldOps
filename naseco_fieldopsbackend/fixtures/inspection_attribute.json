@@ -3,7 +3,9 @@
   "attribute_name": "Soil Moisture",
   "attribute_type": "Text",
   "description": null,
+  "docstatus": 0,
   "doctype": "Inspection Attribute",
+  "modified": "2026-08-05 12:44:50.259735",
   "name": "Soil Moisture",
   "unit": "Percent"
  },
@@ -11,7 +13,9 @@
   "attribute_name": "Crop Health Score",
   "attribute_type": "Numeric",
   "description": null,
+  "docstatus": 0,
   "doctype": "Inspection Attribute",
+  "modified": "2026-08-05 12:44:50.277196",
   "name": "Crop Health Score",
   "unit": null
  },
@@ -19,7 +23,9 @@
   "attribute_name": "Expected Yield",
   "attribute_type": "Numeric",
   "description": null,
+  "docstatus": 0,
   "doctype": "Inspection Attribute",
+  "modified": "2026-08-05 12:44:50.290758",
   "name": "Expected Yield",
   "unit": "Kg"
  },
@@ -27,7 +33,9 @@
   "attribute_name": "Flowering Stage",
   "attribute_type": "Boolean",
   "description": null,
+  "docstatus": 0,
   "doctype": "Inspection Attribute",
+  "modified": "2026-08-05 12:44:50.301290",
   "name": "Flowering Stage",
   "unit": null
  },
@@ -35,7 +43,9 @@
   "attribute_name": "Weed Pressure",
   "attribute_type": "Text",
   "description": null,
+  "docstatus": 0,
   "doctype": "Inspection Attribute",
+  "modified": "2026-08-05 12:44:50.310470",
   "name": "Weed Pressure",
   "unit": null
  },
@@ -43,7 +53,9 @@
   "attribute_name": "Disease Symptoms",
   "attribute_type": "Text",
   "description": null,
+  "docstatus": 0,
   "doctype": "Inspection Attribute",
+  "modified": "2026-08-05 12:44:50.324218",
   "name": "Disease Symptoms",
   "unit": null
  },
@@ -51,7 +63,9 @@
   "attribute_name": "Pest Presence",
   "attribute_type": "Boolean",
   "description": null,
+  "docstatus": 0,
   "doctype": "Inspection Attribute",
+  "modified": "2026-08-05 12:44:50.338284",
   "name": "Pest Presence",
   "unit": null
  },
@@ -59,7 +73,9 @@
   "attribute_name": "Leaf Color",
   "attribute_type": "Text",
   "description": null,
+  "docstatus": 0,
   "doctype": "Inspection Attribute",
+  "modified": "2026-08-05 12:44:50.349083",
   "name": "Leaf Color",
   "unit": null
  },
@@ -67,7 +83,9 @@
   "attribute_name": "Plant Population",
   "attribute_type": "Numeric",
   "description": null,
+  "docstatus": 0,
   "doctype": "Inspection Attribute",
+  "modified": "2026-08-05 12:44:50.359044",
   "name": "Plant Population",
   "unit": "Nos"
  },
@@ -75,7 +93,9 @@
   "attribute_name": "Plant Height",
   "attribute_type": "Numeric",
   "description": null,
+  "docstatus": 0,
   "doctype": "Inspection Attribute",
+  "modified": "2026-08-05 12:44:50.373085",
   "name": "Plant Height",
   "unit": "Centimeter"
  }

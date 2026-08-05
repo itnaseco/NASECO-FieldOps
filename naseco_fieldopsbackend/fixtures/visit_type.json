@@ -1,56 +1,72 @@
 [
  {
   "description": null,
+  "docstatus": 0,
   "doctype": "Visit Type",
+  "modified": "2026-08-05 12:44:51.021340",
   "name": "Training Visit",
   "type_name": "Training Visit",
   "visit_type_id": null
  },
  {
   "description": null,
+  "docstatus": 0,
   "doctype": "Visit Type",
+  "modified": "2026-08-05 12:44:51.033067",
   "name": "Pest/Disease Check",
   "type_name": "Pest/Disease Check",
   "visit_type_id": null
  },
  {
   "description": null,
+  "docstatus": 0,
   "doctype": "Visit Type",
+  "modified": "2026-08-05 12:44:51.047807",
   "name": "Harvest Inspection",
   "type_name": "Harvest Inspection",
   "visit_type_id": null
  },
  {
   "description": null,
+  "docstatus": 0,
   "doctype": "Visit Type",
+  "modified": "2026-08-05 12:44:51.061865",
   "name": "Pre-Harvest Assessment",
   "type_name": "Pre-Harvest Assessment",
   "visit_type_id": null
  },
  {
   "description": null,
+  "docstatus": 0,
   "doctype": "Visit Type",
+  "modified": "2026-08-05 12:44:51.073001",
   "name": "Mid-Season Check",
   "type_name": "Mid-Season Check",
   "visit_type_id": null
  },
  {
   "description": null,
+  "docstatus": 0,
   "doctype": "Visit Type",
+  "modified": "2026-08-05 12:44:51.083604",
   "name": "Planting Inspection",
   "type_name": "Planting Inspection",
   "visit_type_id": null
  },
  {
   "description": null,
+  "docstatus": 0,
   "doctype": "Visit Type",
+  "modified": "2026-08-05 12:44:51.101326",
   "name": "Emergency Visit",
   "type_name": "Emergency Visit",
   "visit_type_id": null
  },
  {
   "description": null,
+  "docstatus": 0,
   "doctype": "Visit Type",
+  "modified": "2026-08-05 12:44:51.114504",
   "name": "Routine Inspection",
   "type_name": "Routine Inspection",
   "visit_type_id": null

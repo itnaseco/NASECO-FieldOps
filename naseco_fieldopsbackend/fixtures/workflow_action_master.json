@@ -1,0 +1,51 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-07-31 12:06:06.059603",
+  "name": "Submit for Department Review",
+  "workflow_action_name": "Submit for Department Review"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-07-31 12:06:06.069071",
+  "name": "Complete Quality Review",
+  "workflow_action_name": "Complete Quality Review"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-07-31 12:06:06.074203",
+  "name": "Approve Production Plan",
+  "workflow_action_name": "Approve Production Plan"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-07-31 12:06:06.080161",
+  "name": "Activate Season Plan",
+  "workflow_action_name": "Activate Season Plan"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-07-31 12:06:06.084613",
+  "name": "Start Season Closure",
+  "workflow_action_name": "Start Season Closure"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-07-31 12:06:06.087460",
+  "name": "Close Season Plan",
+  "workflow_action_name": "Close Season Plan"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-07-31 12:06:06.090178",
+  "name": "Cancel Season Plan",
+  "workflow_action_name": "Cancel Season Plan"
+ }
+]
