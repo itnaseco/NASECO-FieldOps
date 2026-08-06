@@ -497,24 +497,53 @@ class AgronomyReport(Document):
 		sync_crop_cycle_lifecycle(cycle)
 
 	def complete_related_stage(self):
-		if not self.stage:
+		if not self.stage or not self.crop_cycle:
 			return
-		mandatory = frappe.get_all(
+		activities = frappe.get_all(
 			"Stage Activity",
-			filters={"stage": self.stage, "mandatory": 1, "status": ["!=", "Cancelled"]},
-			fields=["status"],
+			filters={
+				"crop_cycle": self.crop_cycle,
+				"stage": self.stage,
+				"status": ["!=", "Cancelled"],
+			},
+			fields=["name", "mandatory"],
 		)
-		all_activities_complete = all(row.status == "Completed" for row in mandatory)
+		completed_on = now_datetime()
+		for activity in activities:
+			frappe.db.set_value(
+				"Stage Activity",
+				activity.name,
+				{
+					"status": "Completed",
+					"completed_on": completed_on,
+					"completed_by": frappe.session.user,
+					"completion_source": "Agronomy Report",
+					"completed_by_report": self.name,
+					"completion_notes": _("Auto-completed by submitted Agronomy Report {0}.").format(
+						self.name
+					),
+				},
+				update_modified=False,
+			)
+			frappe.db.sql(
+				"""
+				update `tabToDo`
+				set status = 'Closed'
+				where reference_type = 'Stage Activity'
+				  and reference_name = %s
+				  and status != 'Cancelled'
+				""",
+				activity.name,
+			)
+		mandatory_count = len([row for row in activities if row.mandatory])
 		frappe.db.set_value(
 			"Crop Cycle Stage",
 			self.stage,
 			{
-				"status": "Completed" if all_activities_complete else "In Progress",
-				"completion_percentage": 100 if all_activities_complete else 90,
-				"mandatory_activity_count": len(mandatory),
-				"completed_activity_count": len(
-					[row for row in mandatory if row.status == "Completed"]
-				),
+				"status": "Completed",
+				"completion_percentage": 100,
+				"mandatory_activity_count": mandatory_count,
+				"completed_activity_count": mandatory_count,
 			},
 			update_modified=False,
 		)

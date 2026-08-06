@@ -239,7 +239,7 @@ class Inspection(Document):
 		if self.plot:
 			plot = frappe.get_doc("Farm Plot", self.plot)
 			self.outgrower = self.outgrower or plot.outgrower
-			self.plot_area_hectares = round((plot.area_acres or 0) * 0.404686, 3)
+			self.plot_area_hectares = round(plot.area_hectares or 0, 3)
 
 		counts_per_hectare = 4
 		if self.inspection_template:
@@ -277,6 +277,7 @@ class Inspection(Document):
 				[
 					"parameter_name",
 					"data_type",
+					"select_options",
 					"unit",
 					"applies_to",
 					"measurement_scope",
@@ -299,6 +300,7 @@ class Inspection(Document):
 			standard.denominator_basis = parameter.denominator_basis if parameter else None
 			standard.requires_take_counts = cint(parameter.requires_take_counts) if parameter else 0
 			standard.description = parameter.description if parameter else None
+			standard.select_options = parameter.select_options if parameter else None
 			standard.unit = standard.unit or (parameter.unit if parameter else None)
 			if is_cumulative_count_standard(standard, self.sampling_protocol_version):
 				standard.data_type = "Count"
@@ -1143,6 +1145,7 @@ def get_take_form_schema(inspection):
 				"parameter": row.parameter,
 				"label": row.parameter_name,
 				"data_type": row.data_type,
+				"options": row.select_options,
 				"unit": row.unit,
 				"responsibility": row.responsibility,
 				"mandatory": cint(
@@ -1419,6 +1422,18 @@ def save_inspection_controls(inspection, readings):
 			continue
 		value = reading.get("value")
 		is_numeric = standard.data_type in NUMERIC_DATA_TYPES
+		if standard.data_type == "Select":
+			options = [
+				option.strip()
+				for option in (standard.select_options or "").splitlines()
+				if option.strip()
+			]
+			if str(value).strip() not in options:
+				frappe.throw(
+					_("{0} must be one of: {1}.").format(
+						standard.parameter_name, ", ".join(options)
+					)
+				)
 		doc.append(
 			"inspection_observations",
 			{

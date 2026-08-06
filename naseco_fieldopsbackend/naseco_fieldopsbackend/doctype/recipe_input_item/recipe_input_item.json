@@ -9,11 +9,11 @@
   "resource_type",
   "item_code",
   "input_name",
-  "quantity_per_acre",
+  "quantity_per_hectare",
   "unit",
   "stock_uom",
   "conversion_factor",
-  "stock_quantity_per_acre",
+  "stock_quantity_per_hectare",
   "recipe_stage",
   "stage_index",
   "input_type",
@@ -72,9 +72,9 @@
    "read_only": 1
   },
   {
-   "fieldname": "stock_quantity_per_acre",
+   "fieldname": "stock_quantity_per_hectare",
    "fieldtype": "Float",
-   "label": "Stock Quantity Per Acre",
+   "label": "Stock Quantity Per Hectare",
    "read_only": 1
   },
   {
@@ -94,9 +94,9 @@
    "label": "Stage Order"
   },
   {
-   "fieldname": "quantity_per_acre",
+   "fieldname": "quantity_per_hectare",
    "fieldtype": "Float",
-   "label": "Quantity Per Acre"
+   "label": "Quantity Per Hectare"
   },
   {
    "fieldname": "recovery_section",

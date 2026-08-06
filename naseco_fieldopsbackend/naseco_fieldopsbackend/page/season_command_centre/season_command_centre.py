@@ -65,10 +65,10 @@ def _plan_summary(doc):
 		"contracted_outgrowers",
 		"target_plots",
 		"contracted_plots",
-		"target_acres",
-		"contracted_acres",
-		"planted_acres",
-		"acreage_achievement_percent",
+		"target_hectares",
+		"contracted_hectares",
+		"planted_hectares",
+		"area_achievement_percent",
 		"planned_production_qty",
 		"forecast_production_qty",
 		"delivered_net_dry_qty",
@@ -91,7 +91,7 @@ def _target_row(row):
 		"variety": row.variety,
 		"production_category": row.production_category,
 		"target_outgrowers": cint(row.target_outgrowers),
-		"target_acres": flt(row.target_acres),
+		"target_hectares": flt(row.target_hectares),
 		"planned_production_qty": flt(row.planned_production_qty),
 	}
 
@@ -102,7 +102,7 @@ def _stage_progress(season, company):
 		select
 			coalesce(stage.stage_name, 'Not Started') stage,
 			count(*) crop_cycles,
-			coalesce(sum(contract.contracted_area_acres), 0) acres
+			coalesce(sum(contract.contracted_area_hectares), 0) hectares
 		from `tabCrop Cycle` cycle
 		left join `tabCrop Cycle Stage` stage on stage.name = cycle.current_stage
 		left join `tabOutgrower Production Contract` contract

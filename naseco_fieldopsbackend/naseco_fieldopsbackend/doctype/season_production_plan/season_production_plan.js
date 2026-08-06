@@ -76,20 +76,20 @@ frappe.ui.form.on("Season Production Plan", {
 });
 
 frappe.ui.form.on("Season Production Target", {
-	target_acres: calculate_target,
-	planned_yield_kg_per_acre: calculate_target,
+	target_hectares: calculate_target,
+	planned_yield_kg_per_hectare: calculate_target,
 	planning_rate: calculate_target,
-	parent_seed_rate_per_acre: calculate_target
+	parent_seed_rate_per_hectare: calculate_target
 });
 
 function calculate_target(frm, cdt, cdn) {
 	const row = locals[cdt][cdn];
 	frappe.model.set_value(cdt, cdn, "planned_production_qty",
-		flt(row.target_acres) * flt(row.planned_yield_kg_per_acre));
+		flt(row.target_hectares) * flt(row.planned_yield_kg_per_hectare));
 	frappe.model.set_value(cdt, cdn, "planned_procurement_value",
 		flt(row.planned_production_qty) * flt(row.planning_rate));
 	frappe.model.set_value(cdt, cdn, "parent_seed_required_qty",
-		flt(row.target_acres) * flt(row.parent_seed_rate_per_acre));
+		flt(row.target_hectares) * flt(row.parent_seed_rate_per_hectare));
 	frm.refresh_field("production_targets");
 }
 
@@ -99,8 +99,8 @@ function add_indicators(frm) {
 		frm.doc.mandatory_readiness_complete ? "green" : "orange"
 	);
 	frm.dashboard.add_indicator(
-		__("Acreage: {0}%", [format_number(frm.doc.acreage_achievement_percent || 0, null, 1)]),
-		frm.doc.acreage_achievement_percent >= 100 ? "green" : "blue"
+		__("Area achievement: {0}%", [format_number(frm.doc.area_achievement_percent || 0, null, 1)]),
+		frm.doc.area_achievement_percent >= 100 ? "green" : "blue"
 	);
 	frm.dashboard.add_indicator(
 		__("QA Coverage: {0}%", [format_number(frm.doc.qa_coverage_percent || 0, null, 1)]),

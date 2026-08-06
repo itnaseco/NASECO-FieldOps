@@ -87,8 +87,8 @@ class CropRecipe(Document):
 			row.unit = conversion.uom
 			row.stock_uom = conversion.stock_uom
 			row.conversion_factor = conversion.conversion_factor
-			row.stock_quantity_per_acre = (
-				flt(row.quantity_per_acre) * flt(row.conversion_factor)
+			row.stock_quantity_per_hectare = (
+				flt(row.quantity_per_hectare) * flt(row.conversion_factor)
 			)
 
 		if row.recovery_policy == "Fully Recoverable":

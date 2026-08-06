@@ -1,0 +1,87 @@
+{
+ "actions": [],
+ "creation": "2026-08-07 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "parent_role",
+  "parent_seed_item",
+  "quantity_per_hectare",
+  "uom",
+  "planned_quantity",
+  "rate",
+  "planned_value"
+ ],
+ "fields": [
+  {
+   "fieldname": "parent_role",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Parent Role",
+   "options": "Female\nMale\nOther",
+   "reqd": 1
+  },
+  {
+   "fieldname": "parent_seed_item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Parent Seed Item",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quantity_per_hectare",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Seed Quantity per Hectare",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "parent_seed_item.stock_uom",
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planned_quantity",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Planned Total Quantity",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Rate",
+   "non_negative": 1,
+   "options": "parent.currency"
+  },
+  {
+   "fieldname": "planned_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Planned Value",
+   "options": "parent.currency",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-08-07 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Production Contract Parent Seed",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

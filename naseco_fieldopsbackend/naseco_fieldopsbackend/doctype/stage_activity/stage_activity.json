@@ -23,6 +23,9 @@
   "evidence",
   "completion_notes",
   "completed_on",
+  "completion_source",
+  "completed_by",
+  "completed_by_report",
   "status",
   "synced"
  ],
@@ -121,6 +124,28 @@
    "fieldname": "completed_on",
    "fieldtype": "Datetime",
    "label": "Completed On",
+   "read_only": 1
+  },
+  {
+   "default": "Manual",
+   "fieldname": "completion_source",
+   "fieldtype": "Select",
+   "label": "Completion Source",
+   "options": "Manual\nAgronomy Report",
+   "read_only": 1
+  },
+  {
+   "fieldname": "completed_by",
+   "fieldtype": "Link",
+   "label": "Completed By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "completed_by_report",
+   "fieldtype": "Link",
+   "label": "Completed by Agronomy Report",
+   "options": "Agronomy Report",
    "read_only": 1
   },
   {

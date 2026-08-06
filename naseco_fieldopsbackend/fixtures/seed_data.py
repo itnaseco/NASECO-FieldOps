@@ -171,6 +171,14 @@ def seed_crops():
 def seed_varieties():
 	"""Create crop varieties"""
 	print("\nCreating Crop Varieties...")
+	expected_yield_by_crop = {
+		"Maize": 2471.05,
+		"Rice": 3000,
+		"Soybean": 1800,
+		"Beans": 1500,
+		"Groundnuts": 2000,
+		"Sunflower": 1800,
+	}
 	varieties = [
 		{"variety_name": "Longe 10H", "crop": "Maize", "maturity_days": 120},
 		{"variety_name": "Longe 5", "crop": "Maize", "maturity_days": 100},
@@ -185,6 +193,9 @@ def seed_varieties():
 	]
 
 	for variety_data in varieties:
+		variety_data["expected_yield_kg_per_hectare"] = expected_yield_by_crop.get(
+			variety_data["crop"], 2471.05
+		)
 		variety_name = variety_data["variety_name"]
 		try:
 			if not frappe.db.exists("Crop Variety", variety_name):
@@ -201,6 +212,13 @@ def seed_varieties():
 				frappe.db.commit()
 				print(f"  ✓ Created Variety: {variety_name} ({variety_data['crop']})")
 			else:
+				frappe.db.set_value(
+					"Crop Variety",
+					variety_name,
+					"expected_yield_kg_per_hectare",
+					variety_data["expected_yield_kg_per_hectare"],
+					update_modified=False,
+				)
 				print(f"  → Variety already exists: {variety_name}")
 		except Exception as e:
 			print(f"  ✗ Error creating Variety {variety_name}: {str(e)}")
@@ -270,8 +288,8 @@ def seed_26b_contract_reference_data():
 					"currency": "UGX",
 					"effective_from": "2026-07-15",
 					"effective_to": "2027-01-31",
-					"quota_kg_per_acre": 1000,
-					"minimum_seed_yield_kg_per_acre": 800,
+					"quota_kg_per_hectare": 2471.05,
+					"minimum_seed_yield_kg_per_hectare": 1976.84,
 					"excess_rate_per_kg": 1600,
 					"grain_item": "FO-MAIZE-GRAIN",
 					"grain_rate_per_kg": FIELDOPS_ITEMS["Maize Grain"]["rate"],
@@ -296,7 +314,7 @@ def seed_26b_contract_reference_data():
 					"blacklist_consecutive_seasons": 2,
 					"resolution_notes": (
 						"<p>The upper boundary is exclusive: 98% and above uses the "
-						"highest purity band. Yield below 800 kg/acre, purity below "
+						"highest purity band. Yield below 1977 kg/hectare, purity below "
 						"90%, or germination below 95% uses the approved grain rate. "
 						"The UGX 1,200 grain rate is sample reference data and must be "
 						"reviewed against the authorized market rate before production "
@@ -379,11 +397,11 @@ def seed_26b_contract_reference_data():
 
 def get_26b_pricing_bands():
 	bands = [
-		("Below Minimum Yield", 0, 800, 0, 0, "Grain Price", 0),
+		("Below Minimum Yield", 0, 1976.84, 0, 0, "Grain Price", 0),
 	]
 	for label, minimum_yield, maximum_yield, rates in (
-		("800-999 kg/acre", 800, 1000, ((98, 0, 1850), (95, 98, 1700), (90, 95, 1600))),
-		("1000+ kg/acre", 1000, 0, ((98, 0, 2100), (95, 98, 2000), (90, 95, 1850))),
+		("1977-2470 kg/hectare", 1976.84, 2471.05, ((98, 0, 1850), (95, 98, 1700), (90, 95, 1600))),
+		("2471+ kg/hectare", 2471.05, 0, ((98, 0, 2100), (95, 98, 2000), (90, 95, 1850))),
 	):
 		for minimum_purity, maximum_purity, rate in rates:
 			bands.append(
@@ -411,8 +429,8 @@ def get_26b_pricing_bands():
 	return [
 		{
 			"band_name": name,
-			"minimum_yield_kg_per_acre": min_yield,
-			"maximum_yield_kg_per_acre": max_yield,
+			"minimum_yield_kg_per_hectare": min_yield,
+			"maximum_yield_kg_per_hectare": max_yield,
 			"minimum_purity_percent": min_purity,
 			"maximum_purity_percent": max_purity,
 			"price_basis": basis,
@@ -512,7 +530,17 @@ def seed_inspection_parameters():
 
 	for name, code, group, data_type, unit, applies_to, requires_counts in parameters:
 		measurement_scope = "Inspection" if code in ("ISOLATION_DISTANCE", "TIME_ISOLATION") else "Inspection Take"
-		calculation_method = "Cumulative Incidence" if requires_counts else "Direct Value"
+		is_isolation_control = code in ("ISOLATION_DISTANCE", "TIME_ISOLATION")
+		if is_isolation_control:
+			data_type = "Select"
+			unit = None
+		calculation_method = (
+			"Categorical"
+			if is_isolation_control
+			else "Cumulative Incidence"
+			if requires_counts
+			else "Direct Value"
+		)
 		values = {
 			"parameter_code": code,
 			"parameter_group": group,
@@ -523,6 +551,7 @@ def seed_inspection_parameters():
 			"calculation_method": calculation_method,
 			"denominator_basis": "Total Plants Counted" if requires_counts else None,
 			"requires_take_counts": requires_counts,
+			"select_options": "Adequate\nInadequate" if is_isolation_control else None,
 		}
 		if frappe.db.exists("Inspection Parameter", name):
 			frappe.db.set_value(
@@ -586,10 +615,10 @@ def seed_inspection_standards():
 
 	for template in all_flowering:
 		standard_rows.extend([
-			(template, "Isolation distance", "Basic", "Isolation Distance", 400, None, None, 1, 0),
-			(template, "Isolation distance", "Certified", "Isolation Distance", 200, None, None, 1, 0),
-			(template, "Time isolation", "Basic", "At Least", 6, None, None, 1, 0),
-			(template, "Time isolation", "Certified", "At Least", 5, None, None, 1, 0),
+			(template, "Isolation distance", "Basic", "Equals", None, None, "Adequate", 1, 0),
+			(template, "Isolation distance", "Certified", "Equals", None, None, "Adequate", 1, 0),
+			(template, "Time isolation", "Basic", "Equals", None, None, "Adequate", 1, 0),
+			(template, "Time isolation", "Certified", "Equals", None, None, "Adequate", 1, 0),
 			(template, "Offtypes in females", "Basic", "At Most", None, 0.05, None, 1, 0),
 			(template, "Offtypes in females", "Certified", "At Most", None, 0.1, None, 1, 0),
 			(template, "Offtypes in males", "Basic", "At Most", None, 0.05, None, 1, 1),
@@ -638,7 +667,13 @@ def seed_inspection_standards():
 			"production_category": category,
 		})
 		if existing_standard:
-			values = {"aggregation_method": aggregation_method}
+			values = {
+				"comparison_rule": rule,
+				"aggregation_method": aggregation_method,
+				"minimum_value": min_value or 0,
+				"maximum_value": max_value or 0,
+				"expected_text": expected,
+			}
 			if parameter in cumulative_parameters:
 				values["unit"] = "Nos"
 			frappe.db.set_value(
@@ -657,8 +692,8 @@ def seed_inspection_standards():
 			"comparison_rule": rule,
 			"aggregation_method": aggregation_method,
 			"unit": "Nos" if parameter in cumulative_parameters else None,
-			"minimum_value": min_value,
-			"maximum_value": max_value,
+			"minimum_value": min_value or 0,
+			"maximum_value": max_value or 0,
 			"expected_text": expected,
 			"good_label": "Good",
 			"poor_label": "Poor",
@@ -681,7 +716,7 @@ def seed_agronomy_report_templates():
 		"BASAL_FERTILIZER": ("Yes Is Pass", None, None, None),
 		"GERMINATION_PERCENT": ("At Least", 80, None, None),
 		"STAND_UNIFORMITY": ("Good Is Pass", None, None, None),
-		"GAP_FILLING": ("No Is Pass", None, None, None),
+		"REPLANTING_NEEDED": ("No Is Pass", None, None, None),
 		"EARLY_PESTS": ("Good Is Pass", None, None, None),
 		"WEED_STATUS": ("Good Is Pass", None, None, None),
 		"CROP_VIGOUR": ("Good Is Pass", None, None, None),
@@ -715,7 +750,7 @@ def seed_agronomy_report_templates():
 	}
 	failure_actions = {
 		"ISOLATION_QUALITY": "Escalate the isolation breach and restore the approved isolation control before the next stage.",
-		"GERMINATION_PERCENT": "Assess the failed stand and complete the approved gap-filling or replanting action.",
+		"GERMINATION_PERCENT": "Assess the failed stand and complete the approved approved replanting action.",
 		"OFFTYPES_ROUGED": "Complete roguing of all identified off-types and attach completion evidence.",
 		"OFFTYPES_STATUS": "Remove all identified off-types before the next field review.",
 		"DETASSEL_STATUS": "Complete corrective detasselling immediately and record the affected area.",
@@ -728,7 +763,7 @@ def seed_agronomy_report_templates():
 		(1, "Field Verification & Contracting", -30, -1, [
 			("CONTRACT_CONFIRMED", "Production contract confirmed", "Contract", "Yes/No", None, 1, 1),
 			("FIELD_OWNERSHIP", "Field ownership / access verified", "Field", "Yes/No", None, 1, 1),
-			("FIELD_AREA", "Verified field area", "Field", "Number", "Acre", 1, 0),
+			("FIELD_AREA", "Verified field area", "Field", "Number", "Hectare", 1, 0),
 			("PREVIOUS_CROP", "Previous crop", "Field", "Data", None, 1, 0),
 			("LAND_PREPARATION", "Land preparation status", "Field", "Good/Poor", None, 1, 1),
 			("ISOLATION_QUALITY", "Isolation distance quality", "Seed Quality", "Good/Poor", None, 1, 1),
@@ -736,7 +771,7 @@ def seed_agronomy_report_templates():
 		]),
 		(2, "Planting", 0, 0, [
 			("PLANTING_DATE", "Actual planting date", "Planting", "Date", None, 1, 0),
-			("PLANTED_AREA", "Area planted", "Planting", "Number", "Acre", 1, 0),
+			("PLANTED_AREA", "Area planted", "Planting", "Number", "Hectare", 1, 0),
 			("SEED_QUANTITY", "Seed quantity used", "Inputs", "Number", "Kg", 1, 0),
 			("MALE_FEMALE_RATIO", "Male to female row ratio", "Planting", "Data", None, 1, 1),
 			("PLANTING_METHOD", "Planting method", "Planting", "Data", None, 1, 0),
@@ -745,7 +780,7 @@ def seed_agronomy_report_templates():
 		(3, "Crop Emergence / Germination", 7, 14, [
 			("GERMINATION_PERCENT", "Germination percentage", "Crop Establishment", "Percent", "Percent", 1, 1),
 			("STAND_UNIFORMITY", "Crop stand uniformity", "Crop Establishment", "Good/Poor", None, 1, 1),
-			("GAP_FILLING", "Gap filling required", "Corrective Work", "Yes/No", None, 1, 1),
+			("REPLANTING_NEEDED", "Replanting Needed?", "Corrective Work", "Yes/No", None, 1, 1),
 			("EARLY_PESTS", "Early pest incidence", "Crop Health", "Good/Poor", None, 1, 1),
 			("WEED_STATUS", "Weed control status", "Crop Health", "Good/Poor", None, 1, 1),
 		]),
@@ -781,7 +816,7 @@ def seed_agronomy_report_templates():
 		]),
 		(8, "Harvest", 150, 180, [
 			("HARVEST_DATE", "Harvest date", "Harvest", "Date", None, 1, 0),
-			("HARVESTED_AREA", "Area harvested", "Harvest", "Number", "Acre", 1, 0),
+			("HARVESTED_AREA", "Area harvested", "Harvest", "Number", "Hectare", 1, 0),
 			("GROSS_YIELD", "Gross seed yield", "Harvest", "Number", "Kg", 1, 0),
 			("REJECTED_QUANTITY", "Rejected quantity", "Quality", "Number", "Kg", 1, 1),
 			("MOISTURE_PERCENT", "Seed moisture percentage", "Quality", "Percent", "Percent", 1, 1),
@@ -970,7 +1005,7 @@ def seed_sample_fieldops_data():
 			"plot_name": "Sample QA Seed Field",
 			"plot_type": "Owned",
 			"status": "Active",
-			"area_acres": 2.5,
+			"area_hectares": 1.0117,
 			"polygon": [
 				{"latitude": 0.347500, "longitude": 32.582500, "order_index": 1},
 				{"latitude": 0.347500, "longitude": 32.583400, "order_index": 2},
@@ -1005,10 +1040,19 @@ def seed_sample_fieldops_data():
 				"planting_start_date": "2026-08-01",
 				"planting_end_date": "2026-08-31",
 				"expected_harvest_date": "2026-12-15",
-				"contracted_area_acres": 2.5,
-				"parent_seed_item": FIELDOPS_ITEMS["Maize Seed (Hybrid)"]["item_code"],
-				"planned_parent_seed_qty": 50,
-				"parent_seed_uom": "Kg",
+				"contracted_area_hectares": 1.0117,
+				"parent_seeds": [
+					{
+						"parent_role": "Female",
+						"parent_seed_item": FIELDOPS_ITEMS["Maize Seed (Hybrid)"]["item_code"],
+						"quantity_per_hectare": 39.5374,
+					},
+					{
+						"parent_role": "Male",
+						"parent_seed_item": FIELDOPS_ITEMS["Maize Seed (Hybrid)"]["item_code"],
+						"quantity_per_hectare": 9.8844,
+					},
+				],
 				"harvest_item": FIELDOPS_ITEMS["Maize Seed Harvest"]["item_code"],
 				"expected_yield_qty": 5000,
 				"pricing_method": "Fixed Rate",
@@ -1032,6 +1076,15 @@ def seed_sample_fieldops_data():
 		contract.submit()
 		contract_name = contract.name
 		print(f"  ✓ Created Outgrower Production Contract: {contract.name}")
+	ensure_sample_parent_seed_rows(contract_name)
+	contract_dates = frappe.db.get_value(
+		"Outgrower Production Contract",
+		contract_name,
+		["planting_start_date", "expected_harvest_date"],
+		as_dict=True,
+	)
+	sample_planting_date = add_days(contract_dates.planting_start_date, 5)
+	sample_harvest_date = contract_dates.expected_harvest_date
 
 	cycle = _ensure_doc(
 		"Crop Cycle",
@@ -1043,10 +1096,10 @@ def seed_sample_fieldops_data():
 			"crop": "Maize",
 			"variety": "Longe 10H",
 			"season": "2026 B",
-			"planting_date": "2026-08-05",
+			"planting_date": sample_planting_date,
 			"production_category": "Certified",
-			"start_date": "2026-08-05",
-			"expected_harvest_date": "2026-12-15",
+			"start_date": sample_planting_date,
+			"expected_harvest_date": sample_harvest_date,
 			"recipe": "Maize Production (Standard)",
 			"harvest_item": FIELDOPS_ITEMS["Maize Seed Harvest"]["item_code"],
 			"harvest_uom": "Kg",
@@ -1070,7 +1123,7 @@ def seed_sample_fieldops_data():
 				"crop_cycle": cycle.name,
 				"planting_start_date": "2026-08-05",
 				"planting_end_date": "2026-08-09",
-				"area_acres": 2.5,
+				"area_hectares": 1.0117,
 				"parent_seed_item": FIELDOPS_ITEMS["Maize Seed (Hybrid)"]["item_code"],
 				"parent_seed_qty": 50,
 				"parent_seed_uom": "Kg",
@@ -1088,6 +1141,60 @@ def seed_sample_fieldops_data():
 	seed_sample_agronomy_report(cycle, plot, outgrower)
 	seed_sample_inspection(cycle, plot, outgrower)
 	seed_sample_finance_requests(cycle)
+
+
+def ensure_sample_parent_seed_rows(contract_name):
+	"""Keep the submitted demo contract representative of a two-parent hybrid."""
+	item_code = FIELDOPS_ITEMS["Maize Seed (Hybrid)"]["item_code"]
+	contract = frappe.db.get_value(
+		"Outgrower Production Contract",
+		contract_name,
+		[
+			"farm_plot",
+			"contracted_area_hectares",
+			"expected_yield_kg_per_hectare",
+			"quota_kg_per_hectare",
+			"contract_rate",
+		],
+		as_dict=True,
+	)
+	area = contract.contracted_area_hectares or frappe.db.get_value(
+		"Farm Plot", contract.farm_plot, "area_hectares"
+	)
+	expected_qty = area * (contract.expected_yield_kg_per_hectare or 0)
+	frappe.db.set_value(
+		"Outgrower Production Contract",
+		contract_name,
+		{
+			"contracted_area_hectares": area,
+			"expected_yield_qty": expected_qty,
+			"contracted_quota_qty": area * (contract.quota_kg_per_hectare or 0),
+			"expected_harvest_value": expected_qty * (contract.contract_rate or 0),
+		},
+		update_modified=False,
+	)
+	frappe.db.delete(
+		"Production Contract Parent Seed",
+		{"parent": contract_name, "parentfield": "parent_seeds"},
+	)
+	for idx, (role, quantity_per_hectare) in enumerate(
+		(("Female", 39.5374), ("Male", 9.8844)), start=1
+	):
+		planned_quantity = quantity_per_hectare * (area or 0)
+		frappe.get_doc(
+			{
+				"doctype": "Production Contract Parent Seed",
+				"parent": contract_name,
+				"parenttype": "Outgrower Production Contract",
+				"parentfield": "parent_seeds",
+				"idx": idx,
+				"parent_role": role,
+				"parent_seed_item": item_code,
+				"quantity_per_hectare": quantity_per_hectare,
+				"uom": "Kg",
+				"planned_quantity": planned_quantity,
+			}
+		).db_insert()
 	frappe.db.commit()
 
 
@@ -1127,11 +1234,11 @@ def seed_sample_season_production_plan():
 					"pricing_policy": "2026B Maize Certified Seed Pricing",
 					"target_outgrowers": 20,
 					"target_plots": 20,
-					"target_acres": 100,
-					"planned_yield_kg_per_acre": 1000,
+					"target_hectares": 40.4686,
+					"planned_yield_kg_per_hectare": 2471.05,
 					"planning_rate": 1850,
 					"parent_seed_item": FIELDOPS_ITEMS["Maize Seed (Hybrid)"]["item_code"],
-					"parent_seed_rate_per_acre": 20,
+					"parent_seed_rate_per_hectare": 49.4211,
 					"planting_window_from": "2026-08-01",
 					"planting_window_to": "2026-08-31",
 					"expected_harvest_date": "2026-12-15",
@@ -1165,7 +1272,7 @@ def seed_sample_agronomy_report(cycle, plot, outgrower):
 
 	values = {
 		"PLANTING_DATE": ("date_value", str(cycle.planting_date)),
-		"PLANTED_AREA": ("numeric_value", plot.area_acres),
+		"PLANTED_AREA": ("numeric_value", plot.area_hectares),
 		"SEED_QUANTITY": ("numeric_value", 20),
 		"MALE_FEMALE_RATIO": ("text_value", "1:4"),
 		"PLANTING_METHOD": ("text_value", "Hand planting"),
@@ -1305,16 +1412,14 @@ def seed_sample_inspection(cycle, plot, outgrower):
 			{
 				"parameter": "Isolation distance",
 				"responsibility": "Outgrower Supervisor",
-				"measured_value": 220,
-				"unit": "Meter",
+				"text_value": "Adequate",
 				"captured_by": frappe.session.user,
 				"captured_at": "2026-04-29 09:05:00",
 			},
 			{
 				"parameter": "Time isolation",
 				"responsibility": "Outgrower Supervisor",
-				"measured_value": 5,
-				"unit": "Week",
+				"text_value": "Adequate",
 				"captured_by": frappe.session.user,
 				"captured_at": "2026-04-29 09:05:00",
 			},

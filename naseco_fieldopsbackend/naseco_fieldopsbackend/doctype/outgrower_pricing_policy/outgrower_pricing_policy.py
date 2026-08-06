@@ -40,15 +40,15 @@ class OutgrowerPricingPolicy(Document):
 		):
 			if not 0 <= flt(self.get(fieldname)) <= 100:
 				frappe.throw(_("{0} must be between zero and 100.").format(self.meta.get_label(fieldname)))
-		if flt(self.minimum_seed_yield_kg_per_acre) > flt(self.quota_kg_per_acre):
+		if flt(self.minimum_seed_yield_kg_per_hectare) > flt(self.quota_kg_per_hectare):
 			frappe.throw(_("Minimum Seed Yield cannot exceed the Contract Quota."))
 
 	def validate_bands(self):
 		if not self.pricing_bands:
 			frappe.throw(_("At least one pricing band is required."))
 		for row in self.pricing_bands:
-			if flt(row.maximum_yield_kg_per_acre) and flt(row.maximum_yield_kg_per_acre) <= flt(
-				row.minimum_yield_kg_per_acre
+			if flt(row.maximum_yield_kg_per_hectare) and flt(row.maximum_yield_kg_per_hectare) <= flt(
+				row.minimum_yield_kg_per_hectare
 			):
 				frappe.throw(_("Maximum Yield must exceed Minimum Yield in row {0}.").format(row.idx))
 			if flt(row.maximum_purity_percent) and flt(row.maximum_purity_percent) <= flt(
@@ -88,13 +88,13 @@ def require_policy_approver():
 		)
 
 
-def find_pricing_band(policy, yield_kg_per_acre, genetic_purity_percent):
-	yield_value = flt(yield_kg_per_acre)
+def find_pricing_band(policy, yield_kg_per_hectare, genetic_purity_percent):
+	yield_value = flt(yield_kg_per_hectare)
 	purity_value = flt(genetic_purity_percent)
 	for row in policy.pricing_bands:
-		yield_matches = yield_value >= flt(row.minimum_yield_kg_per_acre) and (
-			not flt(row.maximum_yield_kg_per_acre)
-			or yield_value < flt(row.maximum_yield_kg_per_acre)
+		yield_matches = yield_value >= flt(row.minimum_yield_kg_per_hectare) and (
+			not flt(row.maximum_yield_kg_per_hectare)
+			or yield_value < flt(row.maximum_yield_kg_per_hectare)
 		)
 		purity_matches = purity_value >= flt(row.minimum_purity_percent) and (
 			not flt(row.maximum_purity_percent)
@@ -108,7 +108,7 @@ def find_pricing_band(policy, yield_kg_per_acre, genetic_purity_percent):
 def calculate_harvest_pricing(
 	policy,
 	net_dry_qty,
-	eligible_area_acres,
+	eligible_area_hectares,
 	genetic_purity_percent,
 	germination_percent,
 	undersize_percent=0,
@@ -118,19 +118,19 @@ def calculate_harvest_pricing(
 ):
 	"""Calculate an auditable pricing result without creating accounting entries."""
 	qty = max(flt(net_dry_qty), 0)
-	area = flt(eligible_area_acres)
+	area = flt(eligible_area_hectares)
 	if area <= 0:
-		frappe.throw(_("Eligible acreage must be greater than zero for harvest pricing."))
+		frappe.throw(_("Eligible area must be greater than zero for harvest pricing."))
 
-	yield_per_acre = qty / area
-	band = find_pricing_band(policy, yield_per_acre, genetic_purity_percent)
+	yield_per_hectare = qty / area
+	band = find_pricing_band(policy, yield_per_hectare, genetic_purity_percent)
 	grain_rate = flt(grain_rate or policy.grain_rate_per_kg)
 	force_grain = flt(germination_percent) < flt(policy.minimum_germination_percent)
 	price_basis = "Rejected" if force_rejected else ("Grain Price" if force_grain else None)
 	if not price_basis:
 		price_basis = band.price_basis if band else "Grain Price"
 
-	quota_qty = area * flt(policy.quota_kg_per_acre)
+	quota_qty = area * flt(policy.quota_kg_per_hectare)
 	base_qty = excess_qty = grain_qty = 0
 	base_rate = excess_rate = 0
 	if price_basis == "Rejected":
@@ -171,8 +171,8 @@ def calculate_harvest_pricing(
 		pricing_band=band.band_name if band else None,
 		price_basis=price_basis,
 		net_dry_qty=qty,
-		eligible_area_acres=area,
-		yield_kg_per_acre=yield_per_acre,
+		eligible_area_hectares=area,
+		yield_kg_per_hectare=yield_per_hectare,
 		base_quota_qty=base_qty,
 		excess_qty=excess_qty,
 		grain_qty=grain_qty,

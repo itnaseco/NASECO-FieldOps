@@ -15,7 +15,7 @@
   "polygon",
   "geojson",
   "section_break_2",
-  "area_acres",
+  "area_hectares",
   "perimeter_meters",
   "centroid_lat",
   "centroid_lng",
@@ -31,11 +31,12 @@
  ],
  "fields": [
   {
+   "description": "Generated from the Outgrower ID when automatic plot naming is enabled.",
    "fieldname": "plot_id",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Plot ID",
-   "reqd": 1,
+   "read_only": 1,
    "unique": 1
   },
   {
@@ -83,9 +84,9 @@
    "label": "Plot Measurements"
   },
   {
-   "fieldname": "area_acres",
+   "fieldname": "area_hectares",
    "fieldtype": "Float",
-   "label": "Area (Acres)",
+   "label": "Area (Hectares)",
    "precision": 2
   },
   {

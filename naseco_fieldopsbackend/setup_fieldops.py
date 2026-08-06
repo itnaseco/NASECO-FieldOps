@@ -115,7 +115,7 @@ def create_doctypes():
             "fields": [
                 {"fieldname": "plot_id", "label": "Plot ID", "fieldtype": "Data", "reqd": 1, "unique": 1},
                 {"fieldname": "outgrower", "label": "Outgrower", "fieldtype": "Link", "options": "Outgrower", "reqd": 1},
-                {"fieldname": "area_acres", "label": "Area (Acres)", "fieldtype": "Float"},
+                {"fieldname": "area_hectares", "label": "Area (Hectares)", "fieldtype": "Float"},
                 {"fieldname": "geojson", "label": "GeoJSON", "fieldtype": "Code", "options": "JSON"},
                 {"fieldname": "map_image", "label": "Map Image", "fieldtype": "Attach Image"},
                 {"fieldname": "status", "label": "Status", "fieldtype": "Select", "options": "Active\nIdle", "default": "Active"}

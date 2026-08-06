@@ -15,6 +15,24 @@ from frappe.utils.file_manager import save_file
 
 
 class FarmPlot(Document):
+	def autoname(self):
+		if self.plot_id:
+			self.name = self.plot_id
+			return
+
+		auto_generate = frappe.db.get_single_value(
+			"FieldOps Settings", "auto_generate_plot_ids"
+		)
+		if auto_generate in (None, ""):
+			auto_generate = 1
+		if not auto_generate:
+			frappe.throw(_("Plot ID is required when automatic plot naming is disabled."))
+		if not self.outgrower:
+			frappe.throw(_("Outgrower is required before a Farm Plot ID can be generated."))
+
+		self.plot_id = get_next_plot_id(self.outgrower)
+		self.name = self.plot_id
+
 	def validate(self):
 		self.validate_and_normalize_polygon()
 		self.validate_geospatial_values()
@@ -124,7 +142,7 @@ class FarmPlot(Document):
 			frappe.throw(_("A plot polygon requires at least three unique coordinates."))
 
 	def validate_geospatial_values(self):
-		if self.area_acres not in (None, "") and flt(self.area_acres) < 0:
+		if self.area_hectares not in (None, "") and flt(self.area_hectares) < 0:
 			frappe.throw(_("Area cannot be negative."))
 		if self.perimeter_meters not in (None, "") and flt(self.perimeter_meters) < 0:
 			frappe.throw(_("Perimeter cannot be negative."))
@@ -144,7 +162,7 @@ class FarmPlot(Document):
 		return any(
 			value not in (None, "")
 			for value in (
-				self.area_acres,
+				self.area_hectares,
 				self.perimeter_meters,
 				self.centroid_lat,
 				self.centroid_lng,
@@ -152,18 +170,18 @@ class FarmPlot(Document):
 		)
 
 	def clear_geospatial_values(self):
-		self.area_acres = 0
+		self.area_hectares = 0
 		self.perimeter_meters = 0
 		self.centroid_lat = None
 		self.centroid_lng = None
 		self.geojson = None
 
 	def calculate_geospatial_values(self):
-		"""Calculate area (acres), perimeter (meters), and centroid from GPS vertices"""
+		"""Calculate area (hectares), perimeter (meters), and centroid from GPS vertices."""
 		vertices = [(float(v.latitude), float(v.longitude)) for v in self.polygon]
 
 		# Calculate area using spherical polygon formula
-		self.area_acres = self.calculate_area_acres(vertices)
+		self.area_hectares = self.calculate_area_hectares(vertices)
 
 		# Calculate perimeter using Haversine distance
 		self.perimeter_meters = self.calculate_perimeter_meters(vertices)
@@ -173,10 +191,10 @@ class FarmPlot(Document):
 		self.centroid_lat = centroid[0]
 		self.centroid_lng = centroid[1]
 
-	def calculate_area_acres(self, vertices):
+	def calculate_area_hectares(self, vertices):
 		"""
 		Calculate area of spherical polygon using spherical excess formula.
-		Returns area in acres.
+		Returns area in hectares.
 		"""
 		if len(vertices) < 3:
 			return 0.0
@@ -200,10 +218,10 @@ class FarmPlot(Document):
 
 		area_sq_meters = abs(area_sq_meters * R * R / 2.0)
 
-		# Convert square meters to acres (1 acre = 4046.86 sq meters)
-		acres = area_sq_meters / 4046.86
+		# One hectare is 10,000 square metres.
+		hectares = area_sq_meters / 10000
 
-		return round(acres, 2)
+		return round(hectares, 2)
 
 	def calculate_perimeter_meters(self, vertices):
 		"""
@@ -293,7 +311,7 @@ class FarmPlot(Document):
 			"properties": {
 				"plot_id": self.plot_id,
 				"plot_name": self.plot_name or "",
-				"area_acres": self.area_acres or 0,
+				"area_hectares": self.area_hectares or 0,
 				"perimeter_meters": self.perimeter_meters or 0
 			}
 		}
@@ -312,8 +330,46 @@ def recalculate_plot_measurements(farm_plot):
 	doc.flags.force_geospatial_calculation = True
 	doc.save()
 	return {
-		"area_acres": doc.area_acres,
+		"area_hectares": doc.area_hectares,
 		"perimeter_meters": doc.perimeter_meters,
 		"centroid_lat": doc.centroid_lat,
 		"centroid_lng": doc.centroid_lng,
 	}
+
+
+def get_next_plot_id(outgrower):
+	"""Allocate the next alphabetic plot suffix under an outgrower."""
+	prefix = str(outgrower).strip()
+	limit = int(
+		frappe.db.get_single_value("FieldOps Settings", "plot_alpha_suffix_limit") or 2
+	)
+	limit = min(max(limit, 1), 4)
+
+	# Lock this outgrower's existing rows for the duration of the insert transaction.
+	existing = frappe.db.sql(
+		"""
+		select plot_id
+		from `tabFarm Plot`
+		where outgrower = %s
+		for update
+		""",
+		outgrower,
+		as_dict=True,
+	)
+	used = {row.plot_id for row in existing if row.plot_id}
+	for index in range(1, sum(26**width for width in range(1, limit + 1)) + 1):
+		candidate = f"{prefix}-{_alpha_suffix(index)}"
+		if candidate not in used and not frappe.db.exists("Farm Plot", candidate):
+			return candidate
+
+	frappe.throw(
+		_("No Farm Plot suffixes remain for Outgrower {0}.").format(frappe.bold(outgrower))
+	)
+
+
+def _alpha_suffix(index):
+	letters = []
+	while index:
+		index, remainder = divmod(index - 1, 26)
+		letters.append(chr(65 + remainder))
+	return "".join(reversed(letters))

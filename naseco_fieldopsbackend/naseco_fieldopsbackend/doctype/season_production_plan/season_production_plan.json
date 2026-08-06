@@ -25,7 +25,7 @@
   "baseline_section",
   "target_outgrowers",
   "target_plots",
-  "target_acres",
+  "target_hectares",
   "planned_production_qty",
   "planned_procurement_value",
   "parent_seed_required_qty",
@@ -46,8 +46,8 @@
   "actuals_section",
   "contracted_outgrowers",
   "contracted_plots",
-  "contracted_acres",
-  "planted_acres",
+  "contracted_hectares",
+  "planted_hectares",
   "forecast_production_qty",
   "delivered_net_dry_qty",
   "verified_inspection_count",
@@ -60,7 +60,7 @@
   "settled_net_payable",
   "deferred_bonus_liability",
   "variance_section",
-  "acreage_achievement_percent",
+  "area_achievement_percent",
   "production_achievement_percent",
   "forecast_variance_qty",
   "notes",
@@ -202,10 +202,10 @@
    "read_only": 1
   },
   {
-   "fieldname": "target_acres",
+   "fieldname": "target_hectares",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Target Acres",
+   "label": "Target Hectares",
    "read_only": 1
   },
   {
@@ -325,15 +325,15 @@
    "read_only": 1
   },
   {
-   "fieldname": "contracted_acres",
+   "fieldname": "contracted_hectares",
    "fieldtype": "Float",
-   "label": "Contracted Acres",
+   "label": "Contracted Hectares",
    "read_only": 1
   },
   {
-   "fieldname": "planted_acres",
+   "fieldname": "planted_hectares",
    "fieldtype": "Float",
-   "label": "Planted Acres",
+   "label": "Planted Hectares",
    "read_only": 1
   },
   {
@@ -408,9 +408,9 @@
    "label": "Plan Variance"
   },
   {
-   "fieldname": "acreage_achievement_percent",
+   "fieldname": "area_achievement_percent",
    "fieldtype": "Percent",
-   "label": "Contracted Acreage Achievement %",
+   "label": "Contracted Area Achievement %",
    "read_only": 1
   },
   {

@@ -13,15 +13,15 @@
   "pricing_policy",
   "target_outgrowers",
   "target_plots",
-  "target_acres",
-  "planned_yield_kg_per_acre",
+  "target_hectares",
+  "planned_yield_kg_per_hectare",
   "planned_production_qty",
   "planning_rate",
   "planned_procurement_value",
   "parent_seed_item",
   "parent_seed_warehouse",
   "parent_seed_uom",
-  "parent_seed_rate_per_acre",
+  "parent_seed_rate_per_hectare",
   "parent_seed_required_qty",
   "planting_window_from",
   "planting_window_to",
@@ -97,17 +97,17 @@
    "non_negative": 1
   },
   {
-   "fieldname": "target_acres",
+   "fieldname": "target_hectares",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Target Acres",
+   "label": "Target Hectares",
    "non_negative": 1,
    "reqd": 1
   },
   {
-   "fieldname": "planned_yield_kg_per_acre",
+   "fieldname": "planned_yield_kg_per_hectare",
    "fieldtype": "Float",
-   "label": "Planned Yield (kg/acre)",
+   "label": "Planned Yield (kg/hectare)",
    "non_negative": 1,
    "reqd": 1
   },
@@ -152,9 +152,9 @@
    "read_only": 1
   },
   {
-   "fieldname": "parent_seed_rate_per_acre",
+   "fieldname": "parent_seed_rate_per_hectare",
    "fieldtype": "Float",
-   "label": "Parent Seed Qty per Acre",
+   "label": "Parent Seed Qty per Hectare",
    "non_negative": 1
   },
   {

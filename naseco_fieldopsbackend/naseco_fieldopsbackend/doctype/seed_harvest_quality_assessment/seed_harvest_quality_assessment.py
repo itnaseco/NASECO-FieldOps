@@ -87,8 +87,8 @@ class SeedHarvestQualityAssessment(Document):
 				"production_contract",
 				"outgrower",
 				"season",
-				"area_acres",
-				"accepted_area_acres",
+				"area_hectares",
+				"accepted_area_hectares",
 				"harvest_batch",
 			],
 			as_dict=True,
@@ -100,7 +100,7 @@ class SeedHarvestQualityAssessment(Document):
 		self.outgrower = lot.outgrower
 		self.season = lot.season
 		self.batch_no = self.batch_no or lot.harvest_batch
-		self.eligible_area_acres = lot.accepted_area_acres or lot.area_acres
+		self.eligible_area_hectares = lot.accepted_area_hectares or lot.area_hectares
 		self.pricing_policy = frappe.db.get_value(
 			"Outgrower Production Contract", lot.production_contract, "pricing_policy"
 		)
@@ -161,20 +161,20 @@ class SeedHarvestQualityAssessment(Document):
 		self.assessment_status = "Pending Laboratory Review"
 
 	def calculate_provisional_pricing(self):
-		if not self.pricing_policy or not flt(self.net_dry_qty) or not flt(self.eligible_area_acres):
+		if not self.pricing_policy or not flt(self.net_dry_qty) or not flt(self.eligible_area_hectares):
 			return
 		policy = frappe.get_doc("Outgrower Pricing Policy", self.pricing_policy)
 		result = calculate_harvest_pricing(
 			policy,
 			self.net_dry_qty,
-			self.eligible_area_acres,
+			self.eligible_area_hectares,
 			self.genetic_purity_percent,
 			self.germination_percent,
 			self.undersize_percent,
 			self.reject_percent,
 			force_rejected=self.disposition == "Rejected",
 		)
-		self.provisional_yield_kg_per_acre = result.yield_kg_per_acre
+		self.provisional_yield_kg_per_hectare = result.yield_kg_per_hectare
 		self.provisional_pricing_band = result.pricing_band
 		self.provisional_price_basis = result.price_basis
 		self.provisional_payable_value = result.initial_payable_value

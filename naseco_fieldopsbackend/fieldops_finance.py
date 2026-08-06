@@ -1210,7 +1210,7 @@ def populate_settlement_pricing(settlement):
 		lot = frappe.db.get_value(
 			"Crop Production Lot",
 			production_lot,
-			["area_acres", "accepted_area_acres"],
+			["area_hectares", "accepted_area_hectares"],
 			as_dict=True,
 		)
 		if not lot:
@@ -1220,10 +1220,10 @@ def populate_settlement_pricing(settlement):
 		qty = sum(flt(row.net_dry_qty) for row in pricing_rows)
 		if qty <= 0:
 			continue
-		area = flt(lot.accepted_area_acres or lot.area_acres)
+		area = flt(lot.accepted_area_hectares or lot.area_hectares)
 		if area <= 0:
 			frappe.throw(
-				_("Production Lot {0} needs positive eligible acreage for pricing.").format(
+				_("Production Lot {0} needs a positive eligible area for pricing.").format(
 					frappe.bold(production_lot)
 				)
 			)
@@ -1256,8 +1256,8 @@ def populate_settlement_pricing(settlement):
 				"assessment_count": len(rows),
 				"net_dry_qty": result.net_dry_qty,
 				"uom": "Kg",
-				"eligible_area_acres": result.eligible_area_acres,
-				"yield_kg_per_acre": result.yield_kg_per_acre,
+				"eligible_area_hectares": result.eligible_area_hectares,
+				"yield_kg_per_hectare": result.yield_kg_per_hectare,
 				"genetic_purity_percent": weighted("genetic_purity_percent"),
 				"germination_percent": weighted("germination_percent"),
 				"undersize_percent": weighted("undersize_percent"),
@@ -1661,7 +1661,7 @@ def get_contract_management_health():
 	sample_pricing = calculate_harvest_pricing(
 		policy,
 		net_dry_qty=1200,
-		eligible_area_acres=1,
+		eligible_area_hectares=1,
 		genetic_purity_percent=98,
 		germination_percent=97,
 	)

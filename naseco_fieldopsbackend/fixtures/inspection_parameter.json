@@ -31,7 +31,8 @@
   "parameter_group": "Planting",
   "parameter_name": "Inter row spacing",
   "requires_take_counts": 0,
-  "unit": "Meter"
+  "select_options": "Adequate\nInadequate",
+  "unit": null
  },
  {
   "applies_to": "Both",
@@ -69,8 +70,8 @@
  },
  {
   "applies_to": "Outgrower Supervisor",
-  "calculation_method": "Direct Value",
-  "data_type": "Number",
+  "calculation_method": "Categorical",
+  "data_type": "Select",
   "denominator_basis": null,
   "description": null,
   "docstatus": 0,
@@ -82,12 +83,13 @@
   "parameter_group": "Isolation",
   "parameter_name": "Isolation distance",
   "requires_take_counts": 0,
-  "unit": "Meter"
+  "select_options": "Adequate\nInadequate",
+  "unit": null
  },
  {
   "applies_to": "Outgrower Supervisor",
-  "calculation_method": "Direct Value",
-  "data_type": "Number",
+  "calculation_method": "Categorical",
+  "data_type": "Select",
   "denominator_basis": null,
   "description": null,
   "docstatus": 0,
@@ -99,7 +101,8 @@
   "parameter_group": "Isolation",
   "parameter_name": "Time isolation",
   "requires_take_counts": 0,
-  "unit": "Week"
+  "select_options": "Adequate\nInadequate",
+  "unit": null
  },
  {
   "applies_to": "Both",

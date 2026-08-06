@@ -79,10 +79,10 @@ class CropProductionLot(Document):
 			)
 
 	def validate_area(self):
-		if flt(self.area_acres) <= 0:
+		if flt(self.area_hectares) <= 0:
 			frappe.throw(_("Lot Area must be greater than zero."))
 		other_area = sum(
-			flt(row.area_acres)
+			flt(row.area_hectares)
 			for row in frappe.get_all(
 				"Crop Production Lot",
 				filters={
@@ -90,23 +90,23 @@ class CropProductionLot(Document):
 					"name": ["!=", self.name or ""],
 					"status": ["!=", "Rejected"],
 				},
-				fields=["area_acres"],
+				fields=["area_hectares"],
 			)
 		)
 		contracted_area = flt(
 			frappe.db.get_value(
 				"Outgrower Production Contract",
 				self.production_contract,
-				"contracted_area_acres",
+				"contracted_area_hectares",
 			)
 		)
-		if contracted_area and other_area + flt(self.area_acres) > contracted_area:
+		if contracted_area and other_area + flt(self.area_hectares) > contracted_area:
 			frappe.throw(
-				_("Total production-lot area cannot exceed the contracted area of {0} acres.").format(
+				_("Total production-lot area cannot exceed the contracted area of {0} hectares.").format(
 					contracted_area
 				)
 			)
-		if flt(self.accepted_area_acres) + flt(self.rejected_area_acres) > flt(self.area_acres):
+		if flt(self.accepted_area_hectares) + flt(self.rejected_area_hectares) > flt(self.area_hectares):
 			frappe.throw(_("Accepted and Rejected Area cannot exceed the Lot Area."))
 
 	def validate_parent_seed_batch(self):

@@ -22,6 +22,9 @@
   "approvals_section",
   "finance_approver",
   "stores_approver",
+  "naming_section",
+  "auto_generate_plot_ids",
+  "plot_alpha_suffix_limit",
   "spacing_section",
   "target_take_spacing_m",
   "minimum_take_spacing_m",
@@ -154,6 +157,25 @@
    "fieldtype": "Link",
    "label": "Stores Approver",
    "options": "User"
+  },
+  {
+   "fieldname": "naming_section",
+   "fieldtype": "Section Break",
+   "label": "Farm Plot Naming"
+  },
+  {
+   "default": "1",
+   "description": "Generate Farm Plot IDs from the Outgrower ID and an alphabetic suffix, for example H-001-A.",
+   "fieldname": "auto_generate_plot_ids",
+   "fieldtype": "Check",
+   "label": "Automatically Generate Farm Plot IDs"
+  },
+  {
+   "default": "2",
+   "description": "Maximum suffix letters. A value of 2 supports A to ZZ per outgrower.",
+   "fieldname": "plot_alpha_suffix_limit",
+   "fieldtype": "Int",
+   "label": "Maximum Plot Suffix Letters"
   },
   {
    "fieldname": "spacing_section",

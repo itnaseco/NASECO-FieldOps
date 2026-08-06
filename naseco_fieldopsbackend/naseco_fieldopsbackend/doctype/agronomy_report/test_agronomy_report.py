@@ -15,6 +15,51 @@ from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.agronomy_report.agron
 
 
 class TestAgronomyReport(unittest.TestCase):
+	@patch("naseco_fieldopsbackend.inspection_scheduler.update_crop_cycle_current_stage")
+	@patch(
+		"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.agronomy_report.agronomy_report.frappe.db.sql"
+	)
+	@patch(
+		"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.agronomy_report.agronomy_report.frappe.db.set_value"
+	)
+	@patch(
+		"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.agronomy_report.agronomy_report.frappe.get_all"
+	)
+	def test_submitted_report_completes_every_stage_activity(
+		self, get_all, set_value, sql, update_current_stage
+	):
+		get_all.return_value = [
+			SimpleNamespace(name="ACT-1", mandatory=1),
+			SimpleNamespace(name="ACT-2", mandatory=0),
+		]
+		report = SimpleNamespace(
+			name="AGR-TEST",
+			stage="STAGE-TEST",
+			crop_cycle="CYCLE-TEST",
+		)
+
+		AgronomyReport.complete_related_stage(report)
+
+		activity_updates = [
+			entry for entry in set_value.call_args_list if entry.args[0] == "Stage Activity"
+		]
+		self.assertEqual(len(activity_updates), 2)
+		self.assertTrue(
+			all(entry.args[2]["status"] == "Completed" for entry in activity_updates)
+		)
+		self.assertTrue(
+			all(
+				entry.args[2]["completed_by_report"] == "AGR-TEST"
+				for entry in activity_updates
+			)
+		)
+		stage_update = next(
+			entry for entry in set_value.call_args_list if entry.args[0] == "Crop Cycle Stage"
+		)
+		self.assertEqual(stage_update.args[2]["completion_percentage"], 100)
+		self.assertEqual(sql.call_count, 2)
+		update_current_stage.assert_called_once_with("CYCLE-TEST")
+
 	def test_lifecycle_has_nine_ordered_stages(self):
 		self.assertEqual(len(STAGE_NAMES), 9)
 		self.assertEqual(STAGE_NAMES[0], "Field Verification & Contracting")

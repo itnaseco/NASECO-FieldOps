@@ -37,8 +37,8 @@
   "disposition",
   "quality_decision_notes",
   "pricing_section",
-  "eligible_area_acres",
-  "provisional_yield_kg_per_acre",
+  "eligible_area_hectares",
+  "provisional_yield_kg_per_hectare",
   "provisional_pricing_band",
   "provisional_price_basis",
   "provisional_payable_value",
@@ -260,15 +260,15 @@
    "label": "Provisional Contract Pricing"
   },
   {
-   "fieldname": "eligible_area_acres",
+   "fieldname": "eligible_area_hectares",
    "fieldtype": "Float",
-   "label": "Eligible Area (Acres)",
+   "label": "Eligible Area (Hectares)",
    "read_only": 1
   },
   {
-   "fieldname": "provisional_yield_kg_per_acre",
+   "fieldname": "provisional_yield_kg_per_hectare",
    "fieldtype": "Float",
-   "label": "Provisional Yield (kg/acre)",
+   "label": "Provisional Yield (kg/hectare)",
    "read_only": 1
   },
   {

@@ -44,6 +44,7 @@ class TestOutgrowerProductionContract(TestCase):
 	)
 	def test_rejects_exposure_percent_over_one_hundred(self, _translate, _throw):
 		contract = SimpleNamespace(
+			expected_yield_kg_per_hectare=1000,
 			expected_yield_qty=100,
 			contract_rate=2500,
 			max_exposure_percent=101,
@@ -53,6 +54,42 @@ class TestOutgrowerProductionContract(TestCase):
 
 		with self.assertRaises(frappe.ValidationError):
 			OutgrowerProductionContract.validate_commercial_terms(contract)
+
+	def test_calculates_harvest_and_each_parent_seed_line_per_hectare(self):
+		female = SimpleNamespace(
+			parent_seed_item="FEMALE-SEED",
+			quantity_per_hectare=15,
+			uom="Kg",
+			rate=100,
+			planned_quantity=0,
+			planned_value=0,
+		)
+		male = SimpleNamespace(
+			parent_seed_item="MALE-SEED",
+			quantity_per_hectare=5,
+			uom="Kg",
+			rate=80,
+			planned_quantity=0,
+			planned_value=0,
+		)
+		contract = SimpleNamespace(
+			contracted_area_hectares=2,
+			quota_kg_per_hectare=2000,
+			expected_yield_kg_per_hectare=2500,
+			contract_rate=2,
+			parent_seeds=[female, male],
+			planned_parent_seed_qty=0,
+			planned_parent_seed_value=0,
+		)
+
+		OutgrowerProductionContract.calculate_contract_values(contract)
+
+		self.assertEqual(contract.expected_yield_qty, 5000)
+		self.assertEqual(contract.contracted_quota_qty, 4000)
+		self.assertEqual(female.planned_quantity, 30)
+		self.assertEqual(male.planned_quantity, 10)
+		self.assertEqual(contract.planned_parent_seed_qty, 40)
+		self.assertEqual(contract.planned_parent_seed_value, 3800)
 
 	def test_accepts_planting_window_inside_selected_season(self):
 		self.assertTrue(

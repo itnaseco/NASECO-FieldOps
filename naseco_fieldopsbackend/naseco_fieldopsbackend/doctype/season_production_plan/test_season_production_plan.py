@@ -13,10 +13,10 @@ class TestSeasonProductionPlan(TestCase):
 				SimpleNamespace(
 					target_outgrowers=10,
 					target_plots=9,
-					target_acres=50,
-					planned_yield_kg_per_acre=1000,
+					target_hectares=50,
+					planned_yield_kg_per_hectare=1000,
 					planning_rate=1800,
-					parent_seed_rate_per_acre=20,
+					parent_seed_rate_per_hectare=20,
 					planned_production_qty=0,
 					planned_procurement_value=0,
 					parent_seed_required_qty=0,
@@ -39,7 +39,7 @@ class TestSeasonProductionPlan(TestCase):
 
 		SeasonProductionPlan.calculate_baseline(plan)
 
-		self.assertEqual(plan.target_acres, 50)
+		self.assertEqual(plan.target_hectares, 50)
 		self.assertEqual(plan.planned_production_qty, 50000)
 		self.assertEqual(plan.planned_procurement_value, 90000000)
 		self.assertEqual(plan.parent_seed_required_qty, 1000)

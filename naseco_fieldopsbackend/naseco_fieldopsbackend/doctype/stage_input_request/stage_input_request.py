@@ -271,8 +271,8 @@ def get_recipe_input_plan(crop_cycle, stage=None):
 	cycle = frappe.get_doc("Crop Cycle", crop_cycle)
 	if not cycle.recipe:
 		return []
-	area_acres = flt(frappe.db.get_value("Farm Plot", cycle.plot, "area_acres"))
-	if area_acres <= 0:
+	area_hectares = flt(frappe.db.get_value("Farm Plot", cycle.plot, "area_hectares"))
+	if area_hectares <= 0:
 		frappe.throw(_("Farm Plot area must be greater than zero."))
 
 	stage_name = (
@@ -291,7 +291,7 @@ def get_recipe_input_plan(crop_cycle, stage=None):
 			"name",
 			"item_code",
 			"input_name",
-			"quantity_per_acre",
+			"quantity_per_hectare",
 			"unit",
 			"stock_uom",
 			"conversion_factor",
@@ -312,7 +312,7 @@ def get_recipe_input_plan(crop_cycle, stage=None):
 			"recipe_input_item": row.name,
 			"item_code": row.item_code,
 			"item_name": row.input_name,
-			"requested_qty": flt(row.quantity_per_acre) * area_acres,
+			"requested_qty": flt(row.quantity_per_hectare) * area_hectares,
 			"uom": row.unit,
 			"conversion_factor": row.conversion_factor,
 			"stock_uom": row.stock_uom,

@@ -103,20 +103,18 @@ class TestInspection(TestCase):
 		Inspection.calculate_inspection_control_completion(inspection, standards)
 		self.assertEqual(inspection.controls_completed, 1)
 
-	def test_isolation_distance_resolves_to_good_or_poor(self):
+	def test_isolation_controls_use_adequate_or_inadequate(self):
 		standard = self._standard(
-			comparison_rule="Isolation Distance",
-			minimum_value=200,
-			good_label="Good",
-			poor_label="Poor",
+			comparison_rule="Equals",
+			expected_text="Adequate",
 		)
 		self.assertEqual(
-			Inspection.evaluate_standard(None, SimpleNamespace(measured_value=220, text_value=""), standard),
-			"Good",
+			Inspection.evaluate_standard(None, SimpleNamespace(measured_value=None, text_value="Adequate"), standard),
+			"Pass",
 		)
 		self.assertEqual(
-			Inspection.evaluate_standard(None, SimpleNamespace(measured_value=199, text_value=""), standard),
-			"Poor",
+			Inspection.evaluate_standard(None, SimpleNamespace(measured_value=None, text_value="Inadequate"), standard),
+			"Corrective Action Required",
 		)
 
 	def test_failed_auto_reject_standard_is_auto_rejected(self):

@@ -7,15 +7,31 @@ from unittest.mock import Mock, patch
 
 import frappe
 
-from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.farm_plot.farm_plot import FarmPlot
+from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.farm_plot.farm_plot import (
+	FarmPlot,
+	_alpha_suffix,
+)
 
 
 class TestFarmPlot(TestCase):
+	def test_plot_suffix_sequence_supports_multiple_letters(self):
+		self.assertEqual(_alpha_suffix(1), "A")
+		self.assertEqual(_alpha_suffix(26), "Z")
+		self.assertEqual(_alpha_suffix(27), "AA")
+
+	def test_polygon_area_is_returned_in_hectares(self):
+		# A small equatorial polygon close to one hectare.
+		area = FarmPlot.calculate_area_hectares(
+			None,
+			[(0, 0), (0, 0.0009), (0.0009, 0.0009), (0.0009, 0)]
+		)
+		self.assertAlmostEqual(area, 1, places=1)
+
 	def test_preserves_manual_measurements_when_polygon_exists(self):
 		plot = SimpleNamespace(
 			polygon=[1, 2, 3],
 			flags={},
-			area_acres=2.5,
+			area_hectares=2.5,
 			perimeter_meters=410,
 			centroid_lat=0.34795,
 			centroid_lng=32.58295,
@@ -33,7 +49,7 @@ class TestFarmPlot(TestCase):
 
 	def test_accepts_valid_manual_plot_measurements(self):
 		plot = SimpleNamespace(
-			area_acres=2.5,
+			area_hectares=2.5,
 			perimeter_meters=410,
 			centroid_lat=0.34795,
 			centroid_lng=32.58295,
@@ -41,7 +57,7 @@ class TestFarmPlot(TestCase):
 
 		FarmPlot.validate_geospatial_values(plot)
 
-		self.assertEqual(plot.area_acres, 2.5)
+		self.assertEqual(plot.area_hectares, 2.5)
 		self.assertEqual(plot.centroid_lng, 32.58295)
 
 	@patch(
@@ -54,7 +70,7 @@ class TestFarmPlot(TestCase):
 	)
 	def test_rejects_incomplete_manual_centroid(self, _translate, _throw):
 		plot = SimpleNamespace(
-			area_acres=2.5,
+			area_hectares=2.5,
 			perimeter_meters=410,
 			centroid_lat=0.34795,
 			centroid_lng=None,

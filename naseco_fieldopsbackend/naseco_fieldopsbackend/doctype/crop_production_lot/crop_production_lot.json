@@ -17,7 +17,7 @@
   "planting_section",
   "planting_start_date",
   "planting_end_date",
-  "area_acres",
+  "area_hectares",
   "assigned_supervisor",
   "parent_seed_section",
   "parent_seed_item",
@@ -25,8 +25,8 @@
   "parent_seed_qty",
   "parent_seed_uom",
   "field_section",
-  "accepted_area_acres",
-  "rejected_area_acres",
+  "accepted_area_hectares",
+  "rejected_area_hectares",
   "field_certification_status",
   "rejected_area_geojson",
   "harvest_section",
@@ -125,10 +125,10 @@
    "reqd": 1
   },
   {
-   "fieldname": "area_acres",
+   "fieldname": "area_hectares",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Lot Area (Acres)",
+   "label": "Lot Area (Hectares)",
    "non_negative": 1,
    "reqd": 1
   },
@@ -176,15 +176,15 @@
    "label": "Field Certification Outcome"
   },
   {
-   "fieldname": "accepted_area_acres",
+   "fieldname": "accepted_area_hectares",
    "fieldtype": "Float",
-   "label": "Accepted Area (Acres)",
+   "label": "Accepted Area (Hectares)",
    "non_negative": 1
   },
   {
-   "fieldname": "rejected_area_acres",
+   "fieldname": "rejected_area_hectares",
    "fieldtype": "Float",
-   "label": "Rejected Area (Acres)",
+   "label": "Rejected Area (Hectares)",
    "non_negative": 1
   },
   {

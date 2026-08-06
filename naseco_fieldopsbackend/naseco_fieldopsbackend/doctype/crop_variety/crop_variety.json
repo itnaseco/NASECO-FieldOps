@@ -12,6 +12,7 @@
   "maturity_days",
   "variety_id",
   "maturity_period_days",
+  "expected_yield_kg_per_hectare",
   "description"
  ],
  "fields": [
@@ -45,6 +46,13 @@
    "fieldname": "maturity_period_days",
    "fieldtype": "Int",
    "label": "Maturity Period (Days)"
+  },
+  {
+   "description": "Agronomic target used to forecast harvest quantities on new production contracts.",
+   "fieldname": "expected_yield_kg_per_hectare",
+   "fieldtype": "Float",
+   "label": "Expected Seed Yield (kg/hectare)",
+   "non_negative": 1
   },
   {
    "fieldname": "description",

@@ -10,6 +10,7 @@
   "parameter_code",
   "parameter_group",
   "data_type",
+  "select_options",
   "unit",
   "applies_to",
   "measurement_scope",
@@ -44,8 +45,16 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Data Type",
-   "options": "Number\nCount\nPercent\nScore\nYes/No\nText\nDate\nRatio",
+   "options": "Number\nCount\nPercent\nScore\nYes/No\nSelect\nText\nDate\nRatio",
    "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.data_type=='Select'",
+   "description": "Enter one option per line.",
+   "fieldname": "select_options",
+   "fieldtype": "Small Text",
+   "label": "Select Options",
+   "mandatory_depends_on": "eval:doc.data_type=='Select'"
   },
   {
    "fieldname": "unit",

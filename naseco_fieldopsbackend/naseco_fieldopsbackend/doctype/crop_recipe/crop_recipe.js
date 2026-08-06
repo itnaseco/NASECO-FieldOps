@@ -92,19 +92,19 @@ frappe.ui.form.on("Recipe Input Item", {
         frappe.model.set_value(
           cdt,
           cdn,
-          'stock_quantity_per_acre',
-          flt(row.quantity_per_acre) * flt(message.conversion_factor)
+          'stock_quantity_per_hectare',
+          flt(row.quantity_per_hectare) * flt(message.conversion_factor)
         );
       }
     });
   },
-  quantity_per_acre(frm, cdt, cdn) {
+  quantity_per_hectare(frm, cdt, cdn) {
     const row = locals[cdt][cdn];
     frappe.model.set_value(
       cdt,
       cdn,
-      'stock_quantity_per_acre',
-      flt(row.quantity_per_acre) * flt(row.conversion_factor || 1)
+      'stock_quantity_per_hectare',
+      flt(row.quantity_per_hectare) * flt(row.conversion_factor || 1)
     );
   },
   recovery_policy(frm, cdt, cdn) {

@@ -16,9 +16,9 @@ def production_performance(filters=None):
 		"""
 		select name, season, company, status, readiness_score,
 			target_outgrowers, contracted_outgrowers,
-			target_acres, contracted_acres, planted_acres,
+			target_hectares, contracted_hectares, planted_hectares,
 			planned_production_qty, forecast_production_qty, delivered_net_dry_qty,
-			acreage_achievement_percent, production_achievement_percent,
+			area_achievement_percent, production_achievement_percent,
 			qa_coverage_percent, current_exposure_value, assessed_harvest_value,
 			settled_net_payable
 		from `tabSeason Production Plan`
@@ -38,10 +38,10 @@ def production_performance(filters=None):
 		_col("readiness_score", "Readiness %", "Percent", width=105),
 		_col("target_outgrowers", "Target Growers", "Int", width=110),
 		_col("contracted_outgrowers", "Contracted Growers", "Int", width=130),
-		_col("target_acres", "Target Acres", "Float", width=105),
-		_col("contracted_acres", "Contracted Acres", "Float", width=120),
-		_col("planted_acres", "Planted Acres", "Float", width=110),
-		_col("acreage_achievement_percent", "Acreage %", "Percent", width=95),
+		_col("target_hectares", "Target Hectares", "Float", width=105),
+		_col("contracted_hectares", "Contracted Hectares", "Float", width=120),
+		_col("planted_hectares", "Planted Hectares", "Float", width=110),
+		_col("area_achievement_percent", "Area Achievement %", "Percent", width=120),
 		_col("planned_production_qty", "Planned Production", "Float", width=135),
 		_col("forecast_production_qty", "Forecast Production", "Float", width=140),
 		_col("delivered_net_dry_qty", "Delivered Net Qty", "Float", width=130),
@@ -60,7 +60,7 @@ def grower_acreage(filters=None):
 			contract.variety, contract.production_category,
 			count(distinct contract.outgrower) contracted_outgrowers,
 			count(distinct contract.farm_plot) contracted_plots,
-			sum(contract.contracted_area_acres) contracted_acres,
+			sum(contract.contracted_area_hectares) contracted_hectares,
 			sum(contract.expected_yield_qty) forecast_qty,
 			sum(contract.expected_harvest_value) forecast_value
 		from `tabOutgrower Production Contract` contract
@@ -82,7 +82,7 @@ def grower_acreage(filters=None):
 		_col("production_category", "Category", width=85),
 		_col("contracted_outgrowers", "Growers", "Int", width=80),
 		_col("contracted_plots", "Plots", "Int", width=70),
-		_col("contracted_acres", "Acres", "Float", width=90),
+		_col("contracted_hectares", "Hectares", "Float", width=90),
 		_col("forecast_qty", "Forecast Qty", "Float", width=110),
 		_col("forecast_value", "Forecast Value", "Currency", width=125),
 	], data

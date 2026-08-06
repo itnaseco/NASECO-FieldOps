@@ -8,7 +8,7 @@
   "user",
   "region",
   "target_outgrowers",
-  "target_acres",
+  "target_hectares",
   "target_activities",
   "target_inspections",
   "actual_assignments",
@@ -49,9 +49,9 @@
    "non_negative": 1
   },
   {
-   "fieldname": "target_acres",
+   "fieldname": "target_hectares",
    "fieldtype": "Float",
-   "label": "Target Acres",
+   "label": "Target Hectares",
    "non_negative": 1
   },
   {

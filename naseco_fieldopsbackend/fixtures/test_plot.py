@@ -84,7 +84,7 @@ def create_test_plot():
 	print("GEOSPATIAL CALCULATIONS RESULTS:")
 	print("-"*60)
 	print(f"  📍 Vertices: {len(plot.polygon)} points")
-	print(f"  📐 Area: {plot.area_acres} acres")
+	print(f"  📐 Area: {plot.area_hectares} hectares")
 	print(f"  📏 Perimeter: {plot.perimeter_meters} meters")
 	print(f"  🎯 Centroid: ({plot.centroid_lat}, {plot.centroid_lng})")
 	print("-"*60)

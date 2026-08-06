@@ -49,12 +49,14 @@
   "pricing_formula",
   "currency",
   "expected_harvest_value",
-  "contracted_area_acres",
-  "quota_kg_per_acre",
+  "contracted_area_hectares",
+  "expected_yield_kg_per_hectare",
+  "quota_kg_per_hectare",
   "contracted_quota_qty",
   "max_exposure_percent",
   "payment_terms_template",
   "parent_seed_section",
+  "parent_seeds",
   "parent_seed_item",
   "parent_seed_uom",
   "planned_parent_seed_qty",
@@ -344,6 +346,7 @@
    "fieldtype": "Float",
    "label": "Expected Harvest Quantity",
    "non_negative": 1,
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -384,17 +387,26 @@
   },
   {
    "description": "Contractual area used for quota, yield and settlement calculations.",
-   "fieldname": "contracted_area_acres",
+   "fieldname": "contracted_area_hectares",
    "fieldtype": "Float",
-   "label": "Contracted Area (Acres)",
+   "label": "Contracted Area (Hectares)",
    "non_negative": 1,
    "reqd": 1
   },
   {
-   "default": "1000",
-   "fieldname": "quota_kg_per_acre",
+   "description": "Crop Variety yield snapshot used for this contract's harvest forecast.",
+   "fieldname": "expected_yield_kg_per_hectare",
    "fieldtype": "Float",
-   "label": "Contract Quota (kg/acre)",
+   "label": "Expected Seed Yield (kg/hectare)",
+   "non_negative": 1,
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "default": "1000",
+   "fieldname": "quota_kg_per_hectare",
+   "fieldtype": "Float",
+   "label": "Contract Quota (kg/hectare)",
    "non_negative": 1,
    "reqd": 1
   },
@@ -424,8 +436,16 @@
    "label": "Parent Seed Commitment"
   },
   {
+   "description": "Add the female, male or other parent seed lines required to produce the contracted seed item.",
+   "fieldname": "parent_seeds",
+   "fieldtype": "Table",
+   "label": "Parent Seed Items",
+   "options": "Production Contract Parent Seed"
+  },
+  {
    "fieldname": "parent_seed_item",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Parent Seed Item",
    "options": "Item"
   },
@@ -435,17 +455,20 @@
    "fieldtype": "Link",
    "label": "Parent Seed UOM",
    "options": "UOM",
+   "hidden": 1,
    "read_only": 1
   },
   {
    "fieldname": "planned_parent_seed_qty",
    "fieldtype": "Float",
+   "hidden": 1,
    "label": "Planned Parent Seed Quantity",
    "non_negative": 1
   },
   {
    "fieldname": "parent_seed_rate",
    "fieldtype": "Currency",
+   "hidden": 1,
    "label": "Parent Seed Rate",
    "non_negative": 1,
    "options": "currency"

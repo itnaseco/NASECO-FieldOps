@@ -117,7 +117,7 @@ function render_plots_section(frm) {
 			filters: {
 				outgrower: frm.doc.name
 			},
-			fields: ['name', 'plot_id', 'plot_name', 'plot_type', 'area_acres', 'centroid_lat', 'centroid_lng'],
+			fields: ['name', 'plot_id', 'plot_name', 'plot_type', 'area_hectares', 'centroid_lat', 'centroid_lng'],
 			order_by: 'creation desc'
 		},
 		callback: function(r) {
@@ -147,7 +147,7 @@ function display_plots(frm, plots) {
 	`;
 
 	plots.forEach(function(plot) {
-		let area_display = plot.area_acres ? `${plot.area_acres} acres` : 'Not calculated';
+		let area_display = plot.area_hectares ? `${plot.area_hectares} hectares` : 'Not calculated';
 		let location_display = (plot.centroid_lat && plot.centroid_lng)
 			? `${plot.centroid_lat.toFixed(4)}, ${plot.centroid_lng.toFixed(4)}`
 			: 'No GPS data';

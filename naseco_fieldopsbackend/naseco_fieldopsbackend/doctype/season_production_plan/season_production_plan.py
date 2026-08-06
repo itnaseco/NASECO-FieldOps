@@ -137,18 +137,18 @@ class SeasonProductionPlan(Document):
 	def calculate_baseline(self):
 		for row in self.production_targets:
 			row.planned_production_qty = (
-				flt(row.target_acres) * flt(row.planned_yield_kg_per_acre)
+				flt(row.target_hectares) * flt(row.planned_yield_kg_per_hectare)
 			)
 			row.planned_procurement_value = (
 				flt(row.planned_production_qty) * flt(row.planning_rate)
 			)
 			row.parent_seed_required_qty = (
-				flt(row.target_acres) * flt(row.parent_seed_rate_per_acre)
+				flt(row.target_hectares) * flt(row.parent_seed_rate_per_hectare)
 			)
 
 		self.target_outgrowers = sum(cint(row.target_outgrowers) for row in self.production_targets)
 		self.target_plots = sum(cint(row.target_plots) for row in self.production_targets)
-		self.target_acres = sum(flt(row.target_acres) for row in self.production_targets)
+		self.target_hectares = sum(flt(row.target_hectares) for row in self.production_targets)
 		self.planned_production_qty = sum(
 			flt(row.planned_production_qty) for row in self.production_targets
 		)
@@ -228,9 +228,9 @@ class SeasonProductionPlan(Document):
 		actuals = get_season_actuals(self.season, self.company)
 		for fieldname, value in actuals.items():
 			self.set(fieldname, value)
-		self.acreage_achievement_percent = (
-			flt(self.contracted_acres) / flt(self.target_acres) * 100
-			if flt(self.target_acres)
+		self.area_achievement_percent = (
+			flt(self.contracted_hectares) / flt(self.target_hectares) * 100
+			if flt(self.target_hectares)
 			else 0
 		)
 		self.production_achievement_percent = (
@@ -323,8 +323,8 @@ class SeasonProductionPlan(Document):
 			if key in seen:
 				frappe.throw(_("Production target row {0} duplicates another target.").format(row.idx))
 			seen.add(key)
-			if flt(row.target_acres) <= 0 or flt(row.planned_yield_kg_per_acre) <= 0:
-				frappe.throw(_("Positive acreage and planned yield are required in row {0}.").format(row.idx))
+			if flt(row.target_hectares) <= 0 or flt(row.planned_yield_kg_per_hectare) <= 0:
+				frappe.throw(_("Positive area and planned yield are required in row {0}.").format(row.idx))
 			if row.variety and frappe.db.get_value("Crop Variety", row.variety, "crop") != row.crop:
 				frappe.throw(_("Variety must belong to the target Crop in row {0}.").format(row.idx))
 			if frappe.db.get_value("Crop Recipe", row.crop_recipe, "crop") != row.crop:
@@ -392,7 +392,7 @@ def get_season_actuals(season, company):
 		select
 			count(distinct outgrower) contracted_outgrowers,
 			count(distinct farm_plot) contracted_plots,
-			coalesce(sum(contracted_area_acres), 0) contracted_acres,
+			coalesce(sum(contracted_area_hectares), 0) contracted_hectares,
 			coalesce(sum(expected_yield_qty), 0) forecast_production_qty
 		from `tabOutgrower Production Contract`
 		where season = %(season)s and company = %(company)s and docstatus = 1
@@ -401,10 +401,10 @@ def get_season_actuals(season, company):
 		{"season": season, "company": company},
 		as_dict=True,
 	)[0]
-	planted_acres = flt(
+	planted_hectares = flt(
 		frappe.db.sql(
 			"""
-			select coalesce(sum(lot.area_acres), 0)
+			select coalesce(sum(lot.area_hectares), 0)
 			from `tabCrop Production Lot` lot
 			inner join `tabCrop Cycle` cycle on cycle.name = lot.crop_cycle
 			where cycle.season = %s and cycle.company = %s
@@ -473,7 +473,7 @@ def get_season_actuals(season, company):
 	verified = cint(inspection.verified_inspection_count)
 	return frappe._dict(
 		**contracts,
-		planted_acres=planted_acres,
+		planted_hectares=planted_hectares,
 		total_inspection_count=total_inspections,
 		verified_inspection_count=verified,
 		qa_coverage_percent=verified / total_inspections * 100 if total_inspections else 0,
@@ -511,11 +511,11 @@ def generate_input_requirements(plan):
 					item.recovery_policy,
 					item.recoverable_percent,
 				)
-				qty_per_acre = flt(
-					item.stock_quantity_per_acre
-					or flt(item.quantity_per_acre) * (flt(item.conversion_factor) or 1)
+				qty_per_hectare = flt(
+					item.stock_quantity_per_hectare
+					or flt(item.quantity_per_hectare) * (flt(item.conversion_factor) or 1)
 				)
-				requirements[key].required_qty += flt(target.target_acres) * qty_per_acre
+				requirements[key].required_qty += flt(target.target_hectares) * qty_per_hectare
 	doc.set("input_requirements", [])
 	for (item_code, warehouse, recovery_policy, recoverable_percent), values in sorted(
 		requirements.items()
@@ -544,8 +544,8 @@ def refresh_plan_actuals(plan):
 		for fieldname in (
 			"contracted_outgrowers",
 			"contracted_plots",
-			"contracted_acres",
-			"planted_acres",
+			"contracted_hectares",
+			"planted_hectares",
 			"forecast_production_qty",
 			"delivered_net_dry_qty",
 			"verified_inspection_count",
@@ -557,7 +557,7 @@ def refresh_plan_actuals(plan):
 			"assessed_harvest_value",
 			"settled_net_payable",
 			"deferred_bonus_liability",
-			"acreage_achievement_percent",
+			"area_achievement_percent",
 			"production_achievement_percent",
 			"forecast_variance_qty",
 		)

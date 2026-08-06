@@ -18,7 +18,8 @@
   "company",
   "supplier",
   "pricing_policy",
-  "contracted_area_acres",
+  "contracted_area_hectares",
+  "expected_yield_kg_per_hectare",
   "contracted_quota_qty",
   "harvest_item",
   "harvest_uom",
@@ -138,9 +139,15 @@
    "read_only": 1
   },
   {
-   "fieldname": "contracted_area_acres",
+   "fieldname": "contracted_area_hectares",
    "fieldtype": "Float",
-   "label": "Contracted Area (Acres)",
+   "label": "Contracted Area (Hectares)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "expected_yield_kg_per_hectare",
+   "fieldtype": "Float",
+   "label": "Expected Seed Yield (kg/hectare)",
    "read_only": 1
   },
   {

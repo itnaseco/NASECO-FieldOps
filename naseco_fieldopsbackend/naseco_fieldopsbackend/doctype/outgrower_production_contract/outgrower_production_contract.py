@@ -22,6 +22,8 @@ class OutgrowerProductionContract(Document):
 		self.capture_legal_snapshot()
 		self.initialize_signatories()
 		self.apply_pricing_policy()
+		self.apply_variety_yield()
+		self.migrate_legacy_parent_seed()
 		self.calculate_contract_values()
 		self.company_obligations = self.company_obligations or _(
 			"<p>Provide contracted technical support, inspections, collection and payment.</p>"
@@ -37,6 +39,7 @@ class OutgrowerProductionContract(Document):
 		self.validate_commercial_terms()
 		self.validate_quality_terms()
 		self.validate_contracted_area()
+		self.validate_parent_seeds()
 
 	def before_submit(self):
 		require_outgrower_manager()
@@ -114,26 +117,52 @@ class OutgrowerProductionContract(Document):
 			plot = frappe.db.get_value(
 				"Farm Plot",
 				self.farm_plot,
-				["plot_id", "area_acres", "geojson"],
+				["plot_id", "area_hectares", "geojson"],
 				as_dict=True,
 			)
 			if plot:
 				self.plot_id_snapshot = plot.plot_id
 				self.plot_geojson_snapshot = plot.geojson
-				self.contracted_area_acres = self.contracted_area_acres or plot.area_acres
+				self.contracted_area_hectares = self.contracted_area_hectares or plot.area_hectares
 
 	def apply_pricing_policy(self):
 		if not self.pricing_policy:
 			return
 		policy = frappe.get_doc("Outgrower Pricing Policy", self.pricing_policy)
 		self.pricing_policy_version = policy.policy_version
-		self.quota_kg_per_acre = policy.quota_kg_per_acre
+		self.quota_kg_per_hectare = policy.quota_kg_per_hectare
 		self.pricing_method = "Formula"
 		self.pricing_formula = (
 			f"Versioned yield and genetic-purity bands from pricing policy {policy.name}."
 		)
 		self.contract_rate = policy.advance_valuation_rate
 		self.currency = policy.currency
+
+	def apply_variety_yield(self):
+		if not self.variety or self.docstatus != 0:
+			return
+		self.expected_yield_kg_per_hectare = flt(
+			frappe.db.get_value(
+				"Crop Variety", self.variety, "expected_yield_kg_per_hectare"
+			)
+		)
+
+	def migrate_legacy_parent_seed(self):
+		if self.parent_seeds or not self.parent_seed_item:
+			return
+		area = flt(self.contracted_area_hectares)
+		self.append(
+			"parent_seeds",
+			{
+				"parent_role": "Other",
+				"parent_seed_item": self.parent_seed_item,
+				"quantity_per_hectare": (
+					flt(self.planned_parent_seed_qty) / area if area else 0
+				),
+				"uom": self.parent_seed_uom,
+				"rate": self.parent_seed_rate,
+			},
+		)
 
 	def initialize_signatories(self):
 		if not self.contract_template or self.docstatus != 0:
@@ -171,11 +200,21 @@ class OutgrowerProductionContract(Document):
 			self.append("signatories", values)
 
 	def calculate_contract_values(self):
-		self.contracted_quota_qty = flt(self.contracted_area_acres) * flt(self.quota_kg_per_acre)
-		if self.pricing_policy and not flt(self.expected_yield_qty):
-			self.expected_yield_qty = self.contracted_quota_qty
+		self.contracted_quota_qty = flt(self.contracted_area_hectares) * flt(self.quota_kg_per_hectare)
+		self.expected_yield_qty = (
+			flt(self.contracted_area_hectares) * flt(self.expected_yield_kg_per_hectare)
+		)
 		self.expected_harvest_value = flt(self.expected_yield_qty) * flt(self.contract_rate)
-		self.planned_parent_seed_value = flt(self.planned_parent_seed_qty) * flt(self.parent_seed_rate)
+		self.planned_parent_seed_qty = 0
+		self.planned_parent_seed_value = 0
+		for row in self.parent_seeds or []:
+			row.uom = row.uom or frappe.db.get_value("Item", row.parent_seed_item, "stock_uom")
+			row.planned_quantity = (
+				flt(self.contracted_area_hectares) * flt(row.quantity_per_hectare)
+			)
+			row.planned_value = flt(row.planned_quantity) * flt(row.rate)
+			self.planned_parent_seed_qty += flt(row.planned_quantity)
+			self.planned_parent_seed_value += flt(row.planned_value)
 
 	def validate_plot(self):
 		if not self.farm_plot:
@@ -309,6 +348,12 @@ class OutgrowerProductionContract(Document):
 		)
 
 	def validate_commercial_terms(self):
+		if flt(self.expected_yield_kg_per_hectare) <= 0:
+			frappe.throw(
+				_("Expected Seed Yield per Hectare must be configured on Crop Variety {0}.").format(
+					frappe.bold(self.variety)
+				)
+			)
 		if flt(self.expected_yield_qty) <= 0:
 			frappe.throw(_("Expected Harvest Quantity must be greater than zero."))
 		if flt(self.contract_rate) <= 0:
@@ -319,15 +364,31 @@ class OutgrowerProductionContract(Document):
 			frappe.throw(_("Pricing Formula is required when Pricing Method is Formula."))
 
 	def validate_contracted_area(self):
-		if flt(self.contracted_area_acres) <= 0:
+		if flt(self.contracted_area_hectares) <= 0:
 			frappe.throw(_("Contracted Area must be greater than zero."))
 		if not self.farm_plot:
 			return
-		plot_area = flt(frappe.db.get_value("Farm Plot", self.farm_plot, "area_acres"))
-		if plot_area and flt(self.contracted_area_acres) > plot_area:
+		plot_area = flt(frappe.db.get_value("Farm Plot", self.farm_plot, "area_hectares"))
+		if plot_area and flt(self.contracted_area_hectares) > plot_area:
 			frappe.throw(
-				_("Contracted Area cannot exceed the Farm Plot area of {0} acres.").format(plot_area)
+				_("Contracted Area cannot exceed the Farm Plot area of {0} hectares.").format(plot_area)
 			)
+
+	def validate_parent_seeds(self):
+		seen = set()
+		for row in self.parent_seeds or []:
+			key = (row.parent_role, row.parent_seed_item)
+			if key in seen:
+				frappe.throw(
+					_("Parent seed row {0} duplicates the same Parent Role and Item.").format(row.idx)
+				)
+			seen.add(key)
+			if flt(row.quantity_per_hectare) <= 0:
+				frappe.throw(
+					_("Seed Quantity per Hectare must be greater than zero in parent seed row {0}.").format(
+						row.idx
+					)
+				)
 
 	def validate_outgrower_eligibility(self):
 		eligibility = frappe.db.get_value("Outgrower", self.outgrower, "eligibility_status")

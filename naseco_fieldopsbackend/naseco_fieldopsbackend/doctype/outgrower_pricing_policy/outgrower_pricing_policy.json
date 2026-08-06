@@ -16,8 +16,8 @@
   "effective_from",
   "effective_to",
   "yield_section",
-  "quota_kg_per_acre",
-  "minimum_seed_yield_kg_per_acre",
+  "quota_kg_per_hectare",
+  "minimum_seed_yield_kg_per_hectare",
   "excess_rate_per_kg",
   "grain_item",
   "grain_rate_per_kg",
@@ -130,17 +130,17 @@
   },
   {
    "default": "1000",
-   "fieldname": "quota_kg_per_acre",
+   "fieldname": "quota_kg_per_hectare",
    "fieldtype": "Float",
-   "label": "Contract Quota (kg/acre)",
+   "label": "Contract Quota (kg/hectare)",
    "non_negative": 1,
    "reqd": 1
   },
   {
    "default": "800",
-   "fieldname": "minimum_seed_yield_kg_per_acre",
+   "fieldname": "minimum_seed_yield_kg_per_hectare",
    "fieldtype": "Float",
-   "label": "Minimum Seed Yield (kg/acre)",
+   "label": "Minimum Seed Yield (kg/hectare)",
    "non_negative": 1,
    "reqd": 1
   },

@@ -56,8 +56,8 @@ function render_command_centre(state, data) {
 		</div>
 		<div class="cc-metrics">
 			${metric(__('Readiness'), p.readiness_score, '%')}
-			${metric(__('Contracted Acres'), p.contracted_acres, '', p.target_acres)}
-			${metric(__('Planted Acres'), p.planted_acres, '', p.target_acres)}
+			${metric(__('Contracted Hectares'), p.contracted_hectares, '', p.target_hectares)}
+			${metric(__('Planted Hectares'), p.planted_hectares, '', p.target_hectares)}
 			${metric(__('Production Forecast'), p.forecast_production_qty, ' kg', p.planned_production_qty)}
 			${metric(__('QA Coverage'), p.qa_coverage_percent, '%')}
 			${currency_metric(__('Current Exposure'), p.current_exposure_value)}
@@ -66,9 +66,9 @@ function render_command_centre(state, data) {
 		</div>
 		<div class="cc-grid">
 			${panel(__('Crop Stage Progress'), table(
-				[__('Stage'), __('Crop Cycles'), __('Acres')],
+				[__('Stage'), __('Crop Cycles'), __('Hectares')],
 				(data.stages || []).map(row => [
-					row.stage, format_number(row.crop_cycles), format_number(row.acres, null, 2)
+					row.stage, format_number(row.crop_cycles), format_number(row.hectares, null, 2)
 				])
 			))}
 			${panel(__('Quality Assurance'), table(

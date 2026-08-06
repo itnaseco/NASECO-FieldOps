@@ -194,7 +194,11 @@ function build_inspection_controls_dialog(frm, schema) {
 			label: control.unit
 				? __('{0} ({1})', [control.label, control.unit])
 				: __(control.label),
-			options: control.data_type === 'Yes/No' ? '\nYes\nNo' : undefined,
+			options: control.data_type === 'Yes/No'
+				? '\nYes\nNo'
+				: control.data_type === 'Select'
+					? `\n${control.options || ''}`
+					: undefined,
 			reqd: cint(control.mandatory),
 			default: control.value,
 			description: control.description
@@ -419,6 +423,7 @@ function get_attribute_fieldtype(data_type) {
 	if (['Number', 'Percent', 'Score'].includes(data_type)) return 'Float';
 	if (data_type === 'Date') return 'Date';
 	if (data_type === 'Yes/No') return 'Select';
+	if (data_type === 'Select') return 'Select';
 	if (data_type === 'Text') return 'Small Text';
 	return 'Data';
 }

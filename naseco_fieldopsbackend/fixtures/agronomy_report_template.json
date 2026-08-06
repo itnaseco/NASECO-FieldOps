@@ -81,7 +81,7 @@
     "responsible_party": "Outgrower Supervisor",
     "section_name": "Field",
     "severity": "Standard",
-    "unit": "Acre",
+    "unit": "Hectare",
     "weight": 1.0
    },
    {
@@ -249,7 +249,7 @@
     "responsible_party": "Outgrower Supervisor",
     "section_name": "Planting",
     "severity": "Standard",
-    "unit": "Acre",
+    "unit": "Hectare",
     "weight": 1.0
    },
    {
@@ -378,7 +378,7 @@
     "data_type": "Percent",
     "evaluation_mode": "Rule Based",
     "expected_value": null,
-    "failure_action": "Assess the failed stand and complete the approved gap-filling or replanting action.",
+    "failure_action": "Assess the failed stand and complete the approved approved replanting action.",
     "help_text": null,
     "mandatory": 1,
     "maximum_value": 0.0,
@@ -434,8 +434,8 @@
     "maximum_value": 0.0,
     "minimum_value": 0.0,
     "options": null,
-    "parameter_code": "GAP_FILLING",
-    "parameter_label": "Gap filling required",
+    "parameter_code": "REPLANTING_NEEDED",
+    "parameter_label": "Replanting Needed?",
     "parent": "Report 3 - Crop Emergence / Germination",
     "parentfield": "parameters",
     "parenttype": "Agronomy Report Template",
@@ -1182,7 +1182,7 @@
     "responsible_party": "Outgrower Supervisor",
     "section_name": "Harvest",
     "severity": "Standard",
-    "unit": "Acre",
+    "unit": "Hectare",
     "weight": 1.0
    },
    {

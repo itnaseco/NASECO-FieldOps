@@ -7,13 +7,21 @@ from frappe.utils import now_datetime
 class StageActivity(Document):
 	def validate(self):
 		if self.status == "Completed":
-			if self.mandatory and not (self.completion_notes or self.evidence):
+			if (
+				self.mandatory
+				and self.completion_source != "Agronomy Report"
+				and not (self.completion_notes or self.evidence)
+			):
 				frappe.throw(
 					_("Completion Notes or Evidence is required for a mandatory activity.")
 				)
 			self.completed_on = self.completed_on or now_datetime()
+			self.completed_by = self.completed_by or frappe.session.user
 		elif self.has_value_changed("status"):
 			self.completed_on = None
+			self.completed_by = None
+			self.completed_by_report = None
+			self.completion_source = "Manual"
 
 	def on_update(self):
 		self.update_stage_progress()

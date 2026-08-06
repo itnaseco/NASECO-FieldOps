@@ -5,8 +5,8 @@
  "engine": "InnoDB",
  "field_order": [
   "band_name",
-  "minimum_yield_kg_per_acre",
-  "maximum_yield_kg_per_acre",
+  "minimum_yield_kg_per_hectare",
+  "maximum_yield_kg_per_hectare",
   "minimum_purity_percent",
   "maximum_purity_percent",
   "price_basis",
@@ -22,18 +22,18 @@
   },
   {
    "description": "Inclusive lower yield boundary.",
-   "fieldname": "minimum_yield_kg_per_acre",
+   "fieldname": "minimum_yield_kg_per_hectare",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Minimum Yield (kg/acre)",
+   "label": "Minimum Yield (kg/hectare)",
    "non_negative": 1,
    "reqd": 1
   },
   {
    "description": "Exclusive upper yield boundary. Leave zero for no upper limit.",
-   "fieldname": "maximum_yield_kg_per_acre",
+   "fieldname": "maximum_yield_kg_per_hectare",
    "fieldtype": "Float",
-   "label": "Maximum Yield (kg/acre)",
+   "label": "Maximum Yield (kg/hectare)",
    "non_negative": 1
   },
   {

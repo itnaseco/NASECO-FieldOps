@@ -3,6 +3,7 @@
 
 frappe.ui.form.on('Farm Plot', {
 	refresh(frm) {
+		configure_plot_id_entry(frm);
 		// Add "View on Map" button if plot has vertices
 		if (frm.doc.polygon && frm.doc.polygon.length >= 3) {
 			frm.add_custom_button(__('View on Map'), function() {
@@ -16,9 +17,9 @@ frappe.ui.form.on('Farm Plot', {
 		}
 
 		// Show summary of calculated values
-		if (frm.doc.area_acres || frm.doc.perimeter_meters) {
+		if (frm.doc.area_hectares || frm.doc.perimeter_meters) {
 			frm.dashboard.add_indicator(
-				__('Area: {0} acres', [frm.doc.area_acres || 0]),
+				__('Area: {0} hectares', [frm.doc.area_hectares || 0]),
 				'blue'
 			);
 			frm.dashboard.add_indicator(
@@ -42,6 +43,7 @@ frappe.ui.form.on('Farm Plot', {
 
 	onload(frm) {
 		enable_polygon_coordinate_entry(frm);
+		configure_plot_id_entry(frm);
 	},
 
 	validate(frm) {
@@ -52,6 +54,14 @@ frappe.ui.form.on('Farm Plot', {
 		renumber_polygon_vertices(frm);
 	}
 });
+
+function configure_plot_id_entry(frm) {
+	frappe.db.get_single_value('FieldOps Settings', 'auto_generate_plot_ids').then((enabled) => {
+		const automatic = cint(enabled === null || enabled === undefined ? 1 : enabled);
+		frm.set_df_property('plot_id', 'read_only', automatic);
+		frm.set_df_property('plot_id', 'reqd', !automatic);
+	});
+}
 
 frappe.ui.form.on('Plot Vertex', {
 	polygon_add(frm, cdt, cdn) {
@@ -329,7 +339,7 @@ function show_plot_map(frm) {
 					</div>
 					<div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #ddd;">
 						<div style="font-size: 11px; color: #666;">
-							<strong>Area:</strong> ${(frm.doc.area_acres || 0).toFixed(3)} acres<br>
+							<strong>Area:</strong> ${(frm.doc.area_hectares || 0).toFixed(3)} hectares<br>
 							<strong>Perimeter:</strong> ${(frm.doc.perimeter_meters || 0).toFixed(1)} m
 						</div>
 					</div>
@@ -438,7 +448,7 @@ function show_plot_map(frm) {
 					let areaLabel = L.divIcon({
 						className: 'area-label',
 						html: `<div style="background: rgba(51, 136, 255, 0.9); color: white; padding: 8px 12px; border-radius: 4px; font-size: 13px; font-weight: bold; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
-							${(frm.doc.area_acres || 0).toFixed(3)} acres
+							${(frm.doc.area_hectares || 0).toFixed(3)} hectares
 						</div>`,
 						iconSize: [100, 30],
 						iconAnchor: [50, 15]
@@ -493,7 +503,7 @@ function show_plot_map(frm) {
 								<table style="width: 100%; font-size: 12px; border-collapse: collapse;">
 									<tr style="border-bottom: 1px solid #eee;">
 										<td style="padding: 6px 0;"><strong>📐 Area:</strong></td>
-										<td style="padding: 6px 0; text-align: right;">${(frm.doc.area_acres || 0).toFixed(3)} acres</td>
+										<td style="padding: 6px 0; text-align: right;">${(frm.doc.area_hectares || 0).toFixed(3)} hectares</td>
 									</tr>
 									<tr style="border-bottom: 1px solid #eee;">
 										<td style="padding: 6px 0;"><strong>📏 Perimeter:</strong></td>

@@ -8,8 +8,8 @@
   "assessment_count",
   "net_dry_qty",
   "uom",
-  "eligible_area_acres",
-  "yield_kg_per_acre",
+  "eligible_area_hectares",
+  "yield_kg_per_hectare",
   "genetic_purity_percent",
   "germination_percent",
   "undersize_percent",
@@ -60,16 +60,16 @@
    "read_only": 1
   },
   {
-   "fieldname": "eligible_area_acres",
+   "fieldname": "eligible_area_hectares",
    "fieldtype": "Float",
-   "label": "Eligible Area (Acres)",
+   "label": "Eligible Area (Hectares)",
    "read_only": 1
   },
   {
-   "fieldname": "yield_kg_per_acre",
+   "fieldname": "yield_kg_per_hectare",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Yield (kg/acre)",
+   "label": "Yield (kg/hectare)",
    "read_only": 1
   },
   {

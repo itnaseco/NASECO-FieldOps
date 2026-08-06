@@ -11,7 +11,7 @@ class TestOutgrowerPricingPolicy(TestCase):
 		result = calculate_harvest_pricing(
 			self.policy(),
 			net_dry_qty=1200,
-			eligible_area_acres=1,
+			eligible_area_hectares=1,
 			genetic_purity_percent=98,
 			germination_percent=97,
 		)
@@ -26,7 +26,7 @@ class TestOutgrowerPricingPolicy(TestCase):
 		result = calculate_harvest_pricing(
 			self.policy(),
 			net_dry_qty=1000,
-			eligible_area_acres=1,
+			eligible_area_hectares=1,
 			genetic_purity_percent=99,
 			germination_percent=94,
 		)
@@ -39,7 +39,7 @@ class TestOutgrowerPricingPolicy(TestCase):
 		result = calculate_harvest_pricing(
 			self.policy(),
 			net_dry_qty=1000,
-			eligible_area_acres=1,
+			eligible_area_hectares=1,
 			genetic_purity_percent=96,
 			germination_percent=96,
 			undersize_percent=6,
@@ -57,8 +57,8 @@ class TestOutgrowerPricingPolicy(TestCase):
 			pricing_bands=[
 				SimpleNamespace(
 					band_name="1000+; 98%+",
-					minimum_yield_kg_per_acre=1000,
-					maximum_yield_kg_per_acre=0,
+					minimum_yield_kg_per_hectare=1000,
+					maximum_yield_kg_per_hectare=0,
 					minimum_purity_percent=98,
 					maximum_purity_percent=0,
 					price_basis="Fixed Rate",
@@ -66,8 +66,8 @@ class TestOutgrowerPricingPolicy(TestCase):
 				),
 				SimpleNamespace(
 					band_name="1000+; 95-98%",
-					minimum_yield_kg_per_acre=1000,
-					maximum_yield_kg_per_acre=0,
+					minimum_yield_kg_per_hectare=1000,
+					maximum_yield_kg_per_hectare=0,
 					minimum_purity_percent=95,
 					maximum_purity_percent=98,
 					price_basis="Fixed Rate",
@@ -75,7 +75,7 @@ class TestOutgrowerPricingPolicy(TestCase):
 				),
 			],
 			minimum_germination_percent=95,
-			quota_kg_per_acre=1000,
+			quota_kg_per_hectare=1000,
 			excess_rate_per_kg=1600,
 			grain_rate_per_kg=1200,
 			undersize_threshold_percent=5,

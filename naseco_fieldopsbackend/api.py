@@ -5,6 +5,7 @@ import frappe
 from frappe import _
 import json
 from datetime import datetime
+from frappe.utils import flt
 
 from naseco_fieldopsbackend.uom import normalize_uom
 from naseco_fieldopsbackend.roles import (
@@ -264,7 +265,7 @@ MOBILE_FIELD_MAP = {
 		"outgrowerId": "outgrower",
 		"plotName": "plot_name",
 		"plotType": "plot_type",
-		"areaAcres": "area_acres",
+		"areaHectares": "area_hectares",
 		"centroidLat": "centroid_lat",
 		"centroidLng": "centroid_lng",
 		"perimeterMeters": "perimeter_meters",
@@ -278,6 +279,7 @@ MOBILE_FIELD_MAP = {
 		"varietyId": "variety_id",
 		"cropId": "crop",
 		"maturityPeriodDays": "maturity_period_days",
+		"expectedYieldKgPerHectare": "expected_yield_kg_per_hectare",
 	},
 	"Season": {
 		"seasonId": "season_id",
@@ -303,7 +305,8 @@ MOBILE_FIELD_MAP = {
 		"companyId": "company",
 		"supplierId": "supplier",
 		"pricingPolicyId": "pricing_policy",
-		"contractedAreaAcres": "contracted_area_acres",
+		"contractedAreaHectares": "contracted_area_hectares",
+		"expectedYieldKgPerHectare": "expected_yield_kg_per_hectare",
 		"contractedQuotaQty": "contracted_quota_qty",
 		"harvestItemId": "harvest_item",
 		"harvestUom": "harvest_uom",
@@ -354,8 +357,9 @@ MOBILE_FIELD_MAP = {
 		"minimumSupervisorCompliancePercent": "minimum_supervisor_compliance_percent",
 		"requiredIsolationQuality": "required_isolation_quality",
 		"targetTakeSpacingM": "target_take_spacing_m",
-		"contractedAreaAcres": "contracted_area_acres",
-		"quotaKgPerAcre": "quota_kg_per_acre",
+		"contractedAreaHectares": "contracted_area_hectares",
+		"expectedYieldKgPerHectare": "expected_yield_kg_per_hectare",
+		"quotaKgPerHectare": "quota_kg_per_hectare",
 		"contractedQuotaQty": "contracted_quota_qty",
 		"parentSeedItemId": "parent_seed_item",
 		"parentSeedQty": "planned_parent_seed_qty",
@@ -364,6 +368,16 @@ MOBILE_FIELD_MAP = {
 		"isSigned": "is_signed",
 		"signedOn": "signed_on",
 		"erpnextContractId": "erpnext_contract",
+		"parentSeeds": "parent_seeds",
+	},
+	"Production Contract Parent Seed": {
+		"parentRole": "parent_role",
+		"parentSeedItemId": "parent_seed_item",
+		"quantityPerHectare": "quantity_per_hectare",
+		"uom": "uom",
+		"plannedQuantity": "planned_quantity",
+		"rate": "rate",
+		"plannedValue": "planned_value",
 	},
 	"Crop Production Lot": {
 		"lotId": "name",
@@ -378,9 +392,9 @@ MOBILE_FIELD_MAP = {
 		"varietyId": "variety",
 		"plantingStartDate": "planting_start_date",
 		"plantingEndDate": "planting_end_date",
-		"areaAcres": "area_acres",
-		"acceptedAreaAcres": "accepted_area_acres",
-		"rejectedAreaAcres": "rejected_area_acres",
+		"areaHectares": "area_hectares",
+		"acceptedAreaHectares": "accepted_area_hectares",
+		"rejectedAreaHectares": "rejected_area_hectares",
 		"parentSeedItemId": "parent_seed_item",
 		"parentSeedBatchId": "parent_seed_batch",
 		"harvestBatchId": "harvest_batch",
@@ -411,8 +425,8 @@ MOBILE_FIELD_MAP = {
 		"undersizePercent": "undersize_percent",
 		"rejectPercent": "reject_percent",
 		"disposition": "disposition",
-		"eligibleAreaAcres": "eligible_area_acres",
-		"provisionalYieldKgPerAcre": "provisional_yield_kg_per_acre",
+		"eligibleAreaHectares": "eligible_area_hectares",
+		"provisionalYieldKgPerHectare": "provisional_yield_kg_per_hectare",
 		"provisionalPricingBand": "provisional_pricing_band",
 		"provisionalPriceBasis": "provisional_price_basis",
 		"provisionalPayableValue": "provisional_payable_value",
@@ -802,7 +816,7 @@ MOBILE_FIELD_MAP = {
 	"Recipe Input Item": {
 		"type": "input_type",
 		"name": "input_name",
-		"quantityPerAcre": "quantity_per_acre",
+		"quantityPerHectare": "quantity_per_hectare",
 	},
 	"Visit Type": {
 		"visitTypeId": "visit_type_id",
@@ -881,9 +895,38 @@ MOBILE_FIELD_MAP = {
 }
 
 
+LEGACY_AREA_MOBILE_FIELDS = {
+	"Farm Plot": {"areaAcres": ("areaHectares", 0.40468564224)},
+	"Outgrower Production Contract": {
+		"contractedAreaAcres": ("contractedAreaHectares", 0.40468564224),
+		"quotaKgPerAcre": ("quotaKgPerHectare", 2.47105381467),
+	},
+	"Crop Production Lot": {
+		"areaAcres": ("areaHectares", 0.40468564224),
+		"acceptedAreaAcres": ("acceptedAreaHectares", 0.40468564224),
+		"rejectedAreaAcres": ("rejectedAreaHectares", 0.40468564224),
+	},
+	"Seed Harvest Quality Assessment": {
+		"eligibleAreaAcres": ("eligibleAreaHectares", 0.40468564224),
+		"provisionalYieldKgPerAcre": (
+			"provisionalYieldKgPerHectare",
+			2.47105381467,
+		),
+	},
+}
+
+
+def _apply_legacy_area_payload(doctype, payload):
+	for old_key, (new_key, factor) in LEGACY_AREA_MOBILE_FIELDS.get(doctype, {}).items():
+		if new_key not in payload and payload.get(old_key) is not None:
+			payload[new_key] = flt(payload.get(old_key)) * factor
+
+
 def _map_mobile_to_doc(doctype, payload):
+	payload = dict(payload or {})
 	if doctype == "Outgrower":
 		payload = _normalize_outgrower_payload(payload)
+	_apply_legacy_area_payload(doctype, payload)
 
 	mapping = MOBILE_FIELD_MAP.get(doctype, {})
 	result = {}
@@ -925,15 +968,27 @@ def _map_mobile_to_doc(doctype, payload):
 					"duration_days": stage.get("durationDays"),
 				}
 				inputs = []
-				for inp in stage.get("inputsPerAcre", []) or []:
+				for inp in (
+					stage.get("inputsPerHectare") or stage.get("inputsPerAcre") or []
+				):
 					inputs.append({
 						"input_type": inp.get("type"),
 						"input_name": inp.get("name"),
-						"quantity_per_acre": inp.get("quantityPerAcre"),
+						"quantity_per_hectare": (
+							inp.get("quantityPerHectare")
+							if inp.get("quantityPerHectare") is not None
+							else flt(inp.get("quantityPerAcre")) * 2.47105381467
+						),
 						"unit": inp.get("unit"),
 					})
 				stage_doc["inputs"] = inputs
-				result["stages"].append(stage_doc)
+			result["stages"].append(stage_doc)
+			continue
+		if key == "parentSeeds" and doctype == "Outgrower Production Contract":
+			result["parent_seeds"] = [
+				_map_mobile_child_to_doc("Production Contract Parent Seed", row)
+				for row in value or []
+			]
 			continue
 		if key == "takes" and doctype == "Inspection":
 			result["takes"] = []
@@ -1061,12 +1116,18 @@ def _map_doc_to_mobile(doctype, doc_dict):
 					inputs.append({
 						"type": inp.get("input_type"),
 						"name": inp.get("input_name"),
-						"quantityPerAcre": inp.get("quantity_per_acre"),
+						"quantityPerHectare": inp.get("quantity_per_hectare"),
 						"unit": inp.get("unit"),
 					})
-				stage["inputsPerAcre"] = inputs
+				stage["inputsPerHectare"] = inputs
 				stages.append(stage)
 			result["stages"] = stages
+			continue
+		if key == "parent_seeds" and doctype == "Outgrower Production Contract":
+			result["parentSeeds"] = [
+				_map_doc_to_mobile("Production Contract Parent Seed", row)
+				for row in value or []
+			]
 			continue
 		if key == "takes" and doctype == "Inspection":
 			result["takes"] = [_map_doc_to_mobile("Inspection Take", row) for row in value or []]
