@@ -1,0 +1,209 @@
+{
+ "app": "naseco_fieldopsbackend",
+ "charts": [],
+ "content": "[{\"id\":\"shortcut-1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outgrowers\",\"col\":3}},{\"id\":\"shortcut-2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Farm Plots\",\"col\":3}},{\"id\":\"shortcut-3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Crop Cycles\",\"col\":3}},{\"id\":\"shortcut-4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Field Visits\",\"col\":3}},{\"id\":\"navigation-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Navigation</b></span>\",\"col\":12}},{\"id\":\"card-1\",\"type\":\"card\",\"data\":{\"card_name\":\"Grower Operations\",\"col\":4}},{\"id\":\"card-2\",\"type\":\"card\",\"data\":{\"card_name\":\"Crop Execution\",\"col\":4}},{\"id\":\"card-3\",\"type\":\"card\",\"data\":{\"card_name\":\"Operational Reports\",\"col\":4}}]",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "map",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Field Operations",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Grower Operations",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Outgrowers",
+   "link_count": 0,
+   "link_to": "Outgrower",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Farm Plots",
+   "link_count": 0,
+   "link_to": "Farm Plot",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Production Contracts",
+   "link_count": 0,
+   "link_to": "Outgrower Production Contract",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Production Lots",
+   "link_count": 0,
+   "link_to": "Crop Production Lot",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Crop Execution",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Crop Cycles",
+   "link_count": 0,
+   "link_to": "Crop Cycle",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Cycle Stages",
+   "link_count": 0,
+   "link_to": "Crop Cycle Stage",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stage Activities",
+   "link_count": 0,
+   "link_to": "Stage Activity",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Field Visits",
+   "link_count": 0,
+   "link_to": "Field Visit",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Operational Reports",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Production Performance",
+   "link_count": 0,
+   "link_to": "Season Production Performance",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Grower & Acreage Progress",
+   "link_count": 0,
+   "link_to": "Season Grower and Acreage Progress",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Agronomy Progress",
+   "link_count": 0,
+   "link_to": "Season Agronomy Progress",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "module": "Naseco FieldOpsBackend",
+ "name": "Field Operations",
+ "number_cards": [],
+ "parent_page": "NASECO FieldOps",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 20,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "format": "",
+   "label": "Outgrowers",
+   "link_to": "Outgrower",
+   "stats_filter": "",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "format": "",
+   "label": "Farm Plots",
+   "link_to": "Farm Plot",
+   "stats_filter": "",
+   "type": "DocType"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "format": "",
+   "label": "Crop Cycles",
+   "link_to": "Crop Cycle",
+   "stats_filter": "",
+   "type": "DocType"
+  },
+  {
+   "color": "Purple",
+   "doc_view": "List",
+   "format": "",
+   "label": "Field Visits",
+   "link_to": "Field Visit",
+   "stats_filter": "",
+   "type": "DocType"
+  }
+ ],
+ "title": "Field Operations",
+ "type": "Workspace"
+}

@@ -1,12 +1,12 @@
 {
+ "app": "naseco_fieldopsbackend",
  "charts": [],
- "content": "[{\"id\":\"season-planning-control\",\"type\":\"card\",\"data\":{\"card_name\":\"Season Planning & Control\",\"col\":4}},{\"id\":\"field-operations\",\"type\":\"card\",\"data\":{\"card_name\":\"Field Operations\",\"col\":4}},{\"id\":\"agronomy-supervisor-tasks\",\"type\":\"card\",\"data\":{\"card_name\":\"Agronomy & Supervisor Tasks\",\"col\":4}},{\"id\":\"quality-assurance\",\"type\":\"card\",\"data\":{\"card_name\":\"Quality Assurance\",\"col\":4}},{\"id\":\"input-management\",\"type\":\"card\",\"data\":{\"card_name\":\"Inputs & Distribution\",\"col\":4}},{\"id\":\"outgrower-finance\",\"type\":\"card\",\"data\":{\"card_name\":\"Outgrower Finance\",\"col\":4}},{\"id\":\"reference-data\",\"type\":\"card\",\"data\":{\"card_name\":\"Reference Data\",\"col\":4}},{\"id\":\"system-sync\",\"type\":\"card\",\"data\":{\"card_name\":\"System & Sync\",\"col\":4}}]",
- "creation": "2026-07-28 21:27:38.005189",
+ "content": "[{\"id\":\"command-centre-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>FieldOps Command Centre</b></span>\",\"col\":12}},{\"id\":\"root-shortcut-1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Season Command Centre\",\"col\":3}},{\"id\":\"root-shortcut-2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Production Plans\",\"col\":3}},{\"id\":\"root-shortcut-3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outgrowers\",\"col\":3}},{\"id\":\"root-shortcut-4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Crop Cycles\",\"col\":3}},{\"id\":\"root-shortcut-5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Field Visits\",\"col\":3}},{\"id\":\"root-shortcut-6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Inspections\",\"col\":3}},{\"id\":\"root-shortcut-7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Input Requests\",\"col\":3}},{\"id\":\"root-shortcut-8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Settlements\",\"col\":3}},{\"id\":\"navigation-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Operational Navigation</b></span>\",\"col\":12}},{\"id\":\"root-card-1\",\"type\":\"card\",\"data\":{\"card_name\":\"Plan & Contract\",\"col\":4}},{\"id\":\"root-card-2\",\"type\":\"card\",\"data\":{\"card_name\":\"Execute & Monitor\",\"col\":4}},{\"id\":\"root-card-3\",\"type\":\"card\",\"data\":{\"card_name\":\"Quality & Compliance\",\"col\":4}},{\"id\":\"root-card-4\",\"type\":\"card\",\"data\":{\"card_name\":\"Supply & Finance\",\"col\":4}},{\"id\":\"root-card-5\",\"type\":\"card\",\"data\":{\"card_name\":\"Management Reports\",\"col\":4}},{\"id\":\"root-card-6\",\"type\":\"card\",\"data\":{\"card_name\":\"Configuration\",\"col\":4}}]",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
- "hide_custom": 0,
+ "hide_custom": 1,
  "icon": "field-ops",
  "idx": 0,
  "is_hidden": 0,
@@ -15,9 +15,8 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Season Planning & Control",
-   "link_count": 0,
-   "link_type": "DocType",
+   "label": "Plan & Contract",
+   "link_count": 5,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -25,10 +24,10 @@
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Season Command Centre",
+   "label": "Seasons",
    "link_count": 0,
-   "link_to": "season-command-centre",
-   "link_type": "Page",
+   "link_to": "Season",
+   "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
   },
@@ -36,7 +35,7 @@
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Season Production Plans",
+   "label": "Production Plans",
    "link_count": 0,
    "link_to": "Season Production Plan",
    "link_type": "DocType",
@@ -44,89 +43,10 @@
    "type": "Link"
   },
   {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Season Production Performance",
-   "link_count": 0,
-   "link_to": "Season Production Performance",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Season Grower and Acreage Progress",
-   "link_count": 0,
-   "link_to": "Season Grower and Acreage Progress",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Season Agronomy Progress",
-   "link_count": 0,
-   "link_to": "Season Agronomy Progress",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Season QA Coverage",
-   "link_count": 0,
-   "link_to": "Season QA Coverage",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Season Inspector Performance",
-   "link_count": 0,
-   "link_to": "Season Inspector Performance",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Season Input and Exposure",
-   "link_count": 0,
-   "link_to": "Season Input and Exposure",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Season Harvest and Settlement",
-   "link_count": 0,
-   "link_to": "Season Harvest and Settlement",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Field Operations",
-   "link_count": 0,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Outgrower",
+   "label": "Outgrowers",
    "link_count": 0,
    "link_to": "Outgrower",
    "link_type": "DocType",
@@ -137,7 +57,7 @@
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Farm Plot",
+   "label": "Farm Plots",
    "link_count": 0,
    "link_to": "Farm Plot",
    "link_type": "DocType",
@@ -156,10 +76,18 @@
    "type": "Link"
   },
   {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Execute & Monitor",
+   "link_count": 5,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Crop Cycle",
+   "label": "Crop Cycles",
    "link_count": 0,
    "link_to": "Crop Cycle",
    "link_type": "DocType",
@@ -170,7 +98,7 @@
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Crop Production Lots",
+   "label": "Production Lots",
    "link_count": 0,
    "link_to": "Crop Production Lot",
    "link_type": "DocType",
@@ -178,19 +106,10 @@
    "type": "Link"
   },
   {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Agronomy & Supervisor Tasks",
-   "link_count": 0,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Supervisor Activities",
+   "label": "Stage Activities",
    "link_count": 0,
    "link_to": "Stage Activity",
    "link_type": "DocType",
@@ -220,45 +139,10 @@
    "type": "Link"
   },
   {
-   "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Crop Cycle Stages",
-   "link_count": 0,
-   "link_to": "Crop Cycle Stage",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Agronomy Activity Templates",
-   "link_count": 0,
-   "link_to": "Agronomy Activity Template",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Agronomy Report Templates",
-   "link_count": 0,
-   "link_to": "Agronomy Report Template",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Quality Assurance",
-   "link_count": 0,
-   "link_type": "DocType",
+   "label": "Quality & Compliance",
+   "link_count": 4,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -288,7 +172,7 @@
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Seed Harvest Quality Assessments",
+   "label": "Harvest Quality",
    "link_count": 0,
    "link_to": "Seed Harvest Quality Assessment",
    "link_type": "DocType",
@@ -296,12 +180,168 @@
    "type": "Link"
   },
   {
-   "dependencies": "erpnext",
+   "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Quality Inspections",
+   "label": "Inspection Standards",
    "link_count": 0,
-   "link_to": "Quality Inspection",
+   "link_to": "Inspection Standard",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Supply & Finance",
+   "link_count": 5,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Input Requests",
+   "link_count": 0,
+   "link_to": "Stage Input Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Input Dispatches",
+   "link_count": 0,
+   "link_to": "Stage Input Dispatch",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Material Requests",
+   "link_count": 0,
+   "link_to": "Material Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Advance Requests",
+   "link_count": 0,
+   "link_to": "Crop Cycle Advance Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Settlements",
+   "link_count": 0,
+   "link_to": "Crop Cycle Settlement",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Management Reports",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Production Performance",
+   "link_count": 0,
+   "link_to": "Season Production Performance",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Agronomy Progress",
+   "link_count": 0,
+   "link_to": "Season Agronomy Progress",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "QA Coverage",
+   "link_count": 0,
+   "link_to": "Season QA Coverage",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Financial Exposure",
+   "link_count": 0,
+   "link_to": "Crop Cycle Financial Exposure",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Configuration",
+   "link_count": 5,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "FieldOps Settings",
+   "link_count": 0,
+   "link_to": "FieldOps Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Crop Recipes",
+   "link_count": 0,
+   "link_to": "Crop Recipe",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Contract Templates",
+   "link_count": 0,
+   "link_to": "Production Contract Template",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -321,737 +361,96 @@
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Inspection Parameters",
-   "link_count": 0,
-   "link_to": "Inspection Parameter",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Inspection Standards",
-   "link_count": 0,
-   "link_to": "Inspection Standard",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "FieldOps Settings",
-   "link_count": 0,
-   "link_to": "FieldOps Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Inputs & Distribution",
-   "link_count": 0,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Stage Input Request",
-   "link_count": 0,
-   "link_to": "Stage Input Request",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Stage Input Dispatch",
-   "link_count": 0,
-   "link_to": "Stage Input Dispatch",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "erpnext",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Material Requests",
-   "link_count": 0,
-   "link_to": "Material Request",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "erpnext",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Stock Entries",
-   "link_count": 0,
-   "link_to": "Stock Entry",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Outgrower Finance",
-   "link_count": 0,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Supplier Advance Requests",
-   "link_count": 0,
-   "link_to": "Crop Cycle Advance Request",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Crop Cycle Settlements",
-   "link_count": 0,
-   "link_to": "Crop Cycle Settlement",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Crop Cycle Financial Exposure",
-   "link_count": 0,
-   "link_to": "Crop Cycle Financial Exposure",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "erpnext",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Outgrower Suppliers",
-   "link_count": 0,
-   "link_to": "Supplier",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "erpnext",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Harvest Purchase Orders",
-   "link_count": 0,
-   "link_to": "Purchase Order",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "erpnext",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Harvest Purchase Receipts",
-   "link_count": 0,
-   "link_to": "Purchase Receipt",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "erpnext",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Settlement Purchase Invoices",
-   "link_count": 0,
-   "link_to": "Purchase Invoice",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "erpnext",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Supplier Payment Entries",
-   "link_count": 0,
-   "link_to": "Payment Entry",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Reference Data",
-   "link_count": 0,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Crop",
-   "link_count": 0,
-   "link_to": "Crop",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Crop Variety",
-   "link_count": 0,
-   "link_to": "Crop Variety",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Season",
-   "link_count": 0,
-   "link_to": "Season",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Crop Recipe",
-   "link_count": 0,
-   "link_to": "Crop Recipe",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Production Contract Templates",
-   "link_count": 0,
-   "link_to": "Production Contract Template",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Outgrower Pricing Policies",
-   "link_count": 0,
-   "link_to": "Outgrower Pricing Policy",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "erpnext",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Outgrower Bank Accounts",
-   "link_count": 0,
-   "link_to": "Bank Account",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Visit Type",
-   "link_count": 0,
-   "link_to": "Visit Type",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Region",
-   "link_count": 0,
-   "link_to": "Region",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "UOM",
-   "link_count": 0,
-   "link_to": "UOM",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Inspection Attribute",
-   "link_count": 0,
-   "link_to": "Inspection Attribute",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "erpnext",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Agricultural Items",
-   "link_count": 0,
-   "link_to": "Item",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "erpnext",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Warehouses",
-   "link_count": 0,
-   "link_to": "Warehouse",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "System & Sync",
-   "link_count": 0,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Sync Log",
+   "label": "Sync Logs",
    "link_count": 0,
    "link_to": "Sync Log",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Sync Conflict",
-   "link_count": 0,
-   "link_to": "Sync Conflict",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Open ToDos",
-   "link_count": 0,
-   "link_to": "ToDo",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
   }
  ],
- "modified": "2026-07-31 18:00:00",
- "modified_by": "Administrator",
  "module": "Naseco FieldOpsBackend",
  "name": "NASECO FieldOps",
  "number_cards": [],
- "owner": "Administrator",
  "parent_page": "",
  "public": 1,
  "quick_lists": [],
  "roles": [],
- "sequence_id": 1.0,
+ "sequence_id": 1,
  "shortcuts": [
   {
+   "color": "Blue",
    "doc_view": "",
+   "format": "",
    "label": "Season Command Centre",
    "link_to": "season-command-centre",
+   "stats_filter": "",
    "type": "Page"
   },
   {
-   "color": "Blue",
-   "doc_view": "",
-   "format": "{} Plans",
-   "label": "Season Production Plans",
+   "color": "Green",
+   "doc_view": "List",
+   "format": "",
+   "label": "Production Plans",
    "link_to": "Season Production Plan",
-   "type": "DocType"
-  },
-  {
-   "color": "Orange",
-   "doc_view": "",
-   "format": "{} Awaiting Review",
-   "label": "Inspections Awaiting QA",
-   "link_to": "Inspection",
-   "stats_filter": "{\"status\": \"Awaiting QA Review\"}",
-   "type": "DocType"
-  },
-  {
-   "color": "Red",
-   "doc_view": "",
-   "format": "{} Reinspections",
-   "label": "Reinspections Required",
-   "link_to": "Inspection",
-   "stats_filter": "{\"status\": \"Reinspection Required\"}",
+   "stats_filter": "",
    "type": "DocType"
   },
   {
    "color": "Blue",
-   "doc_view": "",
-   "format": "{} Active",
-   "label": "Outgrower",
+   "doc_view": "List",
+   "format": "",
+   "label": "Outgrowers",
    "link_to": "Outgrower",
-   "stats_filter": "{\"status\": \"Active\"}",
-   "type": "DocType"
-  },
-  {
-   "color": "Green",
-   "doc_view": "",
-   "format": "{} Plots",
-   "label": "Farm Plot",
-   "link_to": "Farm Plot",
-   "type": "DocType"
-  },
-  {
-   "color": "Cyan",
-   "doc_view": "",
-   "format": "{} Lots",
-   "label": "Crop Production Lots",
-   "link_to": "Crop Production Lot",
+   "stats_filter": "",
    "type": "DocType"
   },
   {
    "color": "Orange",
-   "doc_view": "",
-   "format": "{} Pending",
-   "label": "Pending Harvest QA",
-   "link_to": "Seed Harvest Quality Assessment",
-   "stats_filter": "{\"docstatus\": 0}",
-   "type": "DocType"
-  },
-  {
-   "color": "Green",
-   "doc_view": "",
-   "format": "{} Approved",
-   "label": "Approved Harvest QA",
-   "link_to": "Seed Harvest Quality Assessment",
-   "stats_filter": "{\"docstatus\": 1}",
-   "type": "DocType"
-  },
-  {
-   "color": "Orange",
-   "doc_view": "",
-   "format": "{} Active",
-   "label": "Crop Cycle",
+   "doc_view": "List",
+   "format": "",
+   "label": "Crop Cycles",
    "link_to": "Crop Cycle",
-   "stats_filter": "{\"status\": \"ACTIVE\"}",
-   "type": "DocType"
-  },
-  {
-   "color": "Green",
-   "doc_view": "",
-   "format": "{} Active",
-   "label": "Production Contracts",
-   "link_to": "Outgrower Production Contract",
-   "stats_filter": "{\"docstatus\": 1, \"status\": \"Active\"}",
+   "stats_filter": "",
    "type": "DocType"
   },
   {
    "color": "Purple",
-   "doc_view": "",
-   "format": "{} Visits",
-   "label": "Field Visit",
+   "doc_view": "List",
+   "format": "",
+   "label": "Field Visits",
    "link_to": "Field Visit",
+   "stats_filter": "",
    "type": "DocType"
   },
   {
    "color": "Orange",
-   "doc_view": "",
-   "format": "{} Scheduled",
-   "label": "Scheduled Agronomy Tasks",
-   "link_to": "Stage Activity",
-   "stats_filter": "{\"status\": \"Scheduled\"}",
-   "type": "DocType"
-  },
-  {
-   "color": "Blue",
-   "doc_view": "",
-   "format": "{} In Progress",
-   "label": "Agronomy Tasks In Progress",
-   "link_to": "Stage Activity",
-   "stats_filter": "{\"status\": \"In Progress\"}",
-   "type": "DocType"
-  },
-  {
-   "color": "Orange",
-   "doc_view": "",
-   "format": "{} Due",
-   "label": "Scheduled Agronomy Reports",
-   "link_to": "Agronomy Report",
-   "stats_filter": "{\"docstatus\": 0, \"status\": [\"in\", [\"Scheduled\", \"In Progress\"]]}",
-   "type": "DocType"
-  },
-  {
-   "color": "Green",
-   "doc_view": "",
-   "format": "{} Submitted",
-   "label": "Submitted Agronomy Reports",
-   "link_to": "Agronomy Report",
-   "stats_filter": "{\"docstatus\": 1}",
-   "type": "DocType"
-  },
-  {
-   "color": "Orange",
-   "doc_view": "",
-   "format": "{} Scheduled",
-   "label": "Scheduled Inspections",
+   "doc_view": "List",
+   "format": "",
+   "label": "Inspections",
    "link_to": "Inspection",
-   "stats_filter": "{\"status\": \"Scheduled\"}",
-   "type": "DocType"
-  },
-  {
-   "color": "Blue",
-   "doc_view": "",
-   "format": "{} In Progress",
-   "label": "Inspections In Progress",
-   "link_to": "Inspection",
-   "stats_filter": "{\"status\": \"In Progress\"}",
-   "type": "DocType"
-  },
-  {
-   "color": "Red",
-   "doc_view": "",
-   "format": "{} Open",
-   "label": "Open Corrective Actions",
-   "link_to": "Field Corrective Action",
-   "stats_filter": "{\"status\": [\"in\", [\"Open\", \"In Progress\"]]}",
+   "stats_filter": "",
    "type": "DocType"
   },
   {
    "color": "Yellow",
-   "doc_view": "",
-   "format": "{} Pending",
-   "label": "Stage Input Request",
+   "doc_view": "List",
+   "format": "",
+   "label": "Input Requests",
    "link_to": "Stage Input Request",
-   "stats_filter": "{\"status\": [\"in\", [\"Pending Approval\", \"Approved\", \"Partially Fulfilled\"]]}",
-   "type": "DocType"
-  },
-  {
-   "color": "Yellow",
-   "doc_view": "",
-   "format": "{} Pending",
-   "label": "Supplier Advance Requests",
-   "link_to": "Crop Cycle Advance Request",
-   "stats_filter": "{\"status\": [\"in\", [\"Draft\", \"Approved\", \"Payment Draft\"]]}",
+   "stats_filter": "",
    "type": "DocType"
   },
   {
    "color": "Green",
-   "doc_view": "",
-   "format": "{} Settlements",
-   "label": "Crop Cycle Settlements",
+   "doc_view": "List",
+   "format": "",
+   "label": "Settlements",
    "link_to": "Crop Cycle Settlement",
-   "type": "DocType"
-  },
-  {
-   "doc_view": "",
-   "label": "Crop Cycle Exposure",
-   "link_to": "Crop Cycle Financial Exposure",
-   "report_ref_doctype": "Crop Cycle",
-   "type": "Report"
-  },
-  {
-   "color": "Blue",
-   "doc_view": "",
-   "format": "{} Suppliers",
-   "label": "Outgrower Suppliers",
-   "link_to": "Supplier",
-   "stats_filter": "{\"custom_outgrower\": [\"is\", \"set\"]}",
-   "type": "DocType"
-  },
-  {
-   "color": "Orange",
-   "doc_view": "",
-   "format": "{} Draft",
-   "label": "Draft Input Material Requests",
-   "link_to": "Material Request",
-   "stats_filter": "{\"docstatus\": 0, \"material_request_type\": \"Material Issue\", \"custom_stage_input_request\": [\"is\", \"set\"]}",
-   "type": "DocType"
-  },
-  {
-   "color": "Yellow",
-   "doc_view": "",
-   "format": "{} Pending",
-   "label": "Pending Input Material Requests",
-   "link_to": "Material Request",
-   "stats_filter": "{\"docstatus\": 1, \"material_request_type\": \"Material Issue\", \"status\": \"Pending\", \"custom_stage_input_request\": [\"is\", \"set\"]}",
-   "type": "DocType"
-  },
-  {
-   "color": "Orange",
-   "doc_view": "",
-   "format": "{} Draft Issues",
-   "label": "Draft Input Stock Entries",
-   "link_to": "Stock Entry",
-   "stats_filter": "{\"docstatus\": 0, \"custom_stage_input_request\": [\"is\", \"set\"]}",
-   "type": "DocType"
-  },
-  {
-   "color": "Cyan",
-   "doc_view": "",
-   "format": "{} Orders",
-   "label": "Harvest Purchase Orders",
-   "link_to": "Purchase Order",
-   "stats_filter": "{\"custom_outgrower\": [\"is\", \"set\"]}",
-   "type": "DocType"
-  },
-  {
-   "color": "Green",
-   "doc_view": "",
-   "format": "{} Receipts",
-   "label": "Harvest Purchase Receipts",
-   "link_to": "Purchase Receipt",
-   "stats_filter": "{\"docstatus\": 1, \"custom_outgrower\": [\"is\", \"set\"]}",
-   "type": "DocType"
-  },
-  {
-   "color": "Orange",
-   "doc_view": "",
-   "format": "{} Pending Payments",
-   "label": "Draft Advance Payments",
-   "link_to": "Payment Entry",
-   "stats_filter": "{\"docstatus\": 0, \"custom_crop_cycle_advance_request\": [\"is\", \"set\"]}",
-   "type": "DocType"
-  },
-  {
-   "color": "Orange",
-   "doc_view": "",
-   "format": "{} Draft",
-   "label": "Draft Settlement Invoices",
-   "link_to": "Purchase Invoice",
-   "stats_filter": "{\"docstatus\": 0, \"custom_crop_cycle_settlement\": [\"is\", \"set\"]}",
-   "type": "DocType"
-  },
-  {
-   "color": "Red",
-   "doc_view": "",
-   "format": "{} Unpaid",
-   "label": "Unpaid Settlement Invoices",
-   "link_to": "Purchase Invoice",
-   "stats_filter": "{\"docstatus\": 1, \"outstanding_amount\": [\">\", 0], \"custom_crop_cycle_settlement\": [\"is\", \"set\"]}",
-   "type": "DocType"
-  },
-  {
-   "color": "Yellow",
-   "doc_view": "",
-   "format": "{} Open",
-   "label": "Open ToDos",
-   "link_to": "ToDo",
-   "stats_filter": "{\"status\": \"Open\"}",
-   "type": "DocType"
-  },
-  {
-   "color": "Light Blue",
-   "doc_view": "",
-   "format": "{} Items",
-   "label": "Agricultural Items",
-   "link_to": "Item",
-   "stats_filter": "{\"item_group\": \"Agricultural Inputs\", \"disabled\": 0}",
-   "type": "DocType"
-  },
-  {
-   "color": "Cyan",
-   "doc_view": "",
-   "format": "{} Stages",
-   "label": "Crop Cycle Stage",
-   "link_to": "Crop Cycle Stage",
-   "type": "DocType"
-  },
-  {
-   "color": "Gray",
-   "doc_view": "",
-   "format": "{} Dispatches",
-   "label": "Stage Input Dispatch",
-   "link_to": "Stage Input Dispatch",
-   "type": "DocType"
-  },
-  {
-   "color": "Pink",
-   "doc_view": "",
-   "format": "{} Crops",
-   "label": "Crop",
-   "link_to": "Crop",
-   "type": "DocType"
-  },
-  {
-   "color": "Light Blue",
-   "doc_view": "",
-   "format": "{} Varieties",
-   "label": "Crop Variety",
-   "link_to": "Crop Variety",
-   "type": "DocType"
-  },
-  {
-   "color": "Light Green",
-   "doc_view": "",
-   "format": "{} Seasons",
-   "label": "Season",
-   "link_to": "Season",
-   "type": "DocType"
-  },
-  {
-   "color": "Dark Gray",
-   "doc_view": "",
-   "format": "{} Conflicts",
-   "label": "Sync Conflict",
-   "link_to": "Sync Conflict",
-   "stats_filter": "{\"resolved\": 0}",
+   "stats_filter": "",
    "type": "DocType"
   }
  ],
- "title": "NASECO FieldOps"
+ "title": "NASECO FieldOps",
+ "type": "Workspace"
 }
