@@ -8,9 +8,20 @@ from unittest.mock import patch
 import frappe
 
 from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle import CropCycle
+from naseco_fieldopsbackend.inspection_scheduler import resolve_activity_templates
+from naseco_fieldopsbackend.inspection_scheduler import sync_crop_cycle_lifecycle
 
 
 class TestCropCycle(TestCase):
+	@patch("naseco_fieldopsbackend.inspection_scheduler.ensure_crop_cycle_stages")
+	def test_lifecycle_is_not_generated_before_planting_confirmation(self, ensure_stages):
+		cycle = frappe._dict(name="CC-TEST", planting_date_confirmed=0)
+
+		result = sync_crop_cycle_lifecycle(cycle)
+
+		self.assertIsNone(result)
+		ensure_stages.assert_not_called()
+
 	@patch(
 		"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle.frappe.get_doc"
 	)
@@ -77,3 +88,43 @@ class TestCropCycle(TestCase):
 		cycle = SimpleNamespace(name="CYCLE-NEW", plot="PLOT-001")
 
 		CropCycle.validate_single_cycle_per_plot(cycle)
+
+
+class TestAgronomyActivityTemplateResolution(TestCase):
+	@patch("naseco_fieldopsbackend.inspection_scheduler.frappe.db.get_value")
+	def test_uses_inherited_recipe_templates_before_same_crop_fallback(self, get_value):
+		def values(doctype, name, fieldname):
+			if fieldname == "based_on_recipe":
+				return {"VARIETY": "BASE", "BASE": None}.get(name)
+			return {"OTHER": "Maize"}.get(name)
+
+		get_value.side_effect = values
+		templates = [
+			frappe._dict(name="Generic", crop_recipe=None),
+			frappe._dict(name="Base Activity", crop_recipe="BASE"),
+			frappe._dict(name="Other Maize Activity", crop_recipe="OTHER"),
+		]
+		cycle = frappe._dict(recipe="VARIETY", crop="Maize")
+
+		resolved = resolve_activity_templates(cycle, templates)
+
+		self.assertEqual([row.name for row in resolved], ["Generic", "Base Activity"])
+
+	@patch("naseco_fieldopsbackend.inspection_scheduler.frappe.db.get_value")
+	def test_falls_back_to_templates_for_the_same_crop(self, get_value):
+		def values(doctype, name, fieldname):
+			if fieldname == "based_on_recipe":
+				return None
+			return {"MAIZE-BASE": "Maize", "RICE-BASE": "Rice"}.get(name)
+
+		get_value.side_effect = values
+		templates = [
+			frappe._dict(name="Generic", crop_recipe=None),
+			frappe._dict(name="Maize Activity", crop_recipe="MAIZE-BASE"),
+			frappe._dict(name="Rice Activity", crop_recipe="RICE-BASE"),
+		]
+		cycle = frappe._dict(recipe="NEW-MAIZE", crop="Maize")
+
+		resolved = resolve_activity_templates(cycle, templates)
+
+		self.assertEqual([row.name for row in resolved], ["Generic", "Maize Activity"])

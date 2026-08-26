@@ -309,7 +309,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Configuration",
-   "link_count": 5,
+   "link_count": 10,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -320,6 +320,61 @@
    "label": "FieldOps Settings",
    "link_count": 0,
    "link_to": "FieldOps Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Crops",
+   "link_count": 0,
+   "link_to": "Crop",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Crop Varieties",
+   "link_count": 0,
+   "link_to": "Crop Variety",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Seed Categories",
+   "link_count": 0,
+   "link_to": "Seed Category",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Seed Classes",
+   "link_count": 0,
+   "link_to": "Seed Class",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Seed Items",
+   "link_count": 0,
+   "link_to": "Item",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"

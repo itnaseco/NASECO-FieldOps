@@ -153,6 +153,7 @@ class AgronomyReport(Document):
 		self.variety = cycle.variety
 		self.season = cycle.season
 		self.production_category = cycle.production_category
+		self.seed_class = cycle.seed_class
 		if cycle.plot:
 			plot = frappe.get_doc("Farm Plot", cycle.plot)
 			self.outgrower = plot.outgrower
@@ -499,22 +500,27 @@ class AgronomyReport(Document):
 	def complete_related_stage(self):
 		if not self.stage:
 			return
-		mandatory = frappe.get_all(
+		activities = frappe.get_all(
 			"Stage Activity",
-			filters={"stage": self.stage, "mandatory": 1, "status": ["!=", "Cancelled"]},
-			fields=["status"],
+			filters={"stage": self.stage, "status": ["!=", "Cancelled"]},
+			fields=["name", "mandatory"],
 		)
-		all_activities_complete = all(row.status == "Completed" for row in mandatory)
+		completed_on = now_datetime()
+		for activity in activities:
+			frappe.db.set_value(
+				"Stage Activity", activity.name,
+				{"status": "Completed", "completed_on": completed_on},
+				update_modified=False,
+			)
+		mandatory_count = sum(1 for row in activities if row.mandatory)
 		frappe.db.set_value(
-			"Crop Cycle Stage",
-			self.stage,
+			"Crop Cycle Stage", self.stage,
 			{
-				"status": "Completed" if all_activities_complete else "In Progress",
-				"completion_percentage": 100 if all_activities_complete else 90,
-				"mandatory_activity_count": len(mandatory),
-				"completed_activity_count": len(
-					[row for row in mandatory if row.status == "Completed"]
-				),
+				"status": "Completed",
+				"completion_percentage": 100,
+				"agronomy_report": self.name,
+				"mandatory_activity_count": mandatory_count,
+				"completed_activity_count": mandatory_count,
 			},
 			update_modified=False,
 		)

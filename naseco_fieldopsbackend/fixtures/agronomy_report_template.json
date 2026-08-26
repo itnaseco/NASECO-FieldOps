@@ -435,7 +435,7 @@
     "minimum_value": 0.0,
     "options": null,
     "parameter_code": "GAP_FILLING",
-    "parameter_label": "Gap filling required",
+    "parameter_label": "Replanting Needed?",
     "parent": "Report 3 - Crop Emergence / Germination",
     "parentfield": "parameters",
     "parenttype": "Agronomy Report Template",

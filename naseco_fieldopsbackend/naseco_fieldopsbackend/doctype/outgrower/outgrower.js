@@ -69,41 +69,31 @@ frappe.ui.form.on("Outgrower", {
 				});
 			}, __('Actions'));
 
-			frm.add_custom_button(__('View Production Contracts'), function() {
-				frappe.set_route('List', 'Outgrower Production Contract', {
-					outgrower: frm.doc.name
-				});
-			}, __('Navigate'));
-
-			frm.add_custom_button(__('View Inspections'), function() {
-				frappe.set_route('List', 'Inspection', {
-					outgrower: frm.doc.name
-				});
-			}, __('Actions'));
-
-			frm.add_custom_button(__('View Corrective Actions'), function() {
-				frappe.set_route('List', 'Field Corrective Action', {
-					outgrower: frm.doc.name
-				});
-			}, __('Actions'));
-
-			frm.add_custom_button(__('View Advance Requests'), function() {
-				frappe.set_route('List', 'Crop Cycle Advance Request', {
-					outgrower: frm.doc.name
-				});
-			}, __('Navigate'));
-
-			frm.add_custom_button(__('View Settlements'), function() {
-				frappe.set_route('List', 'Crop Cycle Settlement', {
-					outgrower: frm.doc.name
-				});
-			}, __('Navigate'));
+			add_related_outgrower_buttons(frm);
 
 			// Display list of plots for this outgrower
 			render_plots_section(frm);
 		}
 	}
 });
+
+function add_related_outgrower_buttons(frm) {
+	const relations = [
+		['Outgrower Production Contract', __('View Production Contracts'), 'Navigate'],
+		['Inspection', __('View Inspections'), 'Actions'],
+		['Field Corrective Action', __('View Corrective Actions'), 'Actions'],
+		['Crop Cycle Advance Request', __('View Advance Requests'), 'Navigate'],
+		['Crop Cycle Settlement', __('View Settlements'), 'Navigate']
+	];
+	relations.forEach(([doctype, label, group]) => {
+		frappe.db.count(doctype, { filters: { outgrower: frm.doc.name } }).then((count) => {
+			if (!count) return;
+			frm.add_custom_button(__('{0} ({1})', [label, count]), () => {
+				frappe.set_route('List', doctype, { outgrower: frm.doc.name });
+			}, __(group));
+		});
+	});
+}
 
 function render_plots_section(frm) {
 	const wrapper = get_plots_wrapper(frm);

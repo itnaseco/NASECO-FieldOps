@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:plot_id",
  "creation": "2026-01-29 17:30:58.671493",
@@ -15,6 +16,7 @@
   "polygon",
   "geojson",
   "section_break_2",
+  "area_hectares",
   "area_acres",
   "perimeter_meters",
   "centroid_lat",
@@ -30,6 +32,14 @@
   "synced"
  ],
  "fields": [
+  {
+   "fieldname": "area_hectares",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Area (Hectares)",
+   "precision": 4,
+   "read_only": 1
+  },
   {
    "fieldname": "plot_id",
    "fieldtype": "Data",
@@ -67,7 +77,7 @@
   {
    "fieldname": "polygon",
    "fieldtype": "Table",
-   "label": "Coordinates",
+   "label": "Plot GPS Polygon",
    "options": "Plot Vertex"
   },
   {
@@ -85,8 +95,10 @@
   {
    "fieldname": "area_acres",
    "fieldtype": "Float",
-   "label": "Area (Acres)",
-   "precision": 2
+   "label": "Legacy Area (Acres)",
+   "precision": 4,
+   "hidden": 1,
+   "read_only": 1
   },
   {
    "fieldname": "perimeter_meters",
@@ -171,6 +183,7 @@
    "delete": 1,
    "email": 1,
    "export": 1,
+   "import": 1,
    "print": 1,
    "read": 1,
    "report": 1,
@@ -182,6 +195,7 @@
    "create": 1,
    "email": 1,
    "export": 1,
+   "import": 1,
    "print": 1,
    "read": 1,
    "report": 1,

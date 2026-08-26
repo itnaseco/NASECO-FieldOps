@@ -194,7 +194,11 @@ function build_inspection_controls_dialog(frm, schema) {
 			label: control.unit
 				? __('{0} ({1})', [control.label, control.unit])
 				: __(control.label),
-			options: control.data_type === 'Yes/No' ? '\nYes\nNo' : undefined,
+			options: control.data_type === 'Yes/No'
+				? '\nYes\nNo'
+				: control.data_type === 'Select'
+					? '\nAdequate\nInadequate'
+					: undefined,
 			reqd: cint(control.mandatory),
 			default: control.value,
 			description: control.description
@@ -418,7 +422,7 @@ function get_attribute_fieldtype(data_type) {
 	if (data_type === 'Count') return 'Int';
 	if (['Number', 'Percent', 'Score'].includes(data_type)) return 'Float';
 	if (data_type === 'Date') return 'Date';
-	if (data_type === 'Yes/No') return 'Select';
+	if (['Yes/No', 'Select'].includes(data_type)) return 'Select';
 	if (data_type === 'Text') return 'Small Text';
 	return 'Data';
 }
@@ -929,7 +933,7 @@ function show_inspection_takes(frm) {
 					const take_number = cint($(this).data('take-number'));
 					const marker = rendered_map.markers[take_number];
 					if (marker) {
-						rendered_map.map.setView(marker.getLatLng(), Math.max(rendered_map.map.getZoom(), 18));
+						rendered_map.map.setView(marker.getLatLng(), Math.max(rendered_map.map.getZoom(), 19));
 						marker.openPopup();
 					}
 				});
@@ -974,11 +978,34 @@ function render_inspection_take_map(frm, dialog, takes, geojson, map_id) {
 	}
 
 	const first_point = [flt(valid_takes[0].latitude), flt(valid_takes[0].longitude)];
-	const map = L.map(map_element).setView(first_point, 18);
+	const map = L.map(map_element, { zoomSnap: 0.25, zoomDelta: 0.5 }).setView(first_point, 19);
 	const map_defaults = (frappe.utils && frappe.utils.map_defaults) || {};
-	L.tileLayer(
-		map_defaults.tiles || 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-		map_defaults.options || { attribution: 'OpenStreetMap', maxZoom: 19 }
+	const default_tile = map_defaults.tiles && map_defaults.tiles.default_tile;
+	const tile_url = default_tile && default_tile.url
+		? default_tile.url
+		: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+	const configured_tile_options = default_tile && default_tile.options
+		? default_tile.options
+		: { attribution: 'OpenStreetMap', maxZoom: 19 };
+	const native_max_zoom = Number(configured_tile_options.maxNativeZoom || configured_tile_options.maxZoom || 19);
+	const tile_options = {
+		...configured_tile_options,
+		maxNativeZoom: native_max_zoom,
+		maxZoom: native_max_zoom
+	};
+	const street_layer = L.tileLayer(tile_url, tile_options);
+	const satellite_layer = L.tileLayer(
+		'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+		{
+			attribution: 'Tiles &copy; Esri and imagery providers',
+			maxNativeZoom: 19,
+			maxZoom: 19
+		}
+	).addTo(map);
+	L.control.layers(
+		{ [__('Satellite')]: satellite_layer, [__('Street')]: street_layer },
+		null,
+		{ position: 'topright' }
 	).addTo(map);
 	L.control.scale({ imperial: false }).addTo(map);
 
@@ -1020,16 +1047,6 @@ function render_inspection_take_map(frm, dialog, takes, geojson, map_id) {
 				.addTo(map);
 		}
 
-		if (flt(take.gps_accuracy_meters) > 0) {
-			L.circle(point, {
-				radius: flt(take.gps_accuracy_meters),
-				color: accuracy_color,
-				weight: 1,
-				fillColor: accuracy_color,
-				fillOpacity: 0.08,
-				interactive: false
-			}).addTo(map);
-		}
 		if (index < valid_takes.length - 1 && flt(frm.doc.target_take_spacing_m) > 0) {
 			L.circle(point, {
 				radius: flt(frm.doc.target_take_spacing_m),
@@ -1061,7 +1078,10 @@ function render_inspection_take_map(frm, dialog, takes, geojson, map_id) {
 		if (Object.keys(markers).length === 1) {
 			map.setView(first_point, 19);
 		} else if (marker_group.getBounds().isValid()) {
-			map.fitBounds(marker_group.getBounds(), { padding: [40, 40], maxZoom: 19 });
+			map.fitBounds(marker_group.getBounds(), {
+				padding: [18, 18],
+				maxZoom: 19
+			});
 		}
 	};
 	requestAnimationFrame(() => setTimeout(fit_map, 50));

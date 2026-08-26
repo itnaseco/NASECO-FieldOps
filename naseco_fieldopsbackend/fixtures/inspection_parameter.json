@@ -70,7 +70,7 @@
  {
   "applies_to": "Outgrower Supervisor",
   "calculation_method": "Direct Value",
-  "data_type": "Number",
+  "data_type": "Select",
   "denominator_basis": null,
   "description": null,
   "docstatus": 0,
@@ -82,12 +82,12 @@
   "parameter_group": "Isolation",
   "parameter_name": "Isolation distance",
   "requires_take_counts": 0,
-  "unit": "Meter"
+  "unit": null
  },
  {
   "applies_to": "Outgrower Supervisor",
   "calculation_method": "Direct Value",
-  "data_type": "Number",
+  "data_type": "Select",
   "denominator_basis": null,
   "description": null,
   "docstatus": 0,
@@ -99,7 +99,7 @@
   "parameter_group": "Isolation",
   "parameter_name": "Time isolation",
   "requires_take_counts": 0,
-  "unit": "Week"
+  "unit": null
  },
  {
   "applies_to": "Both",

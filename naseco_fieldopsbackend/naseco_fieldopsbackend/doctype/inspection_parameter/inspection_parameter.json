@@ -44,7 +44,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Data Type",
-   "options": "Number\nCount\nPercent\nScore\nYes/No\nText\nDate\nRatio",
+   "options": "Number\nCount\nPercent\nScore\nYes/No\nSelect\nText\nDate\nRatio",
    "reqd": 1
   },
   {

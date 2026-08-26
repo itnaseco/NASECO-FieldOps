@@ -1,0 +1,19 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": ["seed_category", "seed_class", "item_purpose", "item_code", "stock_uom", "is_default"],
+ "fields": [
+  {"fieldname": "seed_category", "fieldtype": "Link", "in_list_view": 1, "label": "Seed Category", "options": "Seed Category", "reqd": 1},
+  {"fieldname": "seed_class", "fieldtype": "Link", "in_list_view": 1, "label": "Seed Class", "options": "Seed Class", "reqd": 1},
+  {"fieldname": "item_purpose", "fieldtype": "Select", "in_list_view": 1, "label": "Item Purpose", "options": "Parent Seed\nRaw Seed\nFinished Seed", "reqd": 1},
+  {"fieldname": "item_code", "fieldtype": "Link", "in_list_view": 1, "label": "Item", "options": "Item", "reqd": 1},
+  {"fetch_from": "item_code.stock_uom", "fieldname": "stock_uom", "fieldtype": "Link", "label": "Stock UOM", "options": "UOM", "read_only": 1},
+  {"default": "0", "fieldname": "is_default", "fieldtype": "Check", "in_list_view": 1, "label": "Default"}
+ ],
+ "istable": 1,
+ "module": "Naseco FieldOpsBackend",
+ "name": "Crop Variety Seed Item",
+ "permissions": []
+}

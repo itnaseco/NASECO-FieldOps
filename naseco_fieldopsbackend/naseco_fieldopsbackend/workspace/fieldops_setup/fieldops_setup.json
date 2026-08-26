@@ -16,7 +16,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Crop Masters",
-   "link_count": 4,
+   "link_count": 6,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -38,6 +38,28 @@
    "label": "Crop Varieties",
    "link_count": 0,
    "link_to": "Crop Variety",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Seed Categories",
+   "link_count": 0,
+   "link_to": "Seed Category",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Seed Classes",
+   "link_count": 0,
+   "link_to": "Seed Class",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"

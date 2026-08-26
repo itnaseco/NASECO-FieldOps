@@ -12,7 +12,11 @@
   "maturity_days",
   "variety_id",
   "maturity_period_days",
-  "description"
+  "description",
+  "expected_yield_kg_per_hectare",
+  "seed_configuration_section",
+  "can_be_used_as_parent_seed",
+  "seed_items"
  ],
  "fields": [
   {
@@ -50,6 +54,34 @@
    "fieldname": "description",
    "fieldtype": "Text",
    "label": "Description"
+  },
+  {
+   "fieldname": "expected_yield_kg_per_hectare",
+   "fieldtype": "Float",
+   "label": "Expected Harvest (Kg per Hectare)",
+   "non_negative": 1,
+   "precision": 2,
+   "description": "Standard expected harvest used to calculate contract and crop-cycle totals."
+  },
+  {
+   "fieldname": "seed_configuration_section",
+   "fieldtype": "Section Break",
+   "label": "Seed Classification and Inventory Items"
+  },
+  {
+   "default": "0",
+   "description": "Enable when this variety may be issued as source seed for multiplication.",
+   "fieldname": "can_be_used_as_parent_seed",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Can Be Used as Parent Seed"
+  },
+  {
+   "description": "Map the inventory Items used for each seed category, class and processing purpose.",
+   "fieldname": "seed_items",
+   "fieldtype": "Table",
+   "label": "Seed Item Mappings",
+   "options": "Crop Variety Seed Item"
   }
  ],
  "grid_page_length": 50,

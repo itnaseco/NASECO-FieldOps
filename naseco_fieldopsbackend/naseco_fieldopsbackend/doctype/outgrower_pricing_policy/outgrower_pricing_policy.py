@@ -4,10 +4,12 @@ from frappe.model.document import Document
 from frappe.utils import flt, getdate
 
 from naseco_fieldopsbackend.roles import OUTGROWER_MANAGER_ROLE
+from naseco_fieldopsbackend.seed_configuration import validate_seed_scope
 
 
 class OutgrowerPricingPolicy(Document):
 	def validate(self):
+		validate_seed_scope(self.production_category, self.seed_class)
 		self.validate_dates()
 		self.validate_thresholds()
 		self.validate_bands()
@@ -65,6 +67,7 @@ class OutgrowerPricingPolicy(Document):
 				"season": self.season,
 				"crop": self.crop,
 				"production_category": self.production_category,
+				"seed_class": self.seed_class,
 				"docstatus": 1,
 				"status": "Active",
 				"name": ["!=", self.name],

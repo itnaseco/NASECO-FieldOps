@@ -27,7 +27,8 @@ frappe.ui.form.on('Outgrower Production Contract', {
 				status: 'Active',
 				season: frm.doc.season,
 				crop: frm.doc.crop,
-				production_category: frm.doc.production_category
+				production_category: frm.doc.production_category,
+				seed_class: frm.doc.seed_class
 			}
 		}));
 		frm.set_query('pricing_policy', () => ({
@@ -36,7 +37,8 @@ frappe.ui.form.on('Outgrower Production Contract', {
 				status: 'Active',
 				season: frm.doc.season,
 				crop: frm.doc.crop,
-				production_category: frm.doc.production_category
+				production_category: frm.doc.production_category,
+				seed_class: frm.doc.seed_class
 			}
 		}));
 	},
@@ -222,3 +224,11 @@ function calculate_contract_values(frm) {
 	);
 	calculate_expected_value(frm);
 }
+
+// Seed classification master filters.
+frappe.ui.form.on("Outgrower Production Contract", {
+	setup(frm) {
+		frm.set_query("production_category", () => ({ filters: { enabled: 1 } }));
+		frm.set_query("seed_class", () => ({ filters: { enabled: 1 } }));
+	}
+});

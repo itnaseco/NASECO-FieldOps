@@ -12,8 +12,8 @@ from naseco_fieldopsbackend.crop_cycle_lifecycle import LIFECYCLE_STAGES, get_st
 def generate_crop_cycle_schedules_for_doc(crop_cycle):
 	"""Generate all post-planting schedules for a planted crop cycle."""
 	doc = frappe.get_doc("Crop Cycle", crop_cycle)
-	if not doc.planting_date or not doc.production_category:
-		frappe.throw(_("Planting Date and Production Category are required before generating schedules."))
+	if not doc.planting_date_confirmed:
+		frappe.throw(_("Confirm the Planting Date before generating schedules."))
 	sync_crop_cycle_lifecycle(doc)
 	frappe.db.commit()
 	return {
@@ -31,7 +31,7 @@ def generate_crop_cycle_schedules(crop_cycle):
 
 def sync_crop_cycle_lifecycle(crop_cycle):
 	"""Idempotently synchronize lifecycle stages and all operational schedules."""
-	if not crop_cycle.name:
+	if not crop_cycle.name or not crop_cycle.get("planting_date_confirmed"):
 		return
 
 	stages = ensure_crop_cycle_stages(crop_cycle)
@@ -271,6 +271,7 @@ def create_inspections(crop_cycle):
 				"crop": crop_cycle.crop,
 				"season": crop_cycle.season,
 				"production_category": crop_cycle.production_category,
+				"seed_class": crop_cycle.seed_class,
 				"scheduled_date": scheduled_date,
 				"assigned_to": assigned_inspector,
 				"status": "Scheduled",
@@ -354,9 +355,8 @@ def create_agronomy_activities(crop_cycle, stages):
 		],
 		order_by="day_offset_from_planting asc",
 	)
-	for template in templates:
-		if template.crop_recipe and template.crop_recipe != crop_cycle.recipe:
-			continue
+	selected_templates = resolve_activity_templates(crop_cycle, templates)
+	for template in selected_templates:
 		if not crop_cycle.planting_date and template.day_offset_from_planting >= 0:
 			continue
 		anchor = crop_cycle.planting_date or crop_cycle.start_date
@@ -469,3 +469,36 @@ def create_todo(allocated_to, reference_type, reference_name, description, date=
 			"priority": priority,
 		}
 	).insert(ignore_permissions=True)
+
+
+def resolve_activity_templates(crop_cycle, templates):
+	"""Resolve activities by exact/inherited recipe, then fall back to the same crop.
+
+	Generic templates are always included. A same-crop fallback preserves shared activity
+	formats when recipes only override quantities or stage timing.
+	"""
+	generic = [row for row in templates if not row.crop_recipe]
+	recipe_chain = []
+	seen = set()
+	recipe = crop_cycle.recipe
+	while recipe and recipe not in seen:
+		seen.add(recipe)
+		recipe_chain.append(recipe)
+		recipe = frappe.db.get_value("Crop Recipe", recipe, "based_on_recipe")
+
+	scoped = [row for row in templates if row.crop_recipe in recipe_chain]
+	if scoped:
+		return generic + scoped
+
+	recipe_crops = {}
+	for row in templates:
+		if row.crop_recipe and row.crop_recipe not in recipe_crops:
+			recipe_crops[row.crop_recipe] = frappe.db.get_value(
+				"Crop Recipe", row.crop_recipe, "crop"
+			)
+	same_crop = [
+		row
+		for row in templates
+		if row.crop_recipe and recipe_crops.get(row.crop_recipe) == crop_cycle.crop
+	]
+	return generic + same_crop

@@ -1,0 +1,130 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "crop_recipe",
+  "ratio_group",
+  "parent_role",
+  "ratio_value",
+  "item_code",
+  "target_hectares",
+  "quantity_per_hectare",
+  "uom",
+  "conversion_factor",
+  "required_qty",
+  "stock_uom",
+  "required_stock_qty",
+  "source_warehouse",
+  "recovery_policy",
+  "recoverable_percent"
+ ],
+ "fields": [
+  {
+   "fieldname": "crop_recipe",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Crop Recipe",
+   "options": "Crop Recipe",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ratio_group",
+   "fieldtype": "Data",
+   "label": "Ratio Group",
+   "read_only": 1
+  },
+  {
+   "fieldname": "parent_role",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Parent Role",
+   "read_only": 1
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Parent Seed Item",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "target_hectares",
+   "fieldtype": "Float",
+   "label": "Target Hectares",
+   "precision": 4,
+   "read_only": 1
+  },
+  {
+   "fieldname": "quantity_per_hectare",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Rate per Hectare",
+   "read_only": 1
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "Recipe UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "conversion_factor",
+   "fieldtype": "Float",
+   "label": "Stock Conversion Factor",
+   "read_only": 1
+  },
+  {
+   "fieldname": "required_qty",
+   "fieldtype": "Float",
+   "label": "Required Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stock_uom",
+   "fieldtype": "Link",
+   "label": "Stock UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "required_stock_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Required Stock Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "source_warehouse",
+   "fieldtype": "Link",
+   "label": "Source Warehouse",
+   "options": "Warehouse",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recovery_policy",
+   "fieldtype": "Data",
+   "label": "Recovery Policy",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recoverable_percent",
+   "fieldtype": "Percent",
+   "label": "Recoverable %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ratio_value",
+   "fieldtype": "Float",
+   "label": "Ratio Value",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "module": "Naseco FieldOpsBackend",
+ "name": "Season Parent Seed Requirement",
+ "permissions": []
+}

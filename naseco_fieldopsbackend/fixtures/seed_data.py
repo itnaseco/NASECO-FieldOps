@@ -496,8 +496,8 @@ def seed_inspection_parameters():
 		("Inter row spacing", "INTER_ROW_SPACING", "Planting", "Number", "Meter", "Outgrower Supervisor", 0),
 		("Plant population per Ha", "PLANT_POP_HA", "Planting", "Number", "Nos", "Both", 0),
 		("Male:Female ratio", "MALE_FEMALE_RATIO", "Planting", "Ratio", None, "Outgrower Supervisor", 0),
-		("Isolation distance", "ISOLATION_DISTANCE", "Isolation", "Number", "Meter", "Outgrower Supervisor", 0),
-		("Time isolation", "TIME_ISOLATION", "Isolation", "Number", "Week", "Outgrower Supervisor", 0),
+		("Isolation distance", "ISOLATION_DISTANCE", "Isolation", "Select", None, "Outgrower Supervisor", 0),
+		("Time isolation", "TIME_ISOLATION", "Isolation", "Select", None, "Outgrower Supervisor", 0),
 		("Offtypes in females", "OFFTYPES_FEMALE", "Purity", "Count", "Nos", "Both", 1),
 		("Offtypes in males", "OFFTYPES_MALE", "Purity", "Count", "Nos", "Both", 1),
 		("Volunteers", "VOLUNTEERS", "Purity", "Count", "Nos", "Farmer", 1),
@@ -745,7 +745,7 @@ def seed_agronomy_report_templates():
 		(3, "Crop Emergence / Germination", 7, 14, [
 			("GERMINATION_PERCENT", "Germination percentage", "Crop Establishment", "Percent", "Percent", 1, 1),
 			("STAND_UNIFORMITY", "Crop stand uniformity", "Crop Establishment", "Good/Poor", None, 1, 1),
-			("GAP_FILLING", "Gap filling required", "Corrective Work", "Yes/No", None, 1, 1),
+			("GAP_FILLING", "Replanting Needed?", "Corrective Work", "Yes/No", None, 1, 1),
 			("EARLY_PESTS", "Early pest incidence", "Crop Health", "Good/Poor", None, 1, 1),
 			("WEED_STATUS", "Weed control status", "Crop Health", "Good/Poor", None, 1, 1),
 		]),
@@ -1105,6 +1105,11 @@ def seed_sample_season_production_plan():
 	if not company:
 		print("  ! Default Company is not configured")
 		return
+	location = "Central"
+	if not frappe.db.exists("Location", location):
+		frappe.get_doc({"doctype": "Location", "location_name": location}).insert(
+			ignore_permissions=True
+		)
 	plan = frappe.get_doc(
 		{
 			"doctype": "Season Production Plan",
@@ -1119,6 +1124,8 @@ def seed_sample_season_production_plan():
 			"production_targets": [
 				{
 					"region": "Central",
+					"location": location,
+					"outgrower_supervisor": "Administrator",
 					"crop": "Maize",
 					"variety": "Longe 10H",
 					"production_category": "Certified",
@@ -1127,11 +1134,11 @@ def seed_sample_season_production_plan():
 					"pricing_policy": "2026B Maize Certified Seed Pricing",
 					"target_outgrowers": 20,
 					"target_plots": 20,
-					"target_acres": 100,
-					"planned_yield_kg_per_acre": 1000,
+					"target_hectares": 40.4686,
+					"planned_yield_kg_per_hectare": 2471.0538,
 					"planning_rate": 1850,
 					"parent_seed_item": FIELDOPS_ITEMS["Maize Seed (Hybrid)"]["item_code"],
-					"parent_seed_rate_per_acre": 20,
+					"parent_seed_rate_per_hectare": 49.4211,
 					"planting_window_from": "2026-08-01",
 					"planting_window_to": "2026-08-31",
 					"expected_harvest_date": "2026-12-15",

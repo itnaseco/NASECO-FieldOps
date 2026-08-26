@@ -18,34 +18,14 @@ frappe.ui.form.on("Crop Cycle", {
 			frappe.set_route('Form', 'Outgrower Production Contract', frm.doc.production_contract);
 		}, __('Navigate'));
 
-		const schedules_generated =
-			frm.doc.inspection_schedule_generated && frm.doc.agronomy_schedule_generated;
-
-		if (frm.doc.planting_date && frm.doc.production_category && !schedules_generated) {
-			frm.add_custom_button(__('Generate Schedules'), () => generate_schedules(frm), __('Actions'));
+		const can_confirm_planting = frappe.user_roles.some(
+			(role) => ['Outgrower Manager', 'System Manager'].includes(role)
+		);
+		if (can_confirm_planting && frm.doc.planting_date && frm.doc.production_category && !frm.doc.planting_date_confirmed) {
+			frm.add_custom_button(__('Confirm Planting Date'), () => confirm_planting_date(frm), __('Actions'));
 		}
 
-		if (frm.doc.inspection_schedule_generated) {
-			frm.add_custom_button(__('View Inspections'), () => {
-				frappe.set_route('List', 'Inspection', { crop_cycle: frm.doc.name });
-			}, __('Actions'));
-		}
-
-		if (frm.doc.agronomy_schedule_generated) {
-			frm.add_custom_button(__('View Agronomy Activities'), () => {
-				frappe.set_route('List', 'Stage Activity', { crop_cycle: frm.doc.name });
-			}, __('Actions'));
-		}
-
-		if (frm.doc.lifecycle_initialized) {
-			frm.add_custom_button(__('View Agronomy Reports'), () => {
-				frappe.set_route('List', 'Agronomy Report', { crop_cycle: frm.doc.name });
-			}, __('Actions'));
-		}
-
-		frm.add_custom_button(__('View Production Lots'), () => {
-			frappe.set_route('List', 'Crop Production Lot', { crop_cycle: frm.doc.name });
-		}, __('Harvest'));
+		add_related_record_buttons(frm);
 
 		frm.add_custom_button(__('New Production Lot'), () => {
 			frappe.new_doc('Crop Production Lot', {
@@ -53,12 +33,6 @@ frappe.ui.form.on("Crop Cycle", {
 				production_contract: frm.doc.production_contract,
 				plot: frm.doc.plot,
 				season: frm.doc.season
-			});
-		}, __('Harvest'));
-
-		frm.add_custom_button(__('View Harvest Quality Assessments'), () => {
-			frappe.set_route('List', 'Seed Harvest Quality Assessment', {
-				crop_cycle: frm.doc.name
 			});
 		}, __('Harvest'));
 
@@ -108,10 +82,6 @@ frappe.ui.form.on("Crop Cycle", {
 				});
 		}
 
-		frm.add_custom_button(__('View Input Requests'), () => {
-			frappe.set_route('List', 'Stage Input Request', { crop_cycle: frm.doc.name });
-		}, __('Finance'));
-
 		if (frm.doc.current_stage && frm.doc.recipe) {
 			frm.add_custom_button(__('Request Current Stage Inputs'), () => {
 				frappe.new_doc('Stage Input Request', {
@@ -120,10 +90,6 @@ frappe.ui.form.on("Crop Cycle", {
 				});
 			}, __('Create'));
 		}
-
-		frm.add_custom_button(__('View Advance Requests'), () => {
-			frappe.set_route('List', 'Crop Cycle Advance Request', { crop_cycle: frm.doc.name });
-		}, __('Finance'));
 
 		frappe.db.get_value('Crop Cycle Settlement', { crop_cycle: frm.doc.name }, 'name')
 			.then(({ message }) => {
@@ -158,23 +124,71 @@ frappe.ui.form.on("Crop Cycle", {
 	}
 });
 
-function generate_schedules(frm) {
-	frappe.call({
-		method: 'naseco_fieldopsbackend.inspection_scheduler.generate_crop_cycle_schedules_for_doc',
-		args: { crop_cycle: frm.doc.name },
-		freeze: true,
-		freeze_message: __('Generating QA and agronomy schedules...'),
-		callback() {
-			frappe.show_alert({ message: __('Schedules generated'), indicator: 'green' });
-			frm.reload_doc();
+
+function confirm_planting_date(frm) {
+	const dialog = new frappe.ui.Dialog({
+		title: __('Confirm Planting Date'),
+		fields: [
+			{
+				fieldtype: 'HTML',
+				options: `<p>${__('Confirm planting for {0} on {1}? This will generate agronomy activities, reports and quality inspections.', [
+					frappe.utils.escape_html(frm.doc.crop_cycle_id || frm.doc.name),
+					frappe.datetime.str_to_user(frm.doc.planting_date)
+				])}</p>`
+			},
+			{ fieldname: 'notes', fieldtype: 'Small Text', label: __('Confirmation Notes') }
+		],
+		primary_action_label: __('Confirm and Generate Schedules'),
+		primary_action(values) {
+			dialog.hide();
+			frappe.call({
+				method: 'naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle.confirm_planting_date',
+				args: { crop_cycle: frm.doc.name, notes: values.notes },
+				freeze: true,
+				freeze_message: __('Confirming planting and generating schedules...'),
+				callback() {
+					frappe.show_alert({ message: __('Planting confirmed and schedules generated'), indicator: 'green' });
+					frm.reload_doc();
+				}
+			});
 		}
 	});
+	dialog.show();
+}
+
+function add_related_record_buttons(frm) {
+	frappe.call({
+		method: 'naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle.get_related_record_counts',
+		args: { crop_cycle: frm.doc.name },
+		callback(r) {
+			if (!r.message || frm.doc.__islocal) return;
+			const counts = r.message;
+			add_counted_button(frm, counts.inspections, __('View Inspections'), 'Inspection', 'Actions');
+			add_counted_button(frm, counts.activities, __('View Agronomy Activities'), 'Stage Activity', 'Actions');
+			add_counted_button(frm, counts.agronomy_reports, __('View Agronomy Reports'), 'Agronomy Report', 'Actions');
+			add_counted_button(frm, counts.production_lots, __('View Production Lots'), 'Crop Production Lot', 'Harvest');
+			add_counted_button(frm, counts.harvest_assessments, __('View Harvest Quality Assessments'), 'Seed Harvest Quality Assessment', 'Harvest');
+			add_counted_button(frm, counts.input_requests, __('View Input Requests'), 'Stage Input Request', 'Finance');
+			add_counted_button(frm, counts.advance_requests, __('View Advance Requests'), 'Crop Cycle Advance Request', 'Finance');
+		}
+	});
+}
+
+function add_counted_button(frm, count, label, doctype, group) {
+	if (!count) return;
+	frm.add_custom_button(__('{0} ({1})', [label, count]), () => {
+		frappe.set_route('List', doctype, { crop_cycle: frm.doc.name });
+	}, __(group));
 }
 
 function show_schedule_indicators(frm) {
 	frm.dashboard.add_indicator(
 		__('Production: {0}', [frm.doc.production_category || __('Not Set')]),
 		frm.doc.production_category ? 'blue' : 'orange'
+	);
+	frm.dashboard.add_indicator(
+		frm.doc.planting_date_confirmed ? __('Planting Date Confirmed') : __('Planting Date Not Confirmed'),
+		frm.doc.planting_date_confirmed ? 'green' : 'orange'
 	);
 	if (frm.doc.inspection_schedule_generated) {
 		frm.dashboard.add_indicator(__('QA Schedule Generated'), 'green');

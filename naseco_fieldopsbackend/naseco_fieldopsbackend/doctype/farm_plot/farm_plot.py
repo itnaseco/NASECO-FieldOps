@@ -15,6 +15,26 @@ from frappe.utils.file_manager import save_file
 
 
 class FarmPlot(Document):
+	def before_validate(self):
+		if not self.plot_id and self.outgrower:
+			self.plot_id = self.get_next_plot_id()
+
+	def get_next_plot_id(self):
+		existing = frappe.get_all("Farm Plot", filters={"outgrower": self.outgrower}, pluck="plot_id")
+		used = {value[len(self.outgrower) + 1:] for value in existing if value and value.startswith(f"{self.outgrower}-")}
+		index = 1
+		while self._alpha_suffix(index) in used:
+			index += 1
+		return f"{self.outgrower}-{self._alpha_suffix(index)}"
+
+
+	def _alpha_suffix(self, index):
+		letters = ""
+		while index:
+			index, remainder = divmod(index - 1, 26)
+			letters = chr(65 + remainder) + letters
+		return letters
+
 	def validate(self):
 		self.validate_and_normalize_polygon()
 		self.validate_geospatial_values()
@@ -25,8 +45,10 @@ class FarmPlot(Document):
 			if self.flags.get("force_geospatial_calculation") or not self.has_geospatial_values():
 				self.calculate_geospatial_values()
 			self.generate_geojson()
-		elif not self.has_geospatial_values():
-			self.clear_geospatial_values()
+		else:
+			if not self.has_geospatial_values():
+				self.clear_geospatial_values()
+			self.geojson = None
 
 	def after_insert(self):
 		self._ensure_map_image_from_base64()
@@ -124,7 +146,11 @@ class FarmPlot(Document):
 			frappe.throw(_("A plot polygon requires at least three unique coordinates."))
 
 	def validate_geospatial_values(self):
-		if self.area_acres not in (None, "") and flt(self.area_acres) < 0:
+		area_hectares = getattr(self, "area_hectares", None)
+		legacy_area = getattr(self, "area_acres", None)
+		if area_hectares in (None, "") and legacy_area not in (None, ""):
+			area_hectares = flt(legacy_area) * 0.40468564224
+		if area_hectares not in (None, "") and flt(area_hectares) < 0:
 			frappe.throw(_("Area cannot be negative."))
 		if self.perimeter_meters not in (None, "") and flt(self.perimeter_meters) < 0:
 			frappe.throw(_("Perimeter cannot be negative."))
@@ -144,7 +170,7 @@ class FarmPlot(Document):
 		return any(
 			value not in (None, "")
 			for value in (
-				self.area_acres,
+				getattr(self, "area_hectares", None) or getattr(self, "area_acres", None),
 				self.perimeter_meters,
 				self.centroid_lat,
 				self.centroid_lng,
@@ -152,6 +178,7 @@ class FarmPlot(Document):
 		)
 
 	def clear_geospatial_values(self):
+		self.area_hectares = 0
 		self.area_acres = 0
 		self.perimeter_meters = 0
 		self.centroid_lat = None
@@ -159,11 +186,12 @@ class FarmPlot(Document):
 		self.geojson = None
 
 	def calculate_geospatial_values(self):
-		"""Calculate area (acres), perimeter (meters), and centroid from GPS vertices"""
+		"""Calculate area (hectares), perimeter (meters), and centroid from GPS vertices"""
 		vertices = [(float(v.latitude), float(v.longitude)) for v in self.polygon]
 
 		# Calculate area using spherical polygon formula
-		self.area_acres = self.calculate_area_acres(vertices)
+		self.area_hectares = self.calculate_area_hectares(vertices)
+		self.area_acres = round(self.area_hectares * 2.47105381467, 4)
 
 		# Calculate perimeter using Haversine distance
 		self.perimeter_meters = self.calculate_perimeter_meters(vertices)
@@ -173,10 +201,8 @@ class FarmPlot(Document):
 		self.centroid_lat = centroid[0]
 		self.centroid_lng = centroid[1]
 
-	def calculate_area_acres(self, vertices):
-		"""
-		Calculate area of spherical polygon using spherical excess formula.
-		Returns area in acres.
+	def calculate_area_hectares(self, vertices):
+		"""Calculate spherical polygon area in hectares.
 		"""
 		if len(vertices) < 3:
 			return 0.0
@@ -200,10 +226,11 @@ class FarmPlot(Document):
 
 		area_sq_meters = abs(area_sq_meters * R * R / 2.0)
 
-		# Convert square meters to acres (1 acre = 4046.86 sq meters)
-		acres = area_sq_meters / 4046.86
+		return round(area_sq_meters / 10000, 4)
 
-		return round(acres, 2)
+	def calculate_area_acres(self, vertices):
+		"""Compatibility helper for legacy clients."""
+		return round(self.calculate_area_hectares(vertices) * 2.47105381467, 4)
 
 	def calculate_perimeter_meters(self, vertices):
 		"""
@@ -276,8 +303,9 @@ class FarmPlot(Document):
 		return (round(math.degrees(lat_centroid), 6), round(math.degrees(lon_centroid), 6))
 
 	def generate_geojson(self):
-		"""Generate GeoJSON representation of the polygon"""
+		"""Update GeoJSON from the current polygon."""
 		if not self.polygon:
+			self.geojson = None
 			return
 
 		coordinates = [[float(v.longitude), float(v.latitude)] for v in self.polygon]

@@ -31,6 +31,7 @@
   "crop",
   "variety",
   "production_category",
+  "seed_class",
   "crop_recipe",
   "period_section",
   "agreement_date",
@@ -88,7 +89,11 @@
   "signatories",
   "supporting_document",
   "erpnext_contract",
-  "amended_from"
+  "amended_from",
+  "contracted_area_hectares",
+  "quota_kg_per_hectare",
+  "expected_yield_kg_per_hectare",
+  "parent_seed_items"
  ],
  "fields": [
   {
@@ -257,11 +262,18 @@
   },
   {
    "fieldname": "production_category",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Seed Category",
-   "options": "Basic\nCertified",
+   "options": "Seed Category",
    "reqd": 1
+  },
+  {
+   "fieldname": "seed_class",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Seed Class",
+   "options": "Seed Class"
   },
   {
    "fieldname": "crop_recipe",
@@ -633,6 +645,33 @@
    "options": "Outgrower Production Contract",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "contracted_area_hectares",
+   "fieldtype": "Float",
+   "label": "Contracted Area (Hectares)",
+   "precision": 4,
+   "non_negative": 1
+  },
+  {
+   "fieldname": "quota_kg_per_hectare",
+   "fieldtype": "Float",
+   "label": "Contracted Quota (Kg per Hectare)",
+   "precision": 2,
+   "non_negative": 1
+  },
+  {
+   "fieldname": "expected_yield_kg_per_hectare",
+   "fieldtype": "Float",
+   "label": "Expected Harvest (Kg per Hectare)",
+   "precision": 2,
+   "read_only": 1
+  },
+  {
+   "fieldname": "parent_seed_items",
+   "fieldtype": "Table",
+   "label": "Parent Seed Items",
+   "options": "Contract Parent Seed Item"
   }
  ],
  "index_web_pages_for_search": 1,

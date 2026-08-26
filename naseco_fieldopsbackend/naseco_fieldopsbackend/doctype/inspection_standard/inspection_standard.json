@@ -9,6 +9,7 @@
   "inspection_template",
   "parameter",
   "production_category",
+  "seed_class",
   "mandatory",
   "section_break_1",
   "comparison_rule",
@@ -42,11 +43,18 @@
   },
   {
    "fieldname": "production_category",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Production Category",
-   "options": "Basic\nCertified",
+   "options": "Seed Category",
    "reqd": 1
+  },
+  {
+   "fieldname": "seed_class",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Seed Class",
+   "options": "Seed Class"
   },
   {
    "default": "1",

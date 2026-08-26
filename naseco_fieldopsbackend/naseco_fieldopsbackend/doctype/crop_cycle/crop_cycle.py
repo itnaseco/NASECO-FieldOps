@@ -10,15 +10,36 @@ from naseco_fieldopsbackend.fieldops_finance import (
 	calculate_crop_cycle_exposure,
 )
 from naseco_fieldopsbackend.inspection_scheduler import sync_crop_cycle_lifecycle
+from naseco_fieldopsbackend.roles import OUTGROWER_MANAGER_ROLE
+
+
+PLANTING_CONFIRMATION_ROLES = {
+	"System Manager",
+	OUTGROWER_MANAGER_ROLE,
+}
 
 
 class CropCycle(Document):
 	def before_validate(self):
 		self.apply_contract_terms()
+		from naseco_fieldopsbackend.recipe_planning import build_crop_cycle_input_plan
+
+		build_crop_cycle_input_plan(self)
 
 	def validate(self):
 		self.validate_single_cycle_per_plot()
 		self.validate_planting_window()
+		self.validate_confirmed_planting_date()
+
+	def validate_confirmed_planting_date(self):
+		if self.is_new() or not self.planting_date_confirmed:
+			return
+		previous = self.get_doc_before_save()
+		if previous and previous.planting_date_confirmed and previous.planting_date != self.planting_date:
+			frappe.throw(
+				_("A confirmed Planting Date cannot be changed."),
+				title=_("Planting Date Confirmed"),
+			)
 
 	def before_save(self):
 		"""Auto-update status based on dates"""
@@ -62,15 +83,18 @@ class CropCycle(Document):
 			"supplier": "supplier",
 			"pricing_policy": "pricing_policy",
 			"contracted_area_acres": "contracted_area_acres",
+			"contracted_area_hectares": "contracted_area_hectares",
 			"contracted_quota_qty": "contracted_quota_qty",
 			"harvest_item": "harvest_item",
 			"harvest_uom": "harvest_uom",
 			"expected_yield_qty": "expected_yield_qty",
+			"expected_yield_kg_per_hectare": "expected_yield_kg_per_hectare",
 			"contract_rate": "contract_rate",
 			"currency": "currency",
 			"expected_harvest_value": "expected_harvest_value",
 			"max_exposure_percent": "max_exposure_percent",
 			"production_category": "production_category",
+			"seed_class": "seed_class",
 			"start_date": "planting_start_date",
 			"expected_harvest_date": "expected_harvest_date",
 		}
@@ -191,3 +215,77 @@ def refresh_financial_summary(crop_cycle):
 		update_modified=False,
 	)
 	return summary
+
+
+def _require_planting_confirmation_role():
+	roles = set(frappe.get_roles())
+	if frappe.session.user != "Administrator" and not roles.intersection(PLANTING_CONFIRMATION_ROLES):
+		frappe.throw(
+			_("Only an Outgrower Manager or System Manager can confirm planting."),
+			frappe.PermissionError,
+		)
+
+
+@frappe.whitelist()
+def confirm_planting_date(crop_cycle, notes=None):
+	_require_planting_confirmation_role()
+	doc = frappe.get_doc("Crop Cycle", crop_cycle)
+	doc.check_permission("write")
+	if not doc.planting_date:
+		frappe.throw(_("Enter and save the Planting Date before confirming it."))
+	if not doc.production_category:
+		frappe.throw(_("Production Category is required before confirming planting."))
+	if doc.planting_date_confirmed:
+		return _planting_confirmation_result(doc)
+
+	doc.db_set(
+		{
+			"planting_date_confirmed": 1,
+			"planting_date_confirmed_by": frappe.session.user,
+			"planting_date_confirmed_on": now_datetime(),
+			"planting_confirmation_notes": notes,
+		},
+	)
+	doc.planting_date_confirmed = 1
+	sync_crop_cycle_lifecycle(doc)
+	return _planting_confirmation_result(doc)
+
+
+def _planting_confirmation_result(doc):
+	return {
+		"crop_cycle": doc.name,
+		"planting_date": doc.planting_date,
+		"confirmed": bool(doc.planting_date_confirmed),
+		"confirmed_by": doc.planting_date_confirmed_by,
+		"confirmed_on": doc.planting_date_confirmed_on,
+	}
+
+
+RELATED_RECORDS = {
+	"inspections": "Inspection",
+	"activities": "Stage Activity",
+	"agronomy_reports": "Agronomy Report",
+	"production_lots": "Crop Production Lot",
+	"harvest_assessments": "Seed Harvest Quality Assessment",
+	"input_requests": "Stage Input Request",
+	"advance_requests": "Crop Cycle Advance Request",
+}
+
+
+@frappe.whitelist()
+def get_related_record_counts(crop_cycle):
+	doc = frappe.get_doc("Crop Cycle", crop_cycle)
+	doc.check_permission("read")
+	counts = {}
+	for key, doctype in RELATED_RECORDS.items():
+		if not frappe.has_permission(doctype, "read"):
+			counts[key] = 0
+			continue
+		rows = frappe.get_list(
+			doctype,
+			filters={"crop_cycle": doc.name},
+			fields=[{"COUNT": "*", "as": "count"}],
+			limit_page_length=1,
+		)
+		counts[key] = int(rows[0].count) if rows else 0
+	return counts

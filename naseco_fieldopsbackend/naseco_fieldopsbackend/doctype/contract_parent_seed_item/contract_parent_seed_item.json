@@ -1,0 +1,83 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-08-07 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "istable": 1,
+ "field_order": [
+  "parent_role",
+  "item",
+  "uom",
+  "quantity_kg_per_hectare",
+  "planned_quantity",
+  "rate",
+  "amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "parent_role",
+   "fieldtype": "Select",
+   "label": "Parent Role",
+   "options": "Female\nMale\nPollinator\nOther",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "label": "Parent Seed Item",
+   "options": "Item",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "fetch_from": "item.stock_uom",
+   "read_only": 1
+  },
+  {
+   "fieldname": "quantity_kg_per_hectare",
+   "fieldtype": "Float",
+   "label": "Quantity (Kg per Hectare)",
+   "reqd": 1,
+   "non_negative": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "planned_quantity",
+   "fieldtype": "Float",
+   "label": "Planned Quantity",
+   "read_only": 1,
+   "non_negative": 1
+  },
+  {
+   "fieldname": "rate",
+   "fieldtype": "Currency",
+   "label": "Rate",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount",
+   "read_only": 1,
+   "non_negative": 1
+  }
+ ],
+ "module": "Naseco FieldOpsBackend",
+ "name": "Contract Parent Seed Item",
+ "permissions": [],
+ "modified": "2026-08-07 00:00:00.000000",
+ "modified_by": "Administrator",
+ "owner": "Administrator",
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
