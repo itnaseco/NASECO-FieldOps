@@ -3,8 +3,20 @@
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
- "field_order": ["variety", "expected_yield_kg_per_hectare", "enabled"],
+ "field_order": [
+  "ux_details_section",
+  "variety",
+  "ux_additional_details_section",
+  "enabled",
+  "ux_quantities_and_values_section",
+  "expected_yield_kg_per_hectare"
+ ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
   {
    "fieldname": "variety",
    "fieldtype": "Link",
@@ -12,6 +24,23 @@
    "label": "Crop Variety",
    "options": "Crop Variety",
    "reqd": 1
+  },
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Enabled"
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
   },
   {
    "description": "Expected yield for this variety when this recipe is used.",
@@ -22,13 +51,6 @@
    "non_negative": 1,
    "precision": 2,
    "reqd": 1
-  },
-  {
-   "default": "1",
-   "fieldname": "enabled",
-   "fieldtype": "Check",
-   "in_list_view": 1,
-   "label": "Enabled"
   }
  ],
  "istable": 1,

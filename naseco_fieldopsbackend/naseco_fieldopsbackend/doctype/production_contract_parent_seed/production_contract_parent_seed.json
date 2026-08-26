@@ -5,15 +5,24 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_additional_details_section",
   "parent_role",
+  "ux_additional_details_column_2_column",
   "parent_seed_item",
+  "ux_quantities_and_values_section",
   "quantity_per_hectare",
   "uom",
   "planned_quantity",
+  "ux_quantities_and_values_column_2_column",
   "rate",
   "planned_value"
  ],
  "fields": [
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
   {
    "fieldname": "parent_role",
    "fieldtype": "Select",
@@ -23,12 +32,22 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_additional_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Additional Details Column 2"
+  },
+  {
    "fieldname": "parent_seed_item",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Parent Seed Item",
    "options": "Item",
    "reqd": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
   },
   {
    "fieldname": "quantity_per_hectare",
@@ -54,6 +73,11 @@
    "label": "Planned Total Quantity",
    "non_negative": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quantities and Values Column 2"
   },
   {
    "fieldname": "rate",

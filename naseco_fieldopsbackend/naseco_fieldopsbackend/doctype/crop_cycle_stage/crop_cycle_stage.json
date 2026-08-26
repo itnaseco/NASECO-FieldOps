@@ -7,41 +7,41 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_details_section",
   "crop_cycle",
-  "stage_code",
   "stage_name",
-  "order_index",
-  "section_break_1",
-  "start_date",
-  "end_date",
-  "duration_days",
-  "section_break_2",
   "status",
+  "stage_id",
+  "crop",
+  "stage_code",
+  "ux_details_column_2_column",
+  "order_index",
+  "duration_days",
   "completion_percentage",
   "agronomy_report",
   "mandatory_activity_count",
+  "ux_dates_and_location_section",
+  "start_date",
+  "end_date",
+  "ux_dates_and_location_column_2_column",
   "completed_activity_count",
-  "section_break_3",
+  "ux_related_tables_section",
   "inputs",
-  "notes",
-  "stage_id",
-  "crop"
+  "ux_notes_and_review_section",
+  "notes"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
   {
    "fieldname": "crop_cycle",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Crop Cycle",
    "options": "Crop Cycle",
-   "reqd": 1
-  },
-  {
-   "fieldname": "stage_code",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Stage Code",
-   "read_only": 1,
    "reqd": 1
   },
   {
@@ -52,42 +52,47 @@
    "reqd": 1
   },
   {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nIn Progress\nCompleted\nSkipped",
+   "default": "Pending"
+  },
+  {
+   "fieldname": "stage_id",
+   "fieldtype": "Data",
+   "label": "Stage ID",
+   "unique": 1
+  },
+  {
+   "fieldname": "crop",
+   "fieldtype": "Link",
+   "label": "Crop",
+   "options": "Crop"
+  },
+  {
+   "fieldname": "stage_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Stage Code",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Details Column 2"
+  },
+  {
    "fieldname": "order_index",
    "fieldtype": "Int",
    "label": "Order Index",
    "reqd": 1
   },
   {
-   "fieldname": "section_break_1",
-   "fieldtype": "Section Break",
-   "label": "Dates"
-  },
-  {
-   "fieldname": "start_date",
-   "fieldtype": "Date",
-   "label": "Start Date"
-  },
-  {
-   "fieldname": "end_date",
-   "fieldtype": "Date",
-   "label": "End Date"
-  },
-  {
    "fieldname": "duration_days",
    "fieldtype": "Int",
    "label": "Duration (Days)"
-  },
-  {
-   "fieldname": "section_break_2",
-   "fieldtype": "Section Break",
-   "label": "Status"
-  },
-  {
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "Status",
-   "options": "Pending\nIn Progress\nCompleted\nSkipped",
-   "default": "Pending"
   },
   {
    "fieldname": "completion_percentage",
@@ -110,6 +115,26 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_dates_and_location_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Location"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "ux_dates_and_location_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Dates and Location Column 2"
+  },
+  {
    "default": "0",
    "fieldname": "completed_activity_count",
    "fieldtype": "Int",
@@ -117,9 +142,9 @@
    "read_only": 1
   },
   {
-   "fieldname": "section_break_3",
+   "fieldname": "ux_related_tables_section",
    "fieldtype": "Section Break",
-   "label": "Details"
+   "label": "Related Tables"
   },
   {
    "fieldname": "inputs",
@@ -128,21 +153,14 @@
    "options": "Recipe Input Item"
   },
   {
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
+  },
+  {
    "fieldname": "notes",
    "fieldtype": "Text",
    "label": "Notes"
-  },
-  {
-   "fieldname": "stage_id",
-   "fieldtype": "Data",
-   "label": "Stage ID",
-   "unique": 1
-  },
-  {
-   "fieldname": "crop",
-   "fieldtype": "Link",
-   "label": "Crop",
-   "options": "Crop"
   }
  ],
  "index_web_pages_for_search": 1,

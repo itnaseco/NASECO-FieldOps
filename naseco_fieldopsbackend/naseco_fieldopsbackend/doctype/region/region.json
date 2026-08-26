@@ -6,16 +6,28 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_details_section",
   "region_name",
+  "ux_dates_and_location_section",
   "created_at"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
   {
    "fieldname": "region_name",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Region Name",
    "reqd": 1
+  },
+  {
+   "fieldname": "ux_dates_and_location_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Location"
   },
   {
    "fieldname": "created_at",

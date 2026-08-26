@@ -6,32 +6,27 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "take_number",
-  "parameter",
+  "ux_additional_details_section",
   "responsibility",
   "observed_count",
-  "measured_value",
-  "text_value",
   "unit",
+  "remarks",
+  "ux_quantities_and_values_section",
+  "measured_value",
+  "ux_quantities_and_values_column_2_column",
+  "text_value",
+  "ux_quality_and_results_section",
+  "take_number",
+  "parameter",
+  "ux_quality_and_results_column_2_column",
   "result_status",
-  "corrective_action_required",
-  "remarks"
+  "corrective_action_required"
  ],
  "fields": [
   {
-   "fieldname": "take_number",
-   "fieldtype": "Int",
-   "in_list_view": 1,
-   "label": "Take Number",
-   "reqd": 1
-  },
-  {
-   "fieldname": "parameter",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Inspection Attribute",
-   "options": "Inspection Parameter",
-   "reqd": 1
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
   },
   {
    "default": "Both",
@@ -49,10 +44,31 @@
    "label": "Observed Count"
   },
   {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "Unit",
+   "options": "UOM"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
+  {
    "fieldname": "measured_value",
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Measured Value"
+  },
+  {
+   "fieldname": "ux_quantities_and_values_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quantities and Values Column 2"
   },
   {
    "fieldname": "text_value",
@@ -61,10 +77,29 @@
    "label": "Text Value"
   },
   {
-   "fieldname": "unit",
+   "fieldname": "ux_quality_and_results_section",
+   "fieldtype": "Section Break",
+   "label": "Quality and Results"
+  },
+  {
+   "fieldname": "take_number",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Take Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "parameter",
    "fieldtype": "Link",
-   "label": "Unit",
-   "options": "UOM"
+   "in_list_view": 1,
+   "label": "Inspection Attribute",
+   "options": "Inspection Parameter",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_quality_and_results_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quality and Results Column 2"
   },
   {
    "default": "Not Evaluated",
@@ -82,11 +117,6 @@
    "fieldtype": "Check",
    "label": "Corrective Action Required",
    "read_only": 1
-  },
-  {
-   "fieldname": "remarks",
-   "fieldtype": "Small Text",
-   "label": "Remarks"
   }
  ],
  "istable": 1,

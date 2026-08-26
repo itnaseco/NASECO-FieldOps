@@ -5,51 +5,75 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "ux_overview_tab",
+  "ux_policy_summary_section",
   "policy_name",
   "policy_version",
+  "ux_policy_summary_column_2_column",
   "status",
-  "scope_section",
+  "ux_scope_tab",
+  "ux_policy_scope_section",
   "season",
   "crop",
   "production_category",
   "seed_class",
+  "ux_policy_scope_column_2_column",
   "currency",
   "effective_from",
   "effective_to",
-  "yield_section",
+  "ux_yield_and_price_tab",
+  "ux_yield_and_price_rules_section",
   "quota_kg_per_hectare",
   "minimum_seed_yield_kg_per_hectare",
   "excess_rate_per_kg",
+  "ux_yield_and_price_rules_column_2_column",
   "grain_item",
   "grain_rate_per_kg",
   "advance_valuation_rate",
+  "ux_pricing_bands_section",
   "pricing_bands",
-  "quality_section",
+  "ux_quality_and_bonus_tab",
+  "ux_harvest_quality_rules_section",
   "moisture_target_percent",
   "minimum_germination_percent",
   "screen_size_mm",
   "undersize_threshold_percent",
+  "ux_harvest_quality_rules_column_2_column",
   "screen_weight_deduction_percent",
   "reject_threshold_percent",
   "reject_value_deduction_percent",
-  "bonus_section",
+  "ux_deferred_genetic_purity_bonus_section",
   "high_bonus_purity_threshold",
   "high_bonus_rate_per_kg",
   "standard_bonus_purity_threshold",
+  "ux_deferred_genetic_purity_bonus_column_2_column",
   "standard_bonus_rate_per_kg",
   "bonus_payment_days",
   "bonus_requires_approval",
-  "commercial_section",
+  "ux_commercial_control_tab",
+  "ux_deadlines_and_eligibility_section",
   "payment_due_days",
   "late_interest_percent_per_month",
   "collection_due_days",
+  "ux_deadlines_and_eligibility_column_2_column",
   "blacklist_purity_threshold",
   "blacklist_consecutive_seasons",
+  "ux_approval_notes_section",
   "resolution_notes",
   "approved_by",
   "amended_from"
  ],
  "fields": [
+  {
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_policy_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Policy Summary"
+  },
   {
    "fieldname": "policy_name",
    "fieldtype": "Data",
@@ -66,6 +90,11 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_policy_summary_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Policy Summary Column 2"
+  },
+  {
    "allow_on_submit": 1,
    "default": "Draft",
    "fieldname": "status",
@@ -76,7 +105,12 @@
    "read_only": 1
   },
   {
-   "fieldname": "scope_section",
+   "fieldname": "ux_scope_tab",
+   "fieldtype": "Tab Break",
+   "label": "Scope"
+  },
+  {
+   "fieldname": "ux_policy_scope_section",
    "fieldtype": "Section Break",
    "label": "Policy Scope"
   },
@@ -112,6 +146,11 @@
    "options": "Seed Class"
   },
   {
+   "fieldname": "ux_policy_scope_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Policy Scope Column 2"
+  },
+  {
    "default": "UGX",
    "fieldname": "currency",
    "fieldtype": "Link",
@@ -132,7 +171,12 @@
    "reqd": 1
   },
   {
-   "fieldname": "yield_section",
+   "fieldname": "ux_yield_and_price_tab",
+   "fieldtype": "Tab Break",
+   "label": "Yield and Price"
+  },
+  {
+   "fieldname": "ux_yield_and_price_rules_section",
    "fieldtype": "Section Break",
    "label": "Yield and Price Rules"
   },
@@ -162,6 +206,11 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_yield_and_price_rules_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Yield and Price Rules Column 2"
+  },
+  {
    "fieldname": "grain_item",
    "fieldtype": "Link",
    "label": "Grain Item",
@@ -185,6 +234,11 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_pricing_bands_section",
+   "fieldtype": "Section Break",
+   "label": "Pricing Bands"
+  },
+  {
    "fieldname": "pricing_bands",
    "fieldtype": "Table",
    "label": "Yield and Genetic-Purity Pricing Bands",
@@ -192,7 +246,12 @@
    "reqd": 1
   },
   {
-   "fieldname": "quality_section",
+   "fieldname": "ux_quality_and_bonus_tab",
+   "fieldtype": "Tab Break",
+   "label": "Quality and Bonus"
+  },
+  {
+   "fieldname": "ux_harvest_quality_rules_section",
    "fieldtype": "Section Break",
    "label": "Harvest Quality Rules"
   },
@@ -222,6 +281,11 @@
    "label": "Maximum Seed Below Screen Size %"
   },
   {
+   "fieldname": "ux_harvest_quality_rules_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Harvest Quality Rules Column 2"
+  },
+  {
    "default": "5",
    "fieldname": "screen_weight_deduction_percent",
    "fieldtype": "Percent",
@@ -240,7 +304,7 @@
    "label": "Reject Penalty %"
   },
   {
-   "fieldname": "bonus_section",
+   "fieldname": "ux_deferred_genetic_purity_bonus_section",
    "fieldtype": "Section Break",
    "label": "Deferred Genetic-Purity Bonus"
   },
@@ -266,6 +330,11 @@
    "label": "Standard Bonus Purity Threshold %"
   },
   {
+   "fieldname": "ux_deferred_genetic_purity_bonus_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Deferred Genetic-Purity Bonus Column 2"
+  },
+  {
    "default": "50",
    "fieldname": "standard_bonus_rate_per_kg",
    "fieldtype": "Currency",
@@ -287,9 +356,14 @@
    "label": "Bonus Requires QA Approval"
   },
   {
-   "fieldname": "commercial_section",
+   "fieldname": "ux_commercial_control_tab",
+   "fieldtype": "Tab Break",
+   "label": "Commercial Control"
+  },
+  {
+   "fieldname": "ux_deadlines_and_eligibility_section",
    "fieldtype": "Section Break",
-   "label": "Commercial Deadlines and Eligibility"
+   "label": "Deadlines and Eligibility"
   },
   {
    "default": "75",
@@ -312,6 +386,11 @@
    "non_negative": 1
   },
   {
+   "fieldname": "ux_deadlines_and_eligibility_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Deadlines and Eligibility Column 2"
+  },
+  {
    "default": "85",
    "fieldname": "blacklist_purity_threshold",
    "fieldtype": "Percent",
@@ -323,6 +402,11 @@
    "fieldtype": "Int",
    "label": "Consecutive Seasons Before Eligibility Review",
    "non_negative": 1
+  },
+  {
+   "fieldname": "ux_approval_notes_section",
+   "fieldtype": "Section Break",
+   "label": "Approval Notes"
   },
   {
    "description": "Records approved interpretations of ambiguous contract wording and pricing boundaries.",

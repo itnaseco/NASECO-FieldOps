@@ -7,16 +7,28 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_details_section",
   "crop_name",
+  "ux_details_column_2_column",
   "crop_id"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
   {
    "fieldname": "crop_name",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Crop Name",
    "reqd": 1
+  },
+  {
+   "fieldname": "ux_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Details Column 2"
   },
   {
    "fieldname": "crop_id",

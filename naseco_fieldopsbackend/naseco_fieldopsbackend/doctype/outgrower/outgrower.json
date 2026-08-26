@@ -7,35 +7,58 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_overview_tab",
+  "ux_outgrower_summary_section",
   "outgrower_id",
   "full_name",
-  "identity_section",
+  "registration_date",
+  "ux_outgrower_summary_column_2_column",
+  "farmer_status",
+  "eligibility_status",
+  "status",
+  "ux_identity_and_contact_tab",
+  "ux_identity_section",
   "national_id",
   "phone",
+  "ux_identity_column_2_column",
   "email",
+  "ux_address_section",
   "village",
   "sub_county",
   "district",
   "address",
-  "registration_date",
-  "years_since_registration",
-  "farmer_status",
-  "eligibility_status",
-  "consecutive_low_purity_seasons",
   "region",
+  "ux_assignment_and_finance_tab",
+  "ux_assignment_section",
   "assigned_to",
-  "status",
   "assigned_supervisor",
-  "finance_section",
+  "ux_assignment_column_2_column",
+  "consecutive_low_purity_seasons",
+  "ux_supplier_and_payment_details_section",
   "supplier",
   "default_bank_account",
   "bank_account",
+  "ux_supplier_and_payment_details_column_2_column",
   "outgrower_type",
   "synced",
-  "section_break_farm_plots",
-  "farm_plots_html"
+  "ux_farm_plots_tab",
+  "ux_farm_plots_section",
+  "farm_plots_html",
+  "ux_additional_details_tab",
+  "ux_additional_details_section",
+  "years_since_registration"
  ],
  "fields": [
+  {
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_outgrower_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Outgrower Summary"
+  },
   {
    "fieldname": "outgrower_id",
    "fieldtype": "Data",
@@ -50,9 +73,48 @@
    "reqd": 1
   },
   {
-   "fieldname": "identity_section",
+   "fieldname": "registration_date",
+   "fieldtype": "Date",
+   "label": "Registration Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_outgrower_summary_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Outgrower Summary Column 2"
+  },
+  {
+   "fieldname": "farmer_status",
+   "fieldtype": "Select",
+   "label": "Farmer Status",
+   "options": "Beginner\nIntermediate\nExperienced\nExpert",
+   "read_only": 1
+  },
+  {
+   "default": "Eligible",
+   "fieldname": "eligibility_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Production Eligibility",
+   "options": "Eligible\nUnder Review\nIneligible",
+   "read_only": 1
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Active\nInactive\nSuspended\nBlacklisted"
+  },
+  {
+   "fieldname": "ux_identity_and_contact_tab",
+   "fieldtype": "Tab Break",
+   "label": "Identity and Contact"
+  },
+  {
+   "fieldname": "ux_identity_section",
    "fieldtype": "Section Break",
-   "label": "Identity and Contact Details"
+   "label": "Identity"
   },
   {
    "fieldname": "national_id",
@@ -67,10 +129,20 @@
    "label": "Phone"
   },
   {
+   "fieldname": "ux_identity_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Identity Column 2"
+  },
+  {
    "fieldname": "email",
    "fieldtype": "Data",
    "label": "Email",
    "options": "Email"
+  },
+  {
+   "fieldname": "ux_address_section",
+   "fieldtype": "Section Break",
+   "label": "Address"
   },
   {
    "fieldname": "village",
@@ -93,59 +165,26 @@
    "label": "Postal or Physical Address"
   },
   {
-   "fieldname": "registration_date",
-   "fieldtype": "Date",
-   "label": "Registration Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "years_since_registration",
-   "fieldtype": "Float",
-   "label": "Years Since Registration",
-   "precision": "1",
-   "read_only": 1
-  },
-  {
-   "fieldname": "farmer_status",
-   "fieldtype": "Select",
-   "label": "Farmer Status",
-   "options": "Beginner\nIntermediate\nExperienced\nExpert",
-   "read_only": 1
-  },
-  {
-   "default": "Eligible",
-   "fieldname": "eligibility_status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Production Eligibility",
-   "options": "Eligible\nUnder Review\nIneligible",
-   "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "consecutive_low_purity_seasons",
-   "fieldtype": "Int",
-   "label": "Consecutive Low-Purity Seasons",
-   "read_only": 1
-  },
-  {
    "fieldname": "region",
    "fieldtype": "Link",
    "label": "Region",
    "options": "Region"
   },
   {
+   "fieldname": "ux_assignment_and_finance_tab",
+   "fieldtype": "Tab Break",
+   "label": "Assignment and Finance"
+  },
+  {
+   "fieldname": "ux_assignment_section",
+   "fieldtype": "Section Break",
+   "label": "Assignment"
+  },
+  {
    "fieldname": "assigned_to",
    "fieldtype": "Link",
    "label": "Assigned To (Field Officer)",
    "options": "User"
-  },
-  {
-   "default": "Active",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "Status",
-   "options": "Active\nInactive\nSuspended\nBlacklisted"
   },
   {
    "description": "Only enabled System Users with the Outgrower Supervisor role can be selected.",
@@ -155,7 +194,19 @@
    "options": "User"
   },
   {
-   "fieldname": "finance_section",
+   "fieldname": "ux_assignment_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Assignment Column 2"
+  },
+  {
+   "default": "0",
+   "fieldname": "consecutive_low_purity_seasons",
+   "fieldtype": "Int",
+   "label": "Consecutive Low-Purity Seasons",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_supplier_and_payment_details_section",
    "fieldtype": "Section Break",
    "label": "Supplier and Payment Details"
   },
@@ -184,6 +235,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_supplier_and_payment_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Supplier and Payment Details Column 2"
+  },
+  {
    "fieldname": "outgrower_type",
    "fieldtype": "Select",
    "label": "Outgrower Type",
@@ -196,7 +252,12 @@
    "label": "Synced"
   },
   {
-   "fieldname": "section_break_farm_plots",
+   "fieldname": "ux_farm_plots_tab",
+   "fieldtype": "Tab Break",
+   "label": "Farm Plots"
+  },
+  {
+   "fieldname": "ux_farm_plots_section",
    "fieldtype": "Section Break",
    "label": "Farm Plots"
   },
@@ -204,6 +265,23 @@
    "fieldname": "farm_plots_html",
    "fieldtype": "HTML",
    "label": "Farm Plots Display"
+  },
+  {
+   "fieldname": "ux_additional_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Additional Details"
+  },
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
+  {
+   "fieldname": "years_since_registration",
+   "fieldtype": "Float",
+   "label": "Years Since Registration",
+   "precision": "1",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,

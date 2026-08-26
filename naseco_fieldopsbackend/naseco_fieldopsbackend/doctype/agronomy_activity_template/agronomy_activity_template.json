@@ -6,20 +6,30 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "ux_details_section",
   "activity_name",
   "crop_recipe",
   "stage_name",
+  "evidence_required",
   "day_offset_from_planting",
-  "day_offset_end",
+  "ux_details_column_2_column",
   "responsible_party",
   "priority",
   "mandatory",
-  "evidence_required",
-  "inspection_related",
   "active",
+  "ux_dates_and_location_section",
+  "day_offset_end",
+  "ux_quality_and_results_section",
+  "inspection_related",
+  "ux_notes_and_review_section",
   "description"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
   {
    "fieldname": "activity_name",
    "fieldtype": "Data",
@@ -44,6 +54,12 @@
    "reqd": 1
   },
   {
+   "default": "0",
+   "fieldname": "evidence_required",
+   "fieldtype": "Check",
+   "label": "Evidence Required"
+  },
+  {
    "fieldname": "day_offset_from_planting",
    "fieldtype": "Int",
    "in_list_view": 1,
@@ -51,9 +67,9 @@
    "reqd": 1
   },
   {
-   "fieldname": "day_offset_end",
-   "fieldtype": "Int",
-   "label": "Day Offset End"
+   "fieldname": "ux_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Details Column 2"
   },
   {
    "default": "Supervisor / Farmer",
@@ -62,12 +78,6 @@
    "in_list_view": 1,
    "label": "Responsible Party",
    "options": "Supervisor / Farmer\nSupervisor / Farmer / QA\nFarmer\nQA"
-  },
-  {
-   "default": "0",
-   "fieldname": "inspection_related",
-   "fieldtype": "Check",
-   "label": "Inspection Related"
   },
   {
    "default": "Medium",
@@ -84,17 +94,37 @@
    "label": "Mandatory"
   },
   {
-   "default": "0",
-   "fieldname": "evidence_required",
-   "fieldtype": "Check",
-   "label": "Evidence Required"
-  },
-  {
    "default": "1",
    "fieldname": "active",
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": "Active"
+  },
+  {
+   "fieldname": "ux_dates_and_location_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Location"
+  },
+  {
+   "fieldname": "day_offset_end",
+   "fieldtype": "Int",
+   "label": "Day Offset End"
+  },
+  {
+   "fieldname": "ux_quality_and_results_section",
+   "fieldtype": "Section Break",
+   "label": "Quality and Results"
+  },
+  {
+   "default": "0",
+   "fieldname": "inspection_related",
+   "fieldtype": "Check",
+   "label": "Inspection Related"
+  },
+  {
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
   },
   {
    "fieldname": "description",

@@ -4,20 +4,41 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_details_section",
+  "target_outgrowers",
+  "ux_additional_details_section",
   "resource_role",
   "user",
   "region",
-  "target_outgrowers",
   "target_hectares",
   "target_activities",
-  "target_inspections",
+  "ux_additional_details_column_2_column",
   "actual_assignments",
   "actual_completions",
   "utilization_percent",
   "active",
+  "ux_quality_and_results_section",
+  "target_inspections",
+  "ux_notes_and_review_section",
   "notes"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "target_outgrowers",
+   "fieldtype": "Int",
+   "label": "Target Outgrowers",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
   {
    "fieldname": "resource_role",
    "fieldtype": "Select",
@@ -43,12 +64,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "target_outgrowers",
-   "fieldtype": "Int",
-   "label": "Target Outgrowers",
-   "non_negative": 1
-  },
-  {
    "fieldname": "target_hectares",
    "fieldtype": "Float",
    "label": "Target Hectares",
@@ -61,10 +76,9 @@
    "non_negative": 1
   },
   {
-   "fieldname": "target_inspections",
-   "fieldtype": "Int",
-   "label": "Target Inspections",
-   "non_negative": 1
+   "fieldname": "ux_additional_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Additional Details Column 2"
   },
   {
    "fieldname": "actual_assignments",
@@ -89,6 +103,22 @@
    "fieldname": "active",
    "fieldtype": "Check",
    "label": "Active"
+  },
+  {
+   "fieldname": "ux_quality_and_results_section",
+   "fieldtype": "Section Break",
+   "label": "Quality and Results"
+  },
+  {
+   "fieldname": "target_inspections",
+   "fieldtype": "Int",
+   "label": "Target Inspections",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
   },
   {
    "fieldname": "notes",

@@ -4,31 +4,207 @@
  "autoname": "format:IRPP-{company}-{policy_version}",
  "doctype": "DocType",
  "engine": "InnoDB",
- "field_order": ["status","company","policy_version","effective_from","effective_to","default_markup_percent","cost_basis","rounding_increment","approval_threshold_percent","exceptions","approved_by","approved_on","change_reason","amended_from"],
+ "field_order": [
+  "ux_details_section",
+  "status",
+  "company",
+  "policy_version",
+  "default_markup_percent",
+  "approval_threshold_percent",
+  "change_reason",
+  "ux_dates_and_location_section",
+  "effective_from",
+  "effective_to",
+  "ux_dates_and_location_column_2_column",
+  "approved_on",
+  "amended_from",
+  "ux_quantities_and_values_section",
+  "cost_basis",
+  "ux_quantities_and_values_column_2_column",
+  "rounding_increment",
+  "ux_related_tables_section",
+  "exceptions",
+  "ux_notes_and_review_section",
+  "approved_by"
+ ],
  "fields": [
-  {"default":"Draft","fieldname":"status","fieldtype":"Select","in_list_view":1,"label":"Status","options":"Draft\nActive\nRetired\nCancelled","read_only":1},
-  {"fieldname":"company","fieldtype":"Link","in_list_view":1,"label":"Company","options":"Company","reqd":1},
-  {"fieldname":"policy_version","fieldtype":"Data","in_list_view":1,"label":"Policy Version","reqd":1},
-  {"default":"Today","fieldname":"effective_from","fieldtype":"Date","label":"Effective From","reqd":1},
-  {"fieldname":"effective_to","fieldtype":"Date","label":"Effective To"},
-  {"default":"10","fieldname":"default_markup_percent","fieldtype":"Percent","label":"Default Risk Markup %","reqd":1},
-  {"default":"Stock Valuation","fieldname":"cost_basis","fieldtype":"Select","label":"Cost Basis","options":"Purchase Receipt Landed Rate\nStock Valuation\nStandard Rate\nContract Rate","reqd":1},
-  {"default":"1","description":"Round the final recovery rate up to this currency increment.","fieldname":"rounding_increment","fieldtype":"Currency","label":"Recovery Rate Rounding Increment"},
-  {"default":"20","fieldname":"approval_threshold_percent","fieldtype":"Percent","label":"Enhanced Approval Threshold %"},
-  {"fieldname":"exceptions","fieldtype":"Table","label":"Markup Exceptions","options":"Input Recovery Pricing Exception"},
-  {"fieldname":"approved_by","fieldtype":"Link","label":"Approved By","options":"User","read_only":1},
-  {"fieldname":"approved_on","fieldtype":"Datetime","label":"Approved On","read_only":1},
-  {"fieldname":"change_reason","fieldtype":"Small Text","label":"Change Reason"},
-  {"fieldname":"amended_from","fieldtype":"Link","label":"Amended From","options":"Input Recovery Pricing Policy","read_only":1}
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nActive\nRetired\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "policy_version",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Policy Version",
+   "reqd": 1
+  },
+  {
+   "default": "10",
+   "fieldname": "default_markup_percent",
+   "fieldtype": "Percent",
+   "label": "Default Risk Markup %",
+   "reqd": 1
+  },
+  {
+   "default": "20",
+   "fieldname": "approval_threshold_percent",
+   "fieldtype": "Percent",
+   "label": "Enhanced Approval Threshold %"
+  },
+  {
+   "fieldname": "change_reason",
+   "fieldtype": "Small Text",
+   "label": "Change Reason"
+  },
+  {
+   "fieldname": "ux_dates_and_location_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Location"
+  },
+  {
+   "default": "Today",
+   "fieldname": "effective_from",
+   "fieldtype": "Date",
+   "label": "Effective From",
+   "reqd": 1
+  },
+  {
+   "fieldname": "effective_to",
+   "fieldtype": "Date",
+   "label": "Effective To"
+  },
+  {
+   "fieldname": "ux_dates_and_location_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Dates and Location Column 2"
+  },
+  {
+   "fieldname": "approved_on",
+   "fieldtype": "Datetime",
+   "label": "Approved On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "options": "Input Recovery Pricing Policy",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
+  {
+   "default": "Stock Valuation",
+   "fieldname": "cost_basis",
+   "fieldtype": "Select",
+   "label": "Cost Basis",
+   "options": "Purchase Receipt Landed Rate\nStock Valuation\nStandard Rate\nContract Rate",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quantities and Values Column 2"
+  },
+  {
+   "default": "1",
+   "description": "Round the final recovery rate up to this currency increment.",
+   "fieldname": "rounding_increment",
+   "fieldtype": "Currency",
+   "label": "Recovery Rate Rounding Increment"
+  },
+  {
+   "fieldname": "ux_related_tables_section",
+   "fieldtype": "Section Break",
+   "label": "Related Tables"
+  },
+  {
+   "fieldname": "exceptions",
+   "fieldtype": "Table",
+   "label": "Markup Exceptions",
+   "options": "Input Recovery Pricing Exception"
+  },
+  {
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Approved By",
+   "options": "User",
+   "read_only": 1
+  }
  ],
  "is_submittable": 1,
  "module": "Naseco FieldOpsBackend",
  "name": "Input Recovery Pricing Policy",
  "permissions": [
-  {"cancel":1,"create":1,"delete":1,"email":1,"export":1,"print":1,"read":1,"report":1,"role":"System Manager","share":1,"submit":1,"write":1},
-  {"cancel":1,"create":1,"email":1,"export":1,"print":1,"read":1,"report":1,"role":"Finance Manager","submit":1,"write":1},
-  {"create":1,"email":1,"export":1,"print":1,"read":1,"report":1,"role":"Outgrower Manager","write":1},
-  {"read":1,"report":1,"role":"Outgrower Supervisor"}
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Finance Manager",
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Supervisor"
+  }
  ],
- "sort_field":"modified","sort_order":"DESC"
+ "sort_field": "modified",
+ "sort_order": "DESC"
 }

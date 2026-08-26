@@ -6,14 +6,22 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_details_section",
   "season_name",
   "season_id",
+  "ux_details_column_2_column",
   "season_status",
-  "period_section",
+  "ux_dates_and_location_section",
   "start_date",
+  "ux_dates_and_location_column_2_column",
   "end_date"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
   {
    "fieldname": "season_name",
    "fieldtype": "Data",
@@ -28,6 +36,11 @@
    "unique": 1
   },
   {
+   "fieldname": "ux_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Details Column 2"
+  },
+  {
    "default": "Not Started",
    "fieldname": "season_status",
    "fieldtype": "Select",
@@ -37,9 +50,9 @@
    "read_only": 1
   },
   {
-   "fieldname": "period_section",
+   "fieldname": "ux_dates_and_location_section",
    "fieldtype": "Section Break",
-   "label": "Season Period"
+   "label": "Dates and Location"
   },
   {
    "fieldname": "start_date",
@@ -47,6 +60,11 @@
    "in_list_view": 1,
    "label": "Start Date",
    "reqd": 1
+  },
+  {
+   "fieldname": "ux_dates_and_location_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Dates and Location Column 2"
   },
   {
    "fieldname": "end_date",

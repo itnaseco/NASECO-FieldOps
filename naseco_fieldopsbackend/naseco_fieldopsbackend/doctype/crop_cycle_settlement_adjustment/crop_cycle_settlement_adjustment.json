@@ -5,13 +5,23 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_details_section",
   "adjustment_type",
-  "description",
+  "ux_additional_details_section",
   "add_or_deduct",
+  "ux_quantities_and_values_section",
   "account",
-  "amount"
+  "ux_quantities_and_values_column_2_column",
+  "amount",
+  "ux_notes_and_review_section",
+  "description"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
   {
    "fieldname": "adjustment_type",
    "fieldtype": "Select",
@@ -20,11 +30,9 @@
    "options": "Quality Deduction\nQuality Bonus\nCommercial Adjustment\nOther"
   },
   {
-   "fieldname": "description",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Description",
-   "reqd": 1
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
   },
   {
    "default": "Deduct",
@@ -36,6 +44,11 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
+  {
    "fieldname": "account",
    "fieldtype": "Link",
    "label": "Account",
@@ -43,10 +56,27 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_quantities_and_values_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quantities and Values Column 2"
+  },
+  {
    "fieldname": "amount",
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Amount",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
    "reqd": 1
   }
  ],

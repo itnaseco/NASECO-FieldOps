@@ -5,65 +5,81 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "ux_overview_tab",
+  "ux_plan_summary_section",
   "plan_title",
   "season",
   "company",
+  "ux_plan_summary_column_2_column",
   "plan_version",
   "status",
   "calendar_status",
-  "governance_section",
+  "ux_governance_tab",
+  "ux_responsible_teams_section",
   "outgrower_manager",
   "quality_manager",
+  "ux_responsible_teams_column_2_column",
   "finance_approver",
   "stores_responsible",
+  "ux_financial_controls_section",
   "cost_center",
   "project",
+  "ux_financial_controls_column_2_column",
   "budget",
   "maximum_exposure_percent",
-  "targets_section",
+  "ux_targets_tab",
+  "ux_production_targets_section",
   "production_targets",
-  "baseline_section",
+  "ux_approved_baseline_section",
   "target_outgrowers",
   "target_plots",
   "target_hectares",
   "target_acres",
+  "ux_approved_baseline_column_2_column",
   "planned_production_qty",
-  "female_parent_seed_required_qty",
-  "male_parent_seed_required_qty",
   "parent_seed_required_qty",
   "planned_input_cost",
-  "parent_seed_requirements_section",
-  "parent_seed_requirements",
-  "input_section",
+  "ux_inputs_and_seed_tab",
+  "ux_input_requirements_section",
   "input_requirements",
   "stock_coverage_percent",
-  "resource_section",
+  "ux_parent_seed_requirements_section",
+  "parent_seed_requirements",
+  "female_parent_seed_required_qty",
+  "male_parent_seed_required_qty",
+  "ux_workforce_and_milestones_tab",
+  "ux_mobile_workforce_allocation_section",
   "resource_allocations",
   "planned_supervisors",
   "planned_inspectors",
-  "milestone_section",
+  "ux_season_milestones_section",
   "milestones",
-  "readiness_section",
+  "ux_readiness_tab",
+  "ux_readiness_evidence_section",
   "readiness_items",
   "readiness_score",
   "mandatory_readiness_complete",
-  "actuals_section",
+  "ux_actuals_and_variance_tab",
+  "ux_operational_actuals_section",
   "contracted_outgrowers",
   "contracted_plots",
   "contracted_hectares",
   "planted_hectares",
   "forecast_production_qty",
+  "ux_operational_actuals_column_2_column",
   "delivered_net_dry_qty",
   "verified_inspection_count",
   "total_inspection_count",
   "qa_coverage_percent",
+  "ux_financial_actuals_section",
   "recoverable_input_value",
   "cash_advance_value",
   "current_exposure_value",
+  "ux_financial_actuals_column_2_column",
   "assessed_harvest_value",
   "settled_net_payable",
   "deferred_bonus_liability",
-  "variance_section",
+  "ux_plan_variance_section",
   "area_achievement_percent",
   "production_achievement_percent",
   "forecast_variance_qty",
@@ -71,6 +87,16 @@
   "amended_from"
  ],
  "fields": [
+  {
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_plan_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Plan Summary"
+  },
   {
    "fieldname": "plan_title",
    "fieldtype": "Data",
@@ -93,6 +119,11 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "ux_plan_summary_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Plan Summary Column 2"
   },
   {
    "default": "1",
@@ -119,9 +150,14 @@
    "read_only": 1
   },
   {
-   "fieldname": "governance_section",
+   "fieldname": "ux_governance_tab",
+   "fieldtype": "Tab Break",
+   "label": "Governance"
+  },
+  {
+   "fieldname": "ux_responsible_teams_section",
    "fieldtype": "Section Break",
-   "label": "Governance and Financial Control"
+   "label": "Responsible Teams"
   },
   {
    "fieldname": "outgrower_manager",
@@ -138,6 +174,11 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_responsible_teams_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Responsible Teams Column 2"
+  },
+  {
    "fieldname": "finance_approver",
    "fieldtype": "Link",
    "label": "Finance Approver",
@@ -152,6 +193,11 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_financial_controls_section",
+   "fieldtype": "Section Break",
+   "label": "Financial Controls"
+  },
+  {
    "fieldname": "cost_center",
    "fieldtype": "Link",
    "label": "Cost Center",
@@ -162,6 +208,11 @@
    "fieldtype": "Link",
    "label": "Project",
    "options": "Project"
+  },
+  {
+   "fieldname": "ux_financial_controls_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Financial Controls Column 2"
   },
   {
    "fieldname": "budget",
@@ -177,7 +228,12 @@
    "reqd": 1
   },
   {
-   "fieldname": "targets_section",
+   "fieldname": "ux_targets_tab",
+   "fieldtype": "Tab Break",
+   "label": "Targets"
+  },
+  {
+   "fieldname": "ux_production_targets_section",
    "fieldtype": "Section Break",
    "label": "Production Targets"
   },
@@ -189,7 +245,7 @@
    "reqd": 1
   },
   {
-   "fieldname": "baseline_section",
+   "fieldname": "ux_approved_baseline_section",
    "fieldtype": "Section Break",
    "label": "Approved Baseline"
   },
@@ -221,6 +277,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_approved_baseline_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Approved Baseline Column 2"
+  },
+  {
    "fieldname": "planned_production_qty",
    "fieldtype": "Float",
    "label": "Planned Production (Kg)",
@@ -239,9 +300,14 @@
    "read_only": 1
   },
   {
-   "fieldname": "input_section",
+   "fieldname": "ux_inputs_and_seed_tab",
+   "fieldtype": "Tab Break",
+   "label": "Inputs and Seed"
+  },
+  {
+   "fieldname": "ux_input_requirements_section",
    "fieldtype": "Section Break",
-   "label": "Season Input Requirements"
+   "label": "Input Requirements"
   },
   {
    "fieldname": "input_requirements",
@@ -258,7 +324,38 @@
    "read_only": 1
   },
   {
-   "fieldname": "resource_section",
+   "fieldname": "ux_parent_seed_requirements_section",
+   "fieldtype": "Section Break",
+   "label": "Parent Seed Requirements"
+  },
+  {
+   "cannot_add_rows": 1,
+   "cannot_delete_rows": 1,
+   "fieldname": "parent_seed_requirements",
+   "fieldtype": "Table",
+   "label": "Parent Seed Requirements by Recipe and Role",
+   "options": "Season Parent Seed Requirement",
+   "read_only": 1
+  },
+  {
+   "fieldname": "female_parent_seed_required_qty",
+   "fieldtype": "Float",
+   "label": "Female Parent Seed Required (Stock Qty)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "male_parent_seed_required_qty",
+   "fieldtype": "Float",
+   "label": "Male Parent Seed Required (Stock Qty)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_workforce_and_milestones_tab",
+   "fieldtype": "Tab Break",
+   "label": "Workforce and Milestones"
+  },
+  {
+   "fieldname": "ux_mobile_workforce_allocation_section",
    "fieldtype": "Section Break",
    "label": "Mobile Workforce Allocation"
   },
@@ -281,7 +378,7 @@
    "read_only": 1
   },
   {
-   "fieldname": "milestone_section",
+   "fieldname": "ux_season_milestones_section",
    "fieldtype": "Section Break",
    "label": "Season Milestones"
   },
@@ -292,9 +389,14 @@
    "options": "Season Milestone"
   },
   {
-   "fieldname": "readiness_section",
+   "fieldname": "ux_readiness_tab",
+   "fieldtype": "Tab Break",
+   "label": "Readiness"
+  },
+  {
+   "fieldname": "ux_readiness_evidence_section",
    "fieldtype": "Section Break",
-   "label": "Readiness and Approval Evidence"
+   "label": "Readiness Evidence"
   },
   {
    "fieldname": "readiness_items",
@@ -316,9 +418,14 @@
    "read_only": 1
   },
   {
-   "fieldname": "actuals_section",
+   "fieldname": "ux_actuals_and_variance_tab",
+   "fieldtype": "Tab Break",
+   "label": "Actuals and Variance"
+  },
+  {
+   "fieldname": "ux_operational_actuals_section",
    "fieldtype": "Section Break",
-   "label": "System-Derived Forecast and Actuals"
+   "label": "Operational Actuals"
   },
   {
    "fieldname": "contracted_outgrowers",
@@ -336,14 +443,14 @@
    "fieldname": "contracted_hectares",
    "fieldtype": "Float",
    "label": "Contracted Hectares",
-	"precision": 4,
+   "precision": 4,
    "read_only": 1
   },
   {
    "fieldname": "planted_hectares",
    "fieldtype": "Float",
    "label": "Planted Hectares",
-	"precision": 4,
+   "precision": 4,
    "read_only": 1
   },
   {
@@ -351,6 +458,11 @@
    "fieldtype": "Float",
    "label": "Current Forecast Production (Kg)",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_operational_actuals_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Operational Actuals Column 2"
   },
   {
    "fieldname": "delivered_net_dry_qty",
@@ -377,6 +489,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_financial_actuals_section",
+   "fieldtype": "Section Break",
+   "label": "Financial Actuals"
+  },
+  {
    "fieldname": "recoverable_input_value",
    "fieldtype": "Currency",
    "label": "Recoverable Input Value",
@@ -393,6 +510,11 @@
    "fieldtype": "Currency",
    "label": "Current Exposure",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_financial_actuals_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Financial Actuals Column 2"
   },
   {
    "fieldname": "assessed_harvest_value",
@@ -413,7 +535,7 @@
    "read_only": 1
   },
   {
-   "fieldname": "variance_section",
+   "fieldname": "ux_plan_variance_section",
    "fieldtype": "Section Break",
    "label": "Plan Variance"
   },
@@ -447,32 +569,6 @@
    "no_copy": 1,
    "options": "Season Production Plan",
    "print_hide": 1,
-   "read_only": 1
-  },
-  {
-   "fieldname": "parent_seed_requirements_section",
-   "fieldtype": "Section Break",
-   "label": "Generated Parent Seed Requirements"
-  },
-  {
-   "cannot_add_rows": 1,
-   "cannot_delete_rows": 1,
-   "fieldname": "parent_seed_requirements",
-   "fieldtype": "Table",
-   "label": "Parent Seed Requirements by Recipe and Role",
-   "options": "Season Parent Seed Requirement",
-   "read_only": 1
-  },
-  {
-   "fieldname": "female_parent_seed_required_qty",
-   "fieldtype": "Float",
-   "label": "Female Parent Seed Required (Stock Qty)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "male_parent_seed_required_qty",
-   "fieldtype": "Float",
-   "label": "Male Parent Seed Required (Stock Qty)",
    "read_only": 1
   }
  ],

@@ -5,33 +5,34 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "ux_details_section",
   "report_name",
-  "report_number",
   "stage_name",
-  "window_start_day",
-  "window_end_day",
-  "active",
-  "standards_section",
-  "template_version",
-  "overall_pass_threshold_percent",
   "critical_failure_override",
-  "parameters",
-  "instructions"
+  "report_number",
+  "active",
+  "overall_pass_threshold_percent",
+  "instructions",
+  "ux_dates_and_location_section",
+  "window_start_day",
+  "ux_dates_and_location_column_2_column",
+  "window_end_day",
+  "ux_location_and_map_section",
+  "template_version",
+  "ux_related_tables_section",
+  "parameters"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
   {
    "fieldname": "report_name",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Report Name",
-   "reqd": 1,
-   "unique": 1
-  },
-  {
-   "fieldname": "report_number",
-   "fieldtype": "Int",
-   "in_list_view": 1,
-   "label": "Report Number",
    "reqd": 1,
    "unique": 1
   },
@@ -44,16 +45,18 @@
    "reqd": 1
   },
   {
-   "fieldname": "window_start_day",
-   "fieldtype": "Int",
-   "label": "Window Start Day",
-   "reqd": 1
+   "default": "1",
+   "fieldname": "critical_failure_override",
+   "fieldtype": "Check",
+   "label": "Critical Failure Overrides Score"
   },
   {
-   "fieldname": "window_end_day",
+   "fieldname": "report_number",
    "fieldtype": "Int",
-   "label": "Window End Day",
-   "reqd": 1
+   "in_list_view": 1,
+   "label": "Report Number",
+   "reqd": 1,
+   "unique": 1
   },
   {
    "default": "1",
@@ -63,9 +66,43 @@
    "label": "Active"
   },
   {
-   "fieldname": "standards_section",
+   "default": "100",
+   "fieldname": "overall_pass_threshold_percent",
+   "fieldtype": "Percent",
+   "label": "Overall Pass Threshold",
+   "reqd": 1
+  },
+  {
+   "fieldname": "instructions",
+   "fieldtype": "Text Editor",
+   "label": "Instructions"
+  },
+  {
+   "fieldname": "ux_dates_and_location_section",
    "fieldtype": "Section Break",
-   "label": "Evaluation Standard"
+   "label": "Dates and Location"
+  },
+  {
+   "fieldname": "window_start_day",
+   "fieldtype": "Int",
+   "label": "Window Start Day",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_dates_and_location_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Dates and Location Column 2"
+  },
+  {
+   "fieldname": "window_end_day",
+   "fieldtype": "Int",
+   "label": "Window End Day",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_location_and_map_section",
+   "fieldtype": "Section Break",
+   "label": "Location and Map"
   },
   {
    "default": "1",
@@ -75,17 +112,9 @@
    "reqd": 1
   },
   {
-   "default": "100",
-   "fieldname": "overall_pass_threshold_percent",
-   "fieldtype": "Percent",
-   "label": "Overall Pass Threshold",
-   "reqd": 1
-  },
-  {
-   "default": "1",
-   "fieldname": "critical_failure_override",
-   "fieldtype": "Check",
-   "label": "Critical Failure Overrides Score"
+   "fieldname": "ux_related_tables_section",
+   "fieldtype": "Section Break",
+   "label": "Related Tables"
   },
   {
    "fieldname": "parameters",
@@ -93,11 +122,6 @@
    "label": "Report Parameters",
    "options": "Agronomy Report Parameter",
    "reqd": 1
-  },
-  {
-   "fieldname": "instructions",
-   "fieldtype": "Text Editor",
-   "label": "Instructions"
   }
  ],
  "links": [],

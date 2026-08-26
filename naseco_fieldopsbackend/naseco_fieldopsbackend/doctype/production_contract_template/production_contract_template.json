@@ -5,45 +5,51 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "template_name",
-  "template_version",
+  "ux_overview_tab",
+  "ux_summary_section",
   "status",
-  "scope_section",
   "season",
   "crop",
   "production_category",
   "seed_class",
-  "pricing_policy",
-  "effective_from",
-  "effective_to",
-  "reference_section",
   "agreement_title",
-  "seed_handbook_reference",
-  "legal_reference",
   "company_responsibilities",
   "farmer_responsibilities",
   "supervisor_responsibilities",
-  "quality_terms",
-  "input_recovery_terms",
   "termination_terms",
-  "approved_by",
-  "amended_from"
+  "seed_handbook_reference",
+  "ux_planning_and_location_tab",
+  "ux_dates_and_schedule_section",
+  "effective_from",
+  "effective_to",
+  "ux_dates_and_schedule_column_2_column",
+  "amended_from",
+  "ux_location_and_map_section",
+  "template_name",
+  "ux_location_and_map_column_2_column",
+  "template_version",
+  "ux_commercials_tab",
+  "ux_financial_and_quantity_details_section",
+  "pricing_policy",
+  "input_recovery_terms",
+  "ux_quality_tab",
+  "ux_quality_and_results_section",
+  "legal_reference",
+  "quality_terms",
+  "ux_review_and_notes_tab",
+  "ux_notes_and_audit_section",
+  "approved_by"
  ],
  "fields": [
   {
-   "fieldname": "template_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Template Name",
-   "reqd": 1,
-   "unique": 1
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
   },
   {
-   "default": "1",
-   "fieldname": "template_version",
-   "fieldtype": "Data",
-   "label": "Version",
-   "reqd": 1
+   "fieldname": "ux_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Summary"
   },
   {
    "allow_on_submit": 1,
@@ -54,11 +60,6 @@
    "label": "Status",
    "options": "Draft\nActive\nRetired\nCancelled",
    "read_only": 1
-  },
-  {
-   "fieldname": "scope_section",
-   "fieldtype": "Section Break",
-   "label": "Template Scope"
   },
   {
    "fieldname": "season",
@@ -90,47 +91,10 @@
    "options": "Seed Class"
   },
   {
-   "fieldname": "pricing_policy",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Pricing Policy",
-   "options": "Outgrower Pricing Policy",
-   "reqd": 1
-  },
-  {
-   "fieldname": "effective_from",
-   "fieldtype": "Date",
-   "label": "Effective From",
-   "reqd": 1
-  },
-  {
-   "fieldname": "effective_to",
-   "fieldtype": "Date",
-   "label": "Effective To",
-   "reqd": 1
-  },
-  {
-   "fieldname": "reference_section",
-   "fieldtype": "Section Break",
-   "label": "Agreement References and Terms"
-  },
-  {
    "default": "Out Growers Agreement for Seed Production",
    "fieldname": "agreement_title",
    "fieldtype": "Data",
    "label": "Agreement Title",
-   "reqd": 1
-  },
-  {
-   "fieldname": "seed_handbook_reference",
-   "fieldtype": "Data",
-   "label": "Seed Production Handbook Reference",
-   "reqd": 1
-  },
-  {
-   "fieldname": "legal_reference",
-   "fieldtype": "Small Text",
-   "label": "Legal and Certification References",
    "reqd": 1
   },
   {
@@ -152,9 +116,94 @@
    "reqd": 1
   },
   {
-   "fieldname": "quality_terms",
+   "fieldname": "termination_terms",
    "fieldtype": "Text Editor",
-   "label": "Quality and Certification Terms",
+   "label": "Termination and Crop Ownership Terms",
+   "reqd": 1
+  },
+  {
+   "fieldname": "seed_handbook_reference",
+   "fieldtype": "Data",
+   "label": "Seed Production Handbook Reference",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_planning_and_location_tab",
+   "fieldtype": "Tab Break",
+   "label": "Planning and Location"
+  },
+  {
+   "fieldname": "ux_dates_and_schedule_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Schedule"
+  },
+  {
+   "fieldname": "effective_from",
+   "fieldtype": "Date",
+   "label": "Effective From",
+   "reqd": 1
+  },
+  {
+   "fieldname": "effective_to",
+   "fieldtype": "Date",
+   "label": "Effective To",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_dates_and_schedule_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Dates and Schedule Column 2"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Production Contract Template",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_location_and_map_section",
+   "fieldtype": "Section Break",
+   "label": "Location and Map"
+  },
+  {
+   "fieldname": "template_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Template Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "ux_location_and_map_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Location and Map Column 2"
+  },
+  {
+   "default": "1",
+   "fieldname": "template_version",
+   "fieldtype": "Data",
+   "label": "Version",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_commercials_tab",
+   "fieldtype": "Tab Break",
+   "label": "Commercials"
+  },
+  {
+   "fieldname": "ux_financial_and_quantity_details_section",
+   "fieldtype": "Section Break",
+   "label": "Financial and Quantity Details"
+  },
+  {
+   "fieldname": "pricing_policy",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Pricing Policy",
+   "options": "Outgrower Pricing Policy",
    "reqd": 1
   },
   {
@@ -164,25 +213,42 @@
    "reqd": 1
   },
   {
-   "fieldname": "termination_terms",
-   "fieldtype": "Text Editor",
-   "label": "Termination and Crop Ownership Terms",
+   "fieldname": "ux_quality_tab",
+   "fieldtype": "Tab Break",
+   "label": "Quality"
+  },
+  {
+   "fieldname": "ux_quality_and_results_section",
+   "fieldtype": "Section Break",
+   "label": "Quality and Results"
+  },
+  {
+   "fieldname": "legal_reference",
+   "fieldtype": "Small Text",
+   "label": "Legal and Certification References",
    "reqd": 1
+  },
+  {
+   "fieldname": "quality_terms",
+   "fieldtype": "Text Editor",
+   "label": "Quality and Certification Terms",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_review_and_notes_tab",
+   "fieldtype": "Tab Break",
+   "label": "Review and Notes"
+  },
+  {
+   "fieldname": "ux_notes_and_audit_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Audit"
   },
   {
    "fieldname": "approved_by",
    "fieldtype": "Link",
    "label": "Approved By",
    "options": "User",
-   "read_only": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Production Contract Template",
-   "print_hide": 1,
    "read_only": 1
   }
  ],

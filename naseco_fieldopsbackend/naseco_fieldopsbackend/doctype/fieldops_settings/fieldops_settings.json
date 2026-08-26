@@ -1,324 +1,432 @@
 {
-  "actions": [],
-  "creation": "2026-07-26 00:00:00.000000",
-  "doctype": "DocType",
-  "engine": "InnoDB",
-  "field_order": [
-    "accepted_seed_warehouse",
-    "accuracy_section",
-    "advance_paid_account",
-    "allow_positioning_override",
-    "approvals_section",
-    "company",
-    "default_mode_of_payment",
-    "default_payment_account",
-    "default_source_warehouse",
-    "exposure_section",
-    "finance_accounts_section",
-    "finance_approver",
-    "finance_section",
-    "grain_warehouse",
-    "harvest_qa_haircut_percent",
-    "harvest_quarantine_warehouse",
-    "harvest_warehouse",
-    "input_subsidy_account",
-    "location_capture_timeout_seconds",
-    "maximum_exposure_percent",
-    "maximum_gps_accuracy_m",
-    "maximum_location_age_seconds",
-    "maximum_take_spacing_m",
-    "minimum_location_samples",
-    "minimum_spacing_compliance_percent",
-    "minimum_take_spacing_m",
-    "naming_section",
-    "auto_generate_plot_ids",
-    "plot_alpha_suffix_limit",
-    "outgrower_supplier_group",
-    "override_section",
-    "positioning_override_role",
-    "preferred_gps_accuracy_m",
-    "recoverable_inputs_account",
-    "reject_warehouse",
-    "require_purchase_order_for_advance",
-    "spacing_section",
-    "stores_approver",
-    "target_take_spacing_m"
-  ],
-  "fields": [
-    {
-      "fieldname": "accepted_seed_warehouse",
-      "fieldtype": "Link",
-      "label": "Accepted Seed Warehouse",
-      "options": "Warehouse"
-    },
-    {
-      "fieldname": "accuracy_section",
-      "fieldtype": "Section Break",
-      "label": "GPS Acquisition"
-    },
-    {
-      "fieldname": "advance_paid_account",
-      "fieldtype": "Link",
-      "label": "Supplier Advance Paid Account",
-      "options": "Account",
-      "reqd": 1
-    },
-    {
-      "default": "1",
-      "fieldname": "allow_positioning_override",
-      "fieldtype": "Check",
-      "label": "Allow Positioning Override"
-    },
-    {
-      "fieldname": "approvals_section",
-      "fieldtype": "Section Break",
-      "label": "Operational Approvers"
-    },
-    {
-      "fieldname": "company",
-      "fieldtype": "Link",
-      "label": "Company",
-      "options": "Company",
-      "reqd": 1
-    },
-    {
-      "fieldname": "default_mode_of_payment",
-      "fieldtype": "Link",
-      "label": "Default Mode of Payment",
-      "options": "Mode of Payment"
-    },
-    {
-      "fieldname": "default_payment_account",
-      "fieldtype": "Link",
-      "label": "Default Advance Payment Account",
-      "options": "Account",
-      "reqd": 1
-    },
-    {
-      "fieldname": "default_source_warehouse",
-      "fieldtype": "Link",
-      "label": "Default Input Source Warehouse",
-      "options": "Warehouse",
-      "reqd": 1
-    },
-    {
-      "fieldname": "exposure_section",
-      "fieldtype": "Section Break",
-      "label": "Crop Cycle Exposure Controls"
-    },
-    {
-      "fieldname": "finance_accounts_section",
-      "fieldtype": "Section Break",
-      "label": "Accounts and Payment Defaults"
-    },
-    {
-      "fieldname": "finance_approver",
-      "fieldtype": "Link",
-      "label": "Finance Approver",
-      "options": "User"
-    },
-    {
-      "fieldname": "finance_section",
-      "fieldtype": "Section Break",
-      "label": "Outgrower Finance Integration"
-    },
-    {
-      "fieldname": "grain_warehouse",
-      "fieldtype": "Link",
-      "label": "Grain Downgrade Warehouse",
-      "options": "Warehouse"
-    },
-    {
-      "default": "10",
-      "description": "Risk haircut applied by managers when assessing forecast harvest cover.",
-      "fieldname": "harvest_qa_haircut_percent",
-      "fieldtype": "Percent",
-      "label": "Harvest QA Haircut %",
-      "reqd": 1
-    },
-    {
-      "fieldname": "harvest_quarantine_warehouse",
-      "fieldtype": "Link",
-      "label": "Harvest Quarantine Warehouse",
-      "options": "Warehouse"
-    },
-    {
-      "fieldname": "harvest_warehouse",
-      "fieldtype": "Link",
-      "label": "Harvest Receipt Warehouse",
-      "options": "Warehouse",
-      "reqd": 1
-    },
-    {
-      "fieldname": "input_subsidy_account",
-      "fieldtype": "Link",
-      "label": "Input Subsidy Expense Account",
-      "options": "Account",
-      "reqd": 1
-    },
-    {
-      "default": "30",
-      "fieldname": "location_capture_timeout_seconds",
-      "fieldtype": "Int",
-      "label": "Location Capture Timeout (seconds)",
-      "reqd": 1
-    },
-    {
-      "default": "70",
-      "description": "Maximum committed recoverable inputs and advances as a percentage of forecast harvest value.",
-      "fieldname": "maximum_exposure_percent",
-      "fieldtype": "Percent",
-      "label": "Maximum Exposure %",
-      "reqd": 1
-    },
-    {
-      "default": "5",
-      "description": "A take above this uncertainty radius requires an authorized override.",
-      "fieldname": "maximum_gps_accuracy_m",
-      "fieldtype": "Float",
-      "label": "Maximum GPS Accuracy (m)",
-      "reqd": 1
-    },
-    {
-      "default": "60",
-      "description": "Maximum age of the selected device location fix when it reaches the server.",
-      "fieldname": "maximum_location_age_seconds",
-      "fieldtype": "Int",
-      "label": "Maximum Location Age (seconds)",
-      "reqd": 1
-    },
-    {
-      "default": "7",
-      "fieldname": "maximum_take_spacing_m",
-      "fieldtype": "Float",
-      "label": "Maximum Take Spacing (m)",
-      "reqd": 1
-    },
-    {
-      "default": "3",
-      "fieldname": "minimum_location_samples",
-      "fieldtype": "Int",
-      "label": "Minimum Stable Location Samples",
-      "reqd": 1
-    },
-    {
-      "default": "80",
-      "description": "Minimum percentage of spacing segments that must comply for acceptable inspection quality.",
-      "fieldname": "minimum_spacing_compliance_percent",
-      "fieldtype": "Percent",
-      "label": "Minimum Spacing Compliance %",
-      "reqd": 1
-    },
-    {
-      "default": "3",
-      "fieldname": "minimum_take_spacing_m",
-      "fieldtype": "Float",
-      "label": "Minimum Take Spacing (m)",
-      "reqd": 1
-    },
-    {
-      "fieldname": "naming_section",
-      "fieldtype": "Section Break",
-      "label": "Farm Plot Naming"
-    },
-    {
-      "default": "1",
-      "description": "Generate Farm Plot IDs from the Outgrower ID and an alphabetic suffix, for example H-001-A.",
-      "fieldname": "auto_generate_plot_ids",
-      "fieldtype": "Check",
-      "label": "Automatically Generate Farm Plot IDs"
-    },
-    {
-      "default": "2",
-      "description": "Maximum suffix letters. A value of 2 supports A to ZZ per outgrower.",
-      "fieldname": "plot_alpha_suffix_limit",
-      "fieldtype": "Int",
-      "label": "Maximum Plot Suffix Letters"
-    },
-    {
-      "fieldname": "outgrower_supplier_group",
-      "fieldtype": "Link",
-      "label": "Outgrower Supplier Group",
-      "options": "Supplier Group",
-      "reqd": 1
-    },
-    {
-      "fieldname": "override_section",
-      "fieldtype": "Section Break",
-      "label": "Controlled Override"
-    },
-    {
-      "default": "System Manager",
-      "depends_on": "eval:doc.allow_positioning_override",
-      "fieldname": "positioning_override_role",
-      "fieldtype": "Link",
-      "label": "Positioning Override Role",
-      "mandatory_depends_on": "eval:doc.allow_positioning_override",
-      "options": "Role"
-    },
-    {
-      "default": "3",
-      "description": "Accuracy at or below this value is graded Good.",
-      "fieldname": "preferred_gps_accuracy_m",
-      "fieldtype": "Float",
-      "label": "Preferred GPS Accuracy (m)",
-      "reqd": 1
-    },
-    {
-      "description": "Current asset account debited when recoverable stock inputs are issued.",
-      "fieldname": "recoverable_inputs_account",
-      "fieldtype": "Link",
-      "label": "Recoverable Outgrower Inputs Account",
-      "options": "Account",
-      "reqd": 1
-    },
-    {
-      "fieldname": "reject_warehouse",
-      "fieldtype": "Link",
-      "label": "Harvest Reject Warehouse",
-      "options": "Warehouse"
-    },
-    {
-      "default": "1",
-      "fieldname": "require_purchase_order_for_advance",
-      "fieldtype": "Check",
-      "label": "Require Submitted Purchase Order for Advances"
-    },
-    {
-      "fieldname": "spacing_section",
-      "fieldtype": "Section Break",
-      "label": "Inspection Take Spacing"
-    },
-    {
-      "fieldname": "stores_approver",
-      "fieldtype": "Link",
-      "label": "Stores Approver",
-      "options": "User"
-    },
-    {
-      "default": "5",
-      "description": "Required physical distance between consecutive inspection takes.",
-      "fieldname": "target_take_spacing_m",
-      "fieldtype": "Float",
-      "label": "Target Take Spacing (m)",
-      "reqd": 1
-    }
-  ],
-  "issingle": 1,
-  "links": [],
-  "modified": "2026-07-26 00:00:00.000000",
-  "modified_by": "Administrator",
-  "module": "Naseco FieldOpsBackend",
-  "name": "FieldOps Settings",
-  "owner": "Administrator",
-  "permissions": [
-    {
-      "read": 1,
-      "role": "System Manager",
-      "write": 1
-    }
-  ],
-  "sort_field": "modified",
-  "sort_order": "DESC",
-  "states": []
+ "actions": [],
+ "creation": "2026-07-26 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "ux_company_defaults_tab",
+  "ux_company_section",
+  "company",
+  "ux_operational_approvers_section",
+  "finance_approver",
+  "ux_operational_approvers_column_2_column",
+  "stores_approver",
+  "ux_warehouses_tab",
+  "ux_harvest_warehouses_section",
+  "harvest_warehouse",
+  "accepted_seed_warehouse",
+  "harvest_quarantine_warehouse",
+  "ux_harvest_warehouses_column_2_column",
+  "reject_warehouse",
+  "grain_warehouse",
+  "ux_input_source_section",
+  "default_source_warehouse",
+  "ux_finance_tab",
+  "ux_payment_defaults_section",
+  "default_mode_of_payment",
+  "default_payment_account",
+  "ux_payment_defaults_column_2_column",
+  "advance_paid_account",
+  "ux_accounts_section",
+  "recoverable_inputs_account",
+  "ux_accounts_column_2_column",
+  "input_subsidy_account",
+  "ux_outgrower_supplier_defaults_section",
+  "outgrower_supplier_group",
+  "ux_gps_and_inspection_tab",
+  "ux_gps_acquisition_section",
+  "preferred_gps_accuracy_m",
+  "maximum_gps_accuracy_m",
+  "maximum_location_age_seconds",
+  "ux_gps_acquisition_column_2_column",
+  "location_capture_timeout_seconds",
+  "minimum_location_samples",
+  "ux_inspection_take_spacing_section",
+  "minimum_take_spacing_m",
+  "target_take_spacing_m",
+  "ux_inspection_take_spacing_column_2_column",
+  "maximum_take_spacing_m",
+  "minimum_spacing_compliance_percent",
+  "ux_controls_tab",
+  "ux_exposure_controls_section",
+  "maximum_exposure_percent",
+  "harvest_qa_haircut_percent",
+  "ux_exposure_controls_column_2_column",
+  "require_purchase_order_for_advance",
+  "ux_farm_plot_naming_section",
+  "auto_generate_plot_ids",
+  "ux_farm_plot_naming_column_2_column",
+  "plot_alpha_suffix_limit",
+  "ux_controlled_override_section",
+  "allow_positioning_override",
+  "ux_controlled_override_column_2_column",
+  "positioning_override_role"
+ ],
+ "fields": [
+  {
+   "fieldname": "ux_company_defaults_tab",
+   "fieldtype": "Tab Break",
+   "label": "Company Defaults"
+  },
+  {
+   "fieldname": "ux_company_section",
+   "fieldtype": "Section Break",
+   "label": "Company"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_operational_approvers_section",
+   "fieldtype": "Section Break",
+   "label": "Operational Approvers"
+  },
+  {
+   "fieldname": "finance_approver",
+   "fieldtype": "Link",
+   "label": "Finance Approver",
+   "options": "User"
+  },
+  {
+   "fieldname": "ux_operational_approvers_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Operational Approvers Column 2"
+  },
+  {
+   "fieldname": "stores_approver",
+   "fieldtype": "Link",
+   "label": "Stores Approver",
+   "options": "User"
+  },
+  {
+   "fieldname": "ux_warehouses_tab",
+   "fieldtype": "Tab Break",
+   "label": "Warehouses"
+  },
+  {
+   "fieldname": "ux_harvest_warehouses_section",
+   "fieldtype": "Section Break",
+   "label": "Harvest Warehouses"
+  },
+  {
+   "fieldname": "harvest_warehouse",
+   "fieldtype": "Link",
+   "label": "Harvest Receipt Warehouse",
+   "options": "Warehouse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "accepted_seed_warehouse",
+   "fieldtype": "Link",
+   "label": "Accepted Seed Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "harvest_quarantine_warehouse",
+   "fieldtype": "Link",
+   "label": "Harvest Quarantine Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "ux_harvest_warehouses_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Harvest Warehouses Column 2"
+  },
+  {
+   "fieldname": "reject_warehouse",
+   "fieldtype": "Link",
+   "label": "Harvest Reject Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "grain_warehouse",
+   "fieldtype": "Link",
+   "label": "Grain Downgrade Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "ux_input_source_section",
+   "fieldtype": "Section Break",
+   "label": "Input Source"
+  },
+  {
+   "fieldname": "default_source_warehouse",
+   "fieldtype": "Link",
+   "label": "Default Input Source Warehouse",
+   "options": "Warehouse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_finance_tab",
+   "fieldtype": "Tab Break",
+   "label": "Finance"
+  },
+  {
+   "fieldname": "ux_payment_defaults_section",
+   "fieldtype": "Section Break",
+   "label": "Payment Defaults"
+  },
+  {
+   "fieldname": "default_mode_of_payment",
+   "fieldtype": "Link",
+   "label": "Default Mode of Payment",
+   "options": "Mode of Payment"
+  },
+  {
+   "fieldname": "default_payment_account",
+   "fieldtype": "Link",
+   "label": "Default Advance Payment Account",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_payment_defaults_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Payment Defaults Column 2"
+  },
+  {
+   "fieldname": "advance_paid_account",
+   "fieldtype": "Link",
+   "label": "Supplier Advance Paid Account",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_accounts_section",
+   "fieldtype": "Section Break",
+   "label": "Accounts"
+  },
+  {
+   "description": "Current asset account debited when recoverable stock inputs are issued.",
+   "fieldname": "recoverable_inputs_account",
+   "fieldtype": "Link",
+   "label": "Recoverable Outgrower Inputs Account",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_accounts_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Accounts Column 2"
+  },
+  {
+   "fieldname": "input_subsidy_account",
+   "fieldtype": "Link",
+   "label": "Input Subsidy Expense Account",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_outgrower_supplier_defaults_section",
+   "fieldtype": "Section Break",
+   "label": "Outgrower Supplier Defaults"
+  },
+  {
+   "fieldname": "outgrower_supplier_group",
+   "fieldtype": "Link",
+   "label": "Outgrower Supplier Group",
+   "options": "Supplier Group",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_gps_and_inspection_tab",
+   "fieldtype": "Tab Break",
+   "label": "GPS and Inspection"
+  },
+  {
+   "fieldname": "ux_gps_acquisition_section",
+   "fieldtype": "Section Break",
+   "label": "GPS Acquisition"
+  },
+  {
+   "default": "3",
+   "description": "Accuracy at or below this value is graded Good.",
+   "fieldname": "preferred_gps_accuracy_m",
+   "fieldtype": "Float",
+   "label": "Preferred GPS Accuracy (m)",
+   "reqd": 1
+  },
+  {
+   "default": "5",
+   "description": "A take above this uncertainty radius requires an authorized override.",
+   "fieldname": "maximum_gps_accuracy_m",
+   "fieldtype": "Float",
+   "label": "Maximum GPS Accuracy (m)",
+   "reqd": 1
+  },
+  {
+   "default": "60",
+   "description": "Maximum age of the selected device location fix when it reaches the server.",
+   "fieldname": "maximum_location_age_seconds",
+   "fieldtype": "Int",
+   "label": "Maximum Location Age (seconds)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_gps_acquisition_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "GPS Acquisition Column 2"
+  },
+  {
+   "default": "30",
+   "fieldname": "location_capture_timeout_seconds",
+   "fieldtype": "Int",
+   "label": "Location Capture Timeout (seconds)",
+   "reqd": 1
+  },
+  {
+   "default": "3",
+   "fieldname": "minimum_location_samples",
+   "fieldtype": "Int",
+   "label": "Minimum Stable Location Samples",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_inspection_take_spacing_section",
+   "fieldtype": "Section Break",
+   "label": "Inspection Take Spacing"
+  },
+  {
+   "default": "3",
+   "fieldname": "minimum_take_spacing_m",
+   "fieldtype": "Float",
+   "label": "Minimum Take Spacing (m)",
+   "reqd": 1
+  },
+  {
+   "default": "5",
+   "description": "Required physical distance between consecutive inspection takes.",
+   "fieldname": "target_take_spacing_m",
+   "fieldtype": "Float",
+   "label": "Target Take Spacing (m)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_inspection_take_spacing_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Inspection Take Spacing Column 2"
+  },
+  {
+   "default": "7",
+   "fieldname": "maximum_take_spacing_m",
+   "fieldtype": "Float",
+   "label": "Maximum Take Spacing (m)",
+   "reqd": 1
+  },
+  {
+   "default": "80",
+   "description": "Minimum percentage of spacing segments that must comply for acceptable inspection quality.",
+   "fieldname": "minimum_spacing_compliance_percent",
+   "fieldtype": "Percent",
+   "label": "Minimum Spacing Compliance %",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_controls_tab",
+   "fieldtype": "Tab Break",
+   "label": "Controls"
+  },
+  {
+   "fieldname": "ux_exposure_controls_section",
+   "fieldtype": "Section Break",
+   "label": "Exposure Controls"
+  },
+  {
+   "default": "70",
+   "description": "Maximum committed recoverable inputs and advances as a percentage of forecast harvest value.",
+   "fieldname": "maximum_exposure_percent",
+   "fieldtype": "Percent",
+   "label": "Maximum Exposure %",
+   "reqd": 1
+  },
+  {
+   "default": "10",
+   "description": "Risk haircut applied by managers when assessing forecast harvest cover.",
+   "fieldname": "harvest_qa_haircut_percent",
+   "fieldtype": "Percent",
+   "label": "Harvest QA Haircut %",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_exposure_controls_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Exposure Controls Column 2"
+  },
+  {
+   "default": "1",
+   "fieldname": "require_purchase_order_for_advance",
+   "fieldtype": "Check",
+   "label": "Require Submitted Purchase Order for Advances"
+  },
+  {
+   "fieldname": "ux_farm_plot_naming_section",
+   "fieldtype": "Section Break",
+   "label": "Farm Plot Naming"
+  },
+  {
+   "default": "1",
+   "description": "Generate Farm Plot IDs from the Outgrower ID and an alphabetic suffix, for example H-001-A.",
+   "fieldname": "auto_generate_plot_ids",
+   "fieldtype": "Check",
+   "label": "Automatically Generate Farm Plot IDs"
+  },
+  {
+   "fieldname": "ux_farm_plot_naming_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Farm Plot Naming Column 2"
+  },
+  {
+   "default": "2",
+   "description": "Maximum suffix letters. A value of 2 supports A to ZZ per outgrower.",
+   "fieldname": "plot_alpha_suffix_limit",
+   "fieldtype": "Int",
+   "label": "Maximum Plot Suffix Letters"
+  },
+  {
+   "fieldname": "ux_controlled_override_section",
+   "fieldtype": "Section Break",
+   "label": "Controlled Override"
+  },
+  {
+   "default": "1",
+   "fieldname": "allow_positioning_override",
+   "fieldtype": "Check",
+   "label": "Allow Positioning Override"
+  },
+  {
+   "fieldname": "ux_controlled_override_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Controlled Override Column 2"
+  },
+  {
+   "default": "System Manager",
+   "depends_on": "eval:doc.allow_positioning_override",
+   "fieldname": "positioning_override_role",
+   "fieldtype": "Link",
+   "label": "Positioning Override Role",
+   "mandatory_depends_on": "eval:doc.allow_positioning_override",
+   "options": "Role"
+  }
+ ],
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-07-26 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "FieldOps Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
 }

@@ -4,15 +4,40 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_details_section",
+  "status",
+  "ux_additional_details_section",
   "milestone",
+  "ux_additional_details_column_2_column",
+  "responsible_user",
+  "ux_dates_and_location_section",
   "planned_start_date",
   "planned_end_date",
-  "responsible_user",
-  "status",
+  "ux_dates_and_location_column_2_column",
   "actual_completion_date",
+  "ux_notes_and_review_section",
   "notes"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "default": "Not Started",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Not Started\nIn Progress\nCompleted\nDelayed\nCancelled",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
   {
    "fieldname": "milestone",
    "fieldtype": "Select",
@@ -20,6 +45,22 @@
    "label": "Milestone",
    "options": "Planning Approval\nGrower Contracting\nParent Seed Allocation\nInput Procurement\nPlanting\nCrop Emergence\nVegetative\nPre-flowering\nFlowering\nPre-harvest\nHarvest\nDelivery\nSettlement\nSeason Closure",
    "reqd": 1
+  },
+  {
+   "fieldname": "ux_additional_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Additional Details Column 2"
+  },
+  {
+   "fieldname": "responsible_user",
+   "fieldtype": "Link",
+   "label": "Responsible User",
+   "options": "User"
+  },
+  {
+   "fieldname": "ux_dates_and_location_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Location"
   },
   {
    "fieldname": "planned_start_date",
@@ -36,24 +77,19 @@
    "reqd": 1
   },
   {
-   "fieldname": "responsible_user",
-   "fieldtype": "Link",
-   "label": "Responsible User",
-   "options": "User"
-  },
-  {
-   "default": "Not Started",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Status",
-   "options": "Not Started\nIn Progress\nCompleted\nDelayed\nCancelled",
-   "reqd": 1
+   "fieldname": "ux_dates_and_location_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Dates and Location Column 2"
   },
   {
    "fieldname": "actual_completion_date",
    "fieldtype": "Date",
    "label": "Actual Completion"
+  },
+  {
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
   },
   {
    "fieldname": "notes",

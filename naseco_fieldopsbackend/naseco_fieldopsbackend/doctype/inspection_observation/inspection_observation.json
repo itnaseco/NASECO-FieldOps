@@ -4,18 +4,29 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_additional_details_section",
   "parameter",
   "responsibility",
+  "captured_by",
+  "remarks",
+  "ux_dates_and_location_section",
+  "captured_at",
+  "ux_quantities_and_values_section",
   "measured_value",
   "text_value",
+  "ux_quantities_and_values_column_2_column",
   "unit",
+  "ux_quality_and_results_section",
   "result_status",
-  "corrective_action_required",
-  "captured_by",
-  "captured_at",
-  "remarks"
+  "ux_quality_and_results_column_2_column",
+  "corrective_action_required"
  ],
  "fields": [
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
   {
    "fieldname": "parameter",
    "fieldtype": "Link",
@@ -33,6 +44,34 @@
    "reqd": 1
   },
   {
+   "fieldname": "captured_by",
+   "fieldtype": "Link",
+   "label": "Captured By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "ux_dates_and_location_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Location"
+  },
+  {
+   "fieldname": "captured_at",
+   "fieldtype": "Datetime",
+   "label": "Captured At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
+  {
    "fieldname": "measured_value",
    "fieldtype": "Float",
    "in_list_view": 1,
@@ -44,10 +83,20 @@
    "label": "Text Value"
   },
   {
+   "fieldname": "ux_quantities_and_values_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quantities and Values Column 2"
+  },
+  {
    "fieldname": "unit",
    "fieldtype": "Link",
    "label": "UOM",
    "options": "UOM"
+  },
+  {
+   "fieldname": "ux_quality_and_results_section",
+   "fieldtype": "Section Break",
+   "label": "Quality and Results"
   },
   {
    "default": "Not Evaluated",
@@ -60,29 +109,16 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_quality_and_results_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quality and Results Column 2"
+  },
+  {
    "default": "0",
    "fieldname": "corrective_action_required",
    "fieldtype": "Check",
    "label": "Corrective Action Required",
    "read_only": 1
-  },
-  {
-   "fieldname": "captured_by",
-   "fieldtype": "Link",
-   "label": "Captured By",
-   "options": "User",
-   "read_only": 1
-  },
-  {
-   "fieldname": "captured_at",
-   "fieldtype": "Datetime",
-   "label": "Captured At",
-   "read_only": 1
-  },
-  {
-   "fieldname": "remarks",
-   "fieldtype": "Small Text",
-   "label": "Remarks"
   }
  ],
  "istable": 1,

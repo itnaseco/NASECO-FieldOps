@@ -4,48 +4,60 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "ux_overview_tab",
+  "ux_report_summary_section",
   "report_template",
   "report_number",
+  "status",
+  "ux_report_summary_column_2_column",
   "crop_cycle",
   "stage",
   "stage_name",
-  "status",
-  "context_section",
+  "ux_production_context_tab",
+  "ux_context_snapshot_section",
   "production_contract",
   "plot",
   "outgrower",
   "crop",
   "variety",
+  "ux_context_snapshot_column_2_column",
   "season",
   "production_category",
   "seed_class",
   "assigned_supervisor",
-  "schedule_section",
+  "ux_reporting_window_tab",
+  "ux_window_and_report_date_section",
   "window_start_date",
   "window_end_date",
   "report_date",
+  "ux_window_and_report_date_column_2_column",
   "calendar_week",
   "planting_week",
-  "location_section",
+  "ux_location_tab",
+  "ux_report_location_section",
   "location",
   "latitude",
   "longitude",
   "gps_accuracy_meters",
   "location_captured_at",
   "inside_plot_boundary",
-  "observations_section",
+  "ux_observations_tab",
+  "ux_agronomy_observations_section",
   "results",
-  "summary_section",
+  "ux_evaluation_and_follow_up_tab",
+  "ux_evaluation_result_section",
   "overall_result",
   "pass_percentage",
   "evaluated_parameter_count",
   "passed_parameter_count",
   "failed_parameter_count",
+  "ux_evaluation_result_column_2_column",
   "critical_failure_count",
   "evaluated_at",
   "template_version",
   "overall_pass_threshold_percent",
   "critical_failure_override",
+  "ux_notes_and_follow_up_section",
   "field_notes",
   "summary",
   "corrective_action_required",
@@ -56,6 +68,16 @@
   "synced"
  ],
  "fields": [
+  {
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_report_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Report Summary"
+  },
   {
    "fieldname": "report_template",
    "fieldtype": "Link",
@@ -69,6 +91,20 @@
    "fieldtype": "Int",
    "label": "Report Number",
    "read_only": 1
+  },
+  {
+   "default": "Scheduled",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Scheduled\nIn Progress\nSubmitted\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_report_summary_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Report Summary Column 2"
   },
   {
    "fieldname": "crop_cycle",
@@ -93,18 +129,14 @@
    "read_only": 1
   },
   {
-   "default": "Scheduled",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Status",
-   "options": "Scheduled\nIn Progress\nSubmitted\nCancelled",
-   "read_only": 1
+   "fieldname": "ux_production_context_tab",
+   "fieldtype": "Tab Break",
+   "label": "Production Context"
   },
   {
-   "fieldname": "context_section",
+   "fieldname": "ux_context_snapshot_section",
    "fieldtype": "Section Break",
-   "label": "Production Context"
+   "label": "Context Snapshot"
   },
   {
    "fieldname": "production_contract",
@@ -142,6 +174,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_context_snapshot_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Context Snapshot Column 2"
+  },
+  {
    "fieldname": "season",
    "fieldtype": "Link",
    "label": "Season",
@@ -171,9 +208,14 @@
    "read_only": 1
   },
   {
-   "fieldname": "schedule_section",
-   "fieldtype": "Section Break",
+   "fieldname": "ux_reporting_window_tab",
+   "fieldtype": "Tab Break",
    "label": "Reporting Window"
+  },
+  {
+   "fieldname": "ux_window_and_report_date_section",
+   "fieldtype": "Section Break",
+   "label": "Window and Report Date"
   },
   {
    "fieldname": "window_start_date",
@@ -196,6 +238,11 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_window_and_report_date_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Window and Report Date Column 2"
+  },
+  {
    "fieldname": "calendar_week",
    "fieldtype": "Int",
    "label": "Calendar Week",
@@ -208,7 +255,12 @@
    "read_only": 1
   },
   {
-   "fieldname": "location_section",
+   "fieldname": "ux_location_tab",
+   "fieldtype": "Tab Break",
+   "label": "Location"
+  },
+  {
+   "fieldname": "ux_report_location_section",
    "fieldtype": "Section Break",
    "label": "Report Location"
   },
@@ -249,7 +301,12 @@
    "read_only": 1
   },
   {
-   "fieldname": "observations_section",
+   "fieldname": "ux_observations_tab",
+   "fieldtype": "Tab Break",
+   "label": "Observations"
+  },
+  {
+   "fieldname": "ux_agronomy_observations_section",
    "fieldtype": "Section Break",
    "label": "Agronomy Observations"
   },
@@ -261,9 +318,14 @@
    "reqd": 1
   },
   {
-   "fieldname": "summary_section",
+   "fieldname": "ux_evaluation_and_follow_up_tab",
+   "fieldtype": "Tab Break",
+   "label": "Evaluation and Follow-up"
+  },
+  {
+   "fieldname": "ux_evaluation_result_section",
    "fieldtype": "Section Break",
-   "label": "Summary and Follow-up"
+   "label": "Evaluation Result"
   },
   {
    "default": "Not Evaluated",
@@ -299,6 +361,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_evaluation_result_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Evaluation Result Column 2"
+  },
+  {
    "fieldname": "critical_failure_count",
    "fieldtype": "Int",
    "label": "Critical Failures",
@@ -327,6 +394,11 @@
    "fieldtype": "Check",
    "label": "Critical Failure Overrides Score",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_notes_and_follow_up_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Follow-up"
   },
   {
    "fieldname": "field_notes",

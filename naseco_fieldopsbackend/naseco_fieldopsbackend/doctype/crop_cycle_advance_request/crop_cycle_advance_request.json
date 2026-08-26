@@ -6,27 +6,33 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "ux_overview_tab",
+  "ux_crop_cycle_context_section",
   "crop_cycle",
   "production_contract",
   "outgrower",
+  "ux_crop_cycle_context_column_2_column",
   "supplier",
   "company",
   "purchase_order",
-  "request_section",
+  "ux_request_and_payment_tab",
+  "ux_request_and_approval_section",
   "request_date",
   "requested_by",
   "purpose",
   "requested_amount",
   "approved_amount",
   "currency",
-  "payment_section",
+  "ux_supplier_payment_section",
   "mode_of_payment",
   "paid_from_account",
   "payment_entry",
+  "ux_supplier_payment_column_2_column",
   "paid_amount",
   "payment_date",
   "status",
-  "exposure_section",
+  "ux_exposure_tab",
+  "ux_crop_cycle_exposure_section",
   "expected_harvest_value",
   "risk_adjusted_harvest_value",
   "recoverable_stock_value",
@@ -37,6 +43,16 @@
   "manager_notes"
  ],
  "fields": [
+  {
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_crop_cycle_context_section",
+   "fieldtype": "Section Break",
+   "label": "Crop Cycle Context"
+  },
   {
    "fieldname": "crop_cycle",
    "fieldtype": "Link",
@@ -62,6 +78,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_crop_cycle_context_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Crop Cycle Context Column 2"
+  },
+  {
    "fieldname": "supplier",
    "fieldtype": "Link",
    "label": "Outgrower Supplier",
@@ -84,7 +105,12 @@
    "read_only": 1
   },
   {
-   "fieldname": "request_section",
+   "fieldname": "ux_request_and_payment_tab",
+   "fieldtype": "Tab Break",
+   "label": "Request and Payment"
+  },
+  {
+   "fieldname": "ux_request_and_approval_section",
    "fieldtype": "Section Break",
    "label": "Request and Approval"
   },
@@ -133,7 +159,7 @@
    "read_only": 1
   },
   {
-   "fieldname": "payment_section",
+   "fieldname": "ux_supplier_payment_section",
    "fieldtype": "Section Break",
    "label": "Supplier Payment"
   },
@@ -155,6 +181,11 @@
    "label": "Payment Entry",
    "options": "Payment Entry",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_supplier_payment_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Supplier Payment Column 2"
   },
   {
    "fieldname": "paid_amount",
@@ -179,8 +210,12 @@
    "read_only": 1
   },
   {
-   "collapsible": 1,
-   "fieldname": "exposure_section",
+   "fieldname": "ux_exposure_tab",
+   "fieldtype": "Tab Break",
+   "label": "Exposure"
+  },
+  {
+   "fieldname": "ux_crop_cycle_exposure_section",
    "fieldtype": "Section Break",
    "label": "Crop Cycle Exposure"
   },

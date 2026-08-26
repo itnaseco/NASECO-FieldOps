@@ -4,23 +4,33 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_details_section",
   "crop_recipe",
+  "ux_additional_details_section",
   "ratio_group",
   "parent_role",
-  "ratio_value",
+  "ux_additional_details_column_2_column",
   "item_code",
   "target_hectares",
+  "ux_quantities_and_values_section",
   "quantity_per_hectare",
   "uom",
   "conversion_factor",
   "required_qty",
   "stock_uom",
+  "ux_quantities_and_values_column_2_column",
   "required_stock_qty",
   "source_warehouse",
   "recovery_policy",
-  "recoverable_percent"
+  "recoverable_percent",
+  "ratio_value"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
   {
    "fieldname": "crop_recipe",
    "fieldtype": "Link",
@@ -28,6 +38,11 @@
    "label": "Crop Recipe",
    "options": "Crop Recipe",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
   },
   {
    "fieldname": "ratio_group",
@@ -43,6 +58,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_additional_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Additional Details Column 2"
+  },
+  {
    "fieldname": "item_code",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -56,6 +76,11 @@
    "label": "Target Hectares",
    "precision": 4,
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
   },
   {
    "fieldname": "quantity_per_hectare",
@@ -89,6 +114,11 @@
    "label": "Stock UOM",
    "options": "UOM",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quantities and Values Column 2"
   },
   {
    "fieldname": "required_stock_qty",

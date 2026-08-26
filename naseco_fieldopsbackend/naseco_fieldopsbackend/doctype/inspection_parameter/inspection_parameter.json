@@ -6,20 +6,29 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "ux_details_section",
   "parameter_name",
+  "data_type",
   "parameter_code",
   "parameter_group",
-  "data_type",
   "select_options",
   "unit",
   "applies_to",
   "measurement_scope",
-  "calculation_method",
   "denominator_basis",
+  "ux_location_and_map_section",
+  "calculation_method",
+  "ux_quality_and_results_section",
   "requires_take_counts",
+  "ux_notes_and_review_section",
   "description"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
   {
    "fieldname": "parameter_name",
    "fieldtype": "Data",
@@ -27,6 +36,14 @@
    "label": "Parameter Name",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "fieldname": "data_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Data Type",
+   "options": "Number\nCount\nPercent\nScore\nYes/No\nSelect\nText\nDate\nRatio",
+   "reqd": 1
   },
   {
    "fieldname": "parameter_code",
@@ -39,14 +56,6 @@
    "fieldtype": "Select",
    "label": "Parameter Group",
    "options": "Planting\nIsolation\nPurity\nDisease\nWeed\nDetassling\nHarvest\nInspection Quality"
-  },
-  {
-   "fieldname": "data_type",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Data Type",
-   "options": "Number\nCount\nPercent\nScore\nYes/No\nSelect\nText\nDate\nRatio",
-   "reqd": 1
   },
   {
    "depends_on": "eval:doc.data_type=='Select'",
@@ -81,6 +90,18 @@
    "reqd": 1
   },
   {
+   "depends_on": "eval:doc.calculation_method=='Cumulative Incidence'",
+   "fieldname": "denominator_basis",
+   "fieldtype": "Select",
+   "label": "Denominator Basis",
+   "options": "Total Plants Counted"
+  },
+  {
+   "fieldname": "ux_location_and_map_section",
+   "fieldtype": "Section Break",
+   "label": "Location and Map"
+  },
+  {
    "default": "Direct Value",
    "fieldname": "calculation_method",
    "fieldtype": "Select",
@@ -89,17 +110,20 @@
    "reqd": 1
   },
   {
-   "depends_on": "eval:doc.calculation_method=='Cumulative Incidence'",
-   "fieldname": "denominator_basis",
-   "fieldtype": "Select",
-   "label": "Denominator Basis",
-   "options": "Total Plants Counted"
+   "fieldname": "ux_quality_and_results_section",
+   "fieldtype": "Section Break",
+   "label": "Quality and Results"
   },
   {
    "default": "0",
    "fieldname": "requires_take_counts",
    "fieldtype": "Check",
    "label": "Requires Take Counts"
+  },
+  {
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
   },
   {
    "fieldname": "description",

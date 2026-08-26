@@ -4,15 +4,24 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_quantities_and_values_section",
   "band_name",
   "minimum_yield_kg_per_hectare",
   "maximum_yield_kg_per_hectare",
-  "minimum_purity_percent",
-  "maximum_purity_percent",
+  "ux_quantities_and_values_column_2_column",
   "price_basis",
-  "rate_per_kg"
+  "rate_per_kg",
+  "ux_quality_and_results_section",
+  "minimum_purity_percent",
+  "ux_quality_and_results_column_2_column",
+  "maximum_purity_percent"
  ],
  "fields": [
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
   {
    "fieldname": "band_name",
    "fieldtype": "Data",
@@ -37,17 +46,9 @@
    "non_negative": 1
   },
   {
-   "description": "Inclusive lower genetic-purity boundary.",
-   "fieldname": "minimum_purity_percent",
-   "fieldtype": "Percent",
-   "in_list_view": 1,
-   "label": "Minimum Genetic Purity %"
-  },
-  {
-   "description": "Exclusive upper genetic-purity boundary. Leave zero for no upper limit.",
-   "fieldname": "maximum_purity_percent",
-   "fieldtype": "Percent",
-   "label": "Maximum Genetic Purity %"
+   "fieldname": "ux_quantities_and_values_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quantities and Values Column 2"
   },
   {
    "default": "Fixed Rate",
@@ -65,6 +66,29 @@
    "in_list_view": 1,
    "label": "Rate per kg",
    "non_negative": 1
+  },
+  {
+   "fieldname": "ux_quality_and_results_section",
+   "fieldtype": "Section Break",
+   "label": "Quality and Results"
+  },
+  {
+   "description": "Inclusive lower genetic-purity boundary.",
+   "fieldname": "minimum_purity_percent",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Minimum Genetic Purity %"
+  },
+  {
+   "fieldname": "ux_quality_and_results_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quality and Results Column 2"
+  },
+  {
+   "description": "Exclusive upper genetic-purity boundary. Leave zero for no upper limit.",
+   "fieldname": "maximum_purity_percent",
+   "fieldtype": "Percent",
+   "label": "Maximum Genetic Purity %"
   }
  ],
  "istable": 1,

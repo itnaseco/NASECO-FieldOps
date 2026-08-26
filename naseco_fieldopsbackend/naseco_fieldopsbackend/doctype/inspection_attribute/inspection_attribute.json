@@ -6,12 +6,20 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "ux_details_section",
   "attribute_name",
   "attribute_type",
+  "ux_details_column_2_column",
   "unit",
+  "ux_notes_and_review_section",
   "description"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
   {
    "fieldname": "attribute_name",
    "fieldtype": "Data",
@@ -27,10 +35,20 @@
    "default": "Text"
   },
   {
+   "fieldname": "ux_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Details Column 2"
+  },
+  {
    "fieldname": "unit",
    "fieldtype": "Link",
    "label": "Unit",
    "options": "UOM"
+  },
+  {
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
   },
   {
    "fieldname": "description",

@@ -1,32 +1,291 @@
 {
- "actions":[], "allow_rename":0, "autoname":"format:HRD-{YYYY}-{#####}", "doctype":"DocType", "engine":"InnoDB", "is_submittable":1,
- "field_order":["status","quality_assessment","crop_cycle","production_contract","production_lot","purchase_receipt","purchase_receipt_item","item_code","batch_no","rejected_qty","uom","reject_reason","disposition","source_warehouse","target_warehouse","stock_entry","approved_by","notes","amended_from"],
- "fields":[
-  {"default":"Draft","fieldname":"status","fieldtype":"Select","in_list_view":1,"label":"Status","options":"Draft\nStock Entry Draft\nCompleted\nCancelled","read_only":1},
-  {"fieldname":"quality_assessment","fieldtype":"Link","in_list_view":1,"label":"Seed Harvest Quality Assessment","options":"Seed Harvest Quality Assessment","reqd":1},
-  {"fieldname":"crop_cycle","fieldtype":"Link","label":"Crop Cycle","options":"Crop Cycle","read_only":1},
-  {"fieldname":"production_contract","fieldtype":"Link","label":"Production Contract","options":"Outgrower Production Contract","read_only":1},
-  {"fieldname":"production_lot","fieldtype":"Link","label":"Production Lot","options":"Crop Production Lot","read_only":1},
-  {"fieldname":"purchase_receipt","fieldtype":"Link","label":"Purchase Receipt","options":"Purchase Receipt","read_only":1},
-  {"fieldname":"purchase_receipt_item","fieldtype":"Data","label":"Purchase Receipt Item","read_only":1},
-  {"fieldname":"item_code","fieldtype":"Link","in_list_view":1,"label":"Rejected Item","options":"Item","read_only":1},
-  {"fieldname":"batch_no","fieldtype":"Link","label":"Batch","options":"Batch","read_only":1},
-  {"fieldname":"rejected_qty","fieldtype":"Float","in_list_view":1,"label":"Rejected Quantity","non_negative":1,"reqd":1},
-  {"fieldname":"uom","fieldtype":"Link","label":"UOM","options":"UOM","read_only":1},
-  {"fieldname":"reject_reason","fieldtype":"Select","label":"Reject Reason","options":"Delivery Inspection Failure\nMoisture\nLow Germination\nGenetic Impurity\nLow Vigour\nBelow Screen Size\nContamination\nOther","reqd":1},
-  {"default":"Hold for Retest","fieldname":"disposition","fieldtype":"Select","in_list_view":1,"label":"Disposition","options":"Hold for Retest\nDowngrade to Grain\nReturn to Outgrower\nReprocess or Clean\nDestroy\nNon-seed Sale","reqd":1},
-  {"fieldname":"source_warehouse","fieldtype":"Link","label":"Source Warehouse","options":"Warehouse","reqd":1},
-  {"fieldname":"target_warehouse","fieldtype":"Link","label":"Target Warehouse","options":"Warehouse"},
-  {"fieldname":"stock_entry","fieldtype":"Link","label":"ERPNext Stock Entry","options":"Stock Entry","read_only":1},
-  {"fieldname":"approved_by","fieldtype":"Link","label":"Approved By","options":"User","read_only":1},
-  {"fieldname":"notes","fieldtype":"Small Text","label":"Notes"},
-  {"fieldname":"amended_from","fieldtype":"Link","label":"Amended From","options":"Harvest Reject Disposition","read_only":1}
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "format:HRD-{YYYY}-{#####}",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "is_submittable": 1,
+ "field_order": [
+  "ux_overview_tab",
+  "ux_summary_section",
+  "status",
+  "crop_cycle",
+  "production_contract",
+  "ux_summary_column_2_column",
+  "production_lot",
+  "batch_no",
+  "disposition",
+  "ux_planning_and_location_tab",
+  "ux_dates_and_schedule_section",
+  "amended_from",
+  "ux_commercials_tab",
+  "ux_financial_and_quantity_details_section",
+  "purchase_receipt",
+  "purchase_receipt_item",
+  "uom",
+  "ux_financial_and_quantity_details_column_2_column",
+  "source_warehouse",
+  "target_warehouse",
+  "stock_entry",
+  "ux_quality_tab",
+  "ux_quality_and_results_section",
+  "quality_assessment",
+  "item_code",
+  "ux_quality_and_results_column_2_column",
+  "rejected_qty",
+  "reject_reason",
+  "ux_review_and_notes_tab",
+  "ux_notes_and_audit_section",
+  "approved_by",
+  "notes"
  ],
- "module":"Naseco FieldOpsBackend", "name":"Harvest Reject Disposition",
- "permissions":[
-  {"cancel":1,"create":1,"delete":1,"email":1,"export":1,"print":1,"read":1,"report":1,"role":"System Manager","submit":1,"write":1},
-  {"cancel":1,"create":1,"email":1,"export":1,"print":1,"read":1,"report":1,"role":"Quality Manager","submit":1,"write":1},
-  {"create":1,"email":1,"export":1,"print":1,"read":1,"report":1,"role":"Quality Inspector","write":1},
-  {"read":1,"report":1,"role":"Outgrower Manager"}
- ], "sort_field":"modified", "sort_order":"DESC"
+ "fields": [
+  {
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Summary"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nStock Entry Draft\nCompleted\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "crop_cycle",
+   "fieldtype": "Link",
+   "label": "Crop Cycle",
+   "options": "Crop Cycle",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_contract",
+   "fieldtype": "Link",
+   "label": "Production Contract",
+   "options": "Outgrower Production Contract",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_summary_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Summary Column 2"
+  },
+  {
+   "fieldname": "production_lot",
+   "fieldtype": "Link",
+   "label": "Production Lot",
+   "options": "Crop Production Lot",
+   "read_only": 1
+  },
+  {
+   "fieldname": "batch_no",
+   "fieldtype": "Link",
+   "label": "Batch",
+   "options": "Batch",
+   "read_only": 1
+  },
+  {
+   "default": "Hold for Retest",
+   "fieldname": "disposition",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Disposition",
+   "options": "Hold for Retest\nDowngrade to Grain\nReturn to Outgrower\nReprocess or Clean\nDestroy\nNon-seed Sale",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_planning_and_location_tab",
+   "fieldtype": "Tab Break",
+   "label": "Planning and Location"
+  },
+  {
+   "fieldname": "ux_dates_and_schedule_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Schedule"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "options": "Harvest Reject Disposition",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_commercials_tab",
+   "fieldtype": "Tab Break",
+   "label": "Commercials"
+  },
+  {
+   "fieldname": "ux_financial_and_quantity_details_section",
+   "fieldtype": "Section Break",
+   "label": "Financial and Quantity Details"
+  },
+  {
+   "fieldname": "purchase_receipt",
+   "fieldtype": "Link",
+   "label": "Purchase Receipt",
+   "options": "Purchase Receipt",
+   "read_only": 1
+  },
+  {
+   "fieldname": "purchase_receipt_item",
+   "fieldtype": "Data",
+   "label": "Purchase Receipt Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_financial_and_quantity_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Financial and Quantity Details Column 2"
+  },
+  {
+   "fieldname": "source_warehouse",
+   "fieldtype": "Link",
+   "label": "Source Warehouse",
+   "options": "Warehouse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "target_warehouse",
+   "fieldtype": "Link",
+   "label": "Target Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "stock_entry",
+   "fieldtype": "Link",
+   "label": "ERPNext Stock Entry",
+   "options": "Stock Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_quality_tab",
+   "fieldtype": "Tab Break",
+   "label": "Quality"
+  },
+  {
+   "fieldname": "ux_quality_and_results_section",
+   "fieldtype": "Section Break",
+   "label": "Quality and Results"
+  },
+  {
+   "fieldname": "quality_assessment",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Seed Harvest Quality Assessment",
+   "options": "Seed Harvest Quality Assessment",
+   "reqd": 1
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Rejected Item",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_quality_and_results_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quality and Results Column 2"
+  },
+  {
+   "fieldname": "rejected_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Rejected Quantity",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "reject_reason",
+   "fieldtype": "Select",
+   "label": "Reject Reason",
+   "options": "Delivery Inspection Failure\nMoisture\nLow Germination\nGenetic Impurity\nLow Vigour\nBelow Screen Size\nContamination\nOther",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_review_and_notes_tab",
+   "fieldtype": "Tab Break",
+   "label": "Review and Notes"
+  },
+  {
+   "fieldname": "ux_notes_and_audit_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Audit"
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Approved By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "module": "Naseco FieldOpsBackend",
+ "name": "Harvest Reject Disposition",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager",
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
 }

@@ -3,14 +3,92 @@
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
- "field_order": ["seed_category", "seed_class", "item_purpose", "item_code", "stock_uom", "is_default"],
+ "field_order": [
+  "ux_details_section",
+  "seed_category",
+  "ux_details_column_2_column",
+  "seed_class",
+  "ux_additional_details_section",
+  "item_purpose",
+  "item_code",
+  "ux_additional_details_column_2_column",
+  "is_default",
+  "ux_quantities_and_values_section",
+  "stock_uom"
+ ],
  "fields": [
-  {"fieldname": "seed_category", "fieldtype": "Link", "in_list_view": 1, "label": "Seed Category", "options": "Seed Category", "reqd": 1},
-  {"fieldname": "seed_class", "fieldtype": "Link", "in_list_view": 1, "label": "Seed Class", "options": "Seed Class", "reqd": 1},
-  {"fieldname": "item_purpose", "fieldtype": "Select", "in_list_view": 1, "label": "Item Purpose", "options": "Parent Seed\nRaw Seed\nFinished Seed", "reqd": 1},
-  {"fieldname": "item_code", "fieldtype": "Link", "in_list_view": 1, "label": "Item", "options": "Item", "reqd": 1},
-  {"fetch_from": "item_code.stock_uom", "fieldname": "stock_uom", "fieldtype": "Link", "label": "Stock UOM", "options": "UOM", "read_only": 1},
-  {"default": "0", "fieldname": "is_default", "fieldtype": "Check", "in_list_view": 1, "label": "Default"}
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "seed_category",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Seed Category",
+   "options": "Seed Category",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Details Column 2"
+  },
+  {
+   "fieldname": "seed_class",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Seed Class",
+   "options": "Seed Class",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
+  {
+   "fieldname": "item_purpose",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Item Purpose",
+   "options": "Parent Seed\nRaw Seed\nFinished Seed",
+   "reqd": 1
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_additional_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Additional Details Column 2"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_default",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Default"
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
+  {
+   "fetch_from": "item_code.stock_uom",
+   "fieldname": "stock_uom",
+   "fieldtype": "Link",
+   "label": "Stock UOM",
+   "options": "UOM",
+   "read_only": 1
+  }
  ],
  "istable": 1,
  "module": "Naseco FieldOpsBackend",

@@ -6,25 +6,37 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_additional_details_section",
   "parameter",
   "responsibility",
   "aggregation_method",
-  "observation_count",
   "passed_count",
   "failed_count",
-  "pass_percent",
+  "unit",
+  "remarks",
+  "ux_location_section",
   "cumulative_observed_count",
   "cumulative_total_plants",
+  "ux_location_column_2_column",
   "incidence_percent",
+  "ux_quantities_and_values_section",
   "measured_value",
+  "ux_quantities_and_values_column_2_column",
   "text_value",
-  "unit",
+  "ux_quality_and_results_section",
+  "observation_count",
+  "pass_percent",
   "result_status",
+  "ux_quality_and_results_column_2_column",
   "corrective_action_required",
-  "due_date",
-  "remarks"
+  "due_date"
  ],
  "fields": [
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
   {
    "fieldname": "parameter",
    "fieldtype": "Link",
@@ -50,14 +62,6 @@
   },
   {
    "default": "0",
-   "fieldname": "observation_count",
-   "fieldtype": "Int",
-   "in_list_view": 1,
-   "label": "Observations",
-   "read_only": 1
-  },
-  {
-   "default": "0",
    "fieldname": "passed_count",
    "fieldtype": "Int",
    "label": "Passed",
@@ -71,11 +75,21 @@
    "read_only": 1
   },
   {
-   "fieldname": "pass_percent",
-   "fieldtype": "Percent",
-   "in_list_view": 1,
-   "label": "Take Pass %",
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "Unit",
+   "options": "UOM",
    "read_only": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "ux_location_section",
+   "fieldtype": "Section Break",
+   "label": "Location"
   },
   {
    "default": "0",
@@ -94,12 +108,22 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_location_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Location Column 2"
+  },
+  {
    "fieldname": "incidence_percent",
    "fieldtype": "Percent",
    "in_list_view": 1,
    "label": "Cumulative Incidence %",
    "precision": "6",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
   },
   {
    "fieldname": "measured_value",
@@ -109,16 +133,34 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_quantities_and_values_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quantities and Values Column 2"
+  },
+  {
    "fieldname": "text_value",
    "fieldtype": "Data",
    "label": "Aggregated Text",
    "read_only": 1
   },
   {
-   "fieldname": "unit",
-   "fieldtype": "Link",
-   "label": "Unit",
-   "options": "UOM",
+   "fieldname": "ux_quality_and_results_section",
+   "fieldtype": "Section Break",
+   "label": "Quality and Results"
+  },
+  {
+   "default": "0",
+   "fieldname": "observation_count",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Observations",
+   "read_only": 1
+  },
+  {
+   "fieldname": "pass_percent",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Take Pass %",
    "read_only": 1
   },
   {
@@ -132,6 +174,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_quality_and_results_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quality and Results Column 2"
+  },
+  {
    "default": "0",
    "fieldname": "corrective_action_required",
    "fieldtype": "Check",
@@ -141,11 +188,6 @@
    "fieldname": "due_date",
    "fieldtype": "Date",
    "label": "Corrective Action Due Date"
-  },
-  {
-   "fieldname": "remarks",
-   "fieldtype": "Small Text",
-   "label": "Remarks"
   }
  ],
  "istable": 1,

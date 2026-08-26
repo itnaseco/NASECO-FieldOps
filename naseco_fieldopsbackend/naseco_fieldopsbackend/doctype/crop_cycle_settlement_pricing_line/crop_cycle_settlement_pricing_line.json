@@ -4,32 +4,43 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_additional_details_section",
   "production_lot",
   "assessment_count",
+  "ux_additional_details_column_2_column",
+  "eligible_area_hectares",
+  "undersize_percent",
+  "ux_quantities_and_values_section",
   "net_dry_qty",
   "uom",
-  "eligible_area_hectares",
   "yield_kg_per_hectare",
-  "genetic_purity_percent",
-  "germination_percent",
-  "undersize_percent",
-  "reject_percent",
   "pricing_band",
   "price_basis",
   "base_quota_qty",
   "base_rate",
+  "ux_quantities_and_values_column_2_column",
   "excess_qty",
   "excess_rate",
   "grain_qty",
   "gross_value",
   "screen_deduction",
-  "reject_deduction",
   "initial_payable_value",
+  "ux_quality_and_results_section",
+  "genetic_purity_percent",
+  "germination_percent",
+  "reject_percent",
+  "reject_deduction",
+  "ux_quality_and_results_column_2_column",
   "potential_bonus_rate",
   "potential_bonus_amount",
   "bonus_status"
  ],
  "fields": [
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
   {
    "fieldname": "production_lot",
    "fieldtype": "Link",
@@ -46,6 +57,28 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_additional_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Additional Details Column 2"
+  },
+  {
+   "fieldname": "eligible_area_hectares",
+   "fieldtype": "Float",
+   "label": "Eligible Area (Hectares)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "undersize_percent",
+   "fieldtype": "Percent",
+   "label": "Below Screen Size %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
+  {
    "fieldname": "net_dry_qty",
    "fieldtype": "Float",
    "in_list_view": 1,
@@ -60,41 +93,10 @@
    "read_only": 1
   },
   {
-   "fieldname": "eligible_area_hectares",
-   "fieldtype": "Float",
-   "label": "Eligible Area (Hectares)",
-   "read_only": 1
-  },
-  {
    "fieldname": "yield_kg_per_hectare",
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Yield (kg/hectare)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "genetic_purity_percent",
-   "fieldtype": "Percent",
-   "in_list_view": 1,
-   "label": "Genetic Purity %",
-   "read_only": 1
-  },
-  {
-   "fieldname": "germination_percent",
-   "fieldtype": "Percent",
-   "label": "Germination %",
-   "read_only": 1
-  },
-  {
-   "fieldname": "undersize_percent",
-   "fieldtype": "Percent",
-   "label": "Below Screen Size %",
-   "read_only": 1
-  },
-  {
-   "fieldname": "reject_percent",
-   "fieldtype": "Percent",
-   "label": "Rejects %",
    "read_only": 1
   },
   {
@@ -121,6 +123,11 @@
    "fieldtype": "Currency",
    "label": "Base Rate",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quantities and Values Column 2"
   },
   {
    "fieldname": "excess_qty",
@@ -153,17 +160,46 @@
    "read_only": 1
   },
   {
+   "fieldname": "initial_payable_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Initial Payable",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_quality_and_results_section",
+   "fieldtype": "Section Break",
+   "label": "Quality and Results"
+  },
+  {
+   "fieldname": "genetic_purity_percent",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Genetic Purity %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "germination_percent",
+   "fieldtype": "Percent",
+   "label": "Germination %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reject_percent",
+   "fieldtype": "Percent",
+   "label": "Rejects %",
+   "read_only": 1
+  },
+  {
    "fieldname": "reject_deduction",
    "fieldtype": "Currency",
    "label": "Reject Deduction",
    "read_only": 1
   },
   {
-   "fieldname": "initial_payable_value",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Initial Payable",
-   "read_only": 1
+   "fieldname": "ux_quality_and_results_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quality and Results Column 2"
   },
   {
    "fieldname": "potential_bonus_rate",

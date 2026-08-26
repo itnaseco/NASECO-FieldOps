@@ -4,22 +4,47 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_details_section",
+  "procurement_status",
+  "ux_additional_details_section",
   "item_code",
+  "ux_additional_details_column_2_column",
+  "material_request",
+  "ux_quantities_and_values_section",
   "stock_uom",
   "required_qty",
   "available_qty",
   "shortage_qty",
   "stock_coverage_percent",
+  "ux_quantities_and_values_column_2_column",
   "source_warehouse",
   "recovery_policy",
   "recoverable_percent",
   "estimated_rate",
   "estimated_cost",
-  "procurement_status",
-  "material_request",
+  "ux_notes_and_review_section",
   "notes"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "default": "Not Reviewed",
+   "fieldname": "procurement_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Procurement Status",
+   "options": "Not Reviewed\nAvailable\nShortage Identified\nMaterial Request Created\nOrdered\nReceived",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
   {
    "fieldname": "item_code",
    "fieldtype": "Link",
@@ -28,6 +53,23 @@
    "options": "Item",
    "reqd": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_additional_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Additional Details Column 2"
+  },
+  {
+   "fieldname": "material_request",
+   "fieldtype": "Link",
+   "label": "Material Request",
+   "options": "Material Request",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
   },
   {
    "fieldname": "stock_uom",
@@ -65,6 +107,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_quantities_and_values_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quantities and Values Column 2"
+  },
+  {
    "fieldname": "source_warehouse",
    "fieldtype": "Link",
    "label": "Source Warehouse",
@@ -100,20 +147,9 @@
    "read_only": 1
   },
   {
-   "default": "Not Reviewed",
-   "fieldname": "procurement_status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Procurement Status",
-   "options": "Not Reviewed\nAvailable\nShortage Identified\nMaterial Request Created\nOrdered\nReceived",
-   "reqd": 1
-  },
-  {
-   "fieldname": "material_request",
-   "fieldtype": "Link",
-   "label": "Material Request",
-   "options": "Material Request",
-   "read_only": 1
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
   },
   {
    "fieldname": "notes",

@@ -6,30 +6,48 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "stage_code",
+  "ux_details_section",
   "stage_name",
+  "ux_additional_details_section",
+  "stage_code",
   "order_index",
-  "start_day_offset",
-  "end_day_offset",
+  "ux_additional_details_column_2_column",
   "duration_days",
+  "ux_dates_and_location_section",
+  "start_day_offset",
+  "ux_dates_and_location_column_2_column",
+  "end_day_offset",
+  "ux_location_section",
   "agronomy_report_template",
-  "description",
-  "inputs"
+  "ux_related_rows_section",
+  "inputs",
+  "ux_notes_and_review_section",
+  "description"
  ],
  "fields": [
   {
-   "fieldname": "stage_code",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Stage Code",
-   "options": "FIELD_VERIFICATION\nPLANTING\nEMERGENCE\nVEGETATIVE\nPRE_FLOWERING\nFLOWERING\nPRE_HARVEST\nHARVEST\nDELIVERY",
-   "reqd": 1
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
   },
   {
    "fieldname": "stage_name",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Stage Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
+  {
+   "fieldname": "stage_code",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Stage Code",
+   "options": "FIELD_VERIFICATION\nPLANTING\nEMERGENCE\nVEGETATIVE\nPRE_FLOWERING\nFLOWERING\nPRE_HARVEST\nHARVEST\nDELIVERY",
    "reqd": 1
   },
   {
@@ -40,10 +58,20 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_additional_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Additional Details Column 2"
+  },
+  {
    "fieldname": "duration_days",
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "Duration (Days)"
+  },
+  {
+   "fieldname": "ux_dates_and_location_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Location"
   },
   {
    "fieldname": "start_day_offset",
@@ -53,11 +81,21 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_dates_and_location_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Dates and Location Column 2"
+  },
+  {
    "fieldname": "end_day_offset",
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "End Day Offset",
    "reqd": 1
+  },
+  {
+   "fieldname": "ux_location_section",
+   "fieldtype": "Section Break",
+   "label": "Location"
   },
   {
    "fieldname": "agronomy_report_template",
@@ -66,15 +104,25 @@
    "options": "Agronomy Report Template"
   },
   {
-   "fieldname": "description",
-   "fieldtype": "Text",
-   "label": "Description"
+   "fieldname": "ux_related_rows_section",
+   "fieldtype": "Section Break",
+   "label": "Related Rows"
   },
   {
    "fieldname": "inputs",
    "fieldtype": "Table",
    "label": "Required Inputs",
    "options": "Recipe Input Item"
+  },
+  {
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Description"
   }
  ],
  "grid_page_length": 50,

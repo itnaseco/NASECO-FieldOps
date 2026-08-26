@@ -5,31 +5,40 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "ux_overview_tab",
+  "ux_lot_summary_section",
   "lot_number",
   "status",
   "crop_cycle",
   "production_contract",
   "plot",
+  "ux_lot_summary_column_2_column",
   "outgrower",
   "season",
   "crop",
   "variety",
-  "planting_section",
+  "ux_planting_tab",
+  "ux_five_day_planting_lot_section",
   "planting_start_date",
   "planting_end_date",
+  "ux_five_day_planting_lot_column_2_column",
   "area_hectares",
   "assigned_supervisor",
-  "parent_seed_section",
+  "ux_parent_seed_tab",
+  "ux_parent_seed_traceability_section",
   "parent_seed_item",
   "parent_seed_batch",
+  "ux_parent_seed_traceability_column_2_column",
   "parent_seed_qty",
   "parent_seed_uom",
-  "field_section",
+  "ux_certification_tab",
+  "ux_field_certification_outcome_section",
   "accepted_area_hectares",
   "rejected_area_hectares",
   "field_certification_status",
   "rejected_area_geojson",
-  "harvest_section",
+  "ux_harvest_tab",
+  "ux_harvest_storage_and_collection_section",
   "crib_ready_date",
   "collection_due_date",
   "harvest_batch",
@@ -37,6 +46,16 @@
   "notes"
  ],
  "fields": [
+  {
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_lot_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Lot Summary"
+  },
   {
    "fieldname": "lot_number",
    "fieldtype": "Int",
@@ -78,6 +97,11 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_lot_summary_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Lot Summary Column 2"
+  },
+  {
    "fieldname": "outgrower",
    "fieldtype": "Link",
    "label": "Outgrower",
@@ -107,7 +131,12 @@
    "read_only": 1
   },
   {
-   "fieldname": "planting_section",
+   "fieldname": "ux_planting_tab",
+   "fieldtype": "Tab Break",
+   "label": "Planting"
+  },
+  {
+   "fieldname": "ux_five_day_planting_lot_section",
    "fieldtype": "Section Break",
    "label": "Five-Day Planting Lot"
   },
@@ -125,6 +154,11 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_five_day_planting_lot_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Five-Day Planting Lot Column 2"
+  },
+  {
    "fieldname": "area_hectares",
    "fieldtype": "Float",
    "in_list_view": 1,
@@ -140,7 +174,12 @@
    "read_only": 1
   },
   {
-   "fieldname": "parent_seed_section",
+   "fieldname": "ux_parent_seed_tab",
+   "fieldtype": "Tab Break",
+   "label": "Parent Seed"
+  },
+  {
+   "fieldname": "ux_parent_seed_traceability_section",
    "fieldtype": "Section Break",
    "label": "Parent Seed Traceability"
   },
@@ -157,6 +196,11 @@
    "options": "Batch"
   },
   {
+   "fieldname": "ux_parent_seed_traceability_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Parent Seed Traceability Column 2"
+  },
+  {
    "fieldname": "parent_seed_qty",
    "fieldtype": "Float",
    "label": "Parent Seed Allocated",
@@ -171,7 +215,12 @@
    "read_only": 1
   },
   {
-   "fieldname": "field_section",
+   "fieldname": "ux_certification_tab",
+   "fieldtype": "Tab Break",
+   "label": "Certification"
+  },
+  {
+   "fieldname": "ux_field_certification_outcome_section",
    "fieldtype": "Section Break",
    "label": "Field Certification Outcome"
   },
@@ -201,7 +250,12 @@
    "options": "JSON"
   },
   {
-   "fieldname": "harvest_section",
+   "fieldname": "ux_harvest_tab",
+   "fieldtype": "Tab Break",
+   "label": "Harvest"
+  },
+  {
+   "fieldname": "ux_harvest_storage_and_collection_section",
    "fieldtype": "Section Break",
    "label": "Harvest, Storage and Collection"
   },

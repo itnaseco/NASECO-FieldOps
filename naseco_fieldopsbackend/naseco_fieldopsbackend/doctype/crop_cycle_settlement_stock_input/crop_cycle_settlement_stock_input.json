@@ -5,18 +5,51 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_additional_details_section",
+  "item_code",
+  "ux_dates_and_location_section",
+  "posting_date",
+  "ux_quantities_and_values_section",
   "stock_entry",
   "stock_entry_detail",
-  "posting_date",
-  "item_code",
   "qty",
   "uom",
+  "ux_quantities_and_values_column_2_column",
   "recovery_policy",
   "recoverable_percent",
   "recovery_rate",
   "recoverable_amount"
  ],
  "fields": [
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Input Item",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_dates_and_location_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Location"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Issue Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
   {
    "fieldname": "stock_entry",
    "fieldtype": "Link",
@@ -33,20 +66,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "posting_date",
-   "fieldtype": "Date",
-   "label": "Issue Date",
-   "read_only": 1
-  },
-  {
-   "fieldname": "item_code",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Input Item",
-   "options": "Item",
-   "read_only": 1
-  },
-  {
    "fieldname": "qty",
    "fieldtype": "Float",
    "in_list_view": 1,
@@ -59,6 +78,11 @@
    "label": "UOM",
    "options": "UOM",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quantities and Values Column 2"
   },
   {
    "fieldname": "recovery_policy",

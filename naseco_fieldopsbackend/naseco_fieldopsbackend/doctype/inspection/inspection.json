@@ -7,64 +7,83 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_overview_tab",
+  "ux_inspection_summary_section",
   "inspection_id",
   "inspection_template",
   "inspection_type",
+  "ux_inspection_summary_column_2_column",
+  "status",
+  "sampling_protocol_version",
+  "ux_production_context_section",
   "crop_cycle",
   "production_contract",
   "plot",
   "outgrower",
+  "ux_production_context_column_2_column",
   "crop",
   "season",
   "production_category",
   "seed_class",
-  "sampling_protocol_version",
-  "section_break_1",
+  "ux_schedule_tab",
+  "ux_assignment_and_timing_section",
   "scheduled_date",
   "started_at",
+  "ux_assignment_and_timing_column_2_column",
   "completed_at",
   "assigned_to",
-  "status",
-  "qa_review_section",
+  "ux_takes_and_controls_tab",
+  "ux_take_progress_section",
+  "plot_area_hectares",
+  "required_take_count",
+  "ux_take_progress_column_2_column",
+  "completed_take_count",
+  "cumulative_total_plants",
+  "ux_inspection_takes_section",
+  "takes",
+  "take_results",
+  "ux_control_completion_section",
+  "controls_completed",
+  "inspection_observations",
+  "ux_results_tab",
+  "ux_inspection_results_section",
+  "results",
+  "ux_compliance_outcome_section",
+  "farmer_compliance_percent",
+  "farmer_compliance_status",
+  "supervisor_compliance_percent",
+  "ux_compliance_outcome_column_2_column",
+  "supervisor_compliance_status",
+  "field_certification_status",
+  "ux_area_decision_section",
+  "hectares_under_corrective_action",
+  "hectares_rejected",
+  "hectares_accepted",
+  "recommendation",
+  "ux_qa_review_tab",
+  "ux_quality_manager_review_section",
   "qa_review_status",
   "qa_reviewed_by",
   "qa_reviewed_on",
   "qa_review_notes",
   "reinspection_of",
   "reinspection_reason",
-  "section_break_2",
-  "plot_area_hectares",
-  "required_take_count",
-  "completed_take_count",
-  "cumulative_total_plants",
-  "takes",
-  "take_results",
-  "inspection_controls_section",
-  "controls_completed",
-  "inspection_observations",
-  "section_break_3",
-  "results",
-  "section_break_4",
-  "farmer_compliance_percent",
-  "farmer_compliance_status",
-  "supervisor_compliance_percent",
-  "supervisor_compliance_status",
-  "field_certification_status",
-  "hectares_under_corrective_action",
-  "hectares_rejected",
-  "hectares_accepted",
-  "recommendation",
-  "section_break_5",
+  "ux_positioning_quality_tab",
+  "ux_spacing_standards_section",
   "target_take_spacing_m",
   "minimum_take_spacing_standard_m",
+  "ux_spacing_standards_column_2_column",
   "maximum_take_spacing_standard_m",
+  "ux_spacing_performance_section",
   "average_take_spacing_m",
   "median_take_spacing_m",
   "minimum_observed_take_spacing_m",
   "maximum_observed_take_spacing_m",
+  "ux_spacing_performance_column_2_column",
   "spacing_pair_count",
   "spacing_compliant_count",
   "spacing_compliance_percent",
+  "ux_gps_quality_section",
   "average_gps_accuracy_m",
   "worst_gps_accuracy_m",
   "low_accuracy_take_count",
@@ -73,9 +92,20 @@
   "takes_outside_plot",
   "inspection_quality_score",
   "inspection_map_geojson",
+  "ux_sync_section",
   "synced"
  ],
  "fields": [
+  {
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_inspection_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Inspection Summary"
+  },
   {
    "fieldname": "inspection_id",
    "fieldtype": "Data",
@@ -96,6 +126,32 @@
    "label": "Inspection Type",
    "options": "Pre-flowering\n1st Flowering\n2nd Flowering\n3rd Flowering\nPre-harvest",
    "reqd": 1
+  },
+  {
+   "fieldname": "ux_inspection_summary_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Inspection Summary Column 2"
+  },
+  {
+   "default": "Scheduled",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Scheduled\nIn Progress\nAwaiting QA Review\nVerified\nReinspection Required\nCancelled"
+  },
+  {
+   "default": "Cumulative Counts V2",
+   "fieldname": "sampling_protocol_version",
+   "fieldtype": "Select",
+   "label": "Sampling Protocol",
+   "options": "Legacy Percentage V1\nCumulative Counts V2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_production_context_section",
+   "fieldtype": "Section Break",
+   "label": "Production Context"
   },
   {
    "fieldname": "crop_cycle",
@@ -126,6 +182,11 @@
    "options": "Outgrower"
   },
   {
+   "fieldname": "ux_production_context_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Production Context Column 2"
+  },
+  {
    "fieldname": "crop",
    "fieldtype": "Link",
    "label": "Crop",
@@ -153,17 +214,14 @@
    "options": "Seed Class"
   },
   {
-   "default": "Cumulative Counts V2",
-   "fieldname": "sampling_protocol_version",
-   "fieldtype": "Select",
-   "label": "Sampling Protocol",
-   "options": "Legacy Percentage V1\nCumulative Counts V2",
-   "read_only": 1
+   "fieldname": "ux_schedule_tab",
+   "fieldtype": "Tab Break",
+   "label": "Schedule"
   },
   {
-   "fieldname": "section_break_1",
+   "fieldname": "ux_assignment_and_timing_section",
    "fieldtype": "Section Break",
-   "label": "Schedule"
+   "label": "Assignment and Timing"
   },
   {
    "fieldname": "scheduled_date",
@@ -175,6 +233,11 @@
    "fieldname": "started_at",
    "fieldtype": "Datetime",
    "label": "Started At"
+  },
+  {
+   "fieldname": "ux_assignment_and_timing_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Assignment and Timing Column 2"
   },
   {
    "fieldname": "completed_at",
@@ -189,15 +252,177 @@
    "options": "User"
   },
   {
-   "default": "Scheduled",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Status",
-   "options": "Scheduled\nIn Progress\nAwaiting QA Review\nVerified\nReinspection Required\nCancelled"
+   "fieldname": "ux_takes_and_controls_tab",
+   "fieldtype": "Tab Break",
+   "label": "Takes and Controls"
   },
   {
-   "fieldname": "qa_review_section",
+   "fieldname": "ux_take_progress_section",
+   "fieldtype": "Section Break",
+   "label": "Take Progress"
+  },
+  {
+   "fieldname": "plot_area_hectares",
+   "fieldtype": "Float",
+   "label": "Plot Area (Ha)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "required_take_count",
+   "fieldtype": "Int",
+   "label": "Required Take Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_take_progress_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Take Progress Column 2"
+  },
+  {
+   "fieldname": "completed_take_count",
+   "fieldtype": "Int",
+   "label": "Completed Take Count",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cumulative_total_plants",
+   "fieldtype": "Int",
+   "label": "Cumulative Total Plants",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_inspection_takes_section",
+   "fieldtype": "Section Break",
+   "label": "Inspection Takes"
+  },
+  {
+   "fieldname": "takes",
+   "fieldtype": "Table",
+   "label": "Inspection Takes",
+   "options": "Inspection Take",
+   "read_only": 1
+  },
+  {
+   "fieldname": "take_results",
+   "fieldtype": "Table",
+   "label": "Take Attribute Values",
+   "options": "Inspection Take Result",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_control_completion_section",
+   "fieldtype": "Section Break",
+   "label": "Control Completion"
+  },
+  {
+   "default": "0",
+   "fieldname": "controls_completed",
+   "fieldtype": "Check",
+   "label": "Mandatory Controls Completed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "inspection_observations",
+   "fieldtype": "Table",
+   "label": "Inspection-Level Observations",
+   "options": "Inspection Observation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_results_tab",
+   "fieldtype": "Tab Break",
+   "label": "Results"
+  },
+  {
+   "fieldname": "ux_inspection_results_section",
+   "fieldtype": "Section Break",
+   "label": "Inspection Results"
+  },
+  {
+   "fieldname": "results",
+   "fieldtype": "Table",
+   "label": "Aggregated Inspection Results",
+   "options": "Inspection Result",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_compliance_outcome_section",
+   "fieldtype": "Section Break",
+   "label": "Compliance Outcome"
+  },
+  {
+   "fieldname": "farmer_compliance_percent",
+   "fieldtype": "Percent",
+   "label": "Farmer Compliance %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "farmer_compliance_status",
+   "fieldtype": "Select",
+   "label": "Farmer Compliance Status",
+   "options": "Non-Compliant\nImprovements Required\nCompliant",
+   "read_only": 1
+  },
+  {
+   "fieldname": "supervisor_compliance_percent",
+   "fieldtype": "Percent",
+   "label": "Supervisor Compliance %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_compliance_outcome_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Compliance Outcome Column 2"
+  },
+  {
+   "fieldname": "supervisor_compliance_status",
+   "fieldtype": "Select",
+   "label": "Supervisor Compliance Status",
+   "options": "Non-Compliant\nImprovements Required\nCompliant",
+   "read_only": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "field_certification_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Field Certification Status",
+   "options": "Pending\nApproved\nCorrective Action Required\nPartially Rejected\nRejected"
+  },
+  {
+   "fieldname": "ux_area_decision_section",
+   "fieldtype": "Section Break",
+   "label": "Area Decision"
+  },
+  {
+   "fieldname": "hectares_under_corrective_action",
+   "fieldtype": "Float",
+   "label": "Ha Under Corrective Action"
+  },
+  {
+   "fieldname": "hectares_rejected",
+   "fieldtype": "Float",
+   "label": "Ha Rejected"
+  },
+  {
+   "fieldname": "hectares_accepted",
+   "fieldtype": "Float",
+   "label": "Ha Accepted",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recommendation",
+   "fieldtype": "Text",
+   "label": "Recommendation"
+  },
+  {
+   "fieldname": "ux_qa_review_tab",
+   "fieldtype": "Tab Break",
+   "label": "QA Review"
+  },
+  {
+   "fieldname": "ux_quality_manager_review_section",
    "fieldtype": "Section Break",
    "label": "Quality Manager Review"
   },
@@ -242,144 +467,14 @@
    "read_only": 1
   },
   {
-   "fieldname": "section_break_2",
+   "fieldname": "ux_positioning_quality_tab",
+   "fieldtype": "Tab Break",
+   "label": "Positioning Quality"
+  },
+  {
+   "fieldname": "ux_spacing_standards_section",
    "fieldtype": "Section Break",
-   "label": "Takes"
-  },
-  {
-   "fieldname": "plot_area_hectares",
-   "fieldtype": "Float",
-   "label": "Plot Area (Ha)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "required_take_count",
-   "fieldtype": "Int",
-   "label": "Required Take Count",
-   "read_only": 1
-  },
-  {
-   "fieldname": "completed_take_count",
-   "fieldtype": "Int",
-   "label": "Completed Take Count",
-   "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "cumulative_total_plants",
-   "fieldtype": "Int",
-   "label": "Cumulative Total Plants",
-   "read_only": 1
-  },
-  {
-   "fieldname": "takes",
-   "fieldtype": "Table",
-   "label": "Inspection Takes",
-   "options": "Inspection Take",
-   "read_only": 1
-  },
-  {
-   "fieldname": "take_results",
-   "fieldtype": "Table",
-   "label": "Take Attribute Values",
-   "options": "Inspection Take Result",
-   "read_only": 1
-  },
-  {
-   "fieldname": "inspection_controls_section",
-   "fieldtype": "Section Break",
-   "label": "Inspection-Level Controls"
-  },
-  {
-   "default": "0",
-   "fieldname": "controls_completed",
-   "fieldtype": "Check",
-   "label": "Mandatory Controls Completed",
-   "read_only": 1
-  },
-  {
-   "fieldname": "inspection_observations",
-   "fieldtype": "Table",
-   "label": "Inspection-Level Observations",
-   "options": "Inspection Observation",
-   "read_only": 1
-  },
-  {
-   "fieldname": "section_break_3",
-   "fieldtype": "Section Break",
-   "label": "Aggregated Inspection Results"
-  },
-  {
-   "fieldname": "results",
-   "fieldtype": "Table",
-   "label": "Aggregated Inspection Results",
-   "options": "Inspection Result",
-   "read_only": 1
-  },
-  {
-   "fieldname": "section_break_4",
-   "fieldtype": "Section Break",
-   "label": "Compliance Summary"
-  },
-  {
-   "fieldname": "farmer_compliance_percent",
-   "fieldtype": "Percent",
-   "label": "Farmer Compliance %",
-   "read_only": 1
-  },
-  {
-   "fieldname": "farmer_compliance_status",
-   "fieldtype": "Select",
-   "label": "Farmer Compliance Status",
-   "options": "Non-Compliant\nImprovements Required\nCompliant",
-   "read_only": 1
-  },
-  {
-   "fieldname": "supervisor_compliance_percent",
-   "fieldtype": "Percent",
-   "label": "Supervisor Compliance %",
-   "read_only": 1
-  },
-  {
-   "fieldname": "supervisor_compliance_status",
-   "fieldtype": "Select",
-   "label": "Supervisor Compliance Status",
-   "options": "Non-Compliant\nImprovements Required\nCompliant",
-   "read_only": 1
-  },
-  {
-   "default": "Pending",
-   "fieldname": "field_certification_status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Field Certification Status",
-   "options": "Pending\nApproved\nCorrective Action Required\nPartially Rejected\nRejected"
-  },
-  {
-   "fieldname": "hectares_under_corrective_action",
-   "fieldtype": "Float",
-   "label": "Ha Under Corrective Action"
-  },
-  {
-   "fieldname": "hectares_rejected",
-   "fieldtype": "Float",
-   "label": "Ha Rejected"
-  },
-  {
-   "fieldname": "hectares_accepted",
-   "fieldtype": "Float",
-   "label": "Ha Accepted",
-   "read_only": 1
-  },
-  {
-   "fieldname": "recommendation",
-   "fieldtype": "Text",
-   "label": "Recommendation"
-  },
-  {
-   "fieldname": "section_break_5",
-   "fieldtype": "Section Break",
-   "label": "Inspection Quality"
+   "label": "Spacing Standards"
   },
   {
    "fieldname": "target_take_spacing_m",
@@ -394,10 +489,20 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_spacing_standards_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Spacing Standards Column 2"
+  },
+  {
    "fieldname": "maximum_take_spacing_standard_m",
    "fieldtype": "Float",
    "label": "Maximum Spacing Standard (m)",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_spacing_performance_section",
+   "fieldtype": "Section Break",
+   "label": "Spacing Performance"
   },
   {
    "fieldname": "average_take_spacing_m",
@@ -424,6 +529,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_spacing_performance_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Spacing Performance Column 2"
+  },
+  {
    "default": "0",
    "fieldname": "spacing_pair_count",
    "fieldtype": "Int",
@@ -442,6 +552,11 @@
    "fieldtype": "Percent",
    "label": "Spacing Compliance %",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_gps_quality_section",
+   "fieldtype": "Section Break",
+   "label": "GPS Quality"
   },
   {
    "fieldname": "average_gps_accuracy_m",
@@ -494,6 +609,11 @@
    "label": "Inspection Map GeoJSON",
    "options": "JSON",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_sync_section",
+   "fieldtype": "Section Break",
+   "label": "Sync"
   },
   {
    "default": "0",

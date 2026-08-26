@@ -4,16 +4,45 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "readiness_area",
-  "requirement",
-  "mandatory",
-  "responsible_user",
-  "due_date",
+  "ux_details_section",
   "status",
   "evidence",
+  "ux_additional_details_section",
+  "readiness_area",
+  "requirement",
+  "ux_additional_details_column_2_column",
+  "mandatory",
+  "responsible_user",
+  "ux_dates_and_location_section",
+  "due_date",
+  "ux_notes_and_review_section",
   "notes"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "default": "Not Started",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Not Started\nIn Progress\nReady\nBlocked\nNot Applicable",
+   "reqd": 1
+  },
+  {
+   "fieldname": "evidence",
+   "fieldtype": "Attach",
+   "label": "Evidence"
+  },
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
   {
    "fieldname": "readiness_area",
    "fieldtype": "Select",
@@ -30,6 +59,11 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_additional_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Additional Details Column 2"
+  },
+  {
    "default": "1",
    "fieldname": "mandatory",
    "fieldtype": "Check",
@@ -42,23 +76,19 @@
    "options": "User"
   },
   {
+   "fieldname": "ux_dates_and_location_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Location"
+  },
+  {
    "fieldname": "due_date",
    "fieldtype": "Date",
    "label": "Due Date"
   },
   {
-   "default": "Not Started",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Status",
-   "options": "Not Started\nIn Progress\nReady\nBlocked\nNot Applicable",
-   "reqd": 1
-  },
-  {
-   "fieldname": "evidence",
-   "fieldtype": "Attach",
-   "label": "Evidence"
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
   },
   {
    "fieldname": "notes",

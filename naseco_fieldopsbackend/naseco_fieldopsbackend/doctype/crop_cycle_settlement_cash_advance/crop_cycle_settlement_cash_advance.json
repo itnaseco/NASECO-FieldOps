@@ -5,13 +5,20 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_quantities_and_values_section",
   "advance_request",
   "payment_entry",
   "payment_date",
+  "ux_quantities_and_values_column_2_column",
   "paid_amount",
   "available_amount"
  ],
  "fields": [
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
   {
    "fieldname": "advance_request",
    "fieldtype": "Link",
@@ -32,6 +39,11 @@
    "fieldtype": "Date",
    "label": "Payment Date",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quantities and Values Column 2"
   },
   {
    "fieldname": "paid_amount",

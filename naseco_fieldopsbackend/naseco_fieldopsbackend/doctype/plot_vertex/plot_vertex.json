@@ -6,11 +6,32 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_additional_details_section",
+  "order_index",
+  "ux_location_section",
   "latitude",
-  "longitude",
-  "order_index"
+  "ux_location_column_2_column",
+  "longitude"
  ],
  "fields": [
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
+  {
+   "fieldname": "order_index",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Order",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_location_section",
+   "fieldtype": "Section Break",
+   "label": "Location"
+  },
   {
    "fieldname": "latitude",
    "fieldtype": "Float",
@@ -20,20 +41,17 @@
    "precision": 6
   },
   {
+   "fieldname": "ux_location_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Location Column 2"
+  },
+  {
    "fieldname": "longitude",
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Longitude",
    "reqd": 1,
    "precision": 6
-  },
-  {
-   "fieldname": "order_index",
-   "fieldtype": "Int",
-   "in_list_view": 1,
-   "label": "Order",
-   "read_only": 1,
-   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,

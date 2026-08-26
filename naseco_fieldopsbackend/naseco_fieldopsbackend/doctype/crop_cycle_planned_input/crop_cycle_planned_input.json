@@ -1,24 +1,186 @@
 {
- "actions":[], "doctype":"DocType", "editable_grid":1, "engine":"InnoDB", "istable":1,
- "field_order":["recipe_input_row","stage_code","stage_name","required_by","item_code","quantity_per_hectare","planned_qty","uom","stock_uom","planned_stock_qty","source_warehouse","pricing_policy","cost_basis","forecast_base_rate","markup_percent","forecast_recovery_rate","recoverable_percent","forecast_recoverable_amount"],
- "fields":[
-  {"fieldname":"recipe_input_row","fieldtype":"Data","label":"Recipe Input Row","read_only":1},
-  {"fieldname":"stage_code","fieldtype":"Data","label":"Stage Code","read_only":1},
-  {"fieldname":"stage_name","fieldtype":"Data","in_list_view":1,"label":"Stage","read_only":1},
-  {"fieldname":"required_by","fieldtype":"Date","in_list_view":1,"label":"Required By","read_only":1},
-  {"fieldname":"item_code","fieldtype":"Link","in_list_view":1,"label":"Item","options":"Item","read_only":1},
-  {"fieldname":"quantity_per_hectare","fieldtype":"Float","label":"Quantity per Hectare","read_only":1},
-  {"fieldname":"planned_qty","fieldtype":"Float","in_list_view":1,"label":"Planned Qty","read_only":1},
-  {"fieldname":"uom","fieldtype":"Link","label":"UOM","options":"UOM","read_only":1},
-  {"fieldname":"stock_uom","fieldtype":"Link","label":"Stock UOM","options":"UOM","read_only":1},
-  {"fieldname":"planned_stock_qty","fieldtype":"Float","label":"Planned Stock Qty","read_only":1},
-  {"fieldname":"source_warehouse","fieldtype":"Link","label":"Source Warehouse","options":"Warehouse","read_only":1},
-  {"fieldname":"pricing_policy","fieldtype":"Link","label":"Recovery Pricing Policy","options":"Input Recovery Pricing Policy","read_only":1},
-  {"fieldname":"cost_basis","fieldtype":"Data","label":"Cost Basis","read_only":1},
-  {"fieldname":"forecast_base_rate","fieldtype":"Currency","label":"Forecast Base Rate","read_only":1},
-  {"fieldname":"markup_percent","fieldtype":"Percent","label":"Risk Markup %","read_only":1},
-  {"fieldname":"forecast_recovery_rate","fieldtype":"Currency","label":"Forecast Recovery Rate","read_only":1},
-  {"fieldname":"recoverable_percent","fieldtype":"Percent","label":"Recoverable %","read_only":1},
-  {"fieldname":"forecast_recoverable_amount","fieldtype":"Currency","in_list_view":1,"label":"Forecast Recoverable Amount","read_only":1}
- ], "module":"Naseco FieldOpsBackend", "name":"Crop Cycle Planned Input", "permissions":[]
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "istable": 1,
+ "field_order": [
+  "ux_details_section",
+  "stage_name",
+  "ux_additional_details_section",
+  "recipe_input_row",
+  "stage_code",
+  "ux_additional_details_column_2_column",
+  "item_code",
+  "markup_percent",
+  "ux_dates_and_location_section",
+  "required_by",
+  "ux_quantities_and_values_section",
+  "quantity_per_hectare",
+  "planned_qty",
+  "uom",
+  "stock_uom",
+  "planned_stock_qty",
+  "source_warehouse",
+  "ux_quantities_and_values_column_2_column",
+  "pricing_policy",
+  "cost_basis",
+  "forecast_base_rate",
+  "forecast_recovery_rate",
+  "recoverable_percent",
+  "forecast_recoverable_amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "stage_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Stage",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
+  {
+   "fieldname": "recipe_input_row",
+   "fieldtype": "Data",
+   "label": "Recipe Input Row",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stage_code",
+   "fieldtype": "Data",
+   "label": "Stage Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_additional_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Additional Details Column 2"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "markup_percent",
+   "fieldtype": "Percent",
+   "label": "Risk Markup %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_dates_and_location_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Location"
+  },
+  {
+   "fieldname": "required_by",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Required By",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
+  {
+   "fieldname": "quantity_per_hectare",
+   "fieldtype": "Float",
+   "label": "Quantity per Hectare",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planned_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Planned Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stock_uom",
+   "fieldtype": "Link",
+   "label": "Stock UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planned_stock_qty",
+   "fieldtype": "Float",
+   "label": "Planned Stock Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "source_warehouse",
+   "fieldtype": "Link",
+   "label": "Source Warehouse",
+   "options": "Warehouse",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quantities and Values Column 2"
+  },
+  {
+   "fieldname": "pricing_policy",
+   "fieldtype": "Link",
+   "label": "Recovery Pricing Policy",
+   "options": "Input Recovery Pricing Policy",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cost_basis",
+   "fieldtype": "Data",
+   "label": "Cost Basis",
+   "read_only": 1
+  },
+  {
+   "fieldname": "forecast_base_rate",
+   "fieldtype": "Currency",
+   "label": "Forecast Base Rate",
+   "read_only": 1
+  },
+  {
+   "fieldname": "forecast_recovery_rate",
+   "fieldtype": "Currency",
+   "label": "Forecast Recovery Rate",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recoverable_percent",
+   "fieldtype": "Percent",
+   "label": "Recoverable %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "forecast_recoverable_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Forecast Recoverable Amount",
+   "read_only": 1
+  }
+ ],
+ "module": "Naseco FieldOpsBackend",
+ "name": "Crop Cycle Planned Input",
+ "permissions": []
 }

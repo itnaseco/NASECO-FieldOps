@@ -6,22 +6,33 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "ux_overview_tab",
+  "ux_source_document_section",
   "source_type",
   "source_name",
   "source_parameter",
+  "ux_source_document_column_2_column",
   "inspection",
   "agronomy_report",
+  "ux_production_context_section",
   "crop_cycle",
   "plot",
+  "ux_production_context_column_2_column",
   "outgrower",
   "parameter",
+  "ux_action_tab",
+  "ux_assignment_and_due_date_section",
   "responsible_party",
   "assigned_to",
   "verification_assigned_to",
+  "ux_assignment_and_due_date_column_2_column",
   "due_date",
   "status",
+  "ux_corrective_action_details_section",
   "description",
   "resolution_notes",
+  "ux_verification_and_closure_tab",
+  "ux_response_and_verification_section",
   "response_on",
   "verified_by",
   "verified_on",
@@ -29,6 +40,16 @@
   "closed_on"
  ],
  "fields": [
+  {
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_source_document_section",
+   "fieldtype": "Section Break",
+   "label": "Source Document"
+  },
   {
    "default": "Inspection",
    "fieldname": "source_type",
@@ -52,6 +73,11 @@
    "label": "Source Parameter"
   },
   {
+   "fieldname": "ux_source_document_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Source Document Column 2"
+  },
+  {
    "fieldname": "inspection",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -63,6 +89,11 @@
    "fieldtype": "Link",
    "label": "Agronomy Report",
    "options": "Agronomy Report"
+  },
+  {
+   "fieldname": "ux_production_context_section",
+   "fieldtype": "Section Break",
+   "label": "Production Context"
   },
   {
    "fieldname": "crop_cycle",
@@ -77,6 +108,11 @@
    "options": "Farm Plot"
   },
   {
+   "fieldname": "ux_production_context_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Production Context Column 2"
+  },
+  {
    "fieldname": "outgrower",
    "fieldtype": "Link",
    "label": "Outgrower",
@@ -88,6 +124,16 @@
    "in_list_view": 1,
    "label": "Parameter",
    "options": "Inspection Parameter"
+  },
+  {
+   "fieldname": "ux_action_tab",
+   "fieldtype": "Tab Break",
+   "label": "Action"
+  },
+  {
+   "fieldname": "ux_assignment_and_due_date_section",
+   "fieldtype": "Section Break",
+   "label": "Assignment and Due Date"
   },
   {
    "fieldname": "responsible_party",
@@ -111,6 +157,11 @@
    "options": "User"
   },
   {
+   "fieldname": "ux_assignment_and_due_date_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Assignment and Due Date Column 2"
+  },
+  {
    "fieldname": "due_date",
    "fieldtype": "Date",
    "in_list_view": 1,
@@ -125,6 +176,11 @@
    "options": "Open\nIn Progress\nResponded\nVerified\nClosed\nCancelled"
   },
   {
+   "fieldname": "ux_corrective_action_details_section",
+   "fieldtype": "Section Break",
+   "label": "Corrective Action Details"
+  },
+  {
    "fieldname": "description",
    "fieldtype": "Text",
    "label": "Description"
@@ -133,6 +189,16 @@
    "fieldname": "resolution_notes",
    "fieldtype": "Text",
    "label": "Resolution Notes"
+  },
+  {
+   "fieldname": "ux_verification_and_closure_tab",
+   "fieldtype": "Tab Break",
+   "label": "Verification and Closure"
+  },
+  {
+   "fieldname": "ux_response_and_verification_section",
+   "fieldtype": "Section Break",
+   "label": "Response and Verification"
   },
   {
    "fieldname": "response_on",

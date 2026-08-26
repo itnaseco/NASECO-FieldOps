@@ -1,480 +1,551 @@
 {
-  "actions": [],
-  "allow_rename": 1,
-  "autoname": "field:crop_cycle_id",
-  "creation": "2026-01-29 17:30:59.166829",
-  "doctype": "DocType",
-  "editable_grid": 1,
-  "engine": "InnoDB",
-  "field_order": [
-    "actual_harvest_date",
-    "actual_harvest_value",
-    "agronomy_report_schedule_generated",
-    "agronomy_schedule_generated",
-    "available_advance_capacity",
-    "cash_advanced",
-    "commercial_section",
-    "company",
-    "contract_rate",
-    "contracted_area_acres",
-    "contracted_area_hectares",
-    "contracted_quota_qty",
-    "crop",
-    "crop_cycle_id",
-    "currency",
-    "current_stage",
-    "expected_harvest_date",
-    "expected_harvest_value",
-    "expected_yield_kg_per_hectare",
-    "expected_yield_qty",
-    "finance_summary_section",
-    "forecast_input_recovery",
-    "forecast_net_payable",
-    "harvest_item",
-    "harvest_uom",
-    "input_plan_section",
-    "inspection_schedule_generated",
-    "lifecycle_initialized",
-    "max_exposure_percent",
-    "next_inspection_date",
-    "pending_cash_advance",
-    "planned_inputs",
-    "planting_date",
-    "planting_confirmation_section",
-    "planting_date_confirmed",
-    "planting_date_confirmed_by",
-    "planting_date_confirmed_on",
-    "planting_confirmation_notes",
-    "plot",
-    "pricing_policy",
-    "production_category",
-    "seed_class",
-    "production_contract",
-    "purchase_order",
-    "recipe",
-    "recoverable_stock_value",
-    "season",
-    "section_break_1",
-    "section_break_2",
-    "start_date",
-    "status",
-    "supplier",
-    "synced",
-    "total_exposure",
-    "variety"
-  ],
-  "fields": [
-    {
-      "fieldname": "actual_harvest_date",
-      "fieldtype": "Date",
-      "label": "Actual Harvest Date"
-    },
-    {
-      "fieldname": "actual_harvest_value",
-      "fieldtype": "Currency",
-      "label": "Actual Accepted Harvest Value",
-      "options": "currency",
-      "read_only": 1
-    },
-    {
-      "default": "0",
-      "fieldname": "agronomy_report_schedule_generated",
-      "fieldtype": "Check",
-      "label": "Agronomy Report Schedule Generated",
-      "read_only": 1
-    },
-    {
-      "default": "0",
-      "fieldname": "agronomy_schedule_generated",
-      "fieldtype": "Check",
-      "label": "Agronomy Schedule Generated",
-      "read_only": 1
-    },
-    {
-      "fieldname": "available_advance_capacity",
-      "fieldtype": "Currency",
-      "label": "Available Advance Capacity",
-      "options": "currency",
-      "read_only": 1
-    },
-    {
-      "fieldname": "cash_advanced",
-      "fieldtype": "Currency",
-      "label": "Cash Advanced",
-      "options": "currency",
-      "read_only": 1
-    },
-    {
-      "fieldname": "commercial_section",
-      "fieldtype": "Section Break",
-      "label": "Harvest Contract and Procurement"
-    },
-    {
-      "fieldname": "company",
-      "fieldtype": "Link",
-      "label": "Company",
-      "options": "Company",
-      "read_only": 1
-    },
-    {
-      "fieldname": "contract_rate",
-      "fieldtype": "Currency",
-      "label": "Contract Rate",
-      "options": "currency",
-      "read_only": 1
-    },
-    {
-      "fieldname": "contracted_area_acres",
-      "fieldtype": "Float",
-      "hidden": 1,
-      "label": "Legacy Contracted Area (Acres)",
-      "read_only": 1
-    },
-    {
-      "fieldname": "contracted_area_hectares",
-      "fieldtype": "Float",
-      "label": "Contracted Area (Hectares)",
-      "read_only": 1,
-      "precision": 4
-    },
-    {
-      "fieldname": "contracted_quota_qty",
-      "fieldtype": "Float",
-      "label": "Contracted Quota (Kg)",
-      "read_only": 1
-    },
-    {
-      "fieldname": "crop",
-      "fieldtype": "Link",
-      "in_list_view": 1,
-      "label": "Crop",
-      "options": "Crop",
-      "read_only": 1,
-      "reqd": 1
-    },
-    {
-      "fieldname": "crop_cycle_id",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "label": "Cycle ID",
-      "reqd": 1,
-      "unique": 1
-    },
-    {
-      "fieldname": "currency",
-      "fieldtype": "Link",
-      "label": "Currency",
-      "options": "Currency",
-      "read_only": 1
-    },
-    {
-      "fieldname": "current_stage",
-      "fieldtype": "Link",
-      "label": "Current Stage",
-      "options": "Crop Cycle Stage"
-    },
-    {
-      "fieldname": "expected_harvest_date",
-      "fieldtype": "Date",
-      "label": "Expected Harvest Date",
-      "read_only": 1
-    },
-    {
-      "fieldname": "expected_harvest_value",
-      "fieldtype": "Currency",
-      "label": "Expected Harvest Value",
-      "options": "currency",
-      "read_only": 1
-    },
-    {
-      "fieldname": "expected_yield_kg_per_hectare",
-      "fieldtype": "Float",
-      "label": "Expected Harvest (Kg per Hectare)",
-      "read_only": 1,
-      "precision": 2
-    },
-    {
-      "fieldname": "expected_yield_qty",
-      "fieldtype": "Float",
-      "label": "Expected Harvest Quantity",
-      "read_only": 1
-    },
-    {
-      "collapsible": 1,
-      "fieldname": "finance_summary_section",
-      "fieldtype": "Section Break",
-      "label": "Crop Cycle Financial Exposure"
-    },
-    {
-      "fieldname": "forecast_input_recovery",
-      "fieldtype": "Currency",
-      "label": "Forecast Input Recovery",
-      "options": "currency",
-      "read_only": 1
-    },
-    {
-      "fieldname": "forecast_net_payable",
-      "fieldtype": "Currency",
-      "label": "Forecast Net Payable",
-      "options": "currency",
-      "read_only": 1
-    },
-    {
-      "fieldname": "harvest_item",
-      "fieldtype": "Link",
-      "label": "Harvest Item",
-      "options": "Item",
-      "read_only": 1
-    },
-    {
-      "fetch_from": "harvest_item.stock_uom",
-      "fieldname": "harvest_uom",
-      "fieldtype": "Link",
-      "label": "Harvest UOM",
-      "options": "UOM",
-      "read_only": 1
-    },
-    {
-      "fieldname": "input_plan_section",
-      "fieldtype": "Section Break",
-      "label": "Recipe Input Plan"
-    },
-    {
-      "default": "0",
-      "fieldname": "inspection_schedule_generated",
-      "fieldtype": "Check",
-      "label": "Inspection Schedule Generated",
-      "read_only": 1
-    },
-    {
-      "default": "0",
-      "fieldname": "lifecycle_initialized",
-      "fieldtype": "Check",
-      "label": "Lifecycle Initialized",
-      "read_only": 1
-    },
-    {
-      "description": "Overrides the FieldOps default exposure ceiling for this Crop Cycle.",
-      "fieldname": "max_exposure_percent",
-      "fieldtype": "Percent",
-      "label": "Maximum Exposure %",
-      "read_only": 1
-    },
-    {
-      "fieldname": "next_inspection_date",
-      "fieldtype": "Date",
-      "label": "Next Inspection Date"
-    },
-    {
-      "fieldname": "pending_cash_advance",
-      "fieldtype": "Currency",
-      "label": "Approved Cash Pending Payment",
-      "options": "currency",
-      "read_only": 1
-    },
-    {
-      "fieldname": "planned_inputs",
-      "fieldtype": "Table",
-      "label": "Planned Crop Inputs",
-      "options": "Crop Cycle Planned Input",
-      "read_only": 1
-    },
-    {
-      "fieldname": "planting_date",
-      "fieldtype": "Date",
-      "in_list_view": 1,
-      "label": "Planting Date"
-    },
-    {
-      "fieldname": "planting_confirmation_section",
-      "fieldtype": "Section Break",
-      "label": "Planting Confirmation"
-    },
-    {
-      "default": "0",
-      "fieldname": "planting_date_confirmed",
-      "fieldtype": "Check",
-      "label": "Planting Date Confirmed",
-      "read_only": 1
-    },
-    {
-      "fieldname": "planting_date_confirmed_by",
-      "fieldtype": "Link",
-      "label": "Confirmed By",
-      "options": "User",
-      "read_only": 1
-    },
-    {
-      "fieldname": "planting_date_confirmed_on",
-      "fieldtype": "Datetime",
-      "label": "Confirmed On",
-      "read_only": 1
-    },
-    {
-      "fieldname": "planting_confirmation_notes",
-      "fieldtype": "Small Text",
-      "label": "Confirmation Notes",
-      "read_only_depends_on": "eval:doc.planting_date_confirmed"
-    },
-    {
-      "fieldname": "plot",
-      "fieldtype": "Link",
-      "in_list_view": 1,
-      "label": "Plot",
-      "options": "Farm Plot",
-      "read_only": 1,
-      "reqd": 1,
-      "unique": 1
-    },
-    {
-      "fieldname": "pricing_policy",
-      "fieldtype": "Link",
-      "label": "Pricing Policy",
-      "options": "Outgrower Pricing Policy",
-      "read_only": 1
-    },
-    {
-      "fieldname": "production_category",
-      "fieldtype": "Link",
-      "in_list_view": 1,
-      "label": "Production Category",
-      "options": "Seed Category",
-      "read_only": 1
-    },
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:crop_cycle_id",
+ "creation": "2026-01-29 17:30:59.166829",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "ux_overview_tab",
+  "ux_cycle_summary_section",
+  "crop_cycle_id",
+  "status",
+  "current_stage",
+  "production_contract",
+  "ux_cycle_summary_column_2_column",
+  "plot",
+  "supplier",
+  "company",
+  "synced",
+  "ux_crop_context_section",
+  "season",
+  "crop",
+  "variety",
+  "production_category",
+  "ux_crop_context_column_2_column",
+  "seed_class",
+  "recipe",
+  "pricing_policy",
+  "ux_dates_and_lifecycle_tab",
+  "ux_planting_dates_section",
+  "start_date",
+  "planting_date",
+  "planting_date_confirmed",
+  "planting_date_confirmed_by",
+  "planting_date_confirmed_on",
+  "planting_confirmation_notes",
+  "ux_schedules_section",
+  "next_inspection_date",
+  "inspection_schedule_generated",
+  "agronomy_schedule_generated",
+  "ux_schedules_column_2_column",
+  "agronomy_report_schedule_generated",
+  "lifecycle_initialized",
+  "ux_contract_and_harvest_tab",
+  "ux_contracted_harvest_section",
+  "contract_rate",
+  "currency",
+  "contracted_area_hectares",
+  "contracted_area_acres",
+  "contracted_quota_qty",
+  "ux_contracted_harvest_column_2_column",
+  "expected_yield_kg_per_hectare",
+  "expected_yield_qty",
+  "expected_harvest_date",
+  "expected_harvest_value",
+  "ux_actual_harvest_section",
+  "actual_harvest_date",
+  "actual_harvest_value",
+  "harvest_item",
+  "ux_actual_harvest_column_2_column",
+  "harvest_uom",
+  "purchase_order",
+  "ux_inputs_and_exposure_tab",
+  "ux_recipe_input_plan_section",
+  "planned_inputs",
+  "ux_financial_exposure_section",
+  "forecast_input_recovery",
+  "forecast_net_payable",
+  "recoverable_stock_value",
+  "cash_advanced",
+  "ux_financial_exposure_column_2_column",
+  "pending_cash_advance",
+  "available_advance_capacity",
+  "total_exposure",
+  "max_exposure_percent"
+ ],
+ "fields": [
   {
-      "fieldname": "seed_class",
-      "fieldtype": "Link",
-      "in_list_view": 1,
-      "label": "Seed Class",
-      "options": "Seed Class",
-      "read_only": 1
-    },
-    {
-      "fieldname": "production_contract",
-      "fieldtype": "Link",
-      "in_list_view": 1,
-      "label": "Production Contract",
-      "options": "Outgrower Production Contract",
-      "read_only": 1,
-      "reqd": 1,
-      "unique": 1
-    },
-    {
-      "fieldname": "purchase_order",
-      "fieldtype": "Link",
-      "label": "Harvest Purchase Order",
-      "options": "Purchase Order",
-      "read_only": 1
-    },
-    {
-      "fieldname": "recipe",
-      "fieldtype": "Link",
-      "label": "Crop Recipe",
-      "options": "Crop Recipe",
-      "read_only": 1
-    },
-    {
-      "fieldname": "recoverable_stock_value",
-      "fieldtype": "Currency",
-      "label": "Recoverable Stock Value",
-      "options": "currency",
-      "read_only": 1
-    },
-    {
-      "fieldname": "season",
-      "fieldtype": "Link",
-      "label": "Season",
-      "options": "Season",
-      "read_only": 1
-    },
-    {
-      "fieldname": "section_break_1",
-      "fieldtype": "Section Break",
-      "label": "Dates"
-    },
-    {
-      "fieldname": "section_break_2",
-      "fieldtype": "Section Break",
-      "label": "Status"
-    },
-    {
-      "fieldname": "start_date",
-      "fieldtype": "Date",
-      "label": "Start Date",
-      "read_only": 1,
-      "reqd": 1
-    },
-    {
-      "fieldname": "status",
-      "fieldtype": "Select",
-      "label": "Status",
-      "options": "PLANNED\nACTIVE\nCOMPLETED",
-      "read_only": 1
-    },
-    {
-      "fieldname": "supplier",
-      "fieldtype": "Link",
-      "label": "Outgrower Supplier",
-      "options": "Supplier",
-      "read_only": 1
-    },
-    {
-      "fieldname": "synced",
-      "fieldtype": "Check",
-      "label": "Synced",
-      "default": "0"
-    },
-    {
-      "fieldname": "total_exposure",
-      "fieldtype": "Currency",
-      "label": "Total Posted Exposure",
-      "options": "currency",
-      "read_only": 1
-    },
-    {
-      "fieldname": "variety",
-      "fieldtype": "Link",
-      "label": "Variety",
-      "options": "Crop Variety",
-      "read_only": 1
-    }
-  ],
-  "grid_page_length": 50,
-  "index_web_pages_for_search": 1,
-  "links": [],
-  "modified": "2026-01-29 17:30:59.166829",
-  "modified_by": "Administrator",
-  "module": "Naseco FieldOpsBackend",
-  "name": "Crop Cycle",
-  "owner": "Administrator",
-  "permissions": [
-    {
-      "create": 1,
-      "delete": 1,
-      "email": 1,
-      "export": 1,
-      "print": 1,
-      "read": 1,
-      "report": 1,
-      "role": "System Manager",
-      "share": 1,
-      "write": 1
-    },
-    {
-      "create": 1,
-      "email": 1,
-      "export": 1,
-      "print": 1,
-      "read": 1,
-      "report": 1,
-      "role": "Outgrower Manager",
-      "share": 1,
-      "write": 1
-    }
-  ],
-  "row_format": "Dynamic",
-  "rows_threshold_for_grid_search": 20,
-  "sort_field": "modified",
-  "sort_order": "DESC",
-  "states": []
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_cycle_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Cycle Summary"
+  },
+  {
+   "fieldname": "crop_cycle_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Cycle ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "PLANNED\nACTIVE\nCOMPLETED",
+   "read_only": 1
+  },
+  {
+   "fieldname": "current_stage",
+   "fieldtype": "Link",
+   "label": "Current Stage",
+   "options": "Crop Cycle Stage"
+  },
+  {
+   "fieldname": "production_contract",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Production Contract",
+   "options": "Outgrower Production Contract",
+   "read_only": 1,
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "ux_cycle_summary_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Cycle Summary Column 2"
+  },
+  {
+   "fieldname": "plot",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Plot",
+   "options": "Farm Plot",
+   "read_only": 1,
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Outgrower Supplier",
+   "options": "Supplier",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "synced",
+   "fieldtype": "Check",
+   "label": "Synced",
+   "default": "0"
+  },
+  {
+   "fieldname": "ux_crop_context_section",
+   "fieldtype": "Section Break",
+   "label": "Crop Context"
+  },
+  {
+   "fieldname": "season",
+   "fieldtype": "Link",
+   "label": "Season",
+   "options": "Season",
+   "read_only": 1
+  },
+  {
+   "fieldname": "crop",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Crop",
+   "options": "Crop",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "variety",
+   "fieldtype": "Link",
+   "label": "Variety",
+   "options": "Crop Variety",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_category",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Production Category",
+   "options": "Seed Category",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_crop_context_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Crop Context Column 2"
+  },
+  {
+   "fieldname": "seed_class",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Seed Class",
+   "options": "Seed Class",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recipe",
+   "fieldtype": "Link",
+   "label": "Crop Recipe",
+   "options": "Crop Recipe",
+   "read_only": 1
+  },
+  {
+   "fieldname": "pricing_policy",
+   "fieldtype": "Link",
+   "label": "Pricing Policy",
+   "options": "Outgrower Pricing Policy",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_dates_and_lifecycle_tab",
+   "fieldtype": "Tab Break",
+   "label": "Dates and Lifecycle"
+  },
+  {
+   "fieldname": "ux_planting_dates_section",
+   "fieldtype": "Section Break",
+   "label": "Planting Dates"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "planting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Planting Date"
+  },
+  {
+   "default": "0",
+   "fieldname": "planting_date_confirmed",
+   "fieldtype": "Check",
+   "label": "Planting Date Confirmed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planting_date_confirmed_by",
+   "fieldtype": "Link",
+   "label": "Confirmed By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planting_date_confirmed_on",
+   "fieldtype": "Datetime",
+   "label": "Confirmed On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planting_confirmation_notes",
+   "fieldtype": "Small Text",
+   "label": "Confirmation Notes",
+   "read_only_depends_on": "eval:doc.planting_date_confirmed"
+  },
+  {
+   "fieldname": "ux_schedules_section",
+   "fieldtype": "Section Break",
+   "label": "Schedules"
+  },
+  {
+   "fieldname": "next_inspection_date",
+   "fieldtype": "Date",
+   "label": "Next Inspection Date"
+  },
+  {
+   "default": "0",
+   "fieldname": "inspection_schedule_generated",
+   "fieldtype": "Check",
+   "label": "Inspection Schedule Generated",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "agronomy_schedule_generated",
+   "fieldtype": "Check",
+   "label": "Agronomy Schedule Generated",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_schedules_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Schedules Column 2"
+  },
+  {
+   "default": "0",
+   "fieldname": "agronomy_report_schedule_generated",
+   "fieldtype": "Check",
+   "label": "Agronomy Report Schedule Generated",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "lifecycle_initialized",
+   "fieldtype": "Check",
+   "label": "Lifecycle Initialized",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_contract_and_harvest_tab",
+   "fieldtype": "Tab Break",
+   "label": "Contract and Harvest"
+  },
+  {
+   "fieldname": "ux_contracted_harvest_section",
+   "fieldtype": "Section Break",
+   "label": "Contracted Harvest"
+  },
+  {
+   "fieldname": "contract_rate",
+   "fieldtype": "Currency",
+   "label": "Contract Rate",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "contracted_area_hectares",
+   "fieldtype": "Float",
+   "label": "Contracted Area (Hectares)",
+   "read_only": 1,
+   "precision": 4
+  },
+  {
+   "fieldname": "contracted_area_acres",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Legacy Contracted Area (Acres)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "contracted_quota_qty",
+   "fieldtype": "Float",
+   "label": "Contracted Quota (Kg)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_contracted_harvest_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Contracted Harvest Column 2"
+  },
+  {
+   "fieldname": "expected_yield_kg_per_hectare",
+   "fieldtype": "Float",
+   "label": "Expected Harvest (Kg per Hectare)",
+   "read_only": 1,
+   "precision": 2
+  },
+  {
+   "fieldname": "expected_yield_qty",
+   "fieldtype": "Float",
+   "label": "Expected Harvest Quantity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "expected_harvest_date",
+   "fieldtype": "Date",
+   "label": "Expected Harvest Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "expected_harvest_value",
+   "fieldtype": "Currency",
+   "label": "Expected Harvest Value",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_actual_harvest_section",
+   "fieldtype": "Section Break",
+   "label": "Actual Harvest"
+  },
+  {
+   "fieldname": "actual_harvest_date",
+   "fieldtype": "Date",
+   "label": "Actual Harvest Date"
+  },
+  {
+   "fieldname": "actual_harvest_value",
+   "fieldtype": "Currency",
+   "label": "Actual Accepted Harvest Value",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "harvest_item",
+   "fieldtype": "Link",
+   "label": "Harvest Item",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_actual_harvest_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Actual Harvest Column 2"
+  },
+  {
+   "fetch_from": "harvest_item.stock_uom",
+   "fieldname": "harvest_uom",
+   "fieldtype": "Link",
+   "label": "Harvest UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "purchase_order",
+   "fieldtype": "Link",
+   "label": "Harvest Purchase Order",
+   "options": "Purchase Order",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_inputs_and_exposure_tab",
+   "fieldtype": "Tab Break",
+   "label": "Inputs and Exposure"
+  },
+  {
+   "fieldname": "ux_recipe_input_plan_section",
+   "fieldtype": "Section Break",
+   "label": "Recipe Input Plan"
+  },
+  {
+   "fieldname": "planned_inputs",
+   "fieldtype": "Table",
+   "label": "Planned Crop Inputs",
+   "options": "Crop Cycle Planned Input",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_financial_exposure_section",
+   "fieldtype": "Section Break",
+   "label": "Financial Exposure"
+  },
+  {
+   "fieldname": "forecast_input_recovery",
+   "fieldtype": "Currency",
+   "label": "Forecast Input Recovery",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "forecast_net_payable",
+   "fieldtype": "Currency",
+   "label": "Forecast Net Payable",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recoverable_stock_value",
+   "fieldtype": "Currency",
+   "label": "Recoverable Stock Value",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cash_advanced",
+   "fieldtype": "Currency",
+   "label": "Cash Advanced",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_financial_exposure_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Financial Exposure Column 2"
+  },
+  {
+   "fieldname": "pending_cash_advance",
+   "fieldtype": "Currency",
+   "label": "Approved Cash Pending Payment",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "available_advance_capacity",
+   "fieldtype": "Currency",
+   "label": "Available Advance Capacity",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_exposure",
+   "fieldtype": "Currency",
+   "label": "Total Posted Exposure",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "description": "Overrides the FieldOps default exposure ceiling for this Crop Cycle.",
+   "fieldname": "max_exposure_percent",
+   "fieldtype": "Percent",
+   "label": "Maximum Exposure %",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-29 17:30:59.166829",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Crop Cycle",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
 }

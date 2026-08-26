@@ -4,16 +4,39 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "signatory_role",
+  "ux_details_section",
   "full_name",
+  "ux_additional_details_section",
+  "signatory_role",
   "user",
+  "ux_additional_details_column_2_column",
   "phone",
-  "signature",
+  "ux_dates_and_location_section",
   "signed_at",
+  "ux_location_section",
   "latitude",
-  "longitude"
+  "ux_location_column_2_column",
+  "longitude",
+  "ux_notes_and_review_section",
+  "signature"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Full Name"
+  },
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
   {
    "fieldname": "signatory_role",
    "fieldtype": "Select",
@@ -23,16 +46,15 @@
    "reqd": 1
   },
   {
-   "fieldname": "full_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Full Name"
-  },
-  {
    "fieldname": "user",
    "fieldtype": "Link",
    "label": "System User",
    "options": "User"
+  },
+  {
+   "fieldname": "ux_additional_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Additional Details Column 2"
   },
   {
    "fieldname": "phone",
@@ -40,14 +62,19 @@
    "label": "Telephone"
   },
   {
-   "fieldname": "signature",
-   "fieldtype": "Signature",
-   "label": "Signature"
+   "fieldname": "ux_dates_and_location_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Location"
   },
   {
    "fieldname": "signed_at",
    "fieldtype": "Datetime",
    "label": "Signed At"
+  },
+  {
+   "fieldname": "ux_location_section",
+   "fieldtype": "Section Break",
+   "label": "Location"
   },
   {
    "fieldname": "latitude",
@@ -56,10 +83,25 @@
    "precision": "7"
   },
   {
+   "fieldname": "ux_location_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Location Column 2"
+  },
+  {
    "fieldname": "longitude",
    "fieldtype": "Float",
    "label": "Signing Longitude",
    "precision": "7"
+  },
+  {
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
+  },
+  {
+   "fieldname": "signature",
+   "fieldtype": "Signature",
+   "label": "Signature"
   }
  ],
  "istable": 1,

@@ -4,42 +4,38 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "parameter_code",
-  "parameter_label",
+  "ux_details_section",
   "section_name",
   "data_type",
+  "help_text",
+  "ux_additional_details_section",
+  "parameter_code",
+  "parameter_label",
   "options",
-  "unit",
   "mandatory",
-  "evaluation_section",
   "evaluation_mode",
   "comparison_rule",
-  "minimum_value",
-  "maximum_value",
-  "expected_value",
   "severity",
   "weight",
   "allow_not_applicable",
   "responsible_party",
-  "corrective_action_on_fail",
   "failure_action",
-  "corrective_action_due_days",
-  "help_text"
+  "ux_quantities_and_values_section",
+  "unit",
+  "minimum_value",
+  "ux_quantities_and_values_column_2_column",
+  "maximum_value",
+  "expected_value",
+  "ux_quality_and_results_section",
+  "corrective_action_on_fail",
+  "ux_quality_and_results_column_2_column",
+  "corrective_action_due_days"
  ],
  "fields": [
   {
-   "fieldname": "parameter_code",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Parameter Code",
-   "reqd": 1
-  },
-  {
-   "fieldname": "parameter_label",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Parameter",
-   "reqd": 1
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
   },
   {
    "fieldname": "section_name",
@@ -56,17 +52,34 @@
    "reqd": 1
   },
   {
+   "fieldname": "help_text",
+   "fieldtype": "Small Text",
+   "label": "Guidance"
+  },
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
+  {
+   "fieldname": "parameter_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Parameter Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "parameter_label",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Parameter",
+   "reqd": 1
+  },
+  {
    "depends_on": "eval:doc.data_type==\"Select\"",
    "fieldname": "options",
    "fieldtype": "Small Text",
    "label": "Options"
-  },
-  {
-   "depends_on": "eval:[\"Number\", \"Count\", \"Percent\"].includes(doc.data_type)",
-   "fieldname": "unit",
-   "fieldtype": "Link",
-   "label": "UOM",
-   "options": "UOM"
   },
   {
    "default": "1",
@@ -74,11 +87,6 @@
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": "Mandatory"
-  },
-  {
-   "fieldname": "evaluation_section",
-   "fieldtype": "Section Break",
-   "label": "Automated Evaluation"
   },
   {
    "default": "Informational",
@@ -95,24 +103,6 @@
    "fieldtype": "Select",
    "label": "Comparison Rule",
    "options": "At Least\nAt Most\nBetween\nEquals\nExpected Value\nYes Is Pass\nNo Is Pass\nGood Is Pass\nPoor Is Pass\nWithin Report Window"
-  },
-  {
-   "depends_on": "eval:doc.evaluation_mode==\"Rule Based\" && [\"At Least\", \"Between\"].includes(doc.comparison_rule)",
-   "fieldname": "minimum_value",
-   "fieldtype": "Float",
-   "label": "Minimum Passing Value"
-  },
-  {
-   "depends_on": "eval:doc.evaluation_mode==\"Rule Based\" && [\"At Most\", \"Between\"].includes(doc.comparison_rule)",
-   "fieldname": "maximum_value",
-   "fieldtype": "Float",
-   "label": "Maximum Passing Value"
-  },
-  {
-   "depends_on": "eval:doc.evaluation_mode==\"Rule Based\" && [\"Equals\", \"Expected Value\"].includes(doc.comparison_rule)",
-   "fieldname": "expected_value",
-   "fieldtype": "Data",
-   "label": "Expected Passing Value"
   },
   {
    "default": "Standard",
@@ -143,16 +133,61 @@
    "options": "Farmer\nOutgrower Supervisor\nBoth"
   },
   {
+   "depends_on": "corrective_action_on_fail",
+   "fieldname": "failure_action",
+   "fieldtype": "Small Text",
+   "label": "Required Action on Failure"
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
+  {
+   "depends_on": "eval:[\"Number\", \"Count\", \"Percent\"].includes(doc.data_type)",
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
+  },
+  {
+   "depends_on": "eval:doc.evaluation_mode==\"Rule Based\" && [\"At Least\", \"Between\"].includes(doc.comparison_rule)",
+   "fieldname": "minimum_value",
+   "fieldtype": "Float",
+   "label": "Minimum Passing Value"
+  },
+  {
+   "fieldname": "ux_quantities_and_values_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quantities and Values Column 2"
+  },
+  {
+   "depends_on": "eval:doc.evaluation_mode==\"Rule Based\" && [\"At Most\", \"Between\"].includes(doc.comparison_rule)",
+   "fieldname": "maximum_value",
+   "fieldtype": "Float",
+   "label": "Maximum Passing Value"
+  },
+  {
+   "depends_on": "eval:doc.evaluation_mode==\"Rule Based\" && [\"Equals\", \"Expected Value\"].includes(doc.comparison_rule)",
+   "fieldname": "expected_value",
+   "fieldtype": "Data",
+   "label": "Expected Passing Value"
+  },
+  {
+   "fieldname": "ux_quality_and_results_section",
+   "fieldtype": "Section Break",
+   "label": "Quality and Results"
+  },
+  {
    "default": "0",
    "fieldname": "corrective_action_on_fail",
    "fieldtype": "Check",
    "label": "Corrective Action on Failure"
   },
   {
-   "depends_on": "corrective_action_on_fail",
-   "fieldname": "failure_action",
-   "fieldtype": "Small Text",
-   "label": "Required Action on Failure"
+   "fieldname": "ux_quality_and_results_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quality and Results Column 2"
   },
   {
    "default": "3",
@@ -160,11 +195,6 @@
    "fieldname": "corrective_action_due_days",
    "fieldtype": "Int",
    "label": "Corrective Action Due In (Days)"
-  },
-  {
-   "fieldname": "help_text",
-   "fieldtype": "Small Text",
-   "label": "Guidance"
   }
  ],
  "istable": 1,

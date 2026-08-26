@@ -1,193 +1,217 @@
 {
-  "actions": [],
-  "allow_rename": 1,
-  "creation": "2026-02-02 00:00:00.000000",
-  "doctype": "DocType",
-  "editable_grid": 1,
-  "engine": "InnoDB",
-  "field_order": [
-    "contract_recovery_rate",
-    "conversion_factor",
-    "input_name",
-    "input_type",
-    "item_code",
-    "markup_override_reason",
-    "markup_percent_override",
-    "quantity_per_acre",
-    "quantity_per_hectare",
-    "recipe_stage",
-    "recoverable_percent",
-    "recovery_policy",
-    "recovery_pricing_policy",
-    "recovery_rate_basis",
-    "recovery_section",
-    "resource_type",
-    "source_warehouse",
-    "stage_index",
-    "stock_quantity_per_acre",
-    "stock_quantity_per_hectare",
-    "stock_uom",
-    "unit"
-  ],
-  "fields": [
-    {
-      "depends_on": "eval:doc.recovery_rate_basis==\"Contract Rate\"",
-      "description": "Recovery rate per Stock UOM.",
-      "fieldname": "contract_recovery_rate",
-      "fieldtype": "Currency",
-      "label": "Contract Recovery Rate per Stock UOM"
-    },
-    {
-      "default": "1",
-      "description": "Number of Stock UOM units represented by one Recipe UOM.",
-      "fieldname": "conversion_factor",
-      "fieldtype": "Float",
-      "label": "Conversion Factor",
-      "read_only": 1
-    },
-    {
-      "fieldname": "input_name",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "label": "Input Name"
-    },
-    {
-      "fieldname": "input_type",
-      "fieldtype": "Data",
-      "label": "Input Type"
-    },
-    {
-      "fieldname": "item_code",
-      "fieldtype": "Link",
-      "in_list_view": 1,
-      "label": "Stock Item",
-      "mandatory_depends_on": "eval:doc.resource_type==\"Stock Item\"",
-      "options": "Item"
-    },
-    {
-      "fieldname": "markup_override_reason",
-      "fieldtype": "Small Text",
-      "label": "Markup Override Reason"
-    },
-    {
-      "fieldname": "markup_percent_override",
-      "fieldtype": "Percent",
-      "label": "Risk Markup Override %"
-    },
-    {
-      "fieldname": "quantity_per_acre",
-      "fieldtype": "Float",
-      "hidden": 1,
-      "label": "Legacy Quantity Per Acre",
-      "read_only": 1
-    },
-    {
-      "fieldname": "quantity_per_hectare",
-      "fieldtype": "Float",
-      "in_list_view": 1,
-      "label": "Quantity Per Hectare",
-      "non_negative": 1
-    },
-    {
-      "fieldname": "recipe_stage",
-      "fieldtype": "Select",
-      "label": "Crop Cycle Stage",
-      "options": "Field Verification & Contracting\nPlanting\nCrop Emergence / Germination\nVegetative\nPre-flowering\nFlowering\nPre-harvest\nHarvest\nDelivery"
-    },
-    {
-      "default": "100",
-      "depends_on": "eval:[\"Fully Recoverable\", \"Partially Recoverable\"].includes(doc.recovery_policy)",
-      "fieldname": "recoverable_percent",
-      "fieldtype": "Percent",
-      "label": "Recoverable %"
-    },
-    {
-      "default": "Fully Recoverable",
-      "fieldname": "recovery_policy",
-      "fieldtype": "Select",
-      "in_list_view": 1,
-      "label": "Recovery Policy",
-      "options": "Fully Recoverable\nPartially Recoverable\nCompany Subsidy\nNon-Recoverable\nReturnable",
-      "reqd": 1
-    },
-    {
-      "fieldname": "recovery_pricing_policy",
-      "fieldtype": "Link",
-      "label": "Recovery Pricing Policy",
-      "options": "Input Recovery Pricing Policy"
-    },
-    {
-      "default": "Actual Valuation",
-      "depends_on": "eval:[\"Fully Recoverable\", \"Partially Recoverable\"].includes(doc.recovery_policy)",
-      "fieldname": "recovery_rate_basis",
-      "fieldtype": "Select",
-      "label": "Recovery Rate Basis",
-      "options": "Actual Purchase Cost + Markup\nActual Valuation\nStandard Rate\nContract Rate"
-    },
-    {
-      "fieldname": "recovery_section",
-      "fieldtype": "Section Break",
-      "label": "Recovery and Fulfilment"
-    },
-    {
-      "default": "Stock Item",
-      "fieldname": "resource_type",
-      "fieldtype": "Select",
-      "in_list_view": 1,
-      "label": "Resource Type",
-      "options": "Stock Item\nService\nCash Advance",
-      "reqd": 1
-    },
-    {
-      "fieldname": "source_warehouse",
-      "fieldtype": "Link",
-      "label": "Source Warehouse",
-      "options": "Warehouse"
-    },
-    {
-      "fieldname": "stage_index",
-      "fieldtype": "Int",
-      "label": "Stage Order"
-    },
-    {
-      "fieldname": "stock_quantity_per_acre",
-      "fieldtype": "Float",
-      "hidden": 1,
-      "label": "Legacy Stock Quantity Per Acre",
-      "read_only": 1
-    },
-    {
-      "fieldname": "stock_quantity_per_hectare",
-      "fieldtype": "Float",
-      "label": "Stock Quantity Per Hectare",
-      "read_only": 1
-    },
-    {
-      "fieldname": "stock_uom",
-      "fieldtype": "Link",
-      "label": "Stock UOM",
-      "options": "UOM",
-      "read_only": 1
-    },
-    {
-      "fieldname": "unit",
-      "fieldtype": "Link",
-      "in_list_view": 1,
-      "label": "Recipe UOM",
-      "options": "UOM",
-      "reqd": 1
-    }
-  ],
-  "index_web_pages_for_search": 1,
-  "istable": 1,
-  "links": [],
-  "modified": "2026-02-02 00:00:00.000000",
-  "modified_by": "Administrator",
-  "module": "Naseco FieldOpsBackend",
-  "name": "Recipe Input Item",
-  "owner": "Administrator",
-  "permissions": [],
-  "sort_field": "modified",
-  "sort_order": "DESC",
-  "states": []
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-02-02 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "ux_details_section",
+  "input_name",
+  "input_type",
+  "markup_override_reason",
+  "markup_percent_override",
+  "recipe_stage",
+  "resource_type",
+  "ux_additional_details_section",
+  "conversion_factor",
+  "ux_additional_details_column_2_column",
+  "stage_index",
+  "ux_quantities_and_values_section",
+  "contract_recovery_rate",
+  "item_code",
+  "quantity_per_acre",
+  "quantity_per_hectare",
+  "recoverable_percent",
+  "recovery_policy",
+  "recovery_pricing_policy",
+  "ux_quantities_and_values_column_2_column",
+  "recovery_rate_basis",
+  "source_warehouse",
+  "stock_quantity_per_acre",
+  "stock_quantity_per_hectare",
+  "stock_uom",
+  "unit"
+ ],
+ "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "input_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Input Name"
+  },
+  {
+   "fieldname": "input_type",
+   "fieldtype": "Data",
+   "label": "Input Type"
+  },
+  {
+   "fieldname": "markup_override_reason",
+   "fieldtype": "Small Text",
+   "label": "Markup Override Reason"
+  },
+  {
+   "fieldname": "markup_percent_override",
+   "fieldtype": "Percent",
+   "label": "Risk Markup Override %"
+  },
+  {
+   "fieldname": "recipe_stage",
+   "fieldtype": "Select",
+   "label": "Crop Cycle Stage",
+   "options": "Field Verification & Contracting\nPlanting\nCrop Emergence / Germination\nVegetative\nPre-flowering\nFlowering\nPre-harvest\nHarvest\nDelivery"
+  },
+  {
+   "default": "Stock Item",
+   "fieldname": "resource_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Resource Type",
+   "options": "Stock Item\nService\nCash Advance",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
+  {
+   "default": "1",
+   "description": "Number of Stock UOM units represented by one Recipe UOM.",
+   "fieldname": "conversion_factor",
+   "fieldtype": "Float",
+   "label": "Conversion Factor",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_additional_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Additional Details Column 2"
+  },
+  {
+   "fieldname": "stage_index",
+   "fieldtype": "Int",
+   "label": "Stage Order"
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
+  {
+   "depends_on": "eval:doc.recovery_rate_basis==\"Contract Rate\"",
+   "description": "Recovery rate per Stock UOM.",
+   "fieldname": "contract_recovery_rate",
+   "fieldtype": "Currency",
+   "label": "Contract Recovery Rate per Stock UOM"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Stock Item",
+   "mandatory_depends_on": "eval:doc.resource_type==\"Stock Item\"",
+   "options": "Item"
+  },
+  {
+   "fieldname": "quantity_per_acre",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Legacy Quantity Per Acre",
+   "read_only": 1
+  },
+  {
+   "fieldname": "quantity_per_hectare",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Quantity Per Hectare",
+   "non_negative": 1
+  },
+  {
+   "default": "100",
+   "depends_on": "eval:[\"Fully Recoverable\", \"Partially Recoverable\"].includes(doc.recovery_policy)",
+   "fieldname": "recoverable_percent",
+   "fieldtype": "Percent",
+   "label": "Recoverable %"
+  },
+  {
+   "default": "Fully Recoverable",
+   "fieldname": "recovery_policy",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Recovery Policy",
+   "options": "Fully Recoverable\nPartially Recoverable\nCompany Subsidy\nNon-Recoverable\nReturnable",
+   "reqd": 1
+  },
+  {
+   "fieldname": "recovery_pricing_policy",
+   "fieldtype": "Link",
+   "label": "Recovery Pricing Policy",
+   "options": "Input Recovery Pricing Policy"
+  },
+  {
+   "fieldname": "ux_quantities_and_values_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quantities and Values Column 2"
+  },
+  {
+   "default": "Actual Valuation",
+   "depends_on": "eval:[\"Fully Recoverable\", \"Partially Recoverable\"].includes(doc.recovery_policy)",
+   "fieldname": "recovery_rate_basis",
+   "fieldtype": "Select",
+   "label": "Recovery Rate Basis",
+   "options": "Actual Purchase Cost + Markup\nActual Valuation\nStandard Rate\nContract Rate"
+  },
+  {
+   "fieldname": "source_warehouse",
+   "fieldtype": "Link",
+   "label": "Source Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "stock_quantity_per_acre",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Legacy Stock Quantity Per Acre",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stock_quantity_per_hectare",
+   "fieldtype": "Float",
+   "label": "Stock Quantity Per Hectare",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stock_uom",
+   "fieldtype": "Link",
+   "label": "Stock UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Recipe UOM",
+   "options": "UOM",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-02-02 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Recipe Input Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
 }

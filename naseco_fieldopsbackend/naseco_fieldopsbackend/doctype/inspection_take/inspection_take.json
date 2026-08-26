@@ -6,115 +6,41 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "take_number",
-  "total_plants_counted",
-  "latitude",
-  "longitude",
-  "gps_accuracy_meters",
-  "gps_quality_status",
-  "location_sample_count",
-  "location_capture_duration_seconds",
-  "location_source",
-  "captured_at",
-  "captured_by",
-  "attribute_count",
-  "take_status",
+  "ux_details_section",
   "inside_plot_boundary",
-  "distance_from_previous_take_m",
   "spacing_status",
   "positioning_override",
   "positioning_override_reason",
   "positioning_override_by",
+  "ux_additional_details_section",
+  "total_plants_counted",
+  "captured_by",
+  "ux_additional_details_column_2_column",
+  "attribute_count",
+  "ux_dates_and_location_section",
+  "captured_at",
+  "ux_location_section",
+  "latitude",
+  "longitude",
+  "gps_accuracy_meters",
+  "ux_location_column_2_column",
+  "location_sample_count",
+  "location_capture_duration_seconds",
+  "location_source",
+  "ux_quality_and_results_section",
+  "take_number",
+  "gps_quality_status",
+  "ux_quality_and_results_column_2_column",
+  "take_status",
+  "distance_from_previous_take_m",
+  "ux_notes_and_review_section",
   "notes"
  ],
  "fields": [
   {
-   "fieldname": "take_number",
-   "fieldtype": "Int",
-   "in_list_view": 1,
-   "label": "Take Number",
-   "reqd": 1
-  },
-  {
-   "fieldname": "total_plants_counted",
-   "fieldtype": "Int",
-   "in_list_view": 1,
-   "label": "Total Plants Counted"
-  },
-  {
-   "fieldname": "latitude",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Latitude",
-   "precision": "8",
-   "reqd": 1
-  },
-  {
-   "fieldname": "longitude",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Longitude",
-   "precision": "8",
-   "reqd": 1
-  },
-  {
-   "fieldname": "gps_accuracy_meters",
-   "fieldtype": "Float",
-   "label": "GPS Accuracy (m)"
-  },
-  {
-   "fieldname": "gps_quality_status",
-   "fieldtype": "Select",
-   "label": "GPS Quality",
-   "options": "Poor\nAcceptable\nGood",
-   "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "location_sample_count",
-   "fieldtype": "Int",
-   "label": "Location Samples",
-   "read_only": 1
-  },
-  {
-   "fieldname": "location_capture_duration_seconds",
-   "fieldtype": "Float",
-   "label": "Location Capture Duration (seconds)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "location_source",
-   "fieldtype": "Data",
-   "label": "Location Source",
-   "read_only": 1
-  },
-  {
-   "fieldname": "captured_at",
-   "fieldtype": "Datetime",
-   "label": "Captured At"
-  },
-  {
-   "fieldname": "captured_by",
-   "fieldtype": "Link",
-   "label": "Captured By",
-   "options": "User"
-  },
-  {
-   "default": "0",
-   "fieldname": "attribute_count",
-   "fieldtype": "Int",
-   "in_list_view": 1,
-   "label": "Attributes Captured",
-   "read_only": 1
-  },
-  {
-   "default": "Incomplete",
-   "fieldname": "take_status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Take Status",
-   "options": "Incomplete\nComplete",
-   "read_only": 1
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
   },
   {
    "default": "0",
@@ -122,12 +48,6 @@
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": "Inside Plot Boundary"
-  },
-  {
-   "fieldname": "distance_from_previous_take_m",
-   "fieldtype": "Float",
-   "label": "Distance From Previous Take (m)",
-   "read_only": 1
   },
   {
    "fieldname": "spacing_status",
@@ -157,6 +77,140 @@
    "label": "Override By",
    "options": "User",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
+  {
+   "fieldname": "total_plants_counted",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Total Plants Counted"
+  },
+  {
+   "fieldname": "captured_by",
+   "fieldtype": "Link",
+   "label": "Captured By",
+   "options": "User"
+  },
+  {
+   "fieldname": "ux_additional_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Additional Details Column 2"
+  },
+  {
+   "default": "0",
+   "fieldname": "attribute_count",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Attributes Captured",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_dates_and_location_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Location"
+  },
+  {
+   "fieldname": "captured_at",
+   "fieldtype": "Datetime",
+   "label": "Captured At"
+  },
+  {
+   "fieldname": "ux_location_section",
+   "fieldtype": "Section Break",
+   "label": "Location"
+  },
+  {
+   "fieldname": "latitude",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Latitude",
+   "precision": "8",
+   "reqd": 1
+  },
+  {
+   "fieldname": "longitude",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Longitude",
+   "precision": "8",
+   "reqd": 1
+  },
+  {
+   "fieldname": "gps_accuracy_meters",
+   "fieldtype": "Float",
+   "label": "GPS Accuracy (m)"
+  },
+  {
+   "fieldname": "ux_location_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Location Column 2"
+  },
+  {
+   "default": "0",
+   "fieldname": "location_sample_count",
+   "fieldtype": "Int",
+   "label": "Location Samples",
+   "read_only": 1
+  },
+  {
+   "fieldname": "location_capture_duration_seconds",
+   "fieldtype": "Float",
+   "label": "Location Capture Duration (seconds)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "location_source",
+   "fieldtype": "Data",
+   "label": "Location Source",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_quality_and_results_section",
+   "fieldtype": "Section Break",
+   "label": "Quality and Results"
+  },
+  {
+   "fieldname": "take_number",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Take Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "gps_quality_status",
+   "fieldtype": "Select",
+   "label": "GPS Quality",
+   "options": "Poor\nAcceptable\nGood",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_quality_and_results_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quality and Results Column 2"
+  },
+  {
+   "default": "Incomplete",
+   "fieldname": "take_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Take Status",
+   "options": "Incomplete\nComplete",
+   "read_only": 1
+  },
+  {
+   "fieldname": "distance_from_previous_take_m",
+   "fieldtype": "Float",
+   "label": "Distance From Previous Take (m)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
   },
   {
    "fieldname": "notes",

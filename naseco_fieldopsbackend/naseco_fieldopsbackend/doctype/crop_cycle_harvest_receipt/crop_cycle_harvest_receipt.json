@@ -5,16 +5,49 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_additional_details_section",
+  "item_code",
+  "ux_dates_and_location_section",
+  "posting_date",
+  "ux_quantities_and_values_section",
   "purchase_receipt",
   "purchase_receipt_item",
-  "posting_date",
-  "item_code",
   "accepted_qty",
+  "ux_quantities_and_values_column_2_column",
   "uom",
   "rate",
   "amount"
  ],
  "fields": [
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Harvest Item",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_dates_and_location_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Location"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Receipt Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
   {
    "fieldname": "purchase_receipt",
    "fieldtype": "Link",
@@ -31,25 +64,16 @@
    "read_only": 1
   },
   {
-   "fieldname": "posting_date",
-   "fieldtype": "Date",
-   "label": "Receipt Date",
-   "read_only": 1
-  },
-  {
-   "fieldname": "item_code",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Harvest Item",
-   "options": "Item",
-   "read_only": 1
-  },
-  {
    "fieldname": "accepted_qty",
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Accepted Quantity",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quantities and Values Column 2"
   },
   {
    "fieldname": "uom",

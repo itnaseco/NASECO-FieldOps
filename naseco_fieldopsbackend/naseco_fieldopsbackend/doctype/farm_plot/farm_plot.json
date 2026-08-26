@@ -8,30 +8,47 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_overview_tab",
+  "ux_plot_summary_section",
   "plot_id",
   "outgrower",
   "plot_name",
+  "ux_plot_summary_column_2_column",
   "plot_type",
-  "section_break_1",
+  "status",
+  "synced",
+  "ux_boundary_and_map_tab",
+  "ux_plot_polygon_coordinates_section",
   "polygon",
   "geojson",
-  "section_break_2",
+  "ux_plot_measurements_section",
   "area_hectares",
   "area_acres",
   "perimeter_meters",
+  "ux_plot_measurements_column_2_column",
   "centroid_lat",
   "centroid_lng",
-  "section_break_crop_cycles",
-  "crop_cycles_html",
-  "section_break_3",
+  "ux_map_image_section",
   "map_image",
-  "status",
-  "notes",
   "map_image_base64",
+  "ux_crop_cycles_and_photos_tab",
+  "ux_crop_cycle_section",
+  "crop_cycles_html",
+  "ux_photos_and_notes_section",
   "photos",
-  "synced"
+  "notes"
  ],
  "fields": [
+  {
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_plot_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Plot Summary"
+  },
   {
    "description": "Generated from the Outgrower ID when automatic plot naming is enabled.",
    "fieldname": "plot_id",
@@ -56,6 +73,11 @@
    "in_list_view": 1
   },
   {
+   "fieldname": "ux_plot_summary_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Plot Summary Column 2"
+  },
+  {
    "fieldname": "plot_type",
    "fieldtype": "Select",
    "label": "Plot Type",
@@ -63,7 +85,25 @@
    "default": "Owned"
   },
   {
-   "fieldname": "section_break_1",
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Active\nIdle\nACTIVE\nIDLE"
+  },
+  {
+   "fieldname": "synced",
+   "fieldtype": "Check",
+   "label": "Synced",
+   "default": "0"
+  },
+  {
+   "fieldname": "ux_boundary_and_map_tab",
+   "fieldtype": "Tab Break",
+   "label": "Boundary and Map"
+  },
+  {
+   "fieldname": "ux_plot_polygon_coordinates_section",
    "fieldtype": "Section Break",
    "label": "Plot Polygon Coordinates"
   },
@@ -81,7 +121,7 @@
    "read_only": 1
   },
   {
-   "fieldname": "section_break_2",
+   "fieldname": "ux_plot_measurements_section",
    "fieldtype": "Section Break",
    "label": "Plot Measurements"
   },
@@ -107,6 +147,11 @@
    "precision": 2
   },
   {
+   "fieldname": "ux_plot_measurements_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Plot Measurements Column 2"
+  },
+  {
    "fieldname": "centroid_lat",
    "fieldtype": "Float",
    "label": "Centroid Latitude",
@@ -119,35 +164,14 @@
    "precision": 6
   },
   {
-   "fieldname": "section_break_crop_cycles",
+   "fieldname": "ux_map_image_section",
    "fieldtype": "Section Break",
-   "label": "Crop Cycle"
-  },
-  {
-   "fieldname": "crop_cycles_html",
-   "fieldtype": "HTML",
-   "label": "Crop Cycle"
-  },
-  {
-   "fieldname": "section_break_3",
-   "fieldtype": "Section Break"
+   "label": "Map Image"
   },
   {
    "fieldname": "map_image",
    "fieldtype": "Attach Image",
    "label": "Map Image"
-  },
-  {
-   "default": "Active",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "Status",
-   "options": "Active\nIdle\nACTIVE\nIDLE"
-  },
-  {
-   "fieldname": "notes",
-   "fieldtype": "Text",
-   "label": "Notes"
   },
   {
    "fieldname": "map_image_base64",
@@ -157,16 +181,35 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_crop_cycles_and_photos_tab",
+   "fieldtype": "Tab Break",
+   "label": "Crop Cycles and Photos"
+  },
+  {
+   "fieldname": "ux_crop_cycle_section",
+   "fieldtype": "Section Break",
+   "label": "Crop Cycle"
+  },
+  {
+   "fieldname": "crop_cycles_html",
+   "fieldtype": "HTML",
+   "label": "Crop Cycle"
+  },
+  {
+   "fieldname": "ux_photos_and_notes_section",
+   "fieldtype": "Section Break",
+   "label": "Photos and Notes"
+  },
+  {
    "fieldname": "photos",
    "fieldtype": "Table",
    "label": "Photos",
    "options": "Plot Photo"
   },
   {
-   "fieldname": "synced",
-   "fieldtype": "Check",
-   "label": "Synced",
-   "default": "0"
+   "fieldname": "notes",
+   "fieldtype": "Text",
+   "label": "Notes"
   }
  ],
  "grid_page_length": 50,

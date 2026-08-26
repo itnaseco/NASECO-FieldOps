@@ -7,13 +7,20 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_details_section",
   "assignment_id",
   "plot",
   "crop_cycle",
+  "ux_details_column_2_column",
   "season",
   "active"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
   {
    "fieldname": "assignment_id",
    "fieldtype": "Data",
@@ -34,6 +41,11 @@
    "label": "Crop Cycle",
    "options": "Crop Cycle",
    "reqd": 1
+  },
+  {
+   "fieldname": "ux_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Details Column 2"
   },
   {
    "fieldname": "season",

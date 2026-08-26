@@ -5,28 +5,36 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "ux_overview_tab",
+  "ux_assessment_context_section",
   "assessment_status",
   "crop_cycle",
   "production_contract",
   "production_lot",
+  "ux_assessment_context_column_2_column",
   "outgrower",
   "season",
   "pricing_policy",
-  "receipt_section",
+  "ux_receipt_tab",
+  "ux_erpnext_receipt_and_quality_inspection_section",
   "purchase_receipt",
   "purchase_receipt_item",
   "quality_inspection",
+  "ux_erpnext_receipt_and_quality_inspection_column_2_column",
   "item_code",
   "batch_no",
   "delivery_date",
-  "quantity_section",
+  "ux_quantity_tab",
+  "ux_delivered_and_net_dry_quantity_section",
   "gross_qty",
   "uom",
   "moisture_percent",
+  "ux_delivered_and_net_dry_quantity_column_2_column",
   "moisture_target_percent",
   "moisture_adjustment_method",
   "net_dry_qty",
-  "quality_section",
+  "ux_lab_quality_tab",
+  "ux_seed_lot_laboratory_results_section",
   "germination_percent",
   "genetic_purity_percent",
   "vigor_percent",
@@ -36,19 +44,33 @@
   "laboratory_reference",
   "disposition",
   "quality_decision_notes",
-  "pricing_section",
+  "ux_pricing_and_review_tab",
+  "ux_provisional_contract_pricing_section",
   "eligible_area_hectares",
   "provisional_yield_kg_per_hectare",
   "provisional_pricing_band",
   "provisional_price_basis",
+  "ux_provisional_contract_pricing_column_2_column",
   "provisional_payable_value",
   "potential_bonus_amount",
   "bonus_status",
+  "ux_review_trail_section",
   "inspected_by",
   "verified_by",
+  "ux_review_trail_column_2_column",
   "amended_from"
  ],
  "fields": [
+  {
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_assessment_context_section",
+   "fieldtype": "Section Break",
+   "label": "Assessment Context"
+  },
   {
    "default": "Draft",
    "fieldname": "assessment_status",
@@ -83,6 +105,11 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_assessment_context_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Assessment Context Column 2"
+  },
+  {
    "fieldname": "outgrower",
    "fieldtype": "Link",
    "label": "Outgrower",
@@ -105,7 +132,12 @@
    "reqd": 1
   },
   {
-   "fieldname": "receipt_section",
+   "fieldname": "ux_receipt_tab",
+   "fieldtype": "Tab Break",
+   "label": "Receipt"
+  },
+  {
+   "fieldname": "ux_erpnext_receipt_and_quality_inspection_section",
    "fieldtype": "Section Break",
    "label": "ERPNext Receipt and Quality Inspection"
   },
@@ -127,6 +159,11 @@
    "fieldtype": "Link",
    "label": "Quality Inspection",
    "options": "Quality Inspection"
+  },
+  {
+   "fieldname": "ux_erpnext_receipt_and_quality_inspection_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "ERPNext Receipt and Quality Inspection Column 2"
   },
   {
    "fieldname": "item_code",
@@ -151,7 +188,12 @@
    "reqd": 1
   },
   {
-   "fieldname": "quantity_section",
+   "fieldname": "ux_quantity_tab",
+   "fieldtype": "Tab Break",
+   "label": "Quantity"
+  },
+  {
+   "fieldname": "ux_delivered_and_net_dry_quantity_section",
    "fieldtype": "Section Break",
    "label": "Delivered and Net Dry Quantity"
   },
@@ -176,6 +218,11 @@
    "label": "Measured Moisture %"
   },
   {
+   "fieldname": "ux_delivered_and_net_dry_quantity_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Delivered and Net Dry Quantity Column 2"
+  },
+  {
    "fieldname": "moisture_target_percent",
    "fieldtype": "Percent",
    "label": "Contract Moisture Target %",
@@ -198,7 +245,12 @@
    "read_only": 1
   },
   {
-   "fieldname": "quality_section",
+   "fieldname": "ux_lab_quality_tab",
+   "fieldtype": "Tab Break",
+   "label": "Lab Quality"
+  },
+  {
+   "fieldname": "ux_seed_lot_laboratory_results_section",
    "fieldtype": "Section Break",
    "label": "Seed-Lot Laboratory Results"
   },
@@ -255,7 +307,12 @@
    "label": "Quality Decision Notes"
   },
   {
-   "fieldname": "pricing_section",
+   "fieldname": "ux_pricing_and_review_tab",
+   "fieldtype": "Tab Break",
+   "label": "Pricing and Review"
+  },
+  {
+   "fieldname": "ux_provisional_contract_pricing_section",
    "fieldtype": "Section Break",
    "label": "Provisional Contract Pricing"
   },
@@ -284,6 +341,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_provisional_contract_pricing_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Provisional Contract Pricing Column 2"
+  },
+  {
    "fieldname": "provisional_payable_value",
    "fieldtype": "Currency",
    "label": "Provisional Initial Payable",
@@ -304,6 +366,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_review_trail_section",
+   "fieldtype": "Section Break",
+   "label": "Review Trail"
+  },
+  {
    "default": "user",
    "fieldname": "inspected_by",
    "fieldtype": "Link",
@@ -316,6 +383,11 @@
    "fieldtype": "Link",
    "label": "Verified By",
    "options": "User"
+  },
+  {
+   "fieldname": "ux_review_trail_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Review Trail Column 2"
   },
   {
    "fieldname": "amended_from",

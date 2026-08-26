@@ -5,47 +5,66 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "ux_overview_tab",
+  "ux_settlement_summary_section",
   "crop_cycle",
   "production_contract",
   "status",
   "company",
   "outgrower",
+  "ux_settlement_summary_column_2_column",
   "supplier",
-  "purchase_order",
-  "purchase_invoice",
   "posting_date",
   "currency",
   "pricing_policy",
+  "ux_linked_documents_section",
+  "purchase_order",
+  "purchase_invoice",
+  "ux_linked_documents_column_2_column",
   "payment_due_date",
   "bonus_review_due_date",
-  "harvest_section",
+  "ux_harvest_pricing_tab",
+  "ux_accepted_harvest_section",
   "harvest_receipts",
   "receipt_book_value",
-  "pricing_section",
+  "ux_contract_quality_pricing_section",
   "pricing_lines",
   "quality_deductions",
   "potential_deferred_bonus",
   "gross_harvest_value",
-  "recovery_section",
+  "ux_recoveries_tab",
+  "ux_stock_input_recovery_section",
   "stock_inputs",
   "stock_recovery_due",
   "stock_recovery_to_deduct",
   "stock_recovery_shortfall",
+  "ux_cash_advance_recovery_section",
   "cash_advances",
   "cash_advance_available",
   "cash_advance_to_allocate",
   "cash_advance_shortfall",
-  "adjustments_section",
+  "ux_adjustments_and_totals_tab",
+  "ux_quality_and_commercial_adjustments_section",
   "adjustments",
   "other_additions",
   "other_deductions",
-  "summary_section",
+  "ux_settlement_totals_section",
   "invoice_total",
   "net_payable",
   "unrecovered_balance",
   "notes"
  ],
  "fields": [
+  {
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_settlement_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Settlement Summary"
+  },
   {
    "fieldname": "crop_cycle",
    "fieldtype": "Link",
@@ -87,24 +106,15 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_settlement_summary_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Settlement Summary Column 2"
+  },
+  {
    "fieldname": "supplier",
    "fieldtype": "Link",
    "label": "Supplier",
    "options": "Supplier",
-   "read_only": 1
-  },
-  {
-   "fieldname": "purchase_order",
-   "fieldtype": "Link",
-   "label": "Harvest Purchase Order",
-   "options": "Purchase Order",
-   "read_only": 1
-  },
-  {
-   "fieldname": "purchase_invoice",
-   "fieldtype": "Link",
-   "label": "Settlement Purchase Invoice",
-   "options": "Purchase Invoice",
    "read_only": 1
   },
   {
@@ -129,6 +139,30 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_linked_documents_section",
+   "fieldtype": "Section Break",
+   "label": "Linked Documents"
+  },
+  {
+   "fieldname": "purchase_order",
+   "fieldtype": "Link",
+   "label": "Harvest Purchase Order",
+   "options": "Purchase Order",
+   "read_only": 1
+  },
+  {
+   "fieldname": "purchase_invoice",
+   "fieldtype": "Link",
+   "label": "Settlement Purchase Invoice",
+   "options": "Purchase Invoice",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_linked_documents_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Linked Documents Column 2"
+  },
+  {
    "fieldname": "payment_due_date",
    "fieldtype": "Date",
    "label": "Payment Due Date",
@@ -141,7 +175,12 @@
    "read_only": 1
   },
   {
-   "fieldname": "harvest_section",
+   "fieldname": "ux_harvest_pricing_tab",
+   "fieldtype": "Tab Break",
+   "label": "Harvest Pricing"
+  },
+  {
+   "fieldname": "ux_accepted_harvest_section",
    "fieldtype": "Section Break",
    "label": "Accepted Harvest"
   },
@@ -160,7 +199,7 @@
    "read_only": 1
   },
   {
-   "fieldname": "pricing_section",
+   "fieldname": "ux_contract_quality_pricing_section",
    "fieldtype": "Section Break",
    "label": "Contract Quality Pricing"
   },
@@ -194,9 +233,14 @@
    "read_only": 1
   },
   {
-   "fieldname": "recovery_section",
+   "fieldname": "ux_recoveries_tab",
+   "fieldtype": "Tab Break",
+   "label": "Recoveries"
+  },
+  {
+   "fieldname": "ux_stock_input_recovery_section",
    "fieldtype": "Section Break",
-   "label": "Input and Advance Recovery"
+   "label": "Stock Input Recovery"
   },
   {
    "fieldname": "stock_inputs",
@@ -227,6 +271,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_cash_advance_recovery_section",
+   "fieldtype": "Section Break",
+   "label": "Cash Advance Recovery"
+  },
+  {
    "fieldname": "cash_advances",
    "fieldtype": "Table",
    "label": "Paid Supplier Advances",
@@ -255,7 +304,12 @@
    "read_only": 1
   },
   {
-   "fieldname": "adjustments_section",
+   "fieldname": "ux_adjustments_and_totals_tab",
+   "fieldtype": "Tab Break",
+   "label": "Adjustments and Totals"
+  },
+  {
+   "fieldname": "ux_quality_and_commercial_adjustments_section",
    "fieldtype": "Section Break",
    "label": "Quality and Commercial Adjustments"
   },
@@ -280,9 +334,9 @@
    "read_only": 1
   },
   {
-   "fieldname": "summary_section",
+   "fieldname": "ux_settlement_totals_section",
    "fieldtype": "Section Break",
-   "label": "Settlement Summary"
+   "label": "Settlement Totals"
   },
   {
    "fieldname": "invoice_total",

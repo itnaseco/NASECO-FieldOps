@@ -7,26 +7,36 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "finding_id",
-  "visit",
+  "ux_details_section",
   "crop_cycle",
+  "visit",
   "stage",
-  "section_break_1",
   "attribute",
-  "value",
   "unit",
-  "section_break_2",
   "remarks",
-  "photos",
+  "ux_dates_and_location_section",
   "timestamp",
+  "ux_quantities_and_values_section",
+  "value",
+  "ux_quality_and_results_section",
+  "finding_id",
+  "ux_related_tables_section",
+  "photos",
+  "ux_notes_and_review_section",
   "synced"
  ],
  "fields": [
   {
-   "fieldname": "finding_id",
-   "fieldtype": "Data",
-   "label": "Finding ID",
-   "unique": 1
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "crop_cycle",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Crop Cycle",
+   "options": "Crop Cycle"
   },
   {
    "fieldname": "visit",
@@ -37,22 +47,10 @@
    "reqd": 1
   },
   {
-   "fieldname": "crop_cycle",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Crop Cycle",
-   "options": "Crop Cycle"
-  },
-  {
    "fieldname": "stage",
    "fieldtype": "Link",
    "label": "Stage",
    "options": "Crop Cycle Stage"
-  },
-  {
-   "fieldname": "section_break_1",
-   "fieldtype": "Section Break",
-   "label": "Observation"
   },
   {
    "fieldname": "attribute",
@@ -63,6 +61,33 @@
    "reqd": 1
   },
   {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "Unit",
+   "options": "UOM"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "ux_dates_and_location_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Location"
+  },
+  {
+   "fieldname": "timestamp",
+   "fieldtype": "Datetime",
+   "label": "Timestamp",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
+  {
    "fieldname": "value",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -70,20 +95,20 @@
    "reqd": 1
   },
   {
-   "fieldname": "unit",
-   "fieldtype": "Link",
-   "label": "Unit",
-   "options": "UOM"
-  },
-  {
-   "fieldname": "section_break_2",
+   "fieldname": "ux_quality_and_results_section",
    "fieldtype": "Section Break",
-   "label": "Details"
+   "label": "Quality and Results"
   },
   {
-   "fieldname": "remarks",
-   "fieldtype": "Text",
-   "label": "Remarks"
+   "fieldname": "finding_id",
+   "fieldtype": "Data",
+   "label": "Finding ID",
+   "unique": 1
+  },
+  {
+   "fieldname": "ux_related_tables_section",
+   "fieldtype": "Section Break",
+   "label": "Related Tables"
   },
   {
    "fieldname": "photos",
@@ -92,10 +117,9 @@
    "options": "Finding Photo"
   },
   {
-   "fieldname": "timestamp",
-   "fieldtype": "Datetime",
-   "label": "Timestamp",
-   "reqd": 1
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
   },
   {
    "fieldname": "synced",

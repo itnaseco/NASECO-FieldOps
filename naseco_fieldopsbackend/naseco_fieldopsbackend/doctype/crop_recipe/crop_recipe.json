@@ -1,225 +1,298 @@
 {
-  "actions": [],
-  "allow_rename": 1,
-  "creation": "2026-01-29 17:30:58.983311",
-  "doctype": "DocType",
-  "editable_grid": 1,
-  "engine": "InnoDB",
-  "field_order": [
-    "recipe_name",
-    "crop",
-    "variety_scope",
-    "expected_yield_kg_per_hectare",
-    "applicable_varieties",
-    "outgrower",
-    "company",
-    "recipe_version",
-    "status",
-    "effective_from",
-    "effective_to",
-    "based_on_recipe",
-    "is_default",
-    "stages",
-    "recipe_id",
-    "inputs",
-    "parent_seed_items",
-    "approved_by",
-    "approved_on",
-    "amended_from"
-  ],
-  "fields": [
-    {
-      "default": "All Crop Varieties",
-      "fieldname": "variety_scope",
-      "fieldtype": "Select",
-      "label": "Variety Applicability",
-      "options": "All Crop Varieties\nSelected Varieties",
-      "reqd": 1
-    },
-    {
-      "depends_on": "eval:doc.variety_scope==\"Selected Varieties\"",
-      "fieldname": "applicable_varieties",
-      "fieldtype": "Table",
-      "label": "Applicable Varieties and Yields",
-      "mandatory_depends_on": "eval:doc.variety_scope==\"Selected Varieties\"",
-      "options": "Crop Recipe Variety"
-    },
-    {
-      "fieldname": "amended_from",
-      "fieldtype": "Link",
-      "label": "Amended From",
-      "options": "Crop Recipe",
-      "read_only": 1
-    },
-    {
-      "fieldname": "approved_by",
-      "fieldtype": "Link",
-      "label": "Approved By",
-      "options": "User",
-      "read_only": 1
-    },
-    {
-      "fieldname": "approved_on",
-      "fieldtype": "Datetime",
-      "label": "Approved On",
-      "read_only": 1
-    },
-    {
-      "fieldname": "based_on_recipe",
-      "fieldtype": "Link",
-      "label": "Based On Recipe",
-      "options": "Crop Recipe",
-      "read_only": 1
-    },
-    {
-      "fieldname": "company",
-      "fieldtype": "Link",
-      "label": "Company",
-      "options": "Company"
-    },
-    {
-      "fieldname": "crop",
-      "fieldtype": "Link",
-      "in_list_view": 1,
-      "label": "Crop",
-      "options": "Crop",
-      "reqd": 1
-    },
-    {
-      "default": "Today",
-      "fieldname": "effective_from",
-      "fieldtype": "Date",
-      "label": "Effective From",
-      "reqd": 1
-    },
-    {
-      "fieldname": "effective_to",
-      "fieldtype": "Date",
-      "label": "Effective To"
-    },
-    {
-      "fieldname": "inputs",
-      "fieldtype": "Table",
-      "label": "Inputs",
-      "options": "Recipe Input Item"
-    },
-    {
-      "default": "0",
-      "fieldname": "is_default",
-      "fieldtype": "Check",
-      "label": "Default for Scope"
-    },
-    {
-      "fieldname": "outgrower",
-      "fieldtype": "Link",
-      "in_list_view": 1,
-      "label": "Outgrower Override",
-      "options": "Outgrower"
-    },
-    {
-      "fieldname": "parent_seed_items",
-      "fieldtype": "Table",
-      "label": "Basic / Parent Seed Ratios and Inputs",
-      "options": "Recipe Parent Seed Item"
-    },
-    {
-      "fieldname": "recipe_id",
-      "fieldtype": "Data",
-      "label": "Recipe ID",
-      "unique": 1
-    },
-    {
-      "fieldname": "recipe_name",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "label": "Recipe Name",
-      "reqd": 1
-    },
-    {
-      "default": "1.0",
-      "fieldname": "recipe_version",
-      "fieldtype": "Data",
-      "label": "Recipe Version",
-      "reqd": 1
-    },
-    {
-      "fieldname": "stages",
-      "fieldtype": "Table",
-      "label": "Stages",
-      "options": "Recipe Stage"
-    },
-    {
-      "default": "Draft",
-      "fieldname": "status",
-      "fieldtype": "Select",
-      "in_list_view": 1,
-      "label": "Status",
-      "options": "Draft\nActive\nRetired\nCancelled",
-      "read_only": 1
-    },
-    {
-      "fieldname": "variety",
-      "fieldtype": "Link",
-      "label": "Crop Variety",
-      "options": "Crop Variety",
-      "hidden": 1,
-      "no_copy": 1
-    },
-    {
-      "description": "Default expected harvest for all crop varieties. Selected-variety recipes define yield in the applicability table.",
-      "fieldname": "expected_yield_kg_per_hectare",
-      "fieldtype": "Float",
-      "label": "Expected Yield (Kg/Ha)",
-      "non_negative": 1,
-      "precision": 2,
-      "depends_on": "eval:doc.variety_scope==\"All Crop Varieties\"",
-      "mandatory_depends_on": "eval:doc.docstatus==1 && doc.variety_scope==\"All Crop Varieties\""
-    }
-  ],
-  "grid_page_length": 50,
-  "index_web_pages_for_search": 1,
-  "links": [],
-  "modified": "2026-01-29 17:30:58.983311",
-  "modified_by": "Administrator",
-  "module": "Naseco FieldOpsBackend",
-  "name": "Crop Recipe",
-  "owner": "Administrator",
-  "permissions": [
-    {
-      "create": 1,
-      "delete": 1,
-      "email": 1,
-      "export": 1,
-      "print": 1,
-      "read": 1,
-      "report": 1,
-      "role": "System Manager",
-      "share": 1,
-      "write": 1
-    },
-    {
-      "read": 1,
-      "report": 1,
-      "role": "Outgrower Manager",
-      "cancel": 1,
-      "create": 1,
-      "delete": 1,
-      "email": 1,
-      "export": 1,
-      "print": 1,
-      "submit": 1,
-      "write": 1
-    },
-    {
-      "read": 1,
-      "role": "Outgrower Supervisor"
-    }
-  ],
-  "row_format": "Dynamic",
-  "rows_threshold_for_grid_search": 20,
-  "sort_field": "modified",
-  "sort_order": "DESC",
-  "states": [],
-  "autoname": "field:recipe_name",
-  "is_submittable": 1
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-01-29 17:30:58.983311",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "ux_overview_tab",
+  "ux_recipe_summary_section",
+  "recipe_id",
+  "recipe_name",
+  "recipe_version",
+  "status",
+  "company",
+  "ux_recipe_summary_column_2_column",
+  "crop",
+  "variety",
+  "outgrower",
+  "is_default",
+  "ux_applicability_tab",
+  "ux_variety_applicability_section",
+  "variety_scope",
+  "applicable_varieties",
+  "expected_yield_kg_per_hectare",
+  "ux_plan_tab",
+  "ux_stages_section",
+  "stages",
+  "ux_inputs_section",
+  "inputs",
+  "ux_parent_seed_section",
+  "parent_seed_items",
+  "ux_lifecycle_tab",
+  "ux_effective_dates_and_approval_section",
+  "effective_from",
+  "effective_to",
+  "based_on_recipe",
+  "ux_effective_dates_and_approval_column_2_column",
+  "amended_from",
+  "approved_by",
+  "approved_on"
+ ],
+ "fields": [
+  {
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_recipe_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Recipe Summary"
+  },
+  {
+   "fieldname": "recipe_id",
+   "fieldtype": "Data",
+   "label": "Recipe ID",
+   "unique": 1
+  },
+  {
+   "fieldname": "recipe_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Recipe Name",
+   "reqd": 1
+  },
+  {
+   "default": "1.0",
+   "fieldname": "recipe_version",
+   "fieldtype": "Data",
+   "label": "Recipe Version",
+   "reqd": 1
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nActive\nRetired\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "ux_recipe_summary_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Recipe Summary Column 2"
+  },
+  {
+   "fieldname": "crop",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Crop",
+   "options": "Crop",
+   "reqd": 1
+  },
+  {
+   "fieldname": "variety",
+   "fieldtype": "Link",
+   "label": "Crop Variety",
+   "options": "Crop Variety",
+   "hidden": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "outgrower",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Outgrower Override",
+   "options": "Outgrower"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_default",
+   "fieldtype": "Check",
+   "label": "Default for Scope"
+  },
+  {
+   "fieldname": "ux_applicability_tab",
+   "fieldtype": "Tab Break",
+   "label": "Applicability"
+  },
+  {
+   "fieldname": "ux_variety_applicability_section",
+   "fieldtype": "Section Break",
+   "label": "Variety Applicability"
+  },
+  {
+   "default": "All Crop Varieties",
+   "fieldname": "variety_scope",
+   "fieldtype": "Select",
+   "label": "Variety Applicability",
+   "options": "All Crop Varieties\nSelected Varieties",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.variety_scope==\"Selected Varieties\"",
+   "fieldname": "applicable_varieties",
+   "fieldtype": "Table",
+   "label": "Applicable Varieties and Yields",
+   "mandatory_depends_on": "eval:doc.variety_scope==\"Selected Varieties\"",
+   "options": "Crop Recipe Variety"
+  },
+  {
+   "description": "Default expected harvest for all crop varieties. Selected-variety recipes define yield in the applicability table.",
+   "fieldname": "expected_yield_kg_per_hectare",
+   "fieldtype": "Float",
+   "label": "Expected Yield (Kg/Ha)",
+   "non_negative": 1,
+   "precision": 2,
+   "depends_on": "eval:doc.variety_scope==\"All Crop Varieties\"",
+   "mandatory_depends_on": "eval:doc.docstatus==1 && doc.variety_scope==\"All Crop Varieties\""
+  },
+  {
+   "fieldname": "ux_plan_tab",
+   "fieldtype": "Tab Break",
+   "label": "Plan"
+  },
+  {
+   "fieldname": "ux_stages_section",
+   "fieldtype": "Section Break",
+   "label": "Stages"
+  },
+  {
+   "fieldname": "stages",
+   "fieldtype": "Table",
+   "label": "Stages",
+   "options": "Recipe Stage"
+  },
+  {
+   "fieldname": "ux_inputs_section",
+   "fieldtype": "Section Break",
+   "label": "Inputs"
+  },
+  {
+   "fieldname": "inputs",
+   "fieldtype": "Table",
+   "label": "Inputs",
+   "options": "Recipe Input Item"
+  },
+  {
+   "fieldname": "ux_parent_seed_section",
+   "fieldtype": "Section Break",
+   "label": "Parent Seed"
+  },
+  {
+   "fieldname": "parent_seed_items",
+   "fieldtype": "Table",
+   "label": "Basic / Parent Seed Ratios and Inputs",
+   "options": "Recipe Parent Seed Item"
+  },
+  {
+   "fieldname": "ux_lifecycle_tab",
+   "fieldtype": "Tab Break",
+   "label": "Lifecycle"
+  },
+  {
+   "fieldname": "ux_effective_dates_and_approval_section",
+   "fieldtype": "Section Break",
+   "label": "Effective Dates and Approval"
+  },
+  {
+   "default": "Today",
+   "fieldname": "effective_from",
+   "fieldtype": "Date",
+   "label": "Effective From",
+   "reqd": 1
+  },
+  {
+   "fieldname": "effective_to",
+   "fieldtype": "Date",
+   "label": "Effective To"
+  },
+  {
+   "fieldname": "based_on_recipe",
+   "fieldtype": "Link",
+   "label": "Based On Recipe",
+   "options": "Crop Recipe",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_effective_dates_and_approval_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Effective Dates and Approval Column 2"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "options": "Crop Recipe",
+   "read_only": 1
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Approved By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "approved_on",
+   "fieldtype": "Datetime",
+   "label": "Approved On",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-29 17:30:58.983311",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Crop Recipe",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Outgrower Manager",
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Outgrower Supervisor"
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "autoname": "field:recipe_name",
+ "is_submittable": 1
 }

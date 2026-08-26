@@ -7,29 +7,50 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_overview_tab",
+  "ux_summary_section",
   "activity_id",
   "crop_cycle",
+  "title",
+  "evidence",
+  "status",
   "stage",
-  "activity_template",
   "visit",
   "assigned_to",
-  "title",
-  "description",
+  "duration_hours",
+  "ux_planning_and_location_tab",
+  "ux_dates_and_schedule_section",
   "activity_date",
   "due_date",
-  "duration_hours",
-  "priority",
-  "mandatory",
-  "evidence",
-  "completion_notes",
   "completed_on",
-  "completion_source",
+  "ux_dates_and_schedule_column_2_column",
   "completed_by",
   "completed_by_report",
-  "status",
+  "ux_location_and_map_section",
+  "activity_template",
+  "ux_operations_tab",
+  "ux_operational_details_section",
+  "priority",
+  "mandatory",
+  "ux_operational_details_column_2_column",
+  "completion_source",
+  "ux_review_and_notes_tab",
+  "ux_notes_and_audit_section",
+  "description",
+  "completion_notes",
   "synced"
  ],
  "fields": [
+  {
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Summary"
+  },
   {
    "fieldname": "activity_id",
    "fieldtype": "Data",
@@ -45,17 +66,29 @@
    "reqd": 1
   },
   {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "evidence",
+   "fieldtype": "Attach",
+   "label": "Completion Evidence"
+  },
+  {
+   "default": "Scheduled",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Scheduled\nIn Progress\nCompleted\nCancelled"
+  },
+  {
    "fieldname": "stage",
    "fieldtype": "Link",
    "label": "Stage",
    "options": "Crop Cycle Stage"
-  },
-  {
-   "fieldname": "activity_template",
-   "fieldtype": "Link",
-   "label": "Activity Template",
-   "options": "Agronomy Activity Template",
-   "read_only": 1
   },
   {
    "fieldname": "visit",
@@ -71,15 +104,19 @@
    "options": "User"
   },
   {
-   "fieldname": "title",
-   "fieldtype": "Data",
-   "label": "Title",
-   "reqd": 1
+   "fieldname": "duration_hours",
+   "fieldtype": "Float",
+   "label": "Duration (Hours)"
   },
   {
-   "fieldname": "description",
-   "fieldtype": "Text",
-   "label": "Description"
+   "fieldname": "ux_planning_and_location_tab",
+   "fieldtype": "Tab Break",
+   "label": "Planning and Location"
+  },
+  {
+   "fieldname": "ux_dates_and_schedule_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Schedule"
   },
   {
    "fieldname": "activity_date",
@@ -93,46 +130,15 @@
    "label": "Due Date"
   },
   {
-   "fieldname": "duration_hours",
-   "fieldtype": "Float",
-   "label": "Duration (Hours)"
-  },
-  {
-   "default": "Medium",
-   "fieldname": "priority",
-   "fieldtype": "Select",
-   "label": "Priority",
-   "options": "Low\nMedium\nHigh"
-  },
-  {
-   "default": "1",
-   "fieldname": "mandatory",
-   "fieldtype": "Check",
-   "label": "Mandatory"
-  },
-  {
-   "fieldname": "evidence",
-   "fieldtype": "Attach",
-   "label": "Completion Evidence"
-  },
-  {
-   "fieldname": "completion_notes",
-   "fieldtype": "Text",
-   "label": "Completion Notes"
-  },
-  {
    "fieldname": "completed_on",
    "fieldtype": "Datetime",
    "label": "Completed On",
    "read_only": 1
   },
   {
-   "default": "Manual",
-   "fieldname": "completion_source",
-   "fieldtype": "Select",
-   "label": "Completion Source",
-   "options": "Manual\nAgronomy Report",
-   "read_only": 1
+   "fieldname": "ux_dates_and_schedule_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Dates and Schedule Column 2"
   },
   {
    "fieldname": "completed_by",
@@ -149,12 +155,72 @@
    "read_only": 1
   },
   {
-   "default": "Scheduled",
-   "fieldname": "status",
+   "fieldname": "ux_location_and_map_section",
+   "fieldtype": "Section Break",
+   "label": "Location and Map"
+  },
+  {
+   "fieldname": "activity_template",
+   "fieldtype": "Link",
+   "label": "Activity Template",
+   "options": "Agronomy Activity Template",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_operations_tab",
+   "fieldtype": "Tab Break",
+   "label": "Operations"
+  },
+  {
+   "fieldname": "ux_operational_details_section",
+   "fieldtype": "Section Break",
+   "label": "Operational Details"
+  },
+  {
+   "default": "Medium",
+   "fieldname": "priority",
    "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Status",
-   "options": "Scheduled\nIn Progress\nCompleted\nCancelled"
+   "label": "Priority",
+   "options": "Low\nMedium\nHigh"
+  },
+  {
+   "default": "1",
+   "fieldname": "mandatory",
+   "fieldtype": "Check",
+   "label": "Mandatory"
+  },
+  {
+   "fieldname": "ux_operational_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Operational Details Column 2"
+  },
+  {
+   "default": "Manual",
+   "fieldname": "completion_source",
+   "fieldtype": "Select",
+   "label": "Completion Source",
+   "options": "Manual\nAgronomy Report",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_review_and_notes_tab",
+   "fieldtype": "Tab Break",
+   "label": "Review and Notes"
+  },
+  {
+   "fieldname": "ux_notes_and_audit_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Audit"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "completion_notes",
+   "fieldtype": "Text",
+   "label": "Completion Notes"
   },
   {
    "default": "0",

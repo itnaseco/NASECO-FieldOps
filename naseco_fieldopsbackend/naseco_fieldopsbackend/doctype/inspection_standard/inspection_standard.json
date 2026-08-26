@@ -6,40 +6,33 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "inspection_template",
-  "parameter",
+  "ux_details_section",
   "production_category",
   "seed_class",
+  "parameter",
   "mandatory",
-  "section_break_1",
   "comparison_rule",
-  "aggregation_method",
-  "minimum_value",
-  "maximum_value",
+  "ux_details_column_2_column",
   "expected_text",
   "unit",
   "good_label",
   "poor_label",
+  "ux_quantities_and_values_section",
+  "minimum_value",
+  "ux_quantities_and_values_column_2_column",
+  "maximum_value",
+  "ux_quality_and_results_section",
+  "inspection_template",
+  "aggregation_method",
   "auto_reject_on_fail",
   "corrective_action_on_fail",
   "standard_notes"
  ],
  "fields": [
   {
-   "fieldname": "inspection_template",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Inspection Template",
-   "options": "Inspection Template",
-   "reqd": 1
-  },
-  {
-   "fieldname": "parameter",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Parameter",
-   "options": "Inspection Parameter",
-   "reqd": 1
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
   },
   {
    "fieldname": "production_category",
@@ -57,15 +50,18 @@
    "options": "Seed Class"
   },
   {
+   "fieldname": "parameter",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Parameter",
+   "options": "Inspection Parameter",
+   "reqd": 1
+  },
+  {
    "default": "1",
    "fieldname": "mandatory",
    "fieldtype": "Check",
    "label": "Mandatory"
-  },
-  {
-   "fieldname": "section_break_1",
-   "fieldtype": "Section Break",
-   "label": "Rule"
   },
   {
    "fieldname": "comparison_rule",
@@ -75,22 +71,9 @@
    "reqd": 1
   },
   {
-   "default": "Worst Case",
-   "fieldname": "aggregation_method",
-   "fieldtype": "Select",
-   "label": "Take Aggregation Method",
-   "options": "Worst Case\nAverage\nMinimum\nMaximum\nSum\nAll Must Pass\nCumulative Incidence",
-   "reqd": 1
-  },
-  {
-   "fieldname": "minimum_value",
-   "fieldtype": "Float",
-   "label": "Minimum Value"
-  },
-  {
-   "fieldname": "maximum_value",
-   "fieldtype": "Float",
-   "label": "Maximum Value"
+   "fieldname": "ux_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Details Column 2"
   },
   {
    "fieldname": "expected_text",
@@ -114,6 +97,47 @@
    "fieldname": "poor_label",
    "fieldtype": "Data",
    "label": "Poor Label"
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
+  {
+   "fieldname": "minimum_value",
+   "fieldtype": "Float",
+   "label": "Minimum Value"
+  },
+  {
+   "fieldname": "ux_quantities_and_values_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quantities and Values Column 2"
+  },
+  {
+   "fieldname": "maximum_value",
+   "fieldtype": "Float",
+   "label": "Maximum Value"
+  },
+  {
+   "fieldname": "ux_quality_and_results_section",
+   "fieldtype": "Section Break",
+   "label": "Quality and Results"
+  },
+  {
+   "fieldname": "inspection_template",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Inspection Template",
+   "options": "Inspection Template",
+   "reqd": 1
+  },
+  {
+   "default": "Worst Case",
+   "fieldname": "aggregation_method",
+   "fieldtype": "Select",
+   "label": "Take Aggregation Method",
+   "options": "Worst Case\nAverage\nMinimum\nMaximum\nSum\nAll Must Pass\nCumulative Incidence",
+   "reqd": 1
   },
   {
    "default": "0",

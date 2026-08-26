@@ -6,32 +6,28 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "template_name",
-  "inspection_type",
+  "ux_details_section",
   "crop_stage",
-  "due_days_from_planting",
-  "due_window_end_days",
   "counts_per_hectare",
+  "ux_details_column_2_column",
   "default_assigned_to",
   "active",
+  "ux_dates_and_location_section",
+  "due_days_from_planting",
+  "ux_dates_and_location_column_2_column",
+  "due_window_end_days",
+  "ux_location_and_map_section",
+  "template_name",
+  "ux_quality_and_results_section",
+  "inspection_type",
+  "ux_notes_and_review_section",
   "description"
  ],
  "fields": [
   {
-   "fieldname": "template_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Template Name",
-   "reqd": 1,
-   "unique": 1
-  },
-  {
-   "fieldname": "inspection_type",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Inspection Type",
-   "options": "Pre-flowering\n1st Flowering\n2nd Flowering\n3rd Flowering\nPre-harvest",
-   "reqd": 1
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
   },
   {
    "fieldname": "crop_stage",
@@ -39,22 +35,15 @@
    "label": "Crop Stage"
   },
   {
-   "fieldname": "due_days_from_planting",
-   "fieldtype": "Int",
-   "in_list_view": 1,
-   "label": "Due Days From Planting",
-   "reqd": 1
-  },
-  {
-   "fieldname": "due_window_end_days",
-   "fieldtype": "Int",
-   "label": "Due Window End Days"
-  },
-  {
    "default": "4",
    "fieldname": "counts_per_hectare",
    "fieldtype": "Float",
    "label": "Counts Per Hectare"
+  },
+  {
+   "fieldname": "ux_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Details Column 2"
   },
   {
    "fieldname": "default_assigned_to",
@@ -68,6 +57,59 @@
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": "Active"
+  },
+  {
+   "fieldname": "ux_dates_and_location_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Location"
+  },
+  {
+   "fieldname": "due_days_from_planting",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Due Days From Planting",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_dates_and_location_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Dates and Location Column 2"
+  },
+  {
+   "fieldname": "due_window_end_days",
+   "fieldtype": "Int",
+   "label": "Due Window End Days"
+  },
+  {
+   "fieldname": "ux_location_and_map_section",
+   "fieldtype": "Section Break",
+   "label": "Location and Map"
+  },
+  {
+   "fieldname": "template_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Template Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "ux_quality_and_results_section",
+   "fieldtype": "Section Break",
+   "label": "Quality and Results"
+  },
+  {
+   "fieldname": "inspection_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Inspection Type",
+   "options": "Pre-flowering\n1st Flowering\n2nd Flowering\n3rd Flowering\nPre-harvest",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
   },
   {
    "fieldname": "description",

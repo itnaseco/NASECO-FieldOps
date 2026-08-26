@@ -7,30 +7,47 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_overview_tab",
+  "ux_visit_context_section",
   "visit_id",
   "plot",
   "crop_cycle",
   "stage",
   "visit_type",
-  "section_break_1",
-  "gps_lat",
-  "gps_lng",
-  "distance_from_plot",
-  "section_break_2",
-  "timestamp",
-  "visited_by",
-  "section_break_3",
-  "photos",
-  "notes",
-  "section_break_4",
-  "findings",
+  "ux_visit_context_column_2_column",
   "visit_status",
-  "scheduled_date",
   "status",
   "completed",
-  "synced"
+  "synced",
+  "ux_timing_and_location_tab",
+  "ux_visit_details_section",
+  "timestamp",
+  "visited_by",
+  "ux_visit_details_column_2_column",
+  "scheduled_date",
+  "ux_gps_location_section",
+  "gps_lat",
+  "gps_lng",
+  "ux_gps_location_column_2_column",
+  "distance_from_plot",
+  "ux_evidence_tab",
+  "ux_photos_and_notes_section",
+  "photos",
+  "notes",
+  "ux_findings_section",
+  "findings"
  ],
  "fields": [
+  {
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_visit_context_section",
+   "fieldtype": "Section Break",
+   "label": "Visit Context"
+  },
   {
    "fieldname": "visit_id",
    "fieldtype": "Data",
@@ -65,72 +82,9 @@
    "options": "Visit Type"
   },
   {
-   "fieldname": "section_break_1",
-   "fieldtype": "Section Break",
-   "label": "GPS Location"
-  },
-  {
-   "fieldname": "gps_lat",
-   "fieldtype": "Float",
-   "label": "GPS Latitude",
-   "precision": 6
-  },
-  {
-   "fieldname": "gps_lng",
-   "fieldtype": "Float",
-   "label": "GPS Longitude",
-   "precision": 6
-  },
-  {
-   "fieldname": "distance_from_plot",
-   "fieldtype": "Float",
-   "label": "Distance from Plot (km)",
-   "read_only": 1,
-   "precision": 2
-  },
-  {
-   "fieldname": "section_break_2",
-   "fieldtype": "Section Break",
-   "label": "Visit Details"
-  },
-  {
-   "fieldname": "timestamp",
-   "fieldtype": "Datetime",
-   "label": "Visit Date & Time",
-   "reqd": 1
-  },
-  {
-   "fieldname": "visited_by",
-   "fieldtype": "Link",
-   "label": "Visited By",
-   "options": "User"
-  },
-  {
-   "fieldname": "section_break_3",
-   "fieldtype": "Section Break",
-   "label": "Photos & Notes"
-  },
-  {
-   "fieldname": "photos",
-   "fieldtype": "Table",
-   "label": "Photos",
-   "options": "Visit Photo"
-  },
-  {
-   "fieldname": "notes",
-   "fieldtype": "Text",
-   "label": "Notes"
-  },
-  {
-   "fieldname": "section_break_4",
-   "fieldtype": "Section Break",
-   "label": "Findings"
-  },
-  {
-   "fieldname": "findings",
-   "fieldtype": "Table",
-   "label": "Findings",
-   "options": "Visit Finding"
+   "fieldname": "ux_visit_context_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Visit Context Column 2"
   },
   {
    "fieldname": "visit_status",
@@ -138,11 +92,6 @@
    "label": "Status",
    "options": "Draft\nSubmitted",
    "default": "Draft"
-  },
-  {
-   "fieldname": "scheduled_date",
-   "fieldtype": "Datetime",
-   "label": "Scheduled Date"
   },
   {
    "fieldname": "status",
@@ -162,6 +111,99 @@
    "fieldtype": "Check",
    "label": "Synced",
    "default": "0"
+  },
+  {
+   "fieldname": "ux_timing_and_location_tab",
+   "fieldtype": "Tab Break",
+   "label": "Timing and Location"
+  },
+  {
+   "fieldname": "ux_visit_details_section",
+   "fieldtype": "Section Break",
+   "label": "Visit Details"
+  },
+  {
+   "fieldname": "timestamp",
+   "fieldtype": "Datetime",
+   "label": "Visit Date & Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "visited_by",
+   "fieldtype": "Link",
+   "label": "Visited By",
+   "options": "User"
+  },
+  {
+   "fieldname": "ux_visit_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Visit Details Column 2"
+  },
+  {
+   "fieldname": "scheduled_date",
+   "fieldtype": "Datetime",
+   "label": "Scheduled Date"
+  },
+  {
+   "fieldname": "ux_gps_location_section",
+   "fieldtype": "Section Break",
+   "label": "GPS Location"
+  },
+  {
+   "fieldname": "gps_lat",
+   "fieldtype": "Float",
+   "label": "GPS Latitude",
+   "precision": 6
+  },
+  {
+   "fieldname": "gps_lng",
+   "fieldtype": "Float",
+   "label": "GPS Longitude",
+   "precision": 6
+  },
+  {
+   "fieldname": "ux_gps_location_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "GPS Location Column 2"
+  },
+  {
+   "fieldname": "distance_from_plot",
+   "fieldtype": "Float",
+   "label": "Distance from Plot (km)",
+   "read_only": 1,
+   "precision": 2
+  },
+  {
+   "fieldname": "ux_evidence_tab",
+   "fieldtype": "Tab Break",
+   "label": "Evidence"
+  },
+  {
+   "fieldname": "ux_photos_and_notes_section",
+   "fieldtype": "Section Break",
+   "label": "Photos and Notes"
+  },
+  {
+   "fieldname": "photos",
+   "fieldtype": "Table",
+   "label": "Photos",
+   "options": "Visit Photo"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "ux_findings_section",
+   "fieldtype": "Section Break",
+   "label": "Findings"
+  },
+  {
+   "fieldname": "findings",
+   "fieldtype": "Table",
+   "label": "Findings",
+   "options": "Visit Finding"
   }
  ],
  "grid_page_length": 50,

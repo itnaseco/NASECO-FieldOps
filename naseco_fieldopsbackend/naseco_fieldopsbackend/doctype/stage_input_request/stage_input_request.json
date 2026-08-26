@@ -7,38 +7,56 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_overview_tab",
+  "ux_request_context_section",
   "request_id",
   "crop_cycle",
   "production_contract",
   "stage",
+  "ux_request_context_column_2_column",
   "company",
   "outgrower",
   "supplier",
-  "request_section",
+  "ux_request_and_approval_section",
   "requested_by",
   "request_date",
   "required_by",
+  "ux_request_and_approval_column_2_column",
   "source_warehouse",
   "status",
-  "items_section",
+  "ux_stock_inputs_tab",
+  "ux_requested_inputs_section",
   "items",
-  "totals_section",
+  "ux_fulfilment_tab",
+  "ux_fulfilment_documents_section",
   "total_requested_value",
   "total_approved_value",
   "material_request",
   "notes",
-  "legacy_section",
+  "ux_legacy_compatibility_tab",
+  "ux_legacy_mobile_fields_section",
   "input_name",
   "quantity_needed",
   "unit",
   "quantity_dispatched",
   "quantity_remaining",
+  "ux_legacy_mobile_fields_column_2_column",
   "input_type",
   "quantity",
   "requested_date",
   "synced"
  ],
  "fields": [
+  {
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_request_context_section",
+   "fieldtype": "Section Break",
+   "label": "Request Context"
+  },
   {
    "fieldname": "request_id",
    "fieldtype": "Data",
@@ -69,6 +87,11 @@
    "options": "Crop Cycle Stage"
   },
   {
+   "fieldname": "ux_request_context_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Request Context Column 2"
+  },
+  {
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
@@ -92,7 +115,7 @@
    "read_only": 1
   },
   {
-   "fieldname": "request_section",
+   "fieldname": "ux_request_and_approval_section",
    "fieldtype": "Section Break",
    "label": "Request and Approval"
   },
@@ -117,6 +140,11 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_request_and_approval_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Request and Approval Column 2"
+  },
+  {
    "fieldname": "source_warehouse",
    "fieldtype": "Link",
    "label": "Default Source Warehouse",
@@ -133,9 +161,14 @@
    "read_only": 1
   },
   {
-   "fieldname": "items_section",
-   "fieldtype": "Section Break",
+   "fieldname": "ux_stock_inputs_tab",
+   "fieldtype": "Tab Break",
    "label": "Stock Inputs"
+  },
+  {
+   "fieldname": "ux_requested_inputs_section",
+   "fieldtype": "Section Break",
+   "label": "Requested Inputs"
   },
   {
    "fieldname": "items",
@@ -145,7 +178,12 @@
    "reqd": 1
   },
   {
-   "fieldname": "totals_section",
+   "fieldname": "ux_fulfilment_tab",
+   "fieldtype": "Tab Break",
+   "label": "Fulfilment"
+  },
+  {
+   "fieldname": "ux_fulfilment_documents_section",
    "fieldtype": "Section Break",
    "label": "Fulfilment Documents"
   },
@@ -176,11 +214,14 @@
    "label": "Notes"
   },
   {
-   "collapsible": 1,
-   "fieldname": "legacy_section",
+   "fieldname": "ux_legacy_compatibility_tab",
+   "fieldtype": "Tab Break",
+   "label": "Legacy Compatibility"
+  },
+  {
+   "fieldname": "ux_legacy_mobile_fields_section",
    "fieldtype": "Section Break",
-   "hidden": 1,
-   "label": "Legacy Mobile Compatibility"
+   "label": "Legacy Mobile Fields"
   },
   {
    "fieldname": "input_name",
@@ -215,6 +256,11 @@
    "hidden": 1,
    "label": "Legacy Quantity Remaining",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_legacy_mobile_fields_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Legacy Mobile Fields Column 2"
   },
   {
    "fieldname": "input_type",

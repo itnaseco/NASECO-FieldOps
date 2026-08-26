@@ -6,11 +6,19 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_details_section",
   "type_name",
+  "ux_details_column_2_column",
   "visit_type_id",
+  "ux_notes_and_review_section",
   "description"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
   {
    "fieldname": "type_name",
    "fieldtype": "Data",
@@ -19,10 +27,20 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Details Column 2"
+  },
+  {
    "fieldname": "visit_type_id",
    "fieldtype": "Data",
    "label": "Visit Type ID",
    "unique": 1
+  },
+  {
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
   },
   {
    "fieldname": "description",

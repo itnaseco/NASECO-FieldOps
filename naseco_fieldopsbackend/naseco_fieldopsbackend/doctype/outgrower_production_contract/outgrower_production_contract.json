@@ -6,96 +6,136 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "ux_overview_tab",
+  "ux_contract_summary_section",
   "status",
   "outgrower",
   "supplier",
+  "ux_contract_summary_column_2_column",
   "company",
   "farm_plot",
   "linked_crop_cycle",
+  "ux_templates_and_policies_section",
   "contract_template",
   "template_version",
+  "ux_templates_and_policies_column_2_column",
   "pricing_policy",
   "pricing_policy_version",
-  "legal_snapshot_section",
+  "ux_grower_and_plot_tab",
+  "ux_signed_party_snapshot_section",
   "grower_name_snapshot",
   "national_id_snapshot",
   "phone_snapshot",
   "village_snapshot",
+  "ux_signed_party_snapshot_column_2_column",
   "sub_county_snapshot",
   "district_snapshot",
   "supervisor_snapshot",
+  "ux_field_snapshot_section",
   "plot_id_snapshot",
   "plot_geojson_snapshot",
-  "production_section",
+  "ux_production_scope_tab",
+  "ux_crop_and_variety_section",
   "season",
   "crop",
   "variety",
+  "ux_crop_and_variety_column_2_column",
   "production_category",
   "seed_class",
   "crop_recipe",
-  "period_section",
+  "ux_area_and_quota_section",
+  "contracted_area_hectares",
+  "contracted_area_acres",
+  "quota_kg_per_hectare",
+  "ux_area_and_quota_column_2_column",
+  "quota_kg_per_acre",
+  "contracted_quota_qty",
+  "expected_yield_kg_per_hectare",
+  "ux_dates_tab",
+  "ux_agreement_period_section",
   "agreement_date",
   "contract_start_date",
+  "ux_agreement_period_column_2_column",
   "contract_end_date",
+  "ux_planting_and_harvest_window_section",
   "planting_start_date",
   "planting_end_date",
+  "ux_planting_and_harvest_window_column_2_column",
   "actual_planting_date",
   "expected_harvest_date",
-  "commercial_section",
+  "ux_commercials_tab",
+  "ux_harvest_pricing_section",
   "harvest_item",
   "harvest_uom",
   "expected_yield_qty",
   "pricing_method",
   "contract_rate",
   "pricing_formula",
+  "ux_exposure_and_payment_terms_section",
   "currency",
   "expected_harvest_value",
-  "contracted_area_hectares",
-  "expected_yield_kg_per_hectare",
-  "quota_kg_per_hectare",
-  "contracted_quota_qty",
+  "ux_exposure_and_payment_terms_column_2_column",
   "max_exposure_percent",
   "payment_terms_template",
-  "parent_seed_section",
+  "ux_inputs_and_recovery_tab",
+  "ux_parent_seed_commitment_section",
   "parent_seed_items",
+  "ux_legacy_parent_seed_snapshot_section",
+  "parent_seed_item",
+  "parent_seed_uom",
   "planned_parent_seed_qty",
+  "ux_legacy_parent_seed_snapshot_column_2_column",
+  "parent_seed_rate",
   "planned_parent_seed_value",
-  "recovery_section",
+  "ux_recovery_terms_section",
   "default_recovery_policy",
   "input_recovery_terms",
-  "quality_section",
+  "ux_quality_and_terms_tab",
+  "ux_quality_assurance_standards_section",
   "minimum_farmer_compliance_percent",
   "minimum_supervisor_compliance_percent",
   "required_isolation_quality",
   "target_take_spacing_m",
   "quality_standard_terms",
-  "obligations_section",
+  "ux_contract_references_section",
   "agreement_title",
   "seed_handbook_reference",
   "legal_reference",
+  "ux_responsibilities_section",
   "company_obligations",
   "farmer_obligations",
   "supervisor_obligations",
   "termination_terms",
-  "approval_section",
+  "ux_approval_and_signatures_tab",
+  "ux_eligibility_override_section",
   "eligibility_override_reason",
   "eligibility_override_approved_by",
+  "ux_signing_status_section",
   "is_signed",
   "signed_on",
+  "ux_signing_status_column_2_column",
   "company_signatory",
+  "ux_signatures_and_evidence_section",
   "farmer_signature",
   "company_signature",
   "signatories",
   "supporting_document",
+  "ux_linked_records_section",
   "erpnext_contract",
-  "amended_from",
-  "contracted_area_acres",
-  "quota_kg_per_acre",
-  "parent_seed_item",
-  "parent_seed_uom",
-  "parent_seed_rate"
+  "ux_linked_records_column_2_column",
+  "amended_from"
  ],
  "fields": [
+  {
+   "fieldname": "ux_overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "ux_contract_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Contract Summary"
+  },
   {
    "allow_on_submit": 1,
    "default": "Draft",
@@ -124,6 +164,11 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_contract_summary_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Contract Summary Column 2"
+  },
+  {
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
@@ -147,6 +192,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_templates_and_policies_section",
+   "fieldtype": "Section Break",
+   "label": "Templates and Policies"
+  },
+  {
    "fieldname": "contract_template",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -158,6 +208,11 @@
    "fieldtype": "Data",
    "label": "Template Version",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_templates_and_policies_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Templates and Policies Column 2"
   },
   {
    "fieldname": "pricing_policy",
@@ -172,9 +227,14 @@
    "read_only": 1
   },
   {
-   "fieldname": "legal_snapshot_section",
+   "fieldname": "ux_grower_and_plot_tab",
+   "fieldtype": "Tab Break",
+   "label": "Grower and Plot"
+  },
+  {
+   "fieldname": "ux_signed_party_snapshot_section",
    "fieldtype": "Section Break",
-   "label": "Signed Party and Field Snapshot"
+   "label": "Signed Party Snapshot"
   },
   {
    "fieldname": "grower_name_snapshot",
@@ -201,6 +261,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_signed_party_snapshot_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Signed Party Snapshot Column 2"
+  },
+  {
    "fieldname": "sub_county_snapshot",
    "fieldtype": "Data",
    "label": "Subcounty",
@@ -220,6 +285,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_field_snapshot_section",
+   "fieldtype": "Section Break",
+   "label": "Field Snapshot"
+  },
+  {
    "fieldname": "plot_id_snapshot",
    "fieldtype": "Data",
    "label": "Contracted Field Number",
@@ -233,9 +303,14 @@
    "read_only": 1
   },
   {
-   "fieldname": "production_section",
-   "fieldtype": "Section Break",
+   "fieldname": "ux_production_scope_tab",
+   "fieldtype": "Tab Break",
    "label": "Production Scope"
+  },
+  {
+   "fieldname": "ux_crop_and_variety_section",
+   "fieldtype": "Section Break",
+   "label": "Crop and Variety"
   },
   {
    "fieldname": "season",
@@ -261,6 +336,11 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_crop_and_variety_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Crop and Variety Column 2"
+  },
+  {
    "fieldname": "production_category",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -283,9 +363,73 @@
    "reqd": 1
   },
   {
-   "fieldname": "period_section",
+   "fieldname": "ux_area_and_quota_section",
    "fieldtype": "Section Break",
-   "label": "Contract and Production Period"
+   "label": "Area and Quota"
+  },
+  {
+   "fieldname": "contracted_area_hectares",
+   "fieldtype": "Float",
+   "label": "Contracted Area (Hectares)",
+   "precision": 4,
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "description": "Contractual area used for quota, yield and settlement calculations.",
+   "fieldname": "contracted_area_acres",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Legacy Contracted Area (Acres)",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "quota_kg_per_hectare",
+   "fieldtype": "Float",
+   "label": "Contracted Quota (Kg per Hectare)",
+   "precision": 2,
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_area_and_quota_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Area and Quota Column 2"
+  },
+  {
+   "default": "1000",
+   "fieldname": "quota_kg_per_acre",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Legacy Contract Quota (Kg per Acre)",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "contracted_quota_qty",
+   "fieldtype": "Float",
+   "label": "Contracted Quota Quantity",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "expected_yield_kg_per_hectare",
+   "fieldtype": "Float",
+   "label": "Expected Harvest (Kg per Hectare)",
+   "precision": 2,
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_dates_tab",
+   "fieldtype": "Tab Break",
+   "label": "Dates"
+  },
+  {
+   "fieldname": "ux_agreement_period_section",
+   "fieldtype": "Section Break",
+   "label": "Agreement Period"
   },
   {
    "default": "Today",
@@ -301,10 +445,20 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_agreement_period_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Agreement Period Column 2"
+  },
+  {
    "fieldname": "contract_end_date",
    "fieldtype": "Date",
    "label": "Contract End Date",
    "reqd": 1
+  },
+  {
+   "fieldname": "ux_planting_and_harvest_window_section",
+   "fieldtype": "Section Break",
+   "label": "Planting and Harvest Window"
   },
   {
    "fieldname": "planting_start_date",
@@ -317,6 +471,11 @@
    "fieldtype": "Date",
    "label": "Planting Window To",
    "reqd": 1
+  },
+  {
+   "fieldname": "ux_planting_and_harvest_window_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Planting and Harvest Window Column 2"
   },
   {
    "allow_on_submit": 1,
@@ -332,9 +491,14 @@
    "reqd": 1
   },
   {
-   "fieldname": "commercial_section",
+   "fieldname": "ux_commercials_tab",
+   "fieldtype": "Tab Break",
+   "label": "Commercials"
+  },
+  {
+   "fieldname": "ux_harvest_pricing_section",
    "fieldtype": "Section Break",
-   "label": "Harvest, Pricing and Exposure"
+   "label": "Harvest Pricing"
   },
   {
    "fieldname": "harvest_item",
@@ -380,6 +544,11 @@
    "label": "Pricing Formula"
   },
   {
+   "fieldname": "ux_exposure_and_payment_terms_section",
+   "fieldtype": "Section Break",
+   "label": "Exposure and Payment Terms"
+  },
+  {
    "fieldname": "currency",
    "fieldtype": "Link",
    "label": "Currency",
@@ -395,29 +564,9 @@
    "read_only": 1
   },
   {
-   "description": "Contractual area used for quota, yield and settlement calculations.",
-   "fieldname": "contracted_area_acres",
-   "fieldtype": "Float",
-   "hidden": 1,
-   "label": "Legacy Contracted Area (Acres)",
-   "non_negative": 1,
-   "read_only": 1
-  },
-  {
-   "default": "1000",
-   "fieldname": "quota_kg_per_acre",
-   "fieldtype": "Float",
-   "hidden": 1,
-   "label": "Legacy Contract Quota (Kg per Acre)",
-   "non_negative": 1,
-   "read_only": 1
-  },
-  {
-   "fieldname": "contracted_quota_qty",
-   "fieldtype": "Float",
-   "label": "Contracted Quota Quantity",
-   "non_negative": 1,
-   "read_only": 1
+   "fieldname": "ux_exposure_and_payment_terms_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Exposure and Payment Terms Column 2"
   },
   {
    "default": "70",
@@ -433,9 +582,25 @@
    "options": "Payment Terms Template"
   },
   {
-   "fieldname": "parent_seed_section",
+   "fieldname": "ux_inputs_and_recovery_tab",
+   "fieldtype": "Tab Break",
+   "label": "Inputs and Recovery"
+  },
+  {
+   "fieldname": "ux_parent_seed_commitment_section",
    "fieldtype": "Section Break",
    "label": "Parent Seed Commitment"
+  },
+  {
+   "fieldname": "parent_seed_items",
+   "fieldtype": "Table",
+   "label": "Parent Seed Items",
+   "options": "Contract Parent Seed Item"
+  },
+  {
+   "fieldname": "ux_legacy_parent_seed_snapshot_section",
+   "fieldtype": "Section Break",
+   "label": "Legacy Parent Seed Snapshot"
   },
   {
    "fieldname": "parent_seed_item",
@@ -462,6 +627,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_legacy_parent_seed_snapshot_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Legacy Parent Seed Snapshot Column 2"
+  },
+  {
    "fieldname": "parent_seed_rate",
    "fieldtype": "Currency",
    "hidden": 1,
@@ -478,9 +648,9 @@
    "read_only": 1
   },
   {
-   "fieldname": "recovery_section",
+   "fieldname": "ux_recovery_terms_section",
    "fieldtype": "Section Break",
-   "label": "Input and Advance Recovery"
+   "label": "Recovery Terms"
   },
   {
    "default": "Fully Recoverable",
@@ -497,7 +667,12 @@
    "reqd": 1
   },
   {
-   "fieldname": "quality_section",
+   "fieldname": "ux_quality_and_terms_tab",
+   "fieldtype": "Tab Break",
+   "label": "Quality and Terms"
+  },
+  {
+   "fieldname": "ux_quality_assurance_standards_section",
    "fieldtype": "Section Break",
    "label": "Quality Assurance Standards"
   },
@@ -535,9 +710,9 @@
    "reqd": 1
   },
   {
-   "fieldname": "obligations_section",
+   "fieldname": "ux_contract_references_section",
    "fieldtype": "Section Break",
-   "label": "Responsibilities and Termination"
+   "label": "Contract References"
   },
   {
    "fieldname": "agreement_title",
@@ -556,6 +731,11 @@
    "fieldtype": "Small Text",
    "label": "Legal and Certification References",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_responsibilities_section",
+   "fieldtype": "Section Break",
+   "label": "Responsibilities"
   },
   {
    "fieldname": "company_obligations",
@@ -582,9 +762,14 @@
    "reqd": 1
   },
   {
-   "fieldname": "approval_section",
-   "fieldtype": "Section Break",
+   "fieldname": "ux_approval_and_signatures_tab",
+   "fieldtype": "Tab Break",
    "label": "Approval and Signatures"
+  },
+  {
+   "fieldname": "ux_eligibility_override_section",
+   "fieldtype": "Section Break",
+   "label": "Eligibility Override"
   },
   {
    "depends_on": "eval:doc.eligibility_override_approved_by",
@@ -600,6 +785,11 @@
    "read_only": 1
   },
   {
+   "fieldname": "ux_signing_status_section",
+   "fieldtype": "Section Break",
+   "label": "Signing Status"
+  },
+  {
    "default": "0",
    "fieldname": "is_signed",
    "fieldtype": "Check",
@@ -611,10 +801,20 @@
    "label": "Signed On"
   },
   {
+   "fieldname": "ux_signing_status_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Signing Status Column 2"
+  },
+  {
    "fieldname": "company_signatory",
    "fieldtype": "Link",
    "label": "Company Signatory",
    "options": "User"
+  },
+  {
+   "fieldname": "ux_signatures_and_evidence_section",
+   "fieldtype": "Section Break",
+   "label": "Signatures and Evidence"
   },
   {
    "fieldname": "farmer_signature",
@@ -638,12 +838,22 @@
    "label": "Signed Contract Attachment"
   },
   {
+   "fieldname": "ux_linked_records_section",
+   "fieldtype": "Section Break",
+   "label": "Linked Records"
+  },
+  {
    "allow_on_submit": 1,
    "fieldname": "erpnext_contract",
    "fieldtype": "Link",
    "label": "Supplier Contract",
    "options": "Contract",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_linked_records_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Linked Records Column 2"
   },
   {
    "fieldname": "amended_from",
@@ -653,36 +863,6 @@
    "options": "Outgrower Production Contract",
    "print_hide": 1,
    "read_only": 1
-  },
-  {
-   "fieldname": "contracted_area_hectares",
-   "fieldtype": "Float",
-   "label": "Contracted Area (Hectares)",
-   "precision": 4,
-   "non_negative": 1,
-   "reqd": 1
-  },
-  {
-   "fieldname": "quota_kg_per_hectare",
-   "fieldtype": "Float",
-   "label": "Contracted Quota (Kg per Hectare)",
-   "precision": 2,
-   "non_negative": 1,
-   "reqd": 1
-  },
-  {
-   "fieldname": "expected_yield_kg_per_hectare",
-   "fieldtype": "Float",
-   "label": "Expected Harvest (Kg per Hectare)",
-   "precision": 2,
-   "read_only": 1,
-   "reqd": 1
-  },
-  {
-   "fieldname": "parent_seed_items",
-   "fieldtype": "Table",
-   "label": "Parent Seed Items",
-   "options": "Contract Parent Seed Item"
   }
  ],
  "index_web_pages_for_search": 1,

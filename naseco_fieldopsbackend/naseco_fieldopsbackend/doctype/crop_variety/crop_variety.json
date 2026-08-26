@@ -7,18 +7,28 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_details_section",
   "variety_name",
   "crop",
-  "maturity_days",
   "variety_id",
-  "maturity_period_days",
-  "description",
-  "expected_yield_kg_per_hectare",
-  "seed_configuration_section",
+  "ux_details_column_2_column",
+  "maturity_days",
   "can_be_used_as_parent_seed",
-  "seed_items"
+  "ux_dates_and_location_section",
+  "maturity_period_days",
+  "ux_quantities_and_values_section",
+  "expected_yield_kg_per_hectare",
+  "ux_related_tables_section",
+  "seed_items",
+  "ux_notes_and_review_section",
+  "description"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
   {
    "fieldname": "variety_name",
    "fieldtype": "Data",
@@ -35,38 +45,20 @@
    "reqd": 1
   },
   {
-   "fieldname": "maturity_days",
-   "fieldtype": "Int",
-   "label": "Maturity Days"
-  },
-  {
    "fieldname": "variety_id",
    "fieldtype": "Data",
    "label": "Variety ID",
    "unique": 1
   },
   {
-   "fieldname": "maturity_period_days",
+   "fieldname": "ux_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Details Column 2"
+  },
+  {
+   "fieldname": "maturity_days",
    "fieldtype": "Int",
-   "label": "Maturity Period (Days)"
-  },
-  {
-   "fieldname": "description",
-   "fieldtype": "Text",
-   "label": "Description"
-  },
-  {
-   "fieldname": "expected_yield_kg_per_hectare",
-   "fieldtype": "Float",
-   "label": "Expected Harvest (Kg per Hectare)",
-   "non_negative": 1,
-   "precision": 2,
-   "description": "Standard expected harvest used to calculate contract and crop-cycle totals."
-  },
-  {
-   "fieldname": "seed_configuration_section",
-   "fieldtype": "Section Break",
-   "label": "Seed Classification and Inventory Items"
+   "label": "Maturity Days"
   },
   {
    "default": "0",
@@ -77,11 +69,49 @@
    "label": "Can Be Used as Parent Seed"
   },
   {
+   "fieldname": "ux_dates_and_location_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Location"
+  },
+  {
+   "fieldname": "maturity_period_days",
+   "fieldtype": "Int",
+   "label": "Maturity Period (Days)"
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
+  {
+   "fieldname": "expected_yield_kg_per_hectare",
+   "fieldtype": "Float",
+   "label": "Expected Harvest (Kg per Hectare)",
+   "non_negative": 1,
+   "precision": 2,
+   "description": "Standard expected harvest used to calculate contract and crop-cycle totals."
+  },
+  {
+   "fieldname": "ux_related_tables_section",
+   "fieldtype": "Section Break",
+   "label": "Related Tables"
+  },
+  {
    "description": "Map the inventory Items used for each seed category, class and processing purpose.",
    "fieldname": "seed_items",
    "fieldtype": "Table",
    "label": "Seed Item Mappings",
    "options": "Crop Variety Seed Item"
+  },
+  {
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Description"
   }
  ],
  "grid_page_length": 50,

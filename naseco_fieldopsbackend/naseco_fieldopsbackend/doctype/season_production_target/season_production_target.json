@@ -4,50 +4,46 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "production_scope_section",
-  "region",
-  "location",
+  "ux_details_section",
   "outgrower_supervisor",
   "crop",
   "variety",
   "production_category",
+  "ux_details_column_2_column",
   "seed_class",
   "crop_recipe",
-  "quantity_targets_section",
   "target_outgrowers",
   "target_plots",
+  "ux_additional_details_section",
+  "region",
   "target_hectares",
-  "recipe_yield_kg_per_hectare",
-  "planned_yield_kg_per_hectare",
-  "yield_override_reason",
-  "yield_source_recipe",
   "target_acres",
-  "planned_yield_kg_per_acre",
-  "planned_production_qty",
-  "schedule_section",
-  "planting_window_from",
-  "planting_window_to",
-  "expected_harvest_date",
-  "harvest_warehouse",
+  "ux_additional_details_column_2_column",
   "planned_supervisors",
   "planned_inspectors",
+  "ux_dates_and_location_section",
+  "planting_window_from",
+  "planting_window_to",
+  "ux_dates_and_location_column_2_column",
+  "expected_harvest_date",
+  "ux_location_section",
+  "location",
+  "ux_quantities_and_values_section",
+  "planned_yield_kg_per_hectare",
+  "planned_yield_kg_per_acre",
+  "planned_production_qty",
+  "harvest_warehouse",
+  "recipe_yield_kg_per_hectare",
+  "yield_override_reason",
+  "yield_source_recipe",
+  "ux_notes_and_review_section",
   "notes"
  ],
  "fields": [
   {
-   "fieldname": "region",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Region",
-   "options": "Region",
-   "reqd": 1
-  },
-  {
-   "fieldname": "location",
-   "fieldtype": "Link",
-   "label": "Location",
-   "options": "Location",
-   "reqd": 1
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
   },
   {
    "description": "Must be an enabled user with the Outgrower Supervisor role.",
@@ -82,6 +78,11 @@
    "reqd": 1
   },
   {
+   "fieldname": "ux_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Details Column 2"
+  },
+  {
    "fieldname": "seed_class",
    "fieldtype": "Link",
    "label": "Seed Class",
@@ -108,6 +109,19 @@
    "non_negative": 1
   },
   {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
+  {
+   "fieldname": "region",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Region",
+   "options": "Region",
+   "reqd": 1
+  },
+  {
    "fieldname": "target_hectares",
    "fieldtype": "Float",
    "in_list_view": 1,
@@ -117,20 +131,82 @@
    "reqd": 1
   },
   {
-   "fieldname": "planned_yield_kg_per_hectare",
-   "fieldtype": "Float",
-   "label": "Planned Yield (Kg/Ha)",
-   "non_negative": 1,
-   "precision": 2,
-   "description": "Defaults from the selected Crop Recipe and is saved as a plan-specific assumption. If overridden, provide a reason before submission."
-  },
-  {
    "fieldname": "target_acres",
    "fieldtype": "Float",
    "hidden": 1,
    "label": "Legacy Target Acres",
    "non_negative": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_additional_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Additional Details Column 2"
+  },
+  {
+   "fieldname": "planned_supervisors",
+   "fieldtype": "Int",
+   "label": "Planned Supervisors",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "planned_inspectors",
+   "fieldtype": "Int",
+   "label": "Planned Inspectors",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "ux_dates_and_location_section",
+   "fieldtype": "Section Break",
+   "label": "Dates and Location"
+  },
+  {
+   "fieldname": "planting_window_from",
+   "fieldtype": "Date",
+   "label": "Planting Window From",
+   "reqd": 1
+  },
+  {
+   "fieldname": "planting_window_to",
+   "fieldtype": "Date",
+   "label": "Planting Window To",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_dates_and_location_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Dates and Location Column 2"
+  },
+  {
+   "fieldname": "expected_harvest_date",
+   "fieldtype": "Date",
+   "label": "Expected Harvest Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_location_section",
+   "fieldtype": "Section Break",
+   "label": "Location"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
+  {
+   "fieldname": "planned_yield_kg_per_hectare",
+   "fieldtype": "Float",
+   "label": "Planned Yield (Kg/Ha)",
+   "non_negative": 1,
+   "precision": 2,
+   "description": "Defaults from the selected Crop Recipe and is saved as a plan-specific assumption. If overridden, provide a reason before submission."
   },
   {
    "fieldname": "planned_yield_kg_per_acre",
@@ -147,60 +223,10 @@
    "read_only": 1
   },
   {
-   "fieldname": "planting_window_from",
-   "fieldtype": "Date",
-   "label": "Planting Window From",
-   "reqd": 1
-  },
-  {
-   "fieldname": "planting_window_to",
-   "fieldtype": "Date",
-   "label": "Planting Window To",
-   "reqd": 1
-  },
-  {
-   "fieldname": "expected_harvest_date",
-   "fieldtype": "Date",
-   "label": "Expected Harvest Date",
-   "reqd": 1
-  },
-  {
    "fieldname": "harvest_warehouse",
    "fieldtype": "Link",
    "label": "Harvest Warehouse",
    "options": "Warehouse"
-  },
-  {
-   "fieldname": "planned_supervisors",
-   "fieldtype": "Int",
-   "label": "Planned Supervisors",
-   "non_negative": 1
-  },
-  {
-   "fieldname": "planned_inspectors",
-   "fieldtype": "Int",
-   "label": "Planned Inspectors",
-   "non_negative": 1
-  },
-  {
-   "fieldname": "notes",
-   "fieldtype": "Small Text",
-   "label": "Planning Notes"
-  },
-  {
-   "fieldname": "production_scope_section",
-   "fieldtype": "Section Break",
-   "label": "Production Scope"
-  },
-  {
-   "fieldname": "quantity_targets_section",
-   "fieldtype": "Section Break",
-   "label": "Quantity Targets and Forecast Assumptions"
-  },
-  {
-   "fieldname": "schedule_section",
-   "fieldtype": "Section Break",
-   "label": "Schedule and Logistics"
   },
   {
    "fieldname": "recipe_yield_kg_per_hectare",
@@ -223,6 +249,16 @@
    "options": "Crop Recipe",
    "hidden": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_notes_and_review_section",
+   "fieldtype": "Section Break",
+   "label": "Notes and Review"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Planning Notes"
   }
  ],
  "istable": 1,

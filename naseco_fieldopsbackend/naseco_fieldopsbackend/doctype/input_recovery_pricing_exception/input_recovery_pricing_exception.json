@@ -1,11 +1,75 @@
 {
- "actions": [], "doctype":"DocType", "editable_grid":1, "engine":"InnoDB", "istable":1,
- "field_order":["item_code","item_group","crop","variety","markup_percent"],
- "fields":[
-  {"fieldname":"item_code","fieldtype":"Link","in_list_view":1,"label":"Item","options":"Item"},
-  {"fieldname":"item_group","fieldtype":"Link","label":"Item Group","options":"Item Group"},
-  {"fieldname":"crop","fieldtype":"Link","label":"Crop","options":"Crop"},
-  {"fieldname":"variety","fieldtype":"Link","label":"Variety","options":"Crop Variety"},
-  {"fieldname":"markup_percent","fieldtype":"Percent","in_list_view":1,"label":"Risk Markup %","reqd":1}
- ], "module":"Naseco FieldOpsBackend", "name":"Input Recovery Pricing Exception", "permissions":[]
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "istable": 1,
+ "field_order": [
+  "ux_details_section",
+  "crop",
+  "ux_details_column_2_column",
+  "variety",
+  "ux_additional_details_section",
+  "item_code",
+  "item_group",
+  "ux_additional_details_column_2_column",
+  "markup_percent"
+ ],
+ "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "crop",
+   "fieldtype": "Link",
+   "label": "Crop",
+   "options": "Crop"
+  },
+  {
+   "fieldname": "ux_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Details Column 2"
+  },
+  {
+   "fieldname": "variety",
+   "fieldtype": "Link",
+   "label": "Variety",
+   "options": "Crop Variety"
+  },
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "label": "Item Group",
+   "options": "Item Group"
+  },
+  {
+   "fieldname": "ux_additional_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Additional Details Column 2"
+  },
+  {
+   "fieldname": "markup_percent",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Risk Markup %",
+   "reqd": 1
+  }
+ ],
+ "module": "Naseco FieldOpsBackend",
+ "name": "Input Recovery Pricing Exception",
+ "permissions": []
 }

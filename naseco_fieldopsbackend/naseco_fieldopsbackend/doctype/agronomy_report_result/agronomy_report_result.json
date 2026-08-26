@@ -4,36 +4,69 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "ux_details_section",
+  "section_name",
+  "ux_details_column_2_column",
+  "data_type",
+  "ux_additional_details_section",
   "parameter_code",
   "parameter_label",
-  "section_name",
-  "data_type",
-  "options",
   "mandatory",
   "responsible_party",
+  "evaluation_mode",
+  "comparison_rule",
+  "severity",
+  "weight",
+  "allow_not_applicable",
+  "failure_action",
+  "evaluation_message",
+  "remarks",
+  "ux_location_section",
+  "template_version",
+  "ux_quantities_and_values_section",
+  "options",
   "value_captured",
   "numeric_value",
   "text_value",
   "date_value",
   "unit",
-  "standard_section",
-  "template_version",
-  "evaluation_mode",
-  "comparison_rule",
   "minimum_value",
   "maximum_value",
   "expected_value",
-  "severity",
-  "weight",
-  "allow_not_applicable",
+  "ux_quality_and_results_section",
   "corrective_action_on_fail",
-  "failure_action",
   "corrective_action_due_days",
-  "result_status",
-  "evaluation_message",
-  "remarks"
+  "ux_quality_and_results_column_2_column",
+  "result_status"
  ],
  "fields": [
+  {
+   "fieldname": "ux_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "section_name",
+   "fieldtype": "Data",
+   "label": "Section",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_details_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Details Column 2"
+  },
+  {
+   "fieldname": "data_type",
+   "fieldtype": "Data",
+   "label": "Data Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
   {
    "fieldname": "parameter_code",
    "fieldtype": "Data",
@@ -50,25 +83,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "section_name",
-   "fieldtype": "Data",
-   "label": "Section",
-   "read_only": 1
-  },
-  {
-   "fieldname": "data_type",
-   "fieldtype": "Data",
-   "label": "Data Type",
-   "read_only": 1
-  },
-  {
-   "fieldname": "options",
-   "fieldtype": "Small Text",
-   "hidden": 1,
-   "label": "Allowed Values",
-   "read_only": 1
-  },
-  {
    "fieldname": "mandatory",
    "fieldtype": "Check",
    "label": "Mandatory",
@@ -78,6 +92,82 @@
    "fieldname": "responsible_party",
    "fieldtype": "Data",
    "label": "Responsible Party",
+   "read_only": 1
+  },
+  {
+   "default": "Informational",
+   "fieldname": "evaluation_mode",
+   "fieldtype": "Data",
+   "label": "Evaluation Mode",
+   "read_only": 1
+  },
+  {
+   "fieldname": "comparison_rule",
+   "fieldtype": "Data",
+   "label": "Comparison Rule",
+   "read_only": 1
+  },
+  {
+   "default": "Standard",
+   "fieldname": "severity",
+   "fieldtype": "Data",
+   "label": "Failure Severity",
+   "read_only": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "weight",
+   "fieldtype": "Float",
+   "label": "Evaluation Weight",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_not_applicable",
+   "fieldtype": "Check",
+   "label": "Allow Not Applicable",
+   "read_only": 1
+  },
+  {
+   "fieldname": "failure_action",
+   "fieldtype": "Small Text",
+   "label": "Required Action on Failure",
+   "read_only": 1
+  },
+  {
+   "fieldname": "evaluation_message",
+   "fieldtype": "Small Text",
+   "label": "Evaluation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_location_section",
+   "fieldtype": "Section Break",
+   "label": "Location"
+  },
+  {
+   "fieldname": "template_version",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Template Version",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_quantities_and_values_section",
+   "fieldtype": "Section Break",
+   "label": "Quantities and Values"
+  },
+  {
+   "fieldname": "options",
+   "fieldtype": "Small Text",
+   "hidden": 1,
+   "label": "Allowed Values",
    "read_only": 1
   },
   {
@@ -119,31 +209,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "standard_section",
-   "fieldtype": "Section Break",
-   "label": "Standard Snapshot"
-  },
-  {
-   "fieldname": "template_version",
-   "fieldtype": "Int",
-   "hidden": 1,
-   "label": "Template Version",
-   "read_only": 1
-  },
-  {
-   "default": "Informational",
-   "fieldname": "evaluation_mode",
-   "fieldtype": "Data",
-   "label": "Evaluation Mode",
-   "read_only": 1
-  },
-  {
-   "fieldname": "comparison_rule",
-   "fieldtype": "Data",
-   "label": "Comparison Rule",
-   "read_only": 1
-  },
-  {
    "fieldname": "minimum_value",
    "fieldtype": "Float",
    "label": "Minimum Passing Value",
@@ -162,25 +227,9 @@
    "read_only": 1
   },
   {
-   "default": "Standard",
-   "fieldname": "severity",
-   "fieldtype": "Data",
-   "label": "Failure Severity",
-   "read_only": 1
-  },
-  {
-   "default": "1",
-   "fieldname": "weight",
-   "fieldtype": "Float",
-   "label": "Evaluation Weight",
-   "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "allow_not_applicable",
-   "fieldtype": "Check",
-   "label": "Allow Not Applicable",
-   "read_only": 1
+   "fieldname": "ux_quality_and_results_section",
+   "fieldtype": "Section Break",
+   "label": "Quality and Results"
   },
   {
    "default": "0",
@@ -190,16 +239,15 @@
    "read_only": 1
   },
   {
-   "fieldname": "failure_action",
-   "fieldtype": "Small Text",
-   "label": "Required Action on Failure",
-   "read_only": 1
-  },
-  {
    "fieldname": "corrective_action_due_days",
    "fieldtype": "Int",
    "label": "Corrective Action Due In (Days)",
    "read_only": 1
+  },
+  {
+   "fieldname": "ux_quality_and_results_column_2_column",
+   "fieldtype": "Column Break",
+   "label": "Quality and Results Column 2"
   },
   {
    "default": "Not Evaluated",
@@ -210,18 +258,6 @@
    "options": "Not Evaluated\nPass\nFail\nInformational\nNot Applicable",
    "read_only": 1,
    "reqd": 1
-  },
-  {
-   "fieldname": "evaluation_message",
-   "fieldtype": "Small Text",
-   "label": "Evaluation",
-   "read_only": 1
-  },
-  {
-   "fieldname": "remarks",
-   "fieldtype": "Small Text",
-   "label": "Remarks",
-   "read_only": 1
   }
  ],
  "istable": 1,
