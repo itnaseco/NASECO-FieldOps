@@ -74,7 +74,7 @@ def migrate_crop_cycle(cycle_name):
 			),
 			"minimum_farmer_compliance_percent": 80,
 			"minimum_supervisor_compliance_percent": 80,
-			"required_isolation_quality": "Good",
+			"required_isolation_quality": "Adequate",
 			"target_take_spacing_m": 5,
 			"quality_standard_terms": (
 				"<p>Quality inspections follow the approved stage-specific FieldOps "

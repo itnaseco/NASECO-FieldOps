@@ -26,7 +26,8 @@
    "in_list_view": 1,
    "label": "Item",
    "options": "Item",
-   "reqd": 1
+   "reqd": 1,
+   "read_only": 1
   },
   {
    "fieldname": "stock_uom",
@@ -41,7 +42,8 @@
    "in_list_view": 1,
    "label": "Required Qty",
    "non_negative": 1,
-   "reqd": 1
+   "reqd": 1,
+   "read_only": 1
   },
   {
    "fieldname": "available_qty",
@@ -66,7 +68,8 @@
    "fieldname": "source_warehouse",
    "fieldtype": "Link",
    "label": "Source Warehouse",
-   "options": "Warehouse"
+   "options": "Warehouse",
+   "read_only": 1
   },
   {
    "default": "Fully Recoverable",
@@ -74,13 +77,15 @@
    "fieldtype": "Select",
    "label": "Recovery Policy",
    "options": "Fully Recoverable\nPartially Recoverable\nCompany Subsidy\nNon-Recoverable\nReturnable",
-   "reqd": 1
+   "reqd": 1,
+   "read_only": 1
   },
   {
    "default": "100",
    "fieldname": "recoverable_percent",
    "fieldtype": "Percent",
-   "label": "Recoverable %"
+   "label": "Recoverable %",
+   "read_only": 1
   },
   {
    "fieldname": "estimated_rate",

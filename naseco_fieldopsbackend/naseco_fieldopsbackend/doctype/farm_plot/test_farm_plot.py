@@ -1,6 +1,7 @@
 # Copyright (c) 2026, NASECO and contributors
 # See license.txt
 
+import json
 from types import SimpleNamespace
 from unittest import TestCase
 from unittest.mock import Mock, patch
@@ -78,6 +79,40 @@ class TestFarmPlot(TestCase):
 
 		with self.assertRaises(frappe.ValidationError):
 			FarmPlot.validate_geospatial_values(plot)
+
+	def test_updates_geojson_from_current_polygon(self):
+		plot = SimpleNamespace(
+			polygon=[
+				SimpleNamespace(latitude=0.10, longitude=32.10),
+				SimpleNamespace(latitude=0.20, longitude=32.20),
+				SimpleNamespace(latitude=0.30, longitude=32.10),
+			],
+			plot_id="PLOT-001",
+			plot_name="North Field",
+			area_acres=2.5,
+			perimeter_meters=410,
+			geojson="stale",
+		)
+
+		FarmPlot.generate_geojson(plot)
+
+		geojson = json.loads(plot.geojson)
+		coordinates = geojson["geometry"]["coordinates"][0]
+		self.assertEqual(coordinates[0], [32.10, 0.10])
+		self.assertEqual(coordinates[-1], coordinates[0])
+
+	def test_clears_geojson_when_polygon_is_removed(self):
+		plot = SimpleNamespace(
+			polygon=[],
+			geojson="stale",
+			has_geospatial_values=Mock(return_value=True),
+			clear_geospatial_values=Mock(),
+		)
+
+		FarmPlot.before_save(plot)
+
+		self.assertIsNone(plot.geojson)
+		plot.clear_geospatial_values.assert_not_called()
 
 	def test_normalizes_manually_entered_polygon_order(self):
 		plot = SimpleNamespace(

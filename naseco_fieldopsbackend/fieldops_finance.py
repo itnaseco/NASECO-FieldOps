@@ -202,6 +202,14 @@ def ensure_item_group():
 
 
 def ensure_erpnext_custom_fields():
+	# Some ERPNext releases expose an additional party-field installer; older releases do not.
+	from erpnext.setup import install as erpnext_install
+
+	party_field_installer = getattr(
+		erpnext_install, "create_address_and_contact_custom_fields", None
+	)
+	if party_field_installer:
+		party_field_installer()
 	custom_fields = {
 		"Supplier": [
 			{
@@ -251,6 +259,14 @@ def ensure_erpnext_custom_fields():
 		]
 		+ get_recovery_custom_fields("custom_stage_input_request_item"),
 		"Stock Entry": [
+			{
+				"fieldname": "custom_harvest_reject_disposition",
+				"label": "Harvest Reject Disposition",
+				"fieldtype": "Link",
+				"options": "Harvest Reject Disposition",
+				"insert_after": "stock_entry_type",
+				"read_only": 1,
+			},
 			{
 				"fieldname": "custom_stage_input_request",
 				"label": "Stage Input Request",
@@ -466,7 +482,7 @@ def get_recovery_custom_fields(insert_after, include_amount=False):
 			"fieldname": "custom_recovery_rate_basis",
 			"label": "Recovery Rate Basis",
 			"fieldtype": "Select",
-			"options": "\nActual Valuation\nStandard Rate\nContract Rate",
+			"options": "\nActual Purchase Cost + Markup\nActual Valuation\nStandard Rate\nContract Rate",
 			"insert_after": "custom_recoverable_percent",
 			"read_only": 1,
 		},
@@ -477,6 +493,42 @@ def get_recovery_custom_fields(insert_after, include_amount=False):
 			"insert_after": "custom_recovery_rate_basis",
 			"read_only": 1,
 		},
+		{
+			"fieldname": "custom_recovery_pricing_policy",
+			"label": "Input Recovery Pricing Policy",
+			"fieldtype": "Link",
+			"options": "Input Recovery Pricing Policy",
+			"insert_after": "custom_contract_recovery_rate",
+			"read_only": 1,
+		},
+		{
+			"fieldname": "custom_pricing_policy_version",
+			"label": "Pricing Policy Version",
+			"fieldtype": "Data",
+			"insert_after": "custom_recovery_pricing_policy",
+			"read_only": 1,
+		},
+		{
+			"fieldname": "custom_base_cost_rate",
+			"label": "Base Procurement or Valuation Rate",
+			"fieldtype": "Currency",
+			"insert_after": "custom_pricing_policy_version",
+			"read_only": 1,
+		},
+		{
+			"fieldname": "custom_risk_markup_percent",
+			"label": "Risk Markup %",
+			"fieldtype": "Percent",
+			"insert_after": "custom_base_cost_rate",
+			"read_only": 1,
+		},
+		{
+			"fieldname": "custom_final_recovery_rate",
+			"label": "Final Farmer Recovery Rate",
+			"fieldtype": "Currency",
+			"insert_after": "custom_risk_markup_percent",
+			"read_only": 1,
+		},
 	]
 	if include_amount:
 		fields.append(
@@ -484,7 +536,7 @@ def get_recovery_custom_fields(insert_after, include_amount=False):
 				"fieldname": "custom_recoverable_amount",
 				"label": "Recoverable Amount",
 				"fieldtype": "Currency",
-				"insert_after": "custom_contract_recovery_rate",
+				"insert_after": "custom_final_recovery_rate",
 				"read_only": 1,
 			}
 		)
@@ -729,12 +781,18 @@ def create_crop_cycle_purchase_order(crop_cycle):
 		production_contract.contracted_quota_qty or cycle.expected_yield_qty
 	)
 	order_rate = flt(
-		production_contract.advance_valuation_rate or cycle.contract_rate
+		production_contract.contract_rate
+		or cycle.contract_rate
+		or frappe.db.get_value(
+			"Outgrower Pricing Policy",
+			production_contract.pricing_policy,
+			"advance_valuation_rate",
+		)
 	)
 	if order_qty <= 0 or order_rate <= 0:
 		frappe.throw(
 			_(
-				"A positive contracted quota and advance valuation rate are required "
+				"A positive contracted quota and contract rate are required "
 				"before creating the Purchase Order."
 			)
 		)
@@ -810,6 +868,9 @@ def create_material_request_from_input_request(input_request):
 				"custom_recoverable_percent": row.recoverable_percent,
 				"custom_recovery_rate_basis": row.recovery_rate_basis,
 				"custom_contract_recovery_rate": row.contract_recovery_rate,
+				"custom_recovery_pricing_policy": row.recovery_pricing_policy,
+				"custom_pricing_policy_version": row.pricing_policy_version,
+				"custom_risk_markup_percent": row.markup_percent,
 			}
 		)
 	if not items:
@@ -945,11 +1006,16 @@ def populate_stock_entry_context(doc, method=None):
 			"custom_recoverable_percent",
 			"custom_recovery_rate_basis",
 			"custom_contract_recovery_rate",
+			"custom_recovery_pricing_policy",
+			"custom_pricing_policy_version",
+			"custom_risk_markup_percent",
 		):
 			if row.meta.has_field(fieldname):
 				row.set(fieldname, source.get(fieldname))
 
-		rate = get_recovery_rate(row)
+		base_rate, rate = get_recovery_rate(row)
+		row.custom_base_cost_rate = base_rate
+		row.custom_final_recovery_rate = rate
 		row.custom_recoverable_amount = flt(row.transfer_qty or row.qty) * rate * flt(
 			row.custom_recoverable_percent
 		) / 100
@@ -980,9 +1046,41 @@ def populate_purchase_receipt_context(doc, method=None):
 
 def get_recovery_rate(row):
 	if row.custom_recovery_rate_basis == "Contract Rate":
-		return flt(row.custom_contract_recovery_rate)
-	if row.custom_recovery_rate_basis == "Standard Rate":
-		return flt(row.basic_rate)
+		base_rate = flt(row.custom_contract_recovery_rate)
+	elif row.custom_recovery_rate_basis == "Standard Rate":
+		base_rate = flt(frappe.db.get_value("Item", row.item_code, "standard_rate") or row.basic_rate)
+	else:
+		base_rate = get_actual_purchase_rate(row)
+	markup = flt(row.custom_risk_markup_percent)
+	policy = frappe.get_doc("Input Recovery Pricing Policy", row.custom_recovery_pricing_policy) if row.custom_recovery_pricing_policy else None
+	if policy and not markup:
+		from naseco_fieldopsbackend.recipe_planning import resolve_markup
+
+		markup = resolve_markup(policy, row.item_code)
+		row.custom_risk_markup_percent = markup
+		row.custom_pricing_policy_version = policy.policy_version
+	increment = flt(policy.rounding_increment) if policy else 0
+	from naseco_fieldopsbackend.recipe_planning import round_rate
+
+	return base_rate, round_rate(base_rate * (1 + markup / 100), increment)
+
+
+def get_actual_purchase_rate(row):
+	"""Use submitted receipt landed/valuation cost, falling back to ERPNext issue valuation."""
+	batch_no = row.get("batch_no")
+	item_meta = frappe.get_meta("Purchase Receipt Item")
+	batch_filter = " and pri.batch_no = %s" if batch_no and item_meta.has_field("batch_no") else ""
+	params = (row.item_code, batch_no) if batch_filter else (row.item_code,)
+	rate_field = "pri.valuation_rate" if item_meta.has_field("valuation_rate") else "pri.base_rate"
+	rate = frappe.db.sql(
+		f"""select {rate_field} from `tabPurchase Receipt Item` pri
+		join `tabPurchase Receipt` pr on pr.name = pri.parent
+		where pr.docstatus = 1 and pri.item_code = %s {batch_filter}
+		order by pr.posting_date desc, pr.posting_time desc limit 1""",
+		params,
+	)
+	if rate and flt(rate[0][0]):
+		return flt(rate[0][0])
 	return flt(row.valuation_rate or row.basic_rate)
 
 
@@ -991,10 +1089,10 @@ def is_recoverable(policy):
 
 
 def sync_input_request_from_stock(doc, method=None):
-	if not doc.custom_stage_input_request:
-		return
-	request = frappe.get_doc("Stage Input Request", doc.custom_stage_input_request)
-	request.update_fulfillment_status()
+	if doc.custom_stage_input_request:
+		request = frappe.get_doc("Stage Input Request", doc.custom_stage_input_request)
+		request.update_fulfillment_status()
+	sync_reject_disposition_from_stock(doc, method)
 
 
 def sync_advance_request_from_payment(doc, method=None):
@@ -1951,3 +2049,16 @@ def verify_sample_settlement_workflow():
 		}
 	finally:
 		frappe.db.rollback(save_point=savepoint)
+
+
+def sync_reject_disposition_from_stock(doc, method=None):
+	if not doc.get("custom_harvest_reject_disposition"):
+		return
+	status = "Completed" if doc.docstatus == 1 else "Stock Entry Cancelled"
+	frappe.db.set_value(
+		"Harvest Reject Disposition",
+		doc.custom_harvest_reject_disposition,
+		"status",
+		status,
+		update_modified=False,
+	)

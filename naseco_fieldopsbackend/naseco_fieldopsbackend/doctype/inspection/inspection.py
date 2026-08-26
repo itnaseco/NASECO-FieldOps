@@ -235,6 +235,7 @@ class Inspection(Document):
 		self.crop = self.crop or cycle.crop
 		self.season = self.season or cycle.season
 		self.production_category = self.production_category or cycle.production_category
+		self.seed_class = self.seed_class or cycle.seed_class
 
 		if self.plot:
 			plot = frappe.get_doc("Farm Plot", self.plot)
@@ -261,15 +262,23 @@ class Inspection(Document):
 		if not self.inspection_template or not self.production_category:
 			return []
 
+		filters = {
+			"inspection_template": self.inspection_template,
+			"production_category": self.production_category,
+		}
+		if self.seed_class:
+			filters["seed_class"] = self.seed_class
 		standards = frappe.get_all(
-			"Inspection Standard",
-			filters={
-				"inspection_template": self.inspection_template,
-				"production_category": self.production_category,
-			},
-			fields=STANDARD_FIELDS,
+			"Inspection Standard", filters=filters, fields=STANDARD_FIELDS,
 			order_by="creation asc, parameter asc",
 		)
+		if not standards and self.seed_class:
+			# Category-wide standards remain valid until class-specific rules are configured.
+			filters["seed_class"] = ["is", "not set"]
+			standards = frappe.get_all(
+				"Inspection Standard", filters=filters, fields=STANDARD_FIELDS,
+				order_by="creation asc, parameter asc",
+			)
 		for standard in standards:
 			parameter = frappe.db.get_value(
 				"Inspection Parameter",
@@ -1513,6 +1522,7 @@ def _create_reinspection(source, reason):
 			"crop": source.crop,
 			"season": source.season,
 			"production_category": source.production_category,
+			"seed_class": source.seed_class,
 			"scheduled_date": frappe.utils.today(),
 			"assigned_to": source.assigned_to,
 			"status": "Scheduled",

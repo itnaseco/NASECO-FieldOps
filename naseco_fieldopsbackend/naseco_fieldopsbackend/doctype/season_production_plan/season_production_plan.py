@@ -6,6 +6,8 @@ from frappe.model.document import Document
 from frappe.utils import cint, flt, getdate, nowdate
 
 from naseco_fieldopsbackend.fieldops_finance import get_default_company, create_todo
+from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_recipe.crop_recipe import get_recipe_variety_yield
+from naseco_fieldopsbackend.seed_configuration import validate_seed_scope
 from naseco_fieldopsbackend.roles import (
 	FIELDOPS_FINANCE_APPROVER_ROLE,
 	FIELDOPS_STORES_USER_ROLE,
@@ -14,6 +16,7 @@ from naseco_fieldopsbackend.roles import (
 	QUALITY_INSPECTOR_ROLE,
 	QUALITY_MANAGER_ROLE,
 )
+from naseco_fieldopsbackend.uom import get_item_uom_conversion
 
 
 READINESS_ITEMS = (
@@ -28,6 +31,10 @@ READINESS_ITEMS = (
 	("Inspector Capacity", "Quality Inspector capacity allocated"),
 	("Finance and Exposure", "Budget, cash flow and exposure ceiling reviewed"),
 )
+
+HECTARES_TO_ACRES = 2.47105381467
+PER_HECTARE_TO_PER_ACRE = 0.40468564224
+
 
 MILESTONES = (
 	"Planning Approval",
@@ -46,12 +53,16 @@ MILESTONES = (
 	"Season Closure",
 )
 
-
 class SeasonProductionPlan(Document):
 	def before_validate(self):
 		self.set_defaults()
 		self.initialize_controls()
+		self.sync_target_recipe_yields()
+		if self.docstatus == 0:
+			self.sync_parent_seed_requirements()
 		self.calculate_baseline()
+		if self.docstatus == 0:
+			self.sync_input_requirements()
 		self.refresh_input_availability()
 		self.calculate_readiness()
 		self.refresh_actuals()
@@ -134,29 +145,51 @@ class SeasonProductionPlan(Document):
 					},
 				)
 
+	def sync_target_recipe_yields(self):
+		"""Snapshot recipe yield when a target first selects or changes its recipe."""
+		for row in self.production_targets:
+			if not row.crop_recipe:
+				continue
+			recipe_changed = row.yield_source_recipe != row.crop_recipe
+			if not recipe_changed and row.recipe_yield_kg_per_hectare not in (None, ""):
+				continue
+			recipe_yield = get_recipe_variety_yield(frappe.get_doc("Crop Recipe", row.crop_recipe), getattr(row, "variety", None))
+			row.recipe_yield_kg_per_hectare = flt(recipe_yield)
+			row.yield_source_recipe = row.crop_recipe
+			if recipe_changed or row.planned_yield_kg_per_hectare in (None, ""):
+				row.planned_yield_kg_per_hectare = flt(recipe_yield)
+				row.yield_override_reason = None
+
 	def calculate_baseline(self):
 		for row in self.production_targets:
+			# Keep legacy acre values synchronized for existing reports and integrations.
+			row.target_acres = flt(row.target_hectares) * HECTARES_TO_ACRES
+			row.planned_yield_kg_per_acre = (
+				flt(row.planned_yield_kg_per_hectare) * PER_HECTARE_TO_PER_ACRE
+			)
 			row.planned_production_qty = (
 				flt(row.target_hectares) * flt(row.planned_yield_kg_per_hectare)
-			)
-			row.planned_procurement_value = (
-				flt(row.planned_production_qty) * flt(row.planning_rate)
-			)
-			row.parent_seed_required_qty = (
-				flt(row.target_hectares) * flt(row.parent_seed_rate_per_hectare)
 			)
 
 		self.target_outgrowers = sum(cint(row.target_outgrowers) for row in self.production_targets)
 		self.target_plots = sum(cint(row.target_plots) for row in self.production_targets)
 		self.target_hectares = sum(flt(row.target_hectares) for row in self.production_targets)
+		self.target_acres = sum(flt(row.target_acres) for row in self.production_targets)
 		self.planned_production_qty = sum(
 			flt(row.planned_production_qty) for row in self.production_targets
 		)
-		self.planned_procurement_value = sum(
-			flt(row.planned_procurement_value) for row in self.production_targets
+		self.female_parent_seed_required_qty = sum(
+			flt(row.required_stock_qty)
+			for row in self.parent_seed_requirements
+			if row.parent_role == "Female"
+		)
+		self.male_parent_seed_required_qty = sum(
+			flt(row.required_stock_qty)
+			for row in self.parent_seed_requirements
+			if row.parent_role == "Male"
 		)
 		self.parent_seed_required_qty = sum(
-			flt(row.parent_seed_required_qty) for row in self.production_targets
+			flt(row.required_stock_qty) for row in self.parent_seed_requirements
 		)
 		self.planned_input_cost = sum(
 			flt(row.estimated_cost) for row in self.input_requirements
@@ -175,6 +208,33 @@ class SeasonProductionPlan(Document):
 				if row.active and row.resource_role == QUALITY_INSPECTOR_ROLE
 			}
 		)
+
+	def sync_parent_seed_requirements(self):
+		"""Rebuild parent-seed demand from target hectares and recipe components."""
+		self.set("parent_seed_requirements", [])
+		for values in aggregate_parent_seed_requirements(self.production_targets):
+			self.append("parent_seed_requirements", values)
+
+	def sync_input_requirements(self):
+		"""Rebuild derived demand while retaining user-entered planning details."""
+		existing = {
+			_input_requirement_key(row): {
+				"estimated_rate": row.estimated_rate,
+				"notes": row.notes,
+			}
+			for row in self.input_requirements
+		}
+		requirements = aggregate_input_requirements(self.production_targets, self.parent_seed_requirements)
+		self.set("input_requirements", [])
+		for values in requirements:
+			preserved = existing.get(_input_requirement_key(values), {})
+			self.append(
+				"input_requirements",
+				{
+					**values,
+					**preserved,
+				},
+			)
 
 	def refresh_input_availability(self):
 		required = available = 0
@@ -319,39 +379,52 @@ class SeasonProductionPlan(Document):
 		)
 		seen = set()
 		for row in self.production_targets:
-			key = (row.region, row.crop, row.variety, row.production_category)
+			validate_seed_scope(
+				row.production_category, row.seed_class,
+				_("Production target row {0}").format(row.idx),
+			)
+			key = (
+				row.region, row.location, row.outgrower_supervisor,
+				row.crop, row.variety, row.production_category, row.seed_class,
+			)
 			if key in seen:
 				frappe.throw(_("Production target row {0} duplicates another target.").format(row.idx))
 			seen.add(key)
-			if flt(row.target_hectares) <= 0 or flt(row.planned_yield_kg_per_hectare) <= 0:
-				frappe.throw(_("Positive area and planned yield are required in row {0}.").format(row.idx))
+			if flt(row.target_hectares) <= 0:
+				frappe.throw(_("Target Hectares must be greater than zero in row {0}.").format(row.idx))
+			if self.docstatus == 1 and flt(row.recipe_yield_kg_per_hectare) <= 0:
+				frappe.throw(
+					_("The selected Crop Recipe must define a positive Expected Yield (Kg/Ha) before submitting row {0}.").format(row.idx)
+				)
+			if self.docstatus == 1 and flt(row.planned_yield_kg_per_hectare) <= 0:
+				frappe.throw(
+					_("Planned Yield (Kg/Ha) must be greater than zero before submitting row {0}.").format(row.idx)
+				)
+			if (
+				self.docstatus == 1
+				and abs(flt(row.planned_yield_kg_per_hectare) - flt(row.recipe_yield_kg_per_hectare)) > 0.01
+				and not (row.yield_override_reason or "").strip()
+			):
+				frappe.throw(_("A Yield Override Reason is required in row {0}.").format(row.idx))
+			if not frappe.db.get_value("User", row.outgrower_supervisor, "enabled"):
+				frappe.throw(_("Outgrower Supervisor in row {0} must be an enabled user.").format(row.idx))
+			if OUTGROWER_SUPERVISOR_ROLE not in frappe.get_roles(row.outgrower_supervisor):
+				frappe.throw(_("Outgrower Supervisor in row {0} must have the {1} role.").format(
+					row.idx, OUTGROWER_SUPERVISOR_ROLE
+				))
 			if row.variety and frappe.db.get_value("Crop Variety", row.variety, "crop") != row.crop:
 				frappe.throw(_("Variety must belong to the target Crop in row {0}.").format(row.idx))
-			if frappe.db.get_value("Crop Recipe", row.crop_recipe, "crop") != row.crop:
+			recipe = frappe.get_doc("Crop Recipe", row.crop_recipe)
+			if recipe.crop != row.crop:
 				frappe.throw(_("Crop Recipe must belong to the target Crop in row {0}.").format(row.idx))
-			self.validate_target_master(row, "Production Contract Template", "contract_template")
-			self.validate_target_master(row, "Outgrower Pricing Policy", "pricing_policy")
+			if get_recipe_variety_yield(recipe, row.variety) is None:
+				frappe.throw(_("Crop Recipe does not apply to the target Variety in row {0}.").format(row.idx))
 			if (
 				getdate(row.planting_window_from) < getdate(season_dates.start_date)
 				or getdate(row.planting_window_to) > getdate(season_dates.end_date)
 				or getdate(row.planting_window_from) > getdate(row.planting_window_to)
 			):
 				frappe.throw(_("Planting window in row {0} must fall within the Season.").format(row.idx))
-
-	def validate_target_master(self, row, doctype, fieldname):
-		master = frappe.db.get_value(
-			doctype,
-			row.get(fieldname),
-			["season", "crop", "production_category", "docstatus", "status"],
-			as_dict=True,
-		)
-		if not master or master.docstatus != 1 or master.status != "Active":
-			frappe.throw(_("{0} in row {1} must be submitted and active.").format(doctype, row.idx))
-		for scope_field in ("season", "crop", "production_category"):
-			if master.get(scope_field) != (
-				self.season if scope_field == "season" else row.get(scope_field)
-			):
-				frappe.throw(_("{0} scope does not match target row {1}.").format(doctype, row.idx))
 
 	def validate_resources(self):
 		seen = set()
@@ -484,56 +557,122 @@ def get_season_actuals(season, company):
 	)
 
 
+def aggregate_parent_seed_requirements(production_targets):
+	"""Calculate every recipe parent-seed component required by production targets."""
+	requirements = {}
+	for target in production_targets:
+		if not target.crop_recipe or flt(target.target_hectares) <= 0:
+			continue
+		recipe = frappe.get_doc("Crop Recipe", target.crop_recipe)
+		all_parent_items = list(recipe.parent_seed_items or [])
+		variety_items = [item for item in all_parent_items if getattr(item, "variety", None) == getattr(target, "variety", None)]
+		parent_items = variety_items or [item for item in all_parent_items if not getattr(item, "variety", None)]
+		for item in parent_items:
+			conversion = get_item_uom_conversion(item.item_code, item.uom)
+			key = (
+				target.crop_recipe, item.ratio_group, item.parent_role, flt(item.ratio_value),
+				item.item_code, conversion.uom, conversion.stock_uom, item.source_warehouse,
+				item.recovery_policy or "Fully Recoverable", flt(item.recoverable_percent),
+			)
+			values = requirements.setdefault(
+				key,
+				{
+					"crop_recipe": target.crop_recipe,
+					"ratio_group": item.ratio_group,
+					"parent_role": item.parent_role,
+					"ratio_value": flt(item.ratio_value),
+					"item_code": item.item_code,
+					"target_hectares": 0,
+					"quantity_per_hectare": flt(item.quantity_per_hectare),
+					"uom": conversion.uom,
+					"conversion_factor": flt(conversion.conversion_factor),
+					"required_qty": 0,
+					"stock_uom": conversion.stock_uom,
+					"required_stock_qty": 0,
+					"source_warehouse": item.source_warehouse,
+					"recovery_policy": item.recovery_policy or "Fully Recoverable",
+					"recoverable_percent": flt(item.recoverable_percent),
+				},
+			)
+			required_qty = flt(target.target_hectares) * flt(item.quantity_per_hectare)
+			values["target_hectares"] += flt(target.target_hectares)
+			values["required_qty"] += required_qty
+			values["required_stock_qty"] += required_qty * flt(conversion.conversion_factor)
+
+	return [requirements[key] for key in sorted(
+		requirements, key=lambda key: tuple(str(value or "") for value in key)
+	)]
+
+
+def _input_requirement_key(row):
+	get_value = row.get if hasattr(row, "get") else lambda fieldname: getattr(row, fieldname, None)
+	return (
+		get_value("item_code"),
+		get_value("source_warehouse"),
+		get_value("recovery_policy") or "Fully Recoverable",
+		flt(get_value("recoverable_percent")),
+	)
+
+
+def aggregate_input_requirements(production_targets, parent_seed_requirements=None):
+	"""Calculate stock demand from target hectares and their selected recipes."""
+	requirements = defaultdict(float)
+	for parent_seed in parent_seed_requirements or []:
+		key = (
+			parent_seed.item_code, parent_seed.source_warehouse,
+			parent_seed.recovery_policy or "Fully Recoverable",
+			flt(parent_seed.recoverable_percent),
+		)
+		requirements[key] += flt(parent_seed.required_stock_qty)
+
+	for target in production_targets:
+		if not target.crop_recipe:
+			continue
+		recipe = frappe.get_doc("Crop Recipe", target.crop_recipe)
+		# Current recipes keep inputs on the recipe. Retain compatibility with
+		# earlier recipes that nested them under stages.
+		recipe_inputs = list(recipe.inputs or [])
+		if not recipe_inputs:
+			recipe_inputs = [item for stage in recipe.stages or [] for item in stage.inputs or []]
+		for item in recipe_inputs:
+			if item.resource_type != "Stock Item" or not item.item_code:
+				continue
+			key = (
+				item.item_code,
+				item.source_warehouse,
+				item.recovery_policy or "Fully Recoverable",
+				flt(item.recoverable_percent),
+			)
+			qty_per_hectare = flt(
+				item.stock_quantity_per_hectare
+				or flt(item.quantity_per_hectare) * (flt(item.conversion_factor) or 1)
+			)
+			requirements[key] += flt(target.target_hectares) * qty_per_hectare
+
+	return [
+		{
+			"item_code": item_code,
+			"required_qty": required_qty,
+			"source_warehouse": warehouse,
+			"recovery_policy": recovery_policy,
+			"recoverable_percent": recoverable_percent,
+		}
+		for (item_code, warehouse, recovery_policy, recoverable_percent), required_qty in sorted(
+			requirements.items(), key=lambda entry: tuple(str(value or "") for value in entry[0])
+		)
+	]
+
+
 @frappe.whitelist()
 def generate_input_requirements(plan):
 	doc = frappe.get_doc("Season Production Plan", plan)
 	if doc.docstatus != 0:
 		frappe.throw(_("Input requirements can only be regenerated on a draft plan."))
-	requirements = defaultdict(lambda: frappe._dict(required_qty=0))
-	for target in doc.production_targets:
-		if target.parent_seed_item and target.parent_seed_required_qty:
-			key = (
-				target.parent_seed_item,
-				target.parent_seed_warehouse,
-				"Fully Recoverable",
-				100,
-			)
-			requirements[key].required_qty += flt(target.parent_seed_required_qty)
-		recipe = frappe.get_doc("Crop Recipe", target.crop_recipe)
-		for stage in recipe.stages:
-			for item in stage.inputs:
-				if item.resource_type != "Stock Item" or not item.item_code:
-					continue
-				warehouse = item.source_warehouse
-				key = (
-					item.item_code,
-					warehouse,
-					item.recovery_policy,
-					item.recoverable_percent,
-				)
-				qty_per_hectare = flt(
-					item.stock_quantity_per_hectare
-					or flt(item.quantity_per_hectare) * (flt(item.conversion_factor) or 1)
-				)
-				requirements[key].required_qty += flt(target.target_hectares) * qty_per_hectare
-	doc.set("input_requirements", [])
-	for (item_code, warehouse, recovery_policy, recoverable_percent), values in sorted(
-		requirements.items()
-	):
-		doc.append(
-			"input_requirements",
-			{
-				"item_code": item_code,
-				"required_qty": values.required_qty,
-				"source_warehouse": warehouse,
-				"recovery_policy": recovery_policy,
-				"recoverable_percent": recoverable_percent,
-			},
-		)
-	doc.before_validate()
+	doc.sync_parent_seed_requirements()
+	doc.calculate_baseline()
+	doc.sync_input_requirements()
 	doc.save(ignore_permissions=True)
 	return doc.name
-
 
 @frappe.whitelist()
 def refresh_plan_actuals(plan):

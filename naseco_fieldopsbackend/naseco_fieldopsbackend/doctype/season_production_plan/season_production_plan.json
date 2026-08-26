@@ -26,10 +26,14 @@
   "target_outgrowers",
   "target_plots",
   "target_hectares",
+  "target_acres",
   "planned_production_qty",
-  "planned_procurement_value",
+  "female_parent_seed_required_qty",
+  "male_parent_seed_required_qty",
   "parent_seed_required_qty",
   "planned_input_cost",
+  "parent_seed_requirements_section",
+  "parent_seed_requirements",
   "input_section",
   "input_requirements",
   "stock_coverage_percent",
@@ -206,6 +210,14 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Target Hectares",
+   "precision": 4,
+   "read_only": 1
+  },
+  {
+   "fieldname": "target_acres",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Legacy Target Acres",
    "read_only": 1
   },
   {
@@ -215,15 +227,9 @@
    "read_only": 1
   },
   {
-   "fieldname": "planned_procurement_value",
-   "fieldtype": "Currency",
-   "label": "Planned Procurement Value",
-   "read_only": 1
-  },
-  {
    "fieldname": "parent_seed_required_qty",
    "fieldtype": "Float",
-   "label": "Parent Seed Required Qty",
+   "label": "Total Parent Seed Required (Stock Qty)",
    "read_only": 1
   },
   {
@@ -241,7 +247,9 @@
    "fieldname": "input_requirements",
    "fieldtype": "Table",
    "label": "Aggregated Item Requirements",
-   "options": "Season Input Requirement"
+   "options": "Season Input Requirement",
+   "cannot_add_rows": 1,
+   "cannot_delete_rows": 1
   },
   {
    "fieldname": "stock_coverage_percent",
@@ -328,12 +336,14 @@
    "fieldname": "contracted_hectares",
    "fieldtype": "Float",
    "label": "Contracted Hectares",
+	"precision": 4,
    "read_only": 1
   },
   {
    "fieldname": "planted_hectares",
    "fieldtype": "Float",
    "label": "Planted Hectares",
+	"precision": 4,
    "read_only": 1
   },
   {
@@ -437,6 +447,32 @@
    "no_copy": 1,
    "options": "Season Production Plan",
    "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "parent_seed_requirements_section",
+   "fieldtype": "Section Break",
+   "label": "Generated Parent Seed Requirements"
+  },
+  {
+   "cannot_add_rows": 1,
+   "cannot_delete_rows": 1,
+   "fieldname": "parent_seed_requirements",
+   "fieldtype": "Table",
+   "label": "Parent Seed Requirements by Recipe and Role",
+   "options": "Season Parent Seed Requirement",
+   "read_only": 1
+  },
+  {
+   "fieldname": "female_parent_seed_required_qty",
+   "fieldtype": "Float",
+   "label": "Female Parent Seed Required (Stock Qty)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "male_parent_seed_required_qty",
+   "fieldtype": "Float",
+   "label": "Male Parent Seed Required (Stock Qty)",
    "read_only": 1
   }
  ],

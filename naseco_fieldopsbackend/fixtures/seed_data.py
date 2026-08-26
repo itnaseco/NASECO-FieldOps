@@ -514,8 +514,8 @@ def seed_inspection_parameters():
 		("Inter row spacing", "INTER_ROW_SPACING", "Planting", "Number", "Meter", "Outgrower Supervisor", 0),
 		("Plant population per Ha", "PLANT_POP_HA", "Planting", "Number", "Nos", "Both", 0),
 		("Male:Female ratio", "MALE_FEMALE_RATIO", "Planting", "Ratio", None, "Outgrower Supervisor", 0),
-		("Isolation distance", "ISOLATION_DISTANCE", "Isolation", "Number", "Meter", "Outgrower Supervisor", 0),
-		("Time isolation", "TIME_ISOLATION", "Isolation", "Number", "Week", "Outgrower Supervisor", 0),
+		("Isolation distance", "ISOLATION_DISTANCE", "Isolation", "Select", None, "Outgrower Supervisor", 0),
+		("Time isolation", "TIME_ISOLATION", "Isolation", "Select", None, "Outgrower Supervisor", 0),
 		("Offtypes in females", "OFFTYPES_FEMALE", "Purity", "Count", "Nos", "Both", 1),
 		("Offtypes in males", "OFFTYPES_MALE", "Purity", "Count", "Nos", "Both", 1),
 		("Volunteers", "VOLUNTEERS", "Purity", "Count", "Nos", "Farmer", 1),
@@ -1041,16 +1041,16 @@ def seed_sample_fieldops_data():
 				"planting_end_date": "2026-08-31",
 				"expected_harvest_date": "2026-12-15",
 				"contracted_area_hectares": 1.0117,
-				"parent_seeds": [
+				"parent_seed_items": [
 					{
 						"parent_role": "Female",
-						"parent_seed_item": FIELDOPS_ITEMS["Maize Seed (Hybrid)"]["item_code"],
-						"quantity_per_hectare": 39.5374,
+						"item": FIELDOPS_ITEMS["Maize Seed (Hybrid)"]["item_code"],
+						"quantity_kg_per_hectare": 39.5374,
 					},
 					{
 						"parent_role": "Male",
-						"parent_seed_item": FIELDOPS_ITEMS["Maize Seed (Hybrid)"]["item_code"],
-						"quantity_per_hectare": 9.8844,
+						"item": FIELDOPS_ITEMS["Maize Seed (Hybrid)"]["item_code"],
+						"quantity_kg_per_hectare": 9.8844,
 					},
 				],
 				"harvest_item": FIELDOPS_ITEMS["Maize Seed Harvest"]["item_code"],
@@ -1062,7 +1062,7 @@ def seed_sample_fieldops_data():
 				"input_recovery_terms": "Recover approved inputs and cash advances from accepted harvest value.",
 				"minimum_farmer_compliance_percent": 80,
 				"minimum_supervisor_compliance_percent": 80,
-				"required_isolation_quality": "Good",
+				"required_isolation_quality": "Adequate",
 				"target_take_spacing_m": 5,
 				"quality_standard_terms": "<p>Apply approved stage inspection standards and corrective actions.</p>",
 				"farmer_obligations": "<p>Maintain crop identity, isolation and field records.</p>",
@@ -1174,8 +1174,8 @@ def ensure_sample_parent_seed_rows(contract_name):
 		update_modified=False,
 	)
 	frappe.db.delete(
-		"Production Contract Parent Seed",
-		{"parent": contract_name, "parentfield": "parent_seeds"},
+		"Contract Parent Seed Item",
+		{"parent": contract_name, "parentfield": "parent_seed_items"},
 	)
 	for idx, (role, quantity_per_hectare) in enumerate(
 		(("Female", 39.5374), ("Male", 9.8844)), start=1
@@ -1183,14 +1183,14 @@ def ensure_sample_parent_seed_rows(contract_name):
 		planned_quantity = quantity_per_hectare * (area or 0)
 		frappe.get_doc(
 			{
-				"doctype": "Production Contract Parent Seed",
+				"doctype": "Contract Parent Seed Item",
 				"parent": contract_name,
 				"parenttype": "Outgrower Production Contract",
-				"parentfield": "parent_seeds",
+				"parentfield": "parent_seed_items",
 				"idx": idx,
 				"parent_role": role,
-				"parent_seed_item": item_code,
-				"quantity_per_hectare": quantity_per_hectare,
+				"item": item_code,
+				"quantity_kg_per_hectare": quantity_per_hectare,
 				"uom": "Kg",
 				"planned_quantity": planned_quantity,
 			}
@@ -1212,6 +1212,11 @@ def seed_sample_season_production_plan():
 	if not company:
 		print("  ! Default Company is not configured")
 		return
+	location = "Central"
+	if not frappe.db.exists("Location", location):
+		frappe.get_doc({"doctype": "Location", "location_name": location}).insert(
+			ignore_permissions=True
+		)
 	plan = frappe.get_doc(
 		{
 			"doctype": "Season Production Plan",
@@ -1226,6 +1231,8 @@ def seed_sample_season_production_plan():
 			"production_targets": [
 				{
 					"region": "Central",
+					"location": location,
+					"outgrower_supervisor": "Administrator",
 					"crop": "Maize",
 					"variety": "Longe 10H",
 					"production_category": "Certified",
@@ -1235,7 +1242,7 @@ def seed_sample_season_production_plan():
 					"target_outgrowers": 20,
 					"target_plots": 20,
 					"target_hectares": 40.4686,
-					"planned_yield_kg_per_hectare": 2471.05,
+					"planned_yield_kg_per_hectare": 2471.0538,
 					"planning_rate": 1850,
 					"parent_seed_item": FIELDOPS_ITEMS["Maize Seed (Hybrid)"]["item_code"],
 					"parent_seed_rate_per_hectare": 49.4211,

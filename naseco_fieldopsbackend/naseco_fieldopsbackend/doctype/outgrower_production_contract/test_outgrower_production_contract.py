@@ -56,28 +56,28 @@ class TestOutgrowerProductionContract(TestCase):
 			OutgrowerProductionContract.validate_commercial_terms(contract)
 
 	def test_calculates_harvest_and_each_parent_seed_line_per_hectare(self):
-		female = SimpleNamespace(
-			parent_seed_item="FEMALE-SEED",
-			quantity_per_hectare=15,
+		female = frappe._dict(
+			item="FEMALE-SEED",
+			quantity_kg_per_hectare=15,
 			uom="Kg",
 			rate=100,
 			planned_quantity=0,
-			planned_value=0,
+			amount=0,
 		)
-		male = SimpleNamespace(
-			parent_seed_item="MALE-SEED",
-			quantity_per_hectare=5,
+		male = frappe._dict(
+			item="MALE-SEED",
+			quantity_kg_per_hectare=5,
 			uom="Kg",
 			rate=80,
 			planned_quantity=0,
-			planned_value=0,
+			amount=0,
 		)
-		contract = SimpleNamespace(
+		contract = frappe._dict(
 			contracted_area_hectares=2,
 			quota_kg_per_hectare=2000,
 			expected_yield_kg_per_hectare=2500,
 			contract_rate=2,
-			parent_seeds=[female, male],
+			parent_seed_items=[female, male],
 			planned_parent_seed_qty=0,
 			planned_parent_seed_value=0,
 		)

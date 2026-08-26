@@ -1,0 +1,102 @@
+{
+  "actions": [],
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "istable": 1,
+  "field_order": [
+    "variety",
+    "parent_role",
+    "ratio_group",
+    "ratio_value",
+    "item_code",
+    "quantity_per_hectare",
+    "uom",
+    "stock_uom",
+    "recovery_policy",
+    "recoverable_percent",
+    "source_warehouse"
+  ],
+  "fields": [
+    {
+      "description": "Leave blank for a generic component. Variety-specific rows replace generic rows for that target variety.",
+      "fieldname": "variety",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Applicable Production Variety",
+      "options": "Crop Variety"
+    },
+    {
+      "fieldname": "parent_role",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Parent Role",
+      "options": "Female\nMale\nBasic Seed",
+      "reqd": 1
+    },
+    {
+      "default": "Primary",
+      "fieldname": "ratio_group",
+      "fieldtype": "Data",
+      "label": "Ratio Group",
+      "reqd": 1
+    },
+    {
+      "fieldname": "ratio_value",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "label": "Ratio Value",
+      "non_negative": 1
+    },
+    {
+      "fieldname": "item_code",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Seed Item",
+      "options": "Item"
+    },
+    {
+      "fieldname": "quantity_per_hectare",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "label": "Quantity per Hectare",
+      "non_negative": 1
+    },
+    {
+      "fieldname": "uom",
+      "fieldtype": "Link",
+      "label": "Recipe UOM",
+      "options": "UOM"
+    },
+    {
+      "fieldname": "stock_uom",
+      "fieldtype": "Link",
+      "label": "Stock UOM",
+      "options": "UOM",
+      "read_only": 1
+    },
+    {
+      "default": "Fully Recoverable",
+      "fieldname": "recovery_policy",
+      "fieldtype": "Select",
+      "label": "Recovery Policy",
+      "options": "Fully Recoverable\nPartially Recoverable\nCompany Subsidy\nNon-Recoverable\nReturnable",
+      "reqd": 1
+    },
+    {
+      "default": "100",
+      "fieldname": "recoverable_percent",
+      "fieldtype": "Percent",
+      "label": "Recoverable %"
+    },
+    {
+      "fieldname": "source_warehouse",
+      "fieldtype": "Link",
+      "label": "Source Warehouse",
+      "options": "Warehouse"
+    }
+  ],
+  "module": "Naseco FieldOpsBackend",
+  "name": "Recipe Parent Seed Item",
+  "permissions": []
+}

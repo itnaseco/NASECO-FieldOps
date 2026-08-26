@@ -31,6 +31,7 @@
   "crop",
   "variety",
   "production_category",
+  "seed_class",
   "crop_recipe",
   "period_section",
   "agreement_date",
@@ -56,11 +57,8 @@
   "max_exposure_percent",
   "payment_terms_template",
   "parent_seed_section",
-  "parent_seeds",
-  "parent_seed_item",
-  "parent_seed_uom",
+  "parent_seed_items",
   "planned_parent_seed_qty",
-  "parent_seed_rate",
   "planned_parent_seed_value",
   "recovery_section",
   "default_recovery_policy",
@@ -90,7 +88,12 @@
   "signatories",
   "supporting_document",
   "erpnext_contract",
-  "amended_from"
+  "amended_from",
+  "contracted_area_acres",
+  "quota_kg_per_acre",
+  "parent_seed_item",
+  "parent_seed_uom",
+  "parent_seed_rate"
  ],
  "fields": [
   {
@@ -259,11 +262,18 @@
   },
   {
    "fieldname": "production_category",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Seed Category",
-   "options": "Basic\nCertified",
+   "options": "Seed Category",
    "reqd": 1
+  },
+  {
+   "fieldname": "seed_class",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Seed Class",
+   "options": "Seed Class"
   },
   {
    "fieldname": "crop_recipe",
@@ -346,7 +356,6 @@
    "fieldtype": "Float",
    "label": "Expected Harvest Quantity",
    "non_negative": 1,
-   "read_only": 1,
    "reqd": 1
   },
   {
@@ -387,28 +396,21 @@
   },
   {
    "description": "Contractual area used for quota, yield and settlement calculations.",
-   "fieldname": "contracted_area_hectares",
+   "fieldname": "contracted_area_acres",
    "fieldtype": "Float",
-   "label": "Contracted Area (Hectares)",
+   "hidden": 1,
+   "label": "Legacy Contracted Area (Acres)",
    "non_negative": 1,
-   "reqd": 1
-  },
-  {
-   "description": "Crop Variety yield snapshot used for this contract's harvest forecast.",
-   "fieldname": "expected_yield_kg_per_hectare",
-   "fieldtype": "Float",
-   "label": "Expected Seed Yield (kg/hectare)",
-   "non_negative": 1,
-   "read_only": 1,
-   "reqd": 1
+   "read_only": 1
   },
   {
    "default": "1000",
-   "fieldname": "quota_kg_per_hectare",
+   "fieldname": "quota_kg_per_acre",
    "fieldtype": "Float",
-   "label": "Contract Quota (kg/hectare)",
+   "hidden": 1,
+   "label": "Legacy Contract Quota (Kg per Acre)",
    "non_negative": 1,
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "contracted_quota_qty",
@@ -436,34 +438,28 @@
    "label": "Parent Seed Commitment"
   },
   {
-   "description": "Add the female, male or other parent seed lines required to produce the contracted seed item.",
-   "fieldname": "parent_seeds",
-   "fieldtype": "Table",
-   "label": "Parent Seed Items",
-   "options": "Production Contract Parent Seed"
-  },
-  {
    "fieldname": "parent_seed_item",
    "fieldtype": "Link",
    "hidden": 1,
    "label": "Parent Seed Item",
-   "options": "Item"
+   "options": "Item",
+   "read_only": 1
   },
   {
    "fetch_from": "parent_seed_item.stock_uom",
    "fieldname": "parent_seed_uom",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Parent Seed UOM",
    "options": "UOM",
-   "hidden": 1,
    "read_only": 1
   },
   {
    "fieldname": "planned_parent_seed_qty",
    "fieldtype": "Float",
-   "hidden": 1,
    "label": "Planned Parent Seed Quantity",
-   "non_negative": 1
+   "non_negative": 1,
+   "read_only": 1
   },
   {
    "fieldname": "parent_seed_rate",
@@ -471,7 +467,8 @@
    "hidden": 1,
    "label": "Parent Seed Rate",
    "non_negative": 1,
-   "options": "currency"
+   "options": "currency",
+   "read_only": 1
   },
   {
    "fieldname": "planned_parent_seed_value",
@@ -517,11 +514,11 @@
    "label": "Minimum Supervisor Compliance %"
   },
   {
-   "default": "Good",
+   "default": "Adequate",
    "fieldname": "required_isolation_quality",
    "fieldtype": "Select",
    "label": "Required Isolation Distance Rating",
-   "options": "Poor\nGood",
+   "options": "Inadequate\nAdequate",
    "reqd": 1
   },
   {
@@ -656,6 +653,36 @@
    "options": "Outgrower Production Contract",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "contracted_area_hectares",
+   "fieldtype": "Float",
+   "label": "Contracted Area (Hectares)",
+   "precision": 4,
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "quota_kg_per_hectare",
+   "fieldtype": "Float",
+   "label": "Contracted Quota (Kg per Hectare)",
+   "precision": 2,
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "expected_yield_kg_per_hectare",
+   "fieldtype": "Float",
+   "label": "Expected Harvest (Kg per Hectare)",
+   "precision": 2,
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "parent_seed_items",
+   "fieldtype": "Table",
+   "label": "Parent Seed Items",
+   "options": "Contract Parent Seed Item"
   }
  ],
  "index_web_pages_for_search": 1,

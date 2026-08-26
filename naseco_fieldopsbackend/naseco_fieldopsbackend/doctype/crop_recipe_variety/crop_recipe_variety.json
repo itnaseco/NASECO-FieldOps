@@ -1,0 +1,38 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": ["variety", "expected_yield_kg_per_hectare", "enabled"],
+ "fields": [
+  {
+   "fieldname": "variety",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Crop Variety",
+   "options": "Crop Variety",
+   "reqd": 1
+  },
+  {
+   "description": "Expected yield for this variety when this recipe is used.",
+   "fieldname": "expected_yield_kg_per_hectare",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Expected Yield (Kg/Ha)",
+   "non_negative": 1,
+   "precision": 2,
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Enabled"
+  }
+ ],
+ "istable": 1,
+ "module": "Naseco FieldOpsBackend",
+ "name": "Crop Recipe Variety",
+ "permissions": []
+}

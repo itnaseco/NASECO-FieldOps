@@ -16,6 +16,19 @@ frappe.ui.form.on("Season Production Plan", {
 			query: "naseco_fieldopsbackend.roles.user_with_role_query",
 			filters: { role: "FieldOps Stores User" }
 		}));
+		frm.set_query("production_category", "production_targets", () => ({ filters: { enabled: 1 } }));
+		frm.set_query("seed_class", "production_targets", () => ({ filters: { enabled: 1 } }));
+		frm.set_query("outgrower_supervisor", "production_targets", () => ({
+			query: "naseco_fieldopsbackend.roles.user_with_role_query",
+			filters: { role: "Outgrower Supervisor" }
+		}));
+		frm.set_query("variety", "production_targets", (doc, cdt, cdn) => ({
+			filters: { crop: locals[cdt][cdn].crop }
+		}));
+		frm.set_query("crop_recipe", "production_targets", (doc, cdt, cdn) => ({
+			query: "naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_recipe.crop_recipe.applicable_recipe_query",
+			filters: { crop: locals[cdt][cdn].crop, variety: locals[cdt][cdn].variety }
+		}));
 		frm.set_query("user", "resource_allocations", (doc, cdt, cdn) => {
 			const row = locals[cdt][cdn];
 			return {
@@ -76,20 +89,40 @@ frappe.ui.form.on("Season Production Plan", {
 });
 
 frappe.ui.form.on("Season Production Target", {
+	variety(frm, cdt, cdn) {
+		const row = locals[cdt][cdn];
+		if (row.crop_recipe) frm.script_manager.trigger("crop_recipe", cdt, cdn);
+	},
+	crop_recipe(frm, cdt, cdn) {
+		const row = locals[cdt][cdn];
+		if (!row.crop_recipe) {
+			frappe.model.set_value(cdt, cdn, "recipe_yield_kg_per_hectare", 0);
+			frappe.model.set_value(cdt, cdn, "planned_yield_kg_per_hectare", 0);
+			frappe.model.set_value(cdt, cdn, "yield_source_recipe", null);
+			frappe.model.set_value(cdt, cdn, "yield_override_reason", null);
+			return;
+		}
+		const selectedRecipe = row.crop_recipe;
+		frappe.call({
+			method: "naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_recipe.crop_recipe.get_recipe_target_defaults",
+			args: { recipe_name: selectedRecipe, variety: row.variety }
+		}).then(({ message }) => {
+				if (locals[cdt][cdn].crop_recipe !== selectedRecipe) return;
+				const recipeYield = flt(message && message.expected_yield_kg_per_hectare);
+				frappe.model.set_value(cdt, cdn, "recipe_yield_kg_per_hectare", recipeYield);
+				frappe.model.set_value(cdt, cdn, "planned_yield_kg_per_hectare", recipeYield);
+				frappe.model.set_value(cdt, cdn, "yield_source_recipe", selectedRecipe);
+				frappe.model.set_value(cdt, cdn, "yield_override_reason", null);
+			});
+	},
 	target_hectares: calculate_target,
 	planned_yield_kg_per_hectare: calculate_target,
-	planning_rate: calculate_target,
-	parent_seed_rate_per_hectare: calculate_target
 });
 
 function calculate_target(frm, cdt, cdn) {
 	const row = locals[cdt][cdn];
-	frappe.model.set_value(cdt, cdn, "planned_production_qty",
-		flt(row.target_hectares) * flt(row.planned_yield_kg_per_hectare));
-	frappe.model.set_value(cdt, cdn, "planned_procurement_value",
-		flt(row.planned_production_qty) * flt(row.planning_rate));
-	frappe.model.set_value(cdt, cdn, "parent_seed_required_qty",
-		flt(row.target_hectares) * flt(row.parent_seed_rate_per_hectare));
+	const plannedProduction = flt(row.target_hectares) * flt(row.planned_yield_kg_per_hectare);
+	frappe.model.set_value(cdt, cdn, "planned_production_qty", plannedProduction);
 	frm.refresh_field("production_targets");
 }
 
@@ -99,7 +132,7 @@ function add_indicators(frm) {
 		frm.doc.mandatory_readiness_complete ? "green" : "orange"
 	);
 	frm.dashboard.add_indicator(
-		__("Area achievement: {0}%", [format_number(frm.doc.area_achievement_percent || 0, null, 1)]),
+		__("Area: {0}%", [format_number(frm.doc.area_achievement_percent || 0, null, 1)]),
 		frm.doc.area_achievement_percent >= 100 ? "green" : "blue"
 	);
 	frm.dashboard.add_indicator(

@@ -153,6 +153,7 @@ class AgronomyReport(Document):
 		self.variety = cycle.variety
 		self.season = cycle.season
 		self.production_category = cycle.production_category
+		self.seed_class = cycle.seed_class
 		if cycle.plot:
 			plot = frappe.get_doc("Farm Plot", cycle.plot)
 			self.outgrower = plot.outgrower
@@ -537,11 +538,11 @@ class AgronomyReport(Document):
 			)
 		mandatory_count = len([row for row in activities if row.mandatory])
 		frappe.db.set_value(
-			"Crop Cycle Stage",
-			self.stage,
+			"Crop Cycle Stage", self.stage,
 			{
 				"status": "Completed",
 				"completion_percentage": 100,
+				"agronomy_report": self.name,
 				"mandatory_activity_count": mandatory_count,
 				"completed_activity_count": mandatory_count,
 			},

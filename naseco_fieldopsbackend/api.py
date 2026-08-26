@@ -368,16 +368,16 @@ MOBILE_FIELD_MAP = {
 		"isSigned": "is_signed",
 		"signedOn": "signed_on",
 		"erpnextContractId": "erpnext_contract",
-		"parentSeeds": "parent_seeds",
+		"parentSeeds": "parent_seed_items",
 	},
-	"Production Contract Parent Seed": {
+	"Contract Parent Seed Item": {
 		"parentRole": "parent_role",
-		"parentSeedItemId": "parent_seed_item",
-		"quantityPerHectare": "quantity_per_hectare",
+		"parentSeedItemId": "item",
+		"quantityPerHectare": "quantity_kg_per_hectare",
 		"uom": "uom",
 		"plannedQuantity": "planned_quantity",
 		"rate": "rate",
-		"plannedValue": "planned_value",
+		"plannedValue": "amount",
 	},
 	"Crop Production Lot": {
 		"lotId": "name",
@@ -985,8 +985,8 @@ def _map_mobile_to_doc(doctype, payload):
 			result["stages"].append(stage_doc)
 			continue
 		if key == "parentSeeds" and doctype == "Outgrower Production Contract":
-			result["parent_seeds"] = [
-				_map_mobile_child_to_doc("Production Contract Parent Seed", row)
+			result["parent_seed_items"] = [
+				_map_mobile_child_to_doc("Contract Parent Seed Item", row)
 				for row in value or []
 			]
 			continue
@@ -1123,9 +1123,9 @@ def _map_doc_to_mobile(doctype, doc_dict):
 				stages.append(stage)
 			result["stages"] = stages
 			continue
-		if key == "parent_seeds" and doctype == "Outgrower Production Contract":
+		if key == "parent_seed_items" and doctype == "Outgrower Production Contract":
 			result["parentSeeds"] = [
-				_map_doc_to_mobile("Production Contract Parent Seed", row)
+				_map_doc_to_mobile("Contract Parent Seed Item", row)
 				for row in value or []
 			]
 			continue

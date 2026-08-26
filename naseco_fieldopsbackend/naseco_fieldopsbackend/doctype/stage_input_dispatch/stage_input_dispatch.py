@@ -73,6 +73,11 @@ class StageInputDispatch(Document):
 		self.quantity_dispatched = row.transfer_qty or row.qty
 		self.unit = row.stock_uom
 		self.valuation_rate = row.valuation_rate or row.basic_rate
+		self.base_cost_rate = row.custom_base_cost_rate
+		self.markup_percent = row.custom_risk_markup_percent
+		self.recovery_rate = row.custom_final_recovery_rate
+		self.pricing_policy = row.custom_recovery_pricing_policy
+		self.pricing_policy_version = row.custom_pricing_policy_version
 		self.recoverable_amount = row.custom_recoverable_amount
 
 

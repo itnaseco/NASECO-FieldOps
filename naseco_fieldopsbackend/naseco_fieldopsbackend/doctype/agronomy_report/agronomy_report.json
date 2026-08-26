@@ -18,6 +18,7 @@
   "variety",
   "season",
   "production_category",
+  "seed_class",
   "assigned_supervisor",
   "schedule_section",
   "window_start_date",
@@ -149,9 +150,16 @@
   },
   {
    "fieldname": "production_category",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "label": "Production Category",
-   "options": "Basic\nCertified",
+   "options": "Seed Category",
+   "read_only": 1
+  },
+  {
+   "fieldname": "seed_class",
+   "fieldtype": "Link",
+   "label": "Seed Class",
+   "options": "Seed Class",
    "read_only": 1
   },
   {

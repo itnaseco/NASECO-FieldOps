@@ -29,11 +29,12 @@ frappe.ui.form.on('Farm Plot', {
 		}
 
 		if (!frm.is_new()) {
-			frm.add_custom_button(__('View Inspections'), function() {
-				frappe.set_route('List', 'Inspection', {
-					plot: frm.doc.name
-				});
-			}, __('Actions'));
+			frappe.db.count('Inspection', { filters: { plot: frm.doc.name } }).then((count) => {
+				if (!count) return;
+				frm.add_custom_button(__('View Inspections ({0})', [count]), function() {
+					frappe.set_route('List', 'Inspection', { plot: frm.doc.name });
+				}, __('Actions'));
+			});
 
 			render_crop_cycles_section(frm);
 		} else {
@@ -52,6 +53,7 @@ frappe.ui.form.on('Farm Plot', {
 
 	polygon_move(frm) {
 		renumber_polygon_vertices(frm);
+		update_plot_geojson(frm);
 	}
 });
 
@@ -68,10 +70,20 @@ frappe.ui.form.on('Plot Vertex', {
 		const row = frappe.get_doc(cdt, cdn);
 		row.order_index = (frm.doc.polygon || []).length;
 		frm.refresh_field('polygon');
+		update_plot_geojson(frm);
 	},
 
 	polygon_remove(frm) {
 		renumber_polygon_vertices(frm);
+		update_plot_geojson(frm);
+	},
+
+	latitude(frm) {
+		update_plot_geojson(frm);
+	},
+
+	longitude(frm) {
+		update_plot_geojson(frm);
 	}
 });
 
@@ -97,6 +109,35 @@ function renumber_polygon_vertices(frm) {
 		frm.dirty();
 		frm.refresh_field('polygon');
 	}
+}
+
+function update_plot_geojson(frm) {
+	const vertices = (frm.doc.polygon || []).filter((row) =>
+		row.latitude !== null && row.latitude !== undefined && row.latitude !== '' &&
+		row.longitude !== null && row.longitude !== undefined && row.longitude !== ''
+	);
+
+	if (vertices.length < 3) {
+		frm.set_value('geojson', null);
+		return;
+	}
+
+	const coordinates = vertices.map((row) => [Number(row.longitude), Number(row.latitude)]);
+	if (coordinates[coordinates.length - 1][0] !== coordinates[0][0] ||
+		coordinates[coordinates.length - 1][1] !== coordinates[0][1]) {
+		coordinates.push([...coordinates[0]]);
+	}
+
+	frm.set_value('geojson', JSON.stringify({
+		type: 'Feature',
+		geometry: { type: 'Polygon', coordinates: [coordinates] },
+		properties: {
+			plot_id: frm.doc.plot_id,
+			plot_name: frm.doc.plot_name || '',
+			area_hectares: frm.doc.area_hectares || 0,
+			perimeter_meters: frm.doc.perimeter_meters || 0
+		}
+	}, null, 2));
 }
 
 function recalculate_plot_measurements(frm) {
@@ -285,6 +326,7 @@ function escape_html(value) {
 	return frappe.utils.escape_html(String(value ?? ''));
 }
 
+
 function show_plot_map(frm) {
 	// Get vertices
 	let vertices = frm.doc.polygon || [];
@@ -303,6 +345,10 @@ function show_plot_map(frm) {
 	let centerLat = frm.doc.centroid_lat || coordinates[0][0];
 	let centerLng = frm.doc.centroid_lng || coordinates[0][1];
 
+	const map_id = "plot_map_container_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+	let rendered_map = null;
+	let dialog_closed = false;
+
 	// Create dialog with map
 	let d = new frappe.ui.Dialog({
 		title: __('Plot Map: {0}', [frm.doc.plot_name || frm.doc.plot_id]),
@@ -315,6 +361,14 @@ function show_plot_map(frm) {
 		]
 	});
 
+	d.$wrapper.one("hidden.bs.modal", () => {
+		dialog_closed = true;
+		if (rendered_map) {
+			rendered_map.remove();
+			rendered_map = null;
+		}
+	});
+
 	d.show();
 
 	// Wait for dialog to render, then create map
@@ -322,16 +376,12 @@ function show_plot_map(frm) {
 		// Create map container HTML with legend
 		let map_container = `
 			<div style="position: relative;">
-				<div id="plot_map_container" style="height: 700px; width: 100%; border: 1px solid #ddd; border-radius: 4px;"></div>
+				<div id="${map_id}" style="height: 700px; width: 100%; border: 1px solid #ddd; border-radius: 4px;"></div>
 				<div id="map_legend" style="position: absolute; bottom: 20px; left: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 1000; max-width: 250px;">
 					<h5 style="margin: 0 0 10px 0; font-size: 14px; font-weight: bold;">📍 Map Legend</h5>
 					<div style="display: flex; align-items: center; margin: 8px 0;">
 						<div style="width: 20px; height: 3px; background: #3388ff; margin-right: 10px;"></div>
 						<span style="font-size: 12px;">Plot Boundary</span>
-					</div>
-					<div style="display: flex; align-items: center; margin: 8px 0;">
-						<div style="width: 12px; height: 12px; background: #ff7800; border: 2px solid white; border-radius: 50%; margin-right: 10px;"></div>
-						<span style="font-size: 12px;">Vertices</span>
 					</div>
 					<div style="display: flex; align-items: center; margin: 8px 0;">
 						<div style="width: 16px; height: 20px; background: #dc3545; clip-path: polygon(50% 0%, 100% 100%, 0% 100%); margin-right: 10px;"></div>
@@ -385,16 +435,21 @@ function show_plot_map(frm) {
 			setTimeout(function() {
 				try {
 					// Initialize map
-					let map = L.map('plot_map_container', {
+					const map_element = d.fields_dict.map_html.$wrapper.find('#' + map_id)[0];
+					if (dialog_closed || !map_element || !document.body.contains(map_element)) return;
+					rendered_map = L.map(map_element, {
 						zoomControl: true,
-						attributionControl: true
+						attributionControl: true,
+						maxZoom: 23,
+						zoomSnap: 0.25
 					}).setView([centerLat, centerLng], 17);
+					const map = rendered_map;
 
 					// Define base layers with different map types
 					let baseLayers = {
 						"🛰️ Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
 							attribution: 'Tiles © Esri',
-							maxZoom: 19
+							maxZoom: 23
 						}),
 						"🗺️ Street Map": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 							attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -407,7 +462,7 @@ function show_plot_map(frm) {
 						"🌐 Hybrid": L.layerGroup([
 							L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
 								attribution: 'Tiles © Esri',
-								maxZoom: 19
+								maxZoom: 23
 							}),
 							L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png', {
 								attribution: '© CartoDB',
@@ -435,11 +490,10 @@ function show_plot_map(frm) {
 
 					// Draw polygon with enhanced styling
 					let polygon = L.polygon(coordinates, {
-						color: '#3388ff',
-						fillColor: '#3388ff',
-						fillOpacity: 0.25,
-						weight: 3,
-						dashArray: '5, 5',
+						color: '#2563eb',
+						fillColor: '#2563eb',
+						fillOpacity: 0.12,
+						weight: 4,
 						className: 'plot-polygon'
 					}).addTo(map);
 
@@ -454,35 +508,6 @@ function show_plot_map(frm) {
 						iconAnchor: [50, 15]
 					});
 					L.marker(polygonCenter, { icon: areaLabel }).addTo(map);
-
-					// Add markers for each vertex with enhanced styling
-					coordinates.forEach((coord, index) => {
-						L.circleMarker(coord, {
-							radius: 8,
-							fillColor: '#ff7800',
-							color: '#fff',
-							weight: 3,
-							opacity: 1,
-							fillOpacity: 0.9
-						}).addTo(map).bindPopup(`
-							<div style="font-family: sans-serif; min-width: 150px;">
-								<h5 style="margin: 0 0 8px 0; color: #ff7800;">📍 Vertex ${index + 1}</h5>
-								<div style="font-size: 12px;">
-									<strong>Latitude:</strong> ${coord[0].toFixed(6)}<br>
-									<strong>Longitude:</strong> ${coord[1].toFixed(6)}
-								</div>
-							</div>
-						`);
-
-						// Add vertex labels
-						let label = L.divIcon({
-							className: 'vertex-label',
-							html: `<div style="background: white; color: #ff7800; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold; border: 2px solid #ff7800;">${index + 1}</div>`,
-							iconSize: [20, 20],
-							iconAnchor: [10, 25]
-						});
-						L.marker(coord, { icon: label }).addTo(map);
-					});
 
 					// Add centroid marker with enhanced styling
 					if (frm.doc.centroid_lat && frm.doc.centroid_lng) {
@@ -530,27 +555,6 @@ function show_plot_map(frm) {
 
 					// Fit map to polygon bounds with padding
 					map.fitBounds(polygon.getBounds(), { padding: [80, 80] });
-
-					// Add measurement lines between vertices
-					for (let i = 0; i < coordinates.length; i++) {
-						let start = coordinates[i];
-						let end = coordinates[(i + 1) % coordinates.length];
-
-						// Calculate distance
-						let distance = map.distance(start, end);
-						let midPoint = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2];
-
-						// Add distance label
-						let distanceLabel = L.divIcon({
-							className: 'distance-label',
-							html: `<div style="background: rgba(255, 255, 255, 0.9); color: #666; padding: 4px 8px; border-radius: 3px; font-size: 10px; border: 1px solid #ddd; white-space: nowrap;">
-								${distance.toFixed(1)} m
-							</div>`,
-							iconSize: [60, 20],
-							iconAnchor: [30, 10]
-						});
-						L.marker(midPoint, { icon: distanceLabel }).addTo(map);
-					}
 
 					// Force map to resize/refresh
 					setTimeout(function() {
