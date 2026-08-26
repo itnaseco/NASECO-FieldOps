@@ -18,12 +18,11 @@
   "variety",
   "outgrower",
   "is_default",
-  "ux_applicability_tab",
+  "ux_plan_tab",
   "ux_variety_applicability_section",
   "variety_scope",
   "applicable_varieties",
   "expected_yield_kg_per_hectare",
-  "ux_plan_tab",
   "ux_stages_section",
   "stages",
   "ux_inputs_section",
@@ -121,9 +120,9 @@
    "label": "Default for Scope"
   },
   {
-   "fieldname": "ux_applicability_tab",
+   "fieldname": "ux_plan_tab",
    "fieldtype": "Tab Break",
-   "label": "Applicability"
+   "label": "Plan"
   },
   {
    "fieldname": "ux_variety_applicability_section",
@@ -155,11 +154,6 @@
    "precision": 2,
    "depends_on": "eval:doc.variety_scope==\"All Crop Varieties\"",
    "mandatory_depends_on": "eval:doc.docstatus==1 && doc.variety_scope==\"All Crop Varieties\""
-  },
-  {
-   "fieldname": "ux_plan_tab",
-   "fieldtype": "Tab Break",
-   "label": "Plan"
   },
   {
    "fieldname": "ux_stages_section",
