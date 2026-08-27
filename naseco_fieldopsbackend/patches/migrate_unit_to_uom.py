@@ -39,7 +39,6 @@ def execute():
 
 	_replace_workspace_links()
 	_remove_custom_unit_doctype()
-	drop_legacy_unit_table()
 	frappe.clear_cache()
 
 
@@ -111,4 +110,4 @@ def drop_legacy_unit_table():
 		frappe.throw("Cannot drop tabUnit while the custom Unit DocType still exists")
 
 	if frappe.db.table_exists("Unit"):
-		frappe.db.sql("DROP TABLE `tabUnit`")
+		frappe.db.sql_ddl("DROP TABLE IF EXISTS `tabUnit`")
