@@ -14,15 +14,38 @@ def execute():
             where coalesce(area_hectares, 0) = 0 and coalesce(area_acres, 0) > 0
         """, ACRES_TO_HECTARES)
 
-    if frappe.db.has_column("Season Production Target", "target_hectares"):
+    if (
+        frappe.db.has_column("Season Production Target", "target_hectares")
+        and frappe.db.has_column("Season Production Target", "target_acres")
+    ):
         frappe.db.sql("""
             update `tabSeason Production Target`
-            set target_hectares = target_acres * %s,
-                planned_yield_kg_per_hectare = planned_yield_kg_per_acre * %s,
-                parent_seed_rate_per_hectare = parent_seed_rate_per_acre * %s
+            set target_hectares = target_acres * %s
             where coalesce(target_hectares, 0) = 0
               and coalesce(target_acres, 0) > 0
-        """, (ACRES_TO_HECTARES, PER_ACRE_TO_PER_HECTARE, PER_ACRE_TO_PER_HECTARE))
+        """, ACRES_TO_HECTARES)
+
+    if (
+        frappe.db.has_column("Season Production Target", "planned_yield_kg_per_hectare")
+        and frappe.db.has_column("Season Production Target", "planned_yield_kg_per_acre")
+    ):
+        frappe.db.sql("""
+            update `tabSeason Production Target`
+            set planned_yield_kg_per_hectare = planned_yield_kg_per_acre * %s
+            where coalesce(planned_yield_kg_per_hectare, 0) = 0
+              and coalesce(planned_yield_kg_per_acre, 0) > 0
+        """, PER_ACRE_TO_PER_HECTARE)
+
+    if (
+        frappe.db.has_column("Season Production Target", "parent_seed_rate_per_hectare")
+        and frappe.db.has_column("Season Production Target", "parent_seed_rate_per_acre")
+    ):
+        frappe.db.sql("""
+            update `tabSeason Production Target`
+            set parent_seed_rate_per_hectare = parent_seed_rate_per_acre * %s
+            where coalesce(parent_seed_rate_per_hectare, 0) = 0
+              and coalesce(parent_seed_rate_per_acre, 0) > 0
+        """, PER_ACRE_TO_PER_HECTARE)
 
     if frappe.db.has_column("Season Production Plan", "target_hectares"):
         frappe.db.sql("""

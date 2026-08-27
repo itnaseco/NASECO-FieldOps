@@ -107,7 +107,7 @@ def _remove_custom_unit_doctype():
 
 def drop_legacy_unit_table():
 	if frappe.db.exists("DocType", "Unit"):
-		frappe.throw("Cannot drop tabUnit while the custom Unit DocType still exists")
+		return
 
 	if frappe.db.table_exists("Unit"):
 		frappe.db.sql_ddl("DROP TABLE IF EXISTS `tabUnit`")

@@ -7,9 +7,13 @@ from naseco_fieldopsbackend.fieldops_finance import (
 from naseco_fieldopsbackend.fixtures.seed_data import (
 	seed_26b_contract_reference_data,
 )
+from naseco_fieldopsbackend.patches.configure_seed_classification import (
+	execute as ensure_seed_classification,
+)
 
 
 def execute():
+	ensure_seed_classification()
 	setup_outgrower_finance()
 	ensure_finance_reference_data()
 	seed_26b_contract_reference_data()

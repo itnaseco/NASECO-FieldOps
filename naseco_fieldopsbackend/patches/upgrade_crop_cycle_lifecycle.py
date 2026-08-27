@@ -12,10 +12,15 @@ from naseco_fieldopsbackend.fixtures.seed_data import (
 	seed_agronomy_activity_templates,
 	seed_agronomy_report_templates,
 )
-from naseco_fieldopsbackend.uom import get_item_uom_conversion
+from naseco_fieldopsbackend.uom import (
+	ensure_fieldops_uoms,
+	get_item_uom_conversion,
+	normalize_uom,
+)
 
 
 def execute():
+	ensure_fieldops_uoms()
 	seed_agronomy_report_templates()
 	upgrade_recipes()
 	seed_agronomy_activity_templates()
@@ -49,6 +54,7 @@ def upgrade_recipes():
 				},
 			)
 		for row in recipe.inputs:
+			row.unit = normalize_uom(row.unit)
 			row.recipe_stage = canonical_stage_name(row.recipe_stage or row.input_type)
 			if row.recipe_stage == "Field Verification & Contracting" and row.input_type == "Planting":
 				row.recipe_stage = "Planting"
