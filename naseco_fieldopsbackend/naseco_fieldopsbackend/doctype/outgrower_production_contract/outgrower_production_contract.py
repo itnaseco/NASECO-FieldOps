@@ -243,7 +243,28 @@ class OutgrowerProductionContract(Document):
 		if not flt(self.quota_kg_per_hectare) and flt(self.quota_kg_per_acre):
 			self.quota_kg_per_hectare = flt(self.quota_kg_per_acre) * 2.47105381467
 		if self.variety:
-			self.expected_yield_kg_per_hectare = flt(frappe.db.get_value("Crop Variety", self.variety, "expected_yield_kg_per_hectare"))
+			expected_yield = None
+			if self.crop_recipe:
+				from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_recipe.crop_recipe import (
+					get_recipe_variety_yield,
+				)
+
+				recipe = frappe.get_doc("Crop Recipe", self.crop_recipe)
+				expected_yield = get_recipe_variety_yield(recipe, self.variety)
+				if expected_yield is None:
+					frappe.throw(
+						_("Crop Recipe {0} does not apply to Crop Variety {1}.").format(
+							self.crop_recipe,
+							self.variety,
+						)
+					)
+			if expected_yield is None:
+				expected_yield = frappe.db.get_value(
+					"Crop Variety",
+					self.variety,
+					"expected_yield_kg_per_hectare",
+				)
+			self.expected_yield_kg_per_hectare = flt(expected_yield)
 		self.contracted_quota_qty = flt(self.contracted_area_hectares) * flt(self.quota_kg_per_hectare)
 		if self.expected_yield_kg_per_hectare:
 			self.expected_yield_qty = flt(self.contracted_area_hectares) * flt(self.expected_yield_kg_per_hectare)

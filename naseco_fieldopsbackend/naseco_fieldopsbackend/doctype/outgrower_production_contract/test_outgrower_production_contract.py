@@ -91,6 +91,41 @@ class TestOutgrowerProductionContract(TestCase):
 		self.assertEqual(contract.planned_parent_seed_qty, 40)
 		self.assertEqual(contract.planned_parent_seed_value, 3800)
 
+	@patch(
+		"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.outgrower_production_contract.outgrower_production_contract.frappe.get_doc"
+	)
+	def test_calculates_harvest_from_recipe_variety_yield(self, get_doc):
+		get_doc.return_value = frappe._dict(
+			variety_scope="Selected Varieties",
+			applicable_varieties=[
+				frappe._dict(
+					enabled=1,
+					variety="Longe 5",
+					expected_yield_kg_per_hectare=3200,
+				)
+			],
+		)
+		contract = frappe._dict(
+			contracted_area_hectares=1.5,
+			contracted_area_acres=0,
+			quota_kg_per_hectare=2000,
+			quota_kg_per_acre=0,
+			variety="Longe 5",
+			crop_recipe="Maize Hybrid Recipe",
+			expected_yield_kg_per_hectare=0,
+			expected_yield_qty=0,
+			contract_rate=2,
+			parent_seed_items=[],
+			planned_parent_seed_qty=0,
+			planned_parent_seed_value=0,
+		)
+
+		OutgrowerProductionContract.calculate_contract_values(contract)
+
+		self.assertEqual(contract.expected_yield_kg_per_hectare, 3200)
+		self.assertEqual(contract.expected_yield_qty, 4800)
+		get_doc.assert_called_once_with("Crop Recipe", "Maize Hybrid Recipe")
+
 	def test_accepts_planting_window_inside_selected_season(self):
 		self.assertTrue(
 			is_planting_window_within_season(

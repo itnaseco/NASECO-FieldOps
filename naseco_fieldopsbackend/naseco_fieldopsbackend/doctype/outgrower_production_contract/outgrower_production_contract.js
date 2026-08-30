@@ -129,15 +129,45 @@ frappe.ui.form.on('Outgrower Production Contract', {
 	},
 
 	farm_plot(frm) {
-		if (!frm.doc.farm_plot) return;
+		if (!frm.doc.farm_plot) {
+			return frm.set_value('contracted_area_hectares', 0);
+		}
 
-		frappe.db.get_value('Farm Plot', frm.doc.farm_plot, 'outgrower').then((r) => {
-			const outgrower = r.message?.outgrower;
-			if (outgrower && outgrower !== frm.doc.outgrower) {
-				return frm.set_value('outgrower', outgrower);
-			}
-			if (outgrower) return set_supplier_from_outgrower(frm);
+		frappe.db.get_value('Farm Plot', frm.doc.farm_plot, [
+			'outgrower',
+			'area_hectares',
+			'area_acres'
+		]).then((r) => {
+			const plot = r.message || {};
+			const areaHectares = flt(plot.area_hectares) || flt(plot.area_acres) * 0.40468564224;
+
+			return frappe.run_serially([
+				() => plot.outgrower && plot.outgrower !== frm.doc.outgrower
+					? frm.set_value('outgrower', plot.outgrower)
+					: null,
+				() => plot.outgrower ? set_supplier_from_outgrower(frm) : null,
+				() => frm.set_value('contracted_area_hectares', areaHectares),
+				() => calculate_contract_values(frm)
+			]);
 		});
+	},
+
+	variety(frm) {
+		if (!frm.doc.variety) {
+			return frappe.run_serially([
+				() => frm.set_value('expected_yield_kg_per_hectare', 0),
+				() => calculate_contract_values(frm)
+			]);
+		}
+
+		return set_expected_yield_from_selection(frm);
+	},
+
+	crop_recipe(frm) {
+		if (frm.doc.variety) {
+			return set_expected_yield_from_selection(frm);
+		}
+		return calculate_contract_values(frm);
 	},
 
 	planting_start_date(frm) {
@@ -159,7 +189,8 @@ frappe.ui.form.on('Outgrower Production Contract', {
 					() => frm.set_value('supervisor_obligations', template.supervisor_responsibilities),
 					() => frm.set_value('quality_standard_terms', template.quality_terms),
 					() => frm.set_value('input_recovery_terms', template.input_recovery_terms),
-					() => frm.set_value('termination_terms', template.termination_terms)
+					() => frm.set_value('termination_terms', template.termination_terms),
+					() => calculate_contract_values(frm)
 				]);
 			});
 	},
@@ -174,7 +205,8 @@ frappe.ui.form.on('Outgrower Production Contract', {
 					flt(policy.quota_kg_per_hectare) || flt(policy.quota_kg_per_acre) * 2.47105381467
 				),
 				() => frm.set_value('contract_rate', policy.advance_valuation_rate),
-				() => frm.set_value('currency', policy.currency)
+				() => frm.set_value('currency', policy.currency),
+				() => calculate_contract_values(frm)
 			]));
 	},
 
@@ -205,6 +237,43 @@ function set_supplier_from_outgrower(frm) {
 
 	return frappe.db.get_value('Outgrower', frm.doc.outgrower, 'supplier').then((r) => {
 		return frm.set_value('supplier', r.message?.supplier || null);
+	});
+}
+
+function set_expected_yield_from_selection(frm) {
+	if (frm.doc.crop_recipe) {
+		return frappe.call({
+			method: 'naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_recipe.crop_recipe.get_recipe_target_defaults',
+			args: {
+				recipe_name: frm.doc.crop_recipe,
+				variety: frm.doc.variety
+			}
+		}).then((r) => {
+			return frappe.run_serially([
+				() => frm.set_value(
+					'expected_yield_kg_per_hectare',
+					flt(r.message && r.message.expected_yield_kg_per_hectare)
+				),
+				() => calculate_contract_values(frm)
+			]);
+		});
+	}
+
+	return frappe.db.get_value('Crop Variety', frm.doc.variety, [
+		'crop',
+		'expected_yield_kg_per_hectare'
+	]).then((r) => {
+		const variety = r.message || {};
+		return frappe.run_serially([
+			() => variety.crop && variety.crop !== frm.doc.crop
+				? frm.set_value('crop', variety.crop)
+				: null,
+			() => frm.set_value(
+				'expected_yield_kg_per_hectare',
+				flt(variety.expected_yield_kg_per_hectare)
+			),
+			() => calculate_contract_values(frm)
+		]);
 	});
 }
 

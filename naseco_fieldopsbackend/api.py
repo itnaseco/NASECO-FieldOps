@@ -1317,12 +1317,18 @@ def _mobile_scope_names(doctype, user=None):
 			frappe.get_all(doctype, filters={"plot": ["in", list(plots)]}, pluck="name")
 		) if plots else set()
 	if doctype == "Field Corrective Action":
-		filters = (
-			[["verification_assigned_to", "=", user]]
-			if inspector and not supervisor
-			else [["assigned_to", "=", user]]
-		)
-		return set(frappe.get_all(doctype, filters=filters, pluck="name"))
+		action_names = set()
+		if supervisor:
+			action_names.update(
+				frappe.get_all(doctype, filters={"assigned_to": user}, pluck="name")
+			)
+		if inspector:
+			action_names.update(
+				frappe.get_all(
+					doctype, filters={"verification_assigned_to": user}, pluck="name"
+				)
+			)
+		return action_names
 	if doctype in ("Stage Input Request", "Stage Input Dispatch", "Crop Production Lot"):
 		return set(
 			frappe.get_all(
