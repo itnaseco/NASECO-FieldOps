@@ -128,6 +128,7 @@ MOBILE_CONTEXT_DOCTYPES = {
 MOBILE_ROLE_READ = {
 	OUTGROWER_SUPERVISOR_ROLE: MOBILE_CONTEXT_DOCTYPES
 	| {
+		"Field Visit",
 		"Agronomy Report",
 		"Field Corrective Action",
 		"Plot Crop Assignment",
@@ -144,6 +145,9 @@ MOBILE_ROLE_READ = {
 }
 MOBILE_ROLE_WRITE = {
 	OUTGROWER_SUPERVISOR_ROLE: {
+		"Outgrower",
+		"Farm Plot",
+		"Field Visit",
 		"Agronomy Report",
 		"Field Corrective Action",
 		"Stage Activity",
@@ -156,8 +160,14 @@ MOBILE_ROLE_WRITE = {
 	},
 }
 MOBILE_ROLE_CREATE = {
-	OUTGROWER_SUPERVISOR_ROLE: {"Stage Input Request"},
-	QUALITY_INSPECTOR_ROLE: {"Seed Harvest Quality Assessment"},
+	OUTGROWER_SUPERVISOR_ROLE: {
+		"Outgrower",
+		"Farm Plot",
+		"Field Visit",
+		"Stage Activity",
+		"Stage Input Request",
+	},
+	QUALITY_INSPECTOR_ROLE: {"Inspection", "Seed Harvest Quality Assessment"},
 }
 MOBILE_SERVER_OWNED_FIELDS = {
 	"Inspection": {
@@ -1302,6 +1312,10 @@ def _mobile_scope_names(doctype, user=None):
 		)
 	if doctype == "Stage Activity":
 		return set(frappe.get_all(doctype, filters={"assigned_to": user}, pluck="name"))
+	if doctype == "Field Visit":
+		return set(
+			frappe.get_all(doctype, filters={"plot": ["in", list(plots)]}, pluck="name")
+		) if plots else set()
 	if doctype == "Field Corrective Action":
 		filters = (
 			[["verification_assigned_to", "=", user]]
@@ -1334,6 +1348,23 @@ def _mobile_record_is_in_scope(doctype, name=None, values=None):
 		return True
 	values = values or {}
 	user = frappe.session.user
+	if doctype == "Outgrower":
+		return values.get("assigned_supervisor") == user
+	if doctype == "Farm Plot":
+		return values.get("outgrower") in (_mobile_scope_names("Outgrower") or set())
+	if doctype == "Stage Activity":
+		return values.get("assigned_to") in (None, "", user) and values.get(
+			"crop_cycle"
+		) in (_mobile_scope_names("Crop Cycle") or set())
+	if doctype == "Inspection":
+		return values.get("assigned_to") == user and values.get("crop_cycle") in (
+			_mobile_scope_names("Crop Cycle") or set()
+		)
+	if doctype == "Field Visit":
+		cycle = values.get("crop_cycle")
+		return values.get("plot") in (_mobile_scope_names("Farm Plot") or set()) and (
+			not cycle or cycle in (_mobile_scope_names("Crop Cycle") or set())
+		)
 	if doctype == "Stage Input Request":
 		return values.get("crop_cycle") in (_mobile_scope_names("Crop Cycle") or set())
 	if doctype == "Seed Harvest Quality Assessment":
@@ -1348,6 +1379,16 @@ def _authorize_mobile_write(doctype, operation, name=None, values=None):
 	if operation == "DELETE":
 		frappe.throw(_("Mobile clients cannot delete FieldOps records."), frappe.PermissionError)
 	roles = _mobile_roles()
+	if (
+		operation == "UPDATE"
+		and not _mobile_has_management_access(roles)
+		and OUTGROWER_SUPERVISOR_ROLE in roles
+		and doctype in {"Outgrower", "Farm Plot"}
+	):
+		frappe.throw(
+			_("A manager must review or update this {0} after mobile registration.").format(doctype),
+			frappe.PermissionError,
+		)
 	if operation == "CREATE" and not _mobile_has_management_access(roles):
 		allowed = set()
 		for role, doctypes in MOBILE_ROLE_CREATE.items():
@@ -1369,7 +1410,14 @@ def _strip_server_owned_mobile_fields(doctype, values):
 	values = dict(values or {})
 	for fieldname in MOBILE_SERVER_OWNED_FIELDS.get(doctype, set()):
 		values.pop(fieldname, None)
+	if doctype == "Outgrower" and OUTGROWER_SUPERVISOR_ROLE in _mobile_roles():
+		# The assignment is derived from the authenticated session, never from
+		# editable mobile input. Managers retain review/confirmation authority.
+		values["assigned_supervisor"] = frappe.session.user
 	if doctype == "Inspection":
+		# Enables create-scope validation while preventing inspectors from
+		# assigning inspections to another user through a crafted payload.
+		values["assigned_to"] = frappe.session.user
 		for take in values.get("takes") or []:
 			take["captured_by"] = frappe.session.user
 			if take.get("positioning_override"):
