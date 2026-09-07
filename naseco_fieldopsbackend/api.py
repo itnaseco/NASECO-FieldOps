@@ -2067,6 +2067,11 @@ def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 		]
 
 		data = {}
+		# These parent records define the context of assigned inspections. Return
+		# their complete scoped set on every sync so a newly assigned inspection
+		# cannot reference an older Outgrower/Farm Plot/Crop Cycle that the device
+		# has never downloaded.
+		assignment_context_doctypes = {"Outgrower", "Farm Plot", "Crop Cycle"}
 
 		# Optional region filter for outgrowers and related plots
 		region_outgrowers = None
@@ -2090,7 +2095,7 @@ def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 				if not filters:
 					data[store] = []
 					continue
-			elif last_sync_dt:
+			elif last_sync_dt and doctype not in assignment_context_doctypes:
 				filters.append(["modified", ">", last_sync_dt])
 			scope_names = _mobile_scope_names(doctype)
 			if scope_names is not None:
