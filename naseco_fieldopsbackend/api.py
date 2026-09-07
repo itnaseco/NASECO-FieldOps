@@ -1963,8 +1963,6 @@ def get_reference_data():
 			except Exception as e:
 				frappe.log_error(f"Error fetching reference {doctype}: {str(e)}")
 
-		_merge_confirmed_cycle_context(data)
-
 		positioning_settings = _get_mobile_positioning_settings()
 		reference_data["FieldOps Settings"] = positioning_settings
 		reference_data["positioningSettings"] = positioning_settings
@@ -2136,6 +2134,8 @@ def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 				data[store] = full_docs
 			except Exception as e:
 				frappe.log_error(f"Error fetching reference {doctype}: {str(e)}")
+
+		_merge_confirmed_cycle_context(data)
 
 		return {
 			"data": data,
