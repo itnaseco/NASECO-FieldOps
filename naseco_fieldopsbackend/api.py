@@ -1963,6 +1963,8 @@ def get_reference_data():
 			except Exception as e:
 				frappe.log_error(f"Error fetching reference {doctype}: {str(e)}")
 
+		_merge_confirmed_cycle_context(data)
+
 		positioning_settings = _get_mobile_positioning_settings()
 		reference_data["FieldOps Settings"] = positioning_settings
 		reference_data["positioningSettings"] = positioning_settings
@@ -2143,6 +2145,46 @@ def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 	except Exception as e:
 		frappe.log_error(f"Get sync data error: {str(e)}")
 		return {"error": str(e)}
+
+
+def _merge_confirmed_cycle_context(data):
+	"""Always include authorized confirmed cycles, their parents and schedules."""
+	allowed = _mobile_allowed_doctypes("read")
+	if "Crop Cycle" not in allowed:
+		return
+	names = _mobile_scope_names("Crop Cycle")
+	filters = {"planting_date_confirmed": 1}
+	if names is not None:
+		if not names:
+			return
+		filters["name"] = ["in", list(names)]
+	cycles = frappe.get_all("Crop Cycle", filters=filters, fields=["name", "plot"])
+	if not cycles:
+		return
+	cycle_names = [row.name for row in cycles]
+	plots = {row.plot for row in cycles if row.plot}
+	growers = frappe.get_all("Farm Plot", filters={"name": ["in", list(plots)]}, pluck="outgrower") if plots else []
+	context = {"Crop Cycle": cycle_names, "Farm Plot": list(plots), "Outgrower": list(set(growers))}
+	context["Crop Cycle Stage"] = frappe.get_all("Crop Cycle Stage", filters={"crop_cycle": ["in", cycle_names]}, pluck="name")
+	for doctype in ("Stage Activity", "Agronomy Report", "Inspection"):
+		if doctype not in allowed:
+			continue
+		task_names = _mobile_scope_names(doctype)
+		task_filters = {"crop_cycle": ["in", cycle_names]}
+		if task_names is not None:
+			if not task_names:
+				continue
+			task_filters["name"] = ["in", list(task_names)]
+		context[doctype] = frappe.get_all(doctype, filters=task_filters, pluck="name")
+	for doctype, doc_names in context.items():
+		if doctype not in allowed:
+			continue
+		store = DOCTYPE_TO_STORE.get(doctype, doctype)
+		merged = {row.get("name"): row for row in data.get(store, [])}
+		for name in doc_names:
+			if name:
+				merged[name] = _map_doc_to_mobile(doctype, frappe.get_doc(doctype, name).as_dict())
+		data[store] = list(merged.values())
 
 
 @frappe.whitelist()
