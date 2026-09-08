@@ -14,7 +14,7 @@ PLANNING_MASTERS = (
     "Crop Variety",
 )
 ROLE_ACCESS = {
-    OUTGROWER_MANAGER_ROLE: {"delete": 0},
+    OUTGROWER_MANAGER_ROLE: {"delete": 1},
     "Administrator": {"delete": 1},
 }
 
