@@ -151,6 +151,9 @@ def ensure_role_profiles():
 
 
 def ensure_custom_permissions():
+	from naseco_fieldopsbackend.patches.enable_supplier_deletion import execute as enable_supplier_deletion
+
+	enable_supplier_deletion()
 	for role in (
 		OUTGROWER_SUPERVISOR_ROLE,
 		QUALITY_INSPECTOR_ROLE,

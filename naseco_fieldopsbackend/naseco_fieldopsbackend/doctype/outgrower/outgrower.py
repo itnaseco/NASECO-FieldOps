@@ -32,6 +32,15 @@ class Outgrower(Document):
 
 		create_or_get_outgrower_supplier(self)
 
+	def on_trash(self):
+		"""Remove the master backlink; all operational link checks still apply."""
+		if not frappe.get_meta("Supplier").has_field("custom_outgrower"):
+			return
+		for supplier in frappe.get_all(
+			"Supplier", filters={"custom_outgrower": self.name}, pluck="name"
+		):
+			frappe.db.set_value("Supplier", supplier, "custom_outgrower", None)
+
 	def calculate_years_since_registration(self):
 		"""Calculate years since registration date"""
 		registration_date = getdate(self.registration_date)
