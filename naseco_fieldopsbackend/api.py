@@ -1473,11 +1473,54 @@ def _get_meta(doctype):
 	return _meta_cache[doctype]
 
 
+
+def _mobile_datetime(value):
+	"""Convert an instant to Frappe's naive site-local SQL datetime."""
+	from zoneinfo import ZoneInfo
+	parsed = value if isinstance(value, datetime) else datetime.fromisoformat(str(value).strip().replace("Z", "+00:00"))
+	if parsed.tzinfo is not None:
+		parsed = parsed.astimezone(ZoneInfo(frappe.utils.get_system_timezone())).replace(tzinfo=None)
+	return parsed
+
+
+def _normalize_mobile_temporal_fields(doctype, data):
+	"""Normalize by DocType metadata, including child tables, never by key guesses."""
+	from datetime import date, time
+	result = dict(data)
+	# Frappe owns audit timestamps; client updatedAt is only a conflict token.
+	for key in ("creation", "modified", "createdAt", "updatedAt", "modified_by", "owner"):
+		result.pop(key, None)
+	for field in _get_meta(doctype).fields:
+		key = field.fieldname
+		if key not in result:
+			continue
+		value = result[key]
+		if field.fieldtype in ("Table", "Table MultiSelect"):
+			result[key] = [_normalize_mobile_temporal_fields(field.options, row) for row in value or []]
+		elif field.fieldtype in ("Date", "Datetime", "Time"):
+			if value is None or value == "":
+				result[key] = None
+				continue
+			try:
+				if field.fieldtype == "Datetime":
+					result[key] = _mobile_datetime(value).isoformat(sep=" ", timespec="microseconds")
+				elif field.fieldtype == "Date":
+					# Calendar dates must not shift when a device supplies an offset.
+					result[key] = date.fromisoformat(str(value).strip()[:10]).isoformat()
+				elif isinstance(value, str):
+					parsed = time.fromisoformat(value.strip())
+					if parsed.tzinfo is not None:
+						raise ValueError("Time fields require a local time without an offset")
+					result[key] = parsed.isoformat(timespec="microseconds")
+			except (ValueError, TypeError, OverflowError) as exc:
+				raise ValueError(f"Invalid {field.fieldtype} for {doctype}.{key}: {exc}") from exc
+	return result
+
 def _filter_fields(doctype, data):
 	meta = _get_meta(doctype)
 	valid_fields = {df.fieldname for df in meta.fields}
 	valid_fields.update({"doctype", "name"})
-	return {k: v for k, v in data.items() if k in valid_fields}
+	return _normalize_mobile_temporal_fields(doctype, {k: v for k, v in data.items() if k in valid_fields})
 
 
 def _resolve_employee_fields(doctype, payload, result):
@@ -1759,6 +1802,7 @@ def bulk_sync(data):
 				if doctype == "UOM":
 					doc_data = _normalize_uom_doc_data(doc_data)
 				doc_data = _strip_server_owned_mobile_fields(doctype, doc_data)
+				doc_data = _normalize_mobile_temporal_fields(doctype, doc_data)
 				doc_name = doc_data.get("name")
 				_authorize_mobile_write(doctype, operation, doc_name, doc_data)
 
@@ -2237,7 +2281,7 @@ def push_sync_data(data):
 					# Conflict check if client provides updatedAt
 					client_modified = payload.get("updatedAt")
 					if client_modified and not force:
-						client_dt = datetime.fromisoformat(str(client_modified).replace('Z', '+00:00'))
+						client_dt = _mobile_datetime(client_modified)
 						if doc.modified and doc.modified > client_dt:
 							# Log conflict for manual resolution
 							try:
@@ -2338,7 +2382,7 @@ def check_conflicts(doctype, doc_name, mobile_modified):
 		server_modified = server_doc.modified
 
 		# Parse mobile modified timestamp
-		mobile_modified_dt = datetime.fromisoformat(mobile_modified.replace('Z', '+00:00'))
+		mobile_modified_dt = _mobile_datetime(mobile_modified)
 
 		# Check if server version is newer
 		if server_modified > mobile_modified_dt:
