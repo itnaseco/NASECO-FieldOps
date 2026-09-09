@@ -2040,6 +2040,7 @@ def get_inspection_positioning_settings():
 def _get_mobile_positioning_settings():
 	from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.inspection.inspection import (
 		get_positioning_settings,
+		can_override_positioning,
 	)
 
 	settings = get_positioning_settings()
@@ -2054,6 +2055,8 @@ def _get_mobile_positioning_settings():
 		"locationCaptureTimeoutSeconds": settings.location_capture_timeout_seconds,
 		"maximumLocationAgeSeconds": settings.maximum_location_age_seconds,
 		"allowPositioningOverride": settings.allow_positioning_override,
+		"canOverride": bool(can_override_positioning(settings)),
+		"overrideUser": frappe.session.user,
 	}
 
 
