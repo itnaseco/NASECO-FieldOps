@@ -425,15 +425,8 @@ class AgronomyReport(Document):
 			frappe.throw(_("Enter a valid report longitude."))
 		if flt(self.gps_accuracy_meters) <= 0:
 			frappe.throw(_("GPS Accuracy must be greater than zero."))
-		maximum_accuracy = flt(
-			frappe.db.get_single_value("FieldOps Settings", "maximum_gps_accuracy_m") or 5
-		)
-		if self.docstatus == 1 and flt(self.gps_accuracy_meters) > maximum_accuracy:
-			frappe.throw(
-				_("GPS accuracy must be {0} m or better before submission.").format(
-					maximum_accuracy
-				)
-			)
+		# Preserve measured GPS accuracy for review, without blocking field entry
+		# or submission on an accuracy threshold.
 		if self.docstatus == 1 and not cint(self.inside_plot_boundary):
 			frappe.throw(_("The agronomy report location must be inside the Farm Plot boundary."))
 
