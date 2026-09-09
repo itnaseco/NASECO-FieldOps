@@ -143,7 +143,8 @@ def can_override_positioning(settings=None):
 		return False
 	if frappe.session.user == "Administrator":
 		return True
-	return settings.positioning_override_role in frappe.get_roles(frappe.session.user)
+	roles = frappe.get_roles(frappe.session.user)
+	return settings.positioning_override_role in roles or "Quality Inspector" in roles
 
 
 def calculate_cumulative_incidence(readings, takes_by_number):
