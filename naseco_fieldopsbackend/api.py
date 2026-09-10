@@ -229,6 +229,8 @@ MOBILE_SERVER_OWNED_FIELDS = {
 }
 
 DOCTYPE_TO_STORE = {v: k for k, v in BASE_STORE_TO_DOCTYPE.items()}
+# Input aliases must not choose the outbound canonical mobile store.
+DOCTYPE_TO_STORE["Field Corrective Action"] = "field_corrective_actions"
 
 ID_FIELD_MAP = {
 	"Outgrower": "outgrower_id",
@@ -696,6 +698,10 @@ MOBILE_FIELD_MAP = {
 	},
 	"Field Corrective Action": {
 		"sourceType": "source_type",
+		"inspectionId": "inspection",
+		"verificationAssignedTo": "verification_assigned_to",
+		"verificationNotes": "verification_notes",
+		"respondedOn": "responded_on",
 		"sourceName": "source_name",
 		"sourceParameter": "source_parameter",
 		"agronomyReportId": "agronomy_report",
