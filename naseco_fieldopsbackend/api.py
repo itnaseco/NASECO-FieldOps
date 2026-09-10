@@ -1128,7 +1128,14 @@ def _map_doc_to_mobile(doctype, doc_dict):
 					"durationDays": s.get("duration_days"),
 				}
 				inputs = []
-				for inp in s.get("inputs", []) or []:
+				stage_inputs = [
+					row for row in doc_dict.get("inputs", []) or []
+					if (row.get("recipe_stage") in (s.get("stage_name"), s.get("name"))
+						if row.get("recipe_stage") else
+						s.get("order_index") is not None and
+						str(row.get("stage_index")) == str(s.get("order_index")))
+				]
+				for inp in stage_inputs or s.get("inputs", []) or []:
 					inputs.append({
 						"type": inp.get("input_type"),
 						"name": inp.get("input_name"),
