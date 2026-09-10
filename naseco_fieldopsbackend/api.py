@@ -1241,6 +1241,8 @@ def _mobile_allowed_doctypes(mode="read"):
 	if _mobile_has_management_access(roles):
 		return set(STORE_TO_DOCTYPE.values())
 	allowed = set(MOBILE_REFERENCE_DOCTYPES) if mode == "read" else set()
+	if mode == "read" and frappe.session.user != "Guest":
+		allowed.update({"Attendance", "Employee Checkin"})
 	role_map = MOBILE_ROLE_READ if mode == "read" else MOBILE_ROLE_WRITE
 	for role, doctypes in role_map.items():
 		if role in roles:
@@ -1259,6 +1261,9 @@ def _require_mobile_doctype(doctype, mode="read"):
 
 
 def _mobile_scope_names(doctype, user=None):
+	if doctype in {"Attendance", "Employee Checkin"}:
+		employees = _get_attendance_employee_ids({})
+		return set(frappe.get_all(doctype, filters={"employee": ["in", employees]}, pluck="name")) if employees else set()
 	user = user or frappe.session.user
 	roles = _mobile_roles(user)
 	if _mobile_has_management_access(roles) or doctype in MOBILE_REFERENCE_DOCTYPES:
@@ -1677,60 +1682,11 @@ def _get_identity_emails(args):
 
 
 def _get_attendance_employee_ids(args):
-	def _vals(keys):
-		out = []
-		for key in keys:
-			out.extend(_as_list(args.get(key)))
-		return [v for v in out if v]
-
-	def _resolve_by_email(values):
-		if not values:
-			return set()
-		rows = frappe.get_all("Employee", filters={"user_id": ["in", list(set(values))]}, fields=["name"])
-		return {r.name for r in rows}
-
-	def _resolve_by_name(values):
-		if not values:
-			return set()
-		rows = frappe.get_all("Employee", filters={"employee_name": ["in", list(set(values))]}, fields=["name"])
-		return {r.name for r in rows}
-
-	source_sets = []
-
-	# 1) Explicit employee ids
-	explicit_ids = _vals(("attendance_employee_id", "attendance_employee", "employee_id"))
-	if explicit_ids:
-		valid_ids = {emp for emp in explicit_ids if frappe.db.exists("Employee", emp)}
-		source_sets.append(valid_ids)
-
-	# 2) Email fields (attendance-specific first, then legacy fallback)
-	attendance_emails = _vals(("attendance_user_email", "attendance_user", "attendance_user_id"))
-	legacy_emails = _vals(("user_email", "user_id"))
-	email_values = attendance_emails or legacy_emails
-	if not email_values:
-		# assigned_to is a final legacy fallback only
-		email_values = _vals(("assigned_to",))
-	if email_values:
-		source_sets.append(_resolve_by_email(email_values))
-
-	# 3) Full name fields
-	full_names = _vals(("attendance_employee_name", "full_name"))
-	if full_names:
-		source_sets.append(_resolve_by_name(full_names))
-
-	# Optional fallback to current logged-in user email
-	if not source_sets and getattr(frappe.session, "user", None) and frappe.session.user not in ("Guest", "Administrator"):
-		source_sets.append(_resolve_by_email([frappe.session.user]))
-
-	if not source_sets:
+	# Never trust client identity hints for HR data access.
+	user = frappe.session.user
+	if not user or user == "Guest":
 		return []
-
-	# Strict combination: intersection of all provided identity sources
-	resolved = source_sets[0]
-	for s in source_sets[1:]:
-		resolved = resolved.intersection(s)
-
-	return sorted(resolved)
+	return frappe.get_all("Employee", filters={"user_id": user}, pluck="name")
 
 
 def _build_attendance_filters(args, modified_since=None):
@@ -1761,7 +1717,7 @@ def _build_employee_checkin_filters(args, modified_since=None):
 	if employee_ids and meta.has_field("employee"):
 		filters.append(["employee", "in", employee_ids])
 	else:
-		emails = _get_identity_emails(args)
+		emails = [frappe.session.user] if frappe.session.user != "Guest" else []
 		# Fallback for deployments with custom user fields on Employee Checkin
 		if emails and meta.has_field("user_id"):
 			filters.append(["user_id", "in", emails])
@@ -2087,6 +2043,8 @@ def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 
 		# Main synced doctypes are filtered again by role and assignment below.
 		sync_doctypes = [
+			"Attendance",
+			"Employee Checkin",
 			"Outgrower",
 			"Farm Plot",
 			"Crop Cycle",
@@ -2277,8 +2235,7 @@ def push_sync_data(data):
 					mapped["uom_name"] = normalize_uom(mapped.get("uom_name") or record_id)
 				if record_id:
 					mapped["name"] = record_id
-				elif ID_FIELD_MAP.get(doctype) and mapped.get(ID_FIELD_MAP[doctype]):
-					mapped["name"] = mapped[ID_FIELD_MAP[doctype]]
+				# Correlation IDs are not document names; Frappe names new documents.
 
 				mapped["doctype"] = doctype
 				effective_operation = (
@@ -2343,6 +2300,46 @@ def push_sync_data(data):
 		frappe.db.rollback()
 		frappe.log_error(f"Push sync data error: {str(e)}")
 		return {"success": False, "error": str(e)}
+
+@frappe.whitelist()
+def reconcile_mobile_create(store, client_id, payload):
+	"""Resolve an uncertain create or create once, serialized by stable mobile ID."""
+	import hashlib
+	doctype = _resolve_doctype(store, strict=True)
+	_require_mobile_doctype(doctype, "write")
+	if not client_id or len(str(client_id)) > 140:
+		frappe.throw("A valid mobile correlation ID is required.")
+	meta = _get_meta(doctype)
+	fields = [field for field in ("external_id", ID_FIELD_MAP.get(doctype))
+		if field and meta.has_field(field)]
+	if not fields:
+		frappe.throw("This document has no durable mobile correlation field; recovery requires backend configuration.")
+	lock = hashlib.sha256((doctype + ":" + str(client_id)).encode()).hexdigest()
+	if not frappe.db.sql("SELECT GET_LOCK(%s, 15)", (lock,))[0][0]:
+		frappe.throw("A previous create is still running. Retry sync shortly.")
+	try:
+		names = set()
+		for field in fields:
+			names.update(frappe.get_all(doctype, filters={field: client_id}, pluck="name"))
+		if len(names) > 1:
+			frappe.throw("Multiple server records share this mobile ID. Manager reconciliation is required; no new record was created.")
+		if names:
+			name = next(iter(names))
+			if not _mobile_record_is_in_scope(doctype, name=name):
+				frappe.throw("The matching record is outside your current assignment. Ask a manager to reconcile it.")
+			return {"success": True, "results": [{"status": "success", "doctype": doctype, "name": name}]}
+		values = json.loads(payload) if isinstance(payload, str) else dict(payload or {})
+		values.pop("name", None)
+		values.pop("id", None)
+		for field in fields:
+			values[field] = client_id
+		return push_sync_data([{"storeName": store, "operation": "SYNC", "payload": values}])
+	except Exception:
+		frappe.db.rollback()
+		raise
+	finally:
+		frappe.db.sql("SELECT RELEASE_LOCK(%s)", (lock,))
+
 
 def log_sync(user, doctype, doc_name, operation, status, error_message=None):
 	"""Helper function to log sync operations"""
