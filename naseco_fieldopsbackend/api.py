@@ -226,7 +226,26 @@ MOBILE_SERVER_OWNED_FIELDS = {
 	},
 	"Seed Harvest Quality Assessment": {"assessment_status", "verified_by"},
 	"Field Corrective Action": {"verified_by", "verified_on", "closed_on"},
+	"Stage Activity": {
+		"stage_lock_override_by",
+		"stage_lock_override_at",
+		"stage_lock_override_reason",
+	},
 }
+MOBILE_SERVER_OWNED_FIELDS["Agronomy Report"] |= {
+	"stage_lock_override_by",
+	"stage_lock_override_at",
+	"stage_lock_override_reason",
+}
+
+# Doctypes whose field data may only be created/updated while their linked
+# Crop Cycle Stage is the crop cycle's current stage (see _mobile_stage_lock_error).
+# Inspection is intentionally excluded: it has no `stage` link field server-side,
+# the mobile client only groups inspections to a stage for display.
+STAGE_LOCKED_DOCTYPES = {"Stage Activity", "Agronomy Report"}
+# A record whose stage closed within this many days is still editable, so a
+# device that was offline right at the stage boundary isn't blocked outright.
+STAGE_EDIT_GRACE_DAYS = 1
 
 DOCTYPE_TO_STORE = {v: k for k, v in BASE_STORE_TO_DOCTYPE.items()}
 # Input aliases must not choose the outbound canonical mobile store.
@@ -669,6 +688,9 @@ MOBILE_FIELD_MAP = {
 		"correctiveActionDueDate": "corrective_action_due_date",
 		"submittedBy": "submitted_by",
 		"submittedAt": "submitted_at",
+		"stageLockOverrideBy": "stage_lock_override_by",
+		"stageLockOverrideAt": "stage_lock_override_at",
+		"stageLockOverrideReason": "stage_lock_override_reason",
 	},
 	"Agronomy Report Result": {
 		"parameterCode": "parameter_code",
@@ -726,6 +748,9 @@ MOBILE_FIELD_MAP = {
 		"activityTemplateId": "activity_template",
 		"completionNotes": "completion_notes",
 		"completedOn": "completed_on",
+		"stageLockOverrideBy": "stage_lock_override_by",
+		"stageLockOverrideAt": "stage_lock_override_at",
+		"stageLockOverrideReason": "stage_lock_override_reason",
 	},
 	"Stage Input Request": {
 		"requestId": "request_id",
@@ -1398,6 +1423,63 @@ def _mobile_record_is_in_scope(doctype, name=None, values=None):
 	return False
 
 
+def _mobile_stage_lock_error(doctype, name, values):
+	"""None if the write may proceed; otherwise a user-facing reason string.
+
+	Mirrors the Flutter client's StageAccessService: a Stage Activity or
+	Agronomy Report may only be written while its Crop Cycle Stage is the
+	cycle's current stage. The client already hides this in the UI, but
+	nothing previously stopped a stale build or a direct API call from
+	writing to any stage, so this is the actual data-integrity boundary.
+	"""
+	if doctype not in STAGE_LOCKED_DOCTYPES:
+		return None
+	values = values or {}
+
+	crop_cycle = values.get("crop_cycle")
+	stage = values.get("stage")
+	if name and (not crop_cycle or not stage):
+		existing = frappe.db.get_value(
+			doctype, name, ["crop_cycle", "stage"], as_dict=True
+		)
+		if existing:
+			crop_cycle = crop_cycle or existing.crop_cycle
+			stage = stage or existing.stage
+	if not crop_cycle or not stage:
+		# Required-field validation on the doc itself will reject this;
+		# there is nothing to evaluate a stage lock against yet.
+		return None
+
+	current_stage = frappe.db.get_value("Crop Cycle", crop_cycle, "current_stage")
+	if not current_stage:
+		return None
+
+	stage_order = frappe.db.get_value("Crop Cycle Stage", stage, "order_index")
+	current_order = frappe.db.get_value(
+		"Crop Cycle Stage", current_stage, "order_index"
+	)
+	if stage_order is None or current_order is None or stage_order == current_order:
+		return None
+
+	if name:
+		override_at = frappe.db.get_value(doctype, name, "stage_lock_override_at")
+		if override_at:
+			return None
+
+	if stage_order < current_order:
+		stage_end = frappe.db.get_value("Crop Cycle Stage", stage, "end_date")
+		if stage_end and (frappe.utils.getdate() - frappe.utils.getdate(stage_end)).days <= STAGE_EDIT_GRACE_DAYS:
+			return None
+		return _(
+			"This {0} belongs to a finished crop-cycle stage and is read-only. "
+			"Ask a manager to unlock it for a correction if needed."
+		).format(doctype)
+
+	return _(
+		"This {0} belongs to a crop-cycle stage that has not started yet."
+	).format(doctype)
+
+
 def _authorize_mobile_write(doctype, operation, name=None, values=None):
 	_require_mobile_doctype(doctype, "write")
 	if operation == "DELETE":
@@ -1428,6 +1510,38 @@ def _authorize_mobile_write(doctype, operation, name=None, values=None):
 			_("This {0} is outside your FieldOps assignment.").format(doctype),
 			frappe.PermissionError,
 		)
+	if operation in ("CREATE", "UPDATE") and not _mobile_has_management_access(roles):
+		stage_lock_error = _mobile_stage_lock_error(doctype, name, values)
+		if stage_lock_error:
+			frappe.throw(stage_lock_error, frappe.PermissionError)
+
+
+@frappe.whitelist()
+def mobile_unlock_stage_document(doctype, name, reason=None):
+	"""Let a manager reopen one Stage Activity/Agronomy Report past its stage
+	lock for a correction. Recorded on the doc itself so the override is
+	visible and auditable wherever the record is later read."""
+	_require_mobile_doctype(doctype, "write")
+	if doctype not in STAGE_LOCKED_DOCTYPES:
+		frappe.throw(_("{0} does not support stage-lock overrides.").format(doctype), frappe.PermissionError)
+	if not _mobile_has_management_access(_mobile_roles()):
+		frappe.throw(
+			_("Only a manager can unlock a finished or upcoming stage's record."),
+			frappe.PermissionError,
+		)
+	if not frappe.db.exists(doctype, name):
+		frappe.throw(_("{0} {1} was not found.").format(doctype, name), frappe.DoesNotExistError)
+	frappe.db.set_value(
+		doctype,
+		name,
+		{
+			"stage_lock_override_by": frappe.session.user,
+			"stage_lock_override_at": frappe.utils.now_datetime(),
+			"stage_lock_override_reason": (reason or "").strip() or None,
+		},
+	)
+	frappe.db.commit()
+	return {"success": True, "name": name}
 
 
 def _strip_server_owned_mobile_fields(doctype, values):
