@@ -1423,6 +1423,36 @@ def _mobile_record_is_in_scope(doctype, name=None, values=None):
 	return False
 
 
+def _mobile_stage_order(doctype, name, values):
+	"""(stage_order, current_order, stage) for a Stage Activity/Agronomy
+	Report, or (None, None, None) if either can't be resolved. Shared by
+	_mobile_stage_lock_error and mobile_unlock_stage_document so both agree
+	on what "finished"/"current"/"upcoming" mean for a given record.
+	"""
+	values = values or {}
+	crop_cycle = values.get("crop_cycle")
+	stage = values.get("stage")
+	if name and (not crop_cycle or not stage):
+		existing = frappe.db.get_value(
+			doctype, name, ["crop_cycle", "stage"], as_dict=True
+		)
+		if existing:
+			crop_cycle = crop_cycle or existing.crop_cycle
+			stage = stage or existing.stage
+	if not crop_cycle or not stage:
+		return None, None, stage
+
+	current_stage = frappe.db.get_value("Crop Cycle", crop_cycle, "current_stage")
+	if not current_stage:
+		return None, None, stage
+
+	stage_order = frappe.db.get_value("Crop Cycle Stage", stage, "order_index")
+	current_order = frappe.db.get_value(
+		"Crop Cycle Stage", current_stage, "order_index"
+	)
+	return stage_order, current_order, stage
+
+
 def _mobile_stage_lock_error(doctype, name, values):
 	"""None if the write may proceed; otherwise a user-facing reason string.
 
@@ -1434,31 +1464,10 @@ def _mobile_stage_lock_error(doctype, name, values):
 	"""
 	if doctype not in STAGE_LOCKED_DOCTYPES:
 		return None
-	values = values or {}
 
-	crop_cycle = values.get("crop_cycle")
-	stage = values.get("stage")
-	if name and (not crop_cycle or not stage):
-		existing = frappe.db.get_value(
-			doctype, name, ["crop_cycle", "stage"], as_dict=True
-		)
-		if existing:
-			crop_cycle = crop_cycle or existing.crop_cycle
-			stage = stage or existing.stage
-	if not crop_cycle or not stage:
-		# Required-field validation on the doc itself will reject this;
-		# there is nothing to evaluate a stage lock against yet.
-		return None
-
-	current_stage = frappe.db.get_value("Crop Cycle", crop_cycle, "current_stage")
-	if not current_stage:
-		return None
-
-	stage_order = frappe.db.get_value("Crop Cycle Stage", stage, "order_index")
-	current_order = frappe.db.get_value(
-		"Crop Cycle Stage", current_stage, "order_index"
-	)
+	stage_order, current_order, stage = _mobile_stage_order(doctype, name, values)
 	if stage_order is None or current_order is None or stage_order == current_order:
+		# Unresolved (missing links) or already the current stage: nothing to block here.
 		return None
 
 	if name:
@@ -1518,19 +1527,34 @@ def _authorize_mobile_write(doctype, operation, name=None, values=None):
 
 @frappe.whitelist()
 def mobile_unlock_stage_document(doctype, name, reason=None):
-	"""Let a manager reopen one Stage Activity/Agronomy Report past its stage
-	lock for a correction. Recorded on the doc itself so the override is
+	"""Let a manager reopen one Stage Activity/Agronomy Report for a
+	correction. Only finished (past) stage records qualify — a current-stage
+	record isn't locked and needs no override, and an upcoming-stage record
+	has nothing to correct yet. Recorded on the doc itself so the override is
 	visible and auditable wherever the record is later read."""
 	_require_mobile_doctype(doctype, "write")
 	if doctype not in STAGE_LOCKED_DOCTYPES:
 		frappe.throw(_("{0} does not support stage-lock overrides.").format(doctype), frappe.PermissionError)
 	if not _mobile_has_management_access(_mobile_roles()):
 		frappe.throw(
-			_("Only a manager can unlock a finished or upcoming stage's record."),
+			_("Only a manager can unlock a finished stage's record."),
 			frappe.PermissionError,
 		)
 	if not frappe.db.exists(doctype, name):
 		frappe.throw(_("{0} {1} was not found.").format(doctype, name), frappe.DoesNotExistError)
+
+	stage_order, current_order, _stage = _mobile_stage_order(doctype, name, None)
+	if stage_order is None or current_order is None:
+		frappe.throw(
+			_("This {0}'s stage could not be resolved; cannot verify it is finished.").format(doctype),
+			frappe.ValidationError,
+		)
+	if stage_order >= current_order:
+		frappe.throw(
+			_("Only a finished (past) stage's {0} can be unlocked for correction.").format(doctype),
+			frappe.PermissionError,
+		)
+
 	frappe.db.set_value(
 		doctype,
 		name,
