@@ -963,6 +963,16 @@ def _apply_legacy_area_payload(doctype, payload):
 			payload[new_key] = flt(payload.get(old_key)) * factor
 
 
+def _apply_legacy_area_response(doctype, result):
+	"""Outbound mirror of _apply_legacy_area_payload: some client models
+	(Plot.areaAcres in particular) only ever read the *Acres field and have
+	no fallback to the canonical *Hectares mobile field, so a pull-only
+	client would otherwise cache these as permanently null."""
+	for old_key, (new_key, factor) in LEGACY_AREA_MOBILE_FIELDS.get(doctype, {}).items():
+		if old_key not in result and result.get(new_key) is not None:
+			result[old_key] = flt(result.get(new_key)) / factor
+
+
 def _map_mobile_to_doc(doctype, payload):
 	payload = dict(payload or {})
 	if doctype == "Outgrower":
@@ -1211,6 +1221,8 @@ def _map_doc_to_mobile(doctype, doc_dict):
 			continue
 
 		result[reverse.get(key, key)] = value
+
+	_apply_legacy_area_response(doctype, result)
 
 	# ensure id fields returned
 	if doctype in ID_FIELD_MAP and ID_FIELD_MAP[doctype] in doc_dict:
