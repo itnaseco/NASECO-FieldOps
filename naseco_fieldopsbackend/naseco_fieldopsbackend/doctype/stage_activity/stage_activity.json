@@ -38,6 +38,10 @@
   "ux_notes_and_audit_section",
   "description",
   "completion_notes",
+  "ux_stage_lock_override_section",
+  "stage_lock_override_by",
+  "stage_lock_override_at",
+  "stage_lock_override_reason",
   "synced"
  ],
  "fields": [
@@ -221,6 +225,30 @@
    "fieldname": "completion_notes",
    "fieldtype": "Text",
    "label": "Completion Notes"
+  },
+  {
+   "fieldname": "ux_stage_lock_override_section",
+   "fieldtype": "Section Break",
+   "label": "Stage Lock Override"
+  },
+  {
+   "fieldname": "stage_lock_override_by",
+   "fieldtype": "Link",
+   "label": "Unlocked By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stage_lock_override_at",
+   "fieldtype": "Datetime",
+   "label": "Unlocked At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stage_lock_override_reason",
+   "fieldtype": "Small Text",
+   "label": "Unlock Reason",
+   "read_only": 1
   },
   {
    "default": "0",
