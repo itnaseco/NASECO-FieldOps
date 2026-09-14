@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:visit_id",
+ "autoname": "format:FIELD-VISIT-.YYYY.-.#####",
  "creation": "2026-01-29 17:30:59.469932",
  "doctype": "DocType",
  "editable_grid": 1,
