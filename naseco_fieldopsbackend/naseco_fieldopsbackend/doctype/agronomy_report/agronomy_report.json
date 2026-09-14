@@ -13,6 +13,7 @@
   "crop_cycle",
   "stage",
   "stage_name",
+  "field_visit",
   "ux_production_context_tab",
   "ux_context_snapshot_section",
   "production_contract",
@@ -479,6 +480,8 @@
    "fieldtype": "Check",
    "hidden": 1,
    "label": "Synced"
+  },
+  {"fieldname":"field_visit","label":"Field Visit","fieldtype":"Link","options":"Field Visit"
   }
  ],
  "is_submittable": 1,

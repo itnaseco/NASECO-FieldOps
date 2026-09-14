@@ -211,6 +211,10 @@ def ensure_erpnext_custom_fields():
 	if party_field_installer:
 		party_field_installer()
 	custom_fields = {
+		"Expense Claim": [
+			{"fieldname":"custom_field_trip","label":"Field Trip","fieldtype":"Link","options":"Field Trip","insert_after":"employee"},
+			{"fieldname":"custom_field_visit","label":"Field Visit","fieldtype":"Link","options":"Field Visit","insert_after":"custom_field_trip"},
+		],
 		"Supplier": [
 			{
 				"fieldname": "custom_outgrower",

@@ -8,6 +8,19 @@ import math
 
 class FieldVisit(Document):
 	def validate(self):
+		self.visited_by = self.visited_by or frappe.session.user
+		if self.crop_cycle and frappe.db.get_value("Crop Cycle", self.crop_cycle, "plot") != self.plot:
+			frappe.throw("The visit crop cycle does not belong to the selected plot.")
+		if self.field_trip:
+			trip = frappe.get_doc("Field Trip", self.field_trip)
+			if trip.field_officer != self.visited_by or trip.status != "In Progress":
+				frappe.throw("The visit must belong to the officer's active Field Trip.")
+		if self.status == "in_progress":
+			other = frappe.db.exists("Field Visit", {"visited_by": self.visited_by, "status": "in_progress", "name": ["!=", self.name or ""]})
+			if other:
+				frappe.throw("Complete the active Field Visit before starting another.")
+		if self.status == "completed" and not self.actual_end:
+			frappe.throw("An actual end time is required to complete a visit.")
 		"""Validate GPS distance from plot centroid"""
 		if self.plot and self.gps_lat and self.gps_lng:
 			self.calculate_distance_from_plot()

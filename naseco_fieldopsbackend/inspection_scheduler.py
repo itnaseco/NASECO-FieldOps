@@ -236,7 +236,7 @@ def create_inspections(crop_cycle):
 	templates = frappe.get_all(
 		"Inspection Template",
 		filters={"active": 1},
-		fields=["name", "inspection_type", "due_days_from_planting", "default_assigned_to"],
+		fields=["name", "inspection_type", "crop_stage", "due_days_from_planting", "default_assigned_to"],
 		order_by="due_days_from_planting asc",
 	)
 	scheduled_dates = []
@@ -245,6 +245,7 @@ def create_inspections(crop_cycle):
 		assigned_inspector = get_quality_inspector(
 			crop_cycle, template.default_assigned_to, outgrower
 		)
+		stage = frappe.db.get_value("Crop Cycle Stage", {"crop_cycle": crop_cycle.name, "stage_name": template.crop_stage}) if template.crop_stage else None
 		existing = frappe.db.get_value(
 			"Inspection",
 			{
@@ -257,6 +258,8 @@ def create_inspections(crop_cycle):
 			inspection = frappe.get_doc("Inspection", existing)
 			if inspection.status == "Scheduled":
 				inspection.db_set("scheduled_date", scheduled_date, update_modified=False)
+				if stage and not inspection.stage:
+					inspection.db_set("stage", stage, update_modified=False)
 			scheduled_dates.append(inspection.scheduled_date or scheduled_date)
 			continue
 		inspection = frappe.get_doc(
@@ -265,6 +268,7 @@ def create_inspections(crop_cycle):
 				"inspection_template": template.name,
 				"inspection_type": template.inspection_type,
 				"crop_cycle": crop_cycle.name,
+				"stage": stage,
 				"production_contract": crop_cycle.production_contract,
 				"plot": crop_cycle.plot,
 				"outgrower": outgrower.name if outgrower else None,
@@ -422,6 +426,13 @@ def update_crop_cycle_current_stage(crop_cycle):
 	)
 	if not stages:
 		return
+	existing_current = frappe.db.get_value("Crop Cycle", crop_cycle, "current_stage")
+	if existing_current:
+		existing = next((row for row in stages if row.name == existing_current), None)
+		# Calendar dates indicate schedule/overdue state; they must not silently
+		# lock unfinished field work by advancing the authoritative pointer.
+		if existing and existing.status not in ("Completed", "Skipped", "Cancelled"):
+			return
 	today = getdate(nowdate())
 	current = next(
 		(

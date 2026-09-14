@@ -27,6 +27,7 @@ BASE_STORE_TO_DOCTYPE = {
 	"crop_production_lots": "Crop Production Lot",
 	"seed_harvest_quality_assessments": "Seed Harvest Quality Assessment",
 	"visits": "Field Visit",
+	"field_trips": "Field Trip",
 	"inspections": "Inspection",
 	"inspection_templates": "Inspection Template",
 	"inspection_parameters": "Inspection Parameter",
@@ -75,6 +76,7 @@ STORE_TO_DOCTYPE.update({
 	"CropProductionLot": "Crop Production Lot",
 	"SeedHarvestQualityAssessment": "Seed Harvest Quality Assessment",
 	"Visit": "Field Visit",
+	"FieldTrip": "Field Trip",
 	"Inspection": "Inspection",
 	"InspectionTemplate": "Inspection Template",
 	"InspectionParameter": "Inspection Parameter",
@@ -129,6 +131,7 @@ MOBILE_ROLE_READ = {
 	OUTGROWER_SUPERVISOR_ROLE: MOBILE_CONTEXT_DOCTYPES
 	| {
 		"Field Visit",
+		"Field Trip",
 		"Agronomy Report",
 		"Field Corrective Action",
 		"Plot Crop Assignment",
@@ -138,6 +141,8 @@ MOBILE_ROLE_READ = {
 	},
 	QUALITY_INSPECTOR_ROLE: MOBILE_CONTEXT_DOCTYPES
 	| {
+		"Field Visit",
+		"Field Trip",
 		"Inspection",
 		"Field Corrective Action",
 		"Seed Harvest Quality Assessment",
@@ -148,12 +153,15 @@ MOBILE_ROLE_WRITE = {
 		"Outgrower",
 		"Farm Plot",
 		"Field Visit",
+		"Field Trip",
 		"Agronomy Report",
 		"Field Corrective Action",
 		"Stage Activity",
 		"Stage Input Request",
 	},
 	QUALITY_INSPECTOR_ROLE: {
+		"Field Visit",
+		"Field Trip",
 		"Inspection",
 		"Field Corrective Action",
 		"Seed Harvest Quality Assessment",
@@ -164,10 +172,11 @@ MOBILE_ROLE_CREATE = {
 		"Outgrower",
 		"Farm Plot",
 		"Field Visit",
+		"Field Trip",
 		"Stage Activity",
 		"Stage Input Request",
 	},
-	QUALITY_INSPECTOR_ROLE: {"Inspection", "Seed Harvest Quality Assessment"},
+	QUALITY_INSPECTOR_ROLE: {"Field Visit", "Field Trip", "Inspection", "Seed Harvest Quality Assessment"},
 }
 MOBILE_SERVER_OWNED_FIELDS = {
 	"Inspection": {
@@ -242,7 +251,7 @@ MOBILE_SERVER_OWNED_FIELDS["Agronomy Report"] |= {
 # Crop Cycle Stage is the crop cycle's current stage (see _mobile_stage_lock_error).
 # Inspection is intentionally excluded: it has no `stage` link field server-side,
 # the mobile client only groups inspections to a stage for display.
-STAGE_LOCKED_DOCTYPES = {"Stage Activity", "Agronomy Report"}
+STAGE_LOCKED_DOCTYPES = {"Stage Activity", "Agronomy Report", "Inspection"}
 # A record whose stage closed within this many days is still editable, so a
 # device that was offline right at the stage boundary isn't blocked outright.
 STAGE_EDIT_GRACE_DAYS = 1
@@ -260,6 +269,7 @@ ID_FIELD_MAP = {
 	"Crop Cycle Stage": "stage_id",
 	"Agronomy Report": "name",
 	"Field Visit": "visit_id",
+	"Field Trip": "external_id",
 	"Inspection": "inspection_id",
 	"Plot Crop Assignment": "assignment_id",
 	"Stage Activity": "activity_id",
@@ -487,6 +497,18 @@ MOBILE_FIELD_MAP = {
 		"gpsLat": "gps_lat",
 		"gpsLng": "gps_lng",
 		"scheduledDate": "scheduled_date",
+		"fieldTripId": "field_trip",
+		"visitedBy": "visited_by",
+		"gpsAccuracyM": "gps_accuracy_m",
+		"actualStart": "actual_start",
+		"actualEnd": "actual_end",
+		"positioningExceptionReason": "positioning_exception_reason",
+	},
+	"Field Trip": {
+		"externalId": "external_id", "fieldOfficer": "field_officer",
+		"startDatetime": "start_datetime", "endDatetime": "end_datetime",
+		"transportMethod": "transport_method", "openingOdometer": "opening_odometer",
+		"closingOdometer": "closing_odometer", "tripSummary": "trip_summary",
 	},
 	"Inspection": {
 		"inspectionId": "inspection_id",
@@ -502,6 +524,8 @@ MOBILE_FIELD_MAP = {
 		"scheduledDate": "scheduled_date",
 		"startedAt": "started_at",
 		"completedAt": "completed_at",
+		"stageId": "stage",
+		"fieldVisitId": "field_visit",
 		"assignedTo": "assigned_to",
 		"requiredTakeCount": "required_take_count",
 		"completedTakeCount": "completed_take_count",
@@ -659,6 +683,7 @@ MOBILE_FIELD_MAP = {
 		"reportNumber": "report_number",
 		"cropCycleId": "crop_cycle",
 		"stageId": "stage",
+		"fieldVisitId": "field_visit",
 		"stageName": "stage_name",
 		"productionContractId": "production_contract",
 		"plotId": "plot",
@@ -921,6 +946,8 @@ MOBILE_FIELD_MAP = {
 		"amount": "total_claimed_amount",
 		"category": "category",
 		"status": "status",
+		"fieldTripId": "custom_field_trip",
+		"fieldVisitId": "custom_field_visit",
 	},
 	"Plot Vertex": {
 		"lat": "latitude",
@@ -1371,6 +1398,8 @@ def _mobile_scope_names(doctype, user=None):
 		return set(
 			frappe.get_all(doctype, filters={"plot": ["in", list(plots)]}, pluck="name")
 		) if plots else set()
+	if doctype == "Field Trip":
+		return set(frappe.get_all(doctype, filters={"field_officer": user}, pluck="name"))
 	if doctype == "Field Corrective Action":
 		action_names = set()
 		if supervisor:
@@ -1426,6 +1455,8 @@ def _mobile_record_is_in_scope(doctype, name=None, values=None):
 		return values.get("plot") in (_mobile_scope_names("Farm Plot") or set()) and (
 			not cycle or cycle in (_mobile_scope_names("Crop Cycle") or set())
 		)
+	if doctype == "Field Trip":
+		return values.get("field_officer") in (None, "", user)
 	if doctype == "Stage Input Request":
 		return values.get("crop_cycle") in (_mobile_scope_names("Crop Cycle") or set())
 	if doctype == "Seed Harvest Quality Assessment":
@@ -1531,10 +1562,39 @@ def _authorize_mobile_write(doctype, operation, name=None, values=None):
 			_("This {0} is outside your FieldOps assignment.").format(doctype),
 			frappe.PermissionError,
 		)
+	_validate_mobile_visit_context(doctype, name, values)
 	if operation in ("CREATE", "UPDATE") and not _mobile_has_management_access(roles):
 		stage_lock_error = _mobile_stage_lock_error(doctype, name, values)
 		if stage_lock_error:
 			frappe.throw(stage_lock_error, frappe.PermissionError)
+
+
+def _validate_mobile_visit_context(doctype, name, values):
+	"""Require a matching active plot visit when mobile captures field evidence."""
+	if doctype not in {"Stage Activity", "Agronomy Report", "Inspection"}:
+		return
+	values = values or {}
+	requires_visit = doctype == "Stage Activity" or bool(
+		values.get("field_notes") or values.get("results") or values.get("takes")
+		or values.get("inspection_observations")
+	)
+	if not requires_visit:
+		return
+	visit = values.get("visit") or values.get("field_visit")
+	if not visit and name:
+		meta = frappe.get_meta(doctype)
+		field = "visit" if meta.has_field("visit") else "field_visit"
+		visit = frappe.db.get_value(doctype, name, field)
+	if not visit:
+		frappe.throw(_("Start or resume a matching Field Visit before recording field data."), frappe.PermissionError)
+	visit_doc = frappe.get_doc("Field Visit", visit)
+	if visit_doc.visited_by != frappe.session.user or visit_doc.status != "in_progress":
+		frappe.throw(_("The referenced Field Visit is not your active visit."), frappe.PermissionError)
+	for field in ("plot", "crop_cycle", "stage"):
+		expected = values.get(field)
+		actual = visit_doc.get(field)
+		if expected and actual and expected != actual:
+			frappe.throw(_("The Field Visit does not match this document's {0}.").format(field), frappe.PermissionError)
 
 
 @frappe.whitelist()
@@ -1588,6 +1648,15 @@ def _strip_server_owned_mobile_fields(doctype, values):
 		# The assignment is derived from the authenticated session, never from
 		# editable mobile input. Managers retain review/confirmation authority.
 		values["assigned_supervisor"] = frappe.session.user
+	if doctype == "Field Trip":
+		values["field_officer"] = frappe.session.user
+		values["employee"] = frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name")
+		for fieldname in ("manager_review_status", "reviewed_by", "reviewed_at", "review_notes", "calculated_distance_km"):
+			values.pop(fieldname, None)
+	if doctype == "Field Visit":
+		values["visited_by"] = frappe.session.user
+		values["external_id"] = values.get("external_id") or values.get("visit_id")
+		values.pop("distance_from_plot", None)
 	if doctype == "Inspection":
 		# Enables create-scope validation while preventing inspectors from
 		# assigning inspections to another user through a crafted payload.
@@ -2200,6 +2269,7 @@ def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 			"Crop Cycle",
 			"Crop Cycle Stage",
 			"Field Visit",
+			"Field Trip",
 			"Inspection",
 			"Agronomy Report",
 			"Field Corrective Action",

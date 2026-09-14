@@ -10,6 +10,8 @@
   "ux_overview_tab",
   "ux_visit_context_section",
   "visit_id",
+  "field_trip",
+  "external_id",
   "plot",
   "crop_cycle",
   "stage",
@@ -28,6 +30,10 @@
   "ux_gps_location_section",
   "gps_lat",
   "gps_lng",
+  "gps_accuracy_m",
+  "actual_start",
+  "actual_end",
+  "positioning_exception_reason",
   "ux_gps_location_column_2_column",
   "distance_from_plot",
   "ux_evidence_tab",
@@ -204,6 +210,13 @@
    "fieldtype": "Table",
    "label": "Findings",
    "options": "Visit Finding"
+  },
+  {"fieldname":"field_trip","label":"Field Trip","fieldtype":"Link","options":"Field Trip"},
+  {"fieldname":"external_id","label":"External ID","fieldtype":"Data","unique":1},
+  {"fieldname":"gps_accuracy_m","label":"GPS Accuracy (m)","fieldtype":"Float"},
+  {"fieldname":"actual_start","label":"Actual Start","fieldtype":"Datetime"},
+  {"fieldname":"actual_end","label":"Actual End","fieldtype":"Datetime"},
+  {"fieldname":"positioning_exception_reason","label":"Positioning Exception Reason","fieldtype":"Small Text"
   }
  ],
  "grid_page_length": 50,
