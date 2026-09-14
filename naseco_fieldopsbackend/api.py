@@ -2512,7 +2512,13 @@ def push_sync_data(data):
 				log_sync(frappe.session.user, doctype, name, operation, "Success")
 				results.append({"status": "success", "doctype": doctype, "name": name})
 			except Exception as e:
-				results.append({"status": "error", "doctype": record.get("doctype"), "error": str(e)})
+				results.append({
+					"status": "error",
+					"store": record.get("storeName") or record.get("store_name"),
+					"doctype": locals().get("doctype") or record.get("doctype"),
+					"client_id": record.get("clientRecordId") or record.get("recordId"),
+					"error": str(e),
+				})
 
 		frappe.db.commit()
 		return {"success": True, "results": results}
