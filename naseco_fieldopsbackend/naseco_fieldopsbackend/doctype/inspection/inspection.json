@@ -17,6 +17,8 @@
   "sampling_protocol_version",
   "ux_production_context_section",
   "crop_cycle",
+  "stage",
+  "field_visit",
   "production_contract",
   "plot",
   "outgrower",
@@ -620,6 +622,9 @@
    "fieldname": "synced",
    "fieldtype": "Check",
    "label": "Synced"
+  },
+  {"fieldname":"stage","label":"Crop Cycle Stage","fieldtype":"Link","options":"Crop Cycle Stage"},
+  {"fieldname":"field_visit","label":"Field Visit","fieldtype":"Link","options":"Field Visit"
   }
  ],
  "grid_page_length": 50,

@@ -201,6 +201,9 @@ class Inspection(Document):
 		self.validate_completion()
 
 	def on_update(self):
+		if self.status in ("Awaiting QA Review", "Verified", "Reinspection Required"):
+			from naseco_fieldopsbackend.stage_progress import complete_stage_if_ready
+			complete_stage_if_ready(self.stage, self.crop_cycle)
 		if self.status in ("Awaiting QA Review", "Verified"):
 			self.create_corrective_actions()
 

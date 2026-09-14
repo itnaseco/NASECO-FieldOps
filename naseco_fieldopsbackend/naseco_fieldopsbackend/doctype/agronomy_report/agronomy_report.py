@@ -533,17 +533,16 @@ class AgronomyReport(Document):
 		frappe.db.set_value(
 			"Crop Cycle Stage", self.stage,
 			{
-				"status": "Completed",
-				"completion_percentage": 100,
+				"status": "In Progress",
+				"completion_percentage": 90,
 				"agronomy_report": self.name,
 				"mandatory_activity_count": mandatory_count,
 				"completed_activity_count": mandatory_count,
 			},
 			update_modified=False,
 		)
-		from naseco_fieldopsbackend.inspection_scheduler import update_crop_cycle_current_stage
-
-		update_crop_cycle_current_stage(self.crop_cycle)
+		from naseco_fieldopsbackend.stage_progress import complete_stage_if_ready
+		complete_stage_if_ready(self.stage, self.crop_cycle)
 
 	def create_corrective_actions(self):
 		failed = [
