@@ -2431,9 +2431,22 @@ def push_sync_data(data):
 	Create/update records pushed from mobile app.
 	"""
 	try:
+		visit_lock = None
 		records = json.loads(data) if isinstance(data, str) else data
 		if isinstance(records, dict) and "data" in records:
 			records = records.get("data")
+
+		# Serialize starts for this officer, including independent mobile devices.
+		# Keep the lock until the batch commits so another request cannot pass
+		# FieldVisit.validate() before this visit becomes visible.
+		if any((row.get("storeName") or row.get("store_name") or row.get("doctype"))
+			in ("visits", "Visit", "Field Visit") for row in records or []):
+			import hashlib
+			visit_lock = hashlib.sha256(
+				("active-field-visit:" + frappe.session.user).encode()
+			).hexdigest()
+			if not frappe.db.sql("SELECT GET_LOCK(%s, 15)", (visit_lock,))[0][0]:
+				frappe.throw("Another Field Visit start is in progress. Retry sync shortly.")
 
 		results = []
 		for record in records or []:
@@ -2512,6 +2525,19 @@ def push_sync_data(data):
 				log_sync(frappe.session.user, doctype, name, operation, "Success")
 				results.append({"status": "success", "doctype": doctype, "name": name})
 			except Exception as e:
+				if doctype == "Field Visit" and "Complete the active Field Visit" in str(e):
+					active = frappe.db.exists("Field Visit", {
+						"visited_by": frappe.session.user,
+						"status": "in_progress",
+					})
+					results.append({
+						"status": "conflict",
+						"doctype": doctype,
+						"client_id": record.get("clientRecordId") or record.get("recordId"),
+						"active_visit": active,
+						"error": str(e),
+					})
+					continue
 				results.append({
 					"status": "error",
 					"store": record.get("storeName") or record.get("store_name"),
@@ -2526,6 +2552,9 @@ def push_sync_data(data):
 		frappe.db.rollback()
 		frappe.log_error(f"Push sync data error: {str(e)}")
 		return {"success": False, "error": str(e)}
+	finally:
+		if locals().get("visit_lock"):
+			frappe.db.sql("SELECT RELEASE_LOCK(%s)", (visit_lock,))
 
 @frappe.whitelist()
 def reconcile_mobile_create(store, client_id, payload):
