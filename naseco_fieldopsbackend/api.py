@@ -1570,7 +1570,7 @@ def _authorize_mobile_write(doctype, operation, name=None, values=None):
 
 
 def _validate_mobile_visit_context(doctype, name, values):
-	"""Require a matching active plot visit when mobile captures field evidence."""
+	"""Require evidence from this officer's matching visit session."""
 	if doctype not in {"Stage Activity", "Agronomy Report", "Inspection"}:
 		return
 	values = values or {}
@@ -1587,14 +1587,61 @@ def _validate_mobile_visit_context(doctype, name, values):
 		visit = frappe.db.get_value(doctype, name, field)
 	if not visit:
 		frappe.throw(_("Start or resume a matching Field Visit before recording field data."), frappe.PermissionError)
+	# Offline records may still carry the phone's correlation ID after the
+	# visit was named by Frappe. Resolve only this officer's visit.
+	if not frappe.db.exists("Field Visit", visit):
+		resolved = frappe.db.get_value("Field Visit", {
+			"external_id": visit, "visited_by": frappe.session.user,
+		}, "name") or frappe.db.get_value("Field Visit", {
+			"visit_id": visit, "visited_by": frappe.session.user,
+		}, "name")
+		if resolved:
+			visit = resolved
+			if values.get("visit"):
+				values["visit"] = resolved
+			if values.get("field_visit"):
+				values["field_visit"] = resolved
 	visit_doc = frappe.get_doc("Field Visit", visit)
-	if visit_doc.visited_by != frappe.session.user or visit_doc.status != "in_progress":
-		frappe.throw(_("The referenced Field Visit is not your active visit."), frappe.PermissionError)
+	if visit_doc.visited_by != frappe.session.user:
+		frappe.throw(_("The referenced Field Visit is not yours."), frappe.PermissionError)
+	if visit_doc.status == "completed":
+		if not _evidence_within_completed_visit(doctype, values, visit_doc):
+			frappe.throw(_("Field evidence must have been captured during the completed Field Visit."), frappe.PermissionError)
+	elif visit_doc.status != "in_progress":
+		frappe.throw(_("The referenced Field Visit is not active."), frappe.PermissionError)
 	for field in ("plot", "crop_cycle", "stage"):
 		expected = values.get(field)
 		actual = visit_doc.get(field)
 		if expected and actual and expected != actual:
 			frappe.throw(_("The Field Visit does not match this document's {0}.").format(field), frappe.PermissionError)
+
+
+def _evidence_within_completed_visit(doctype, values, visit_doc):
+	"""Accept offline evidence saved during a visit, then synced after closure."""
+	if not visit_doc.actual_start or not visit_doc.actual_end:
+		return False
+	start = frappe.utils.get_datetime(visit_doc.actual_start)
+	end = frappe.utils.get_datetime(visit_doc.actual_end)
+	if end < start:
+		return False
+	if doctype == "Agronomy Report":
+		captured = values.get("location_captured_at")
+		if captured:
+			when = frappe.utils.get_datetime(captured)
+			if start <= when <= end:
+				return True
+		date_value = values.get("report_date")
+		return bool(date_value and start.date() <= frappe.utils.getdate(date_value) <= end.date())
+	if doctype == "Stage Activity":
+		date_value = values.get("activity_date")
+		return bool(date_value and start.date() <= frappe.utils.getdate(date_value) <= end.date())
+	if doctype == "Inspection":
+		captured = [row.get("captured_at") for row in values.get("takes") or []]
+		captured = [value for value in captured if value]
+		if not captured:
+			captured = [values.get("started_at") or values.get("completed_at")]
+		return bool(captured and all(value and start <= frappe.utils.get_datetime(value) <= end for value in captured))
+	return False
 
 
 @frappe.whitelist()
