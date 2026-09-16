@@ -138,6 +138,7 @@ MOBILE_ROLE_READ = {
 		"Stage Activity",
 		"Stage Input Request",
 		"Stage Input Dispatch",
+		"Stage Input Dispatch",
 	},
 	QUALITY_INSPECTOR_ROLE: MOBILE_CONTEXT_DOCTYPES
 	| {
@@ -158,6 +159,7 @@ MOBILE_ROLE_WRITE = {
 		"Field Corrective Action",
 		"Stage Activity",
 		"Stage Input Request",
+		"Stage Input Dispatch",
 	},
 	QUALITY_INSPECTOR_ROLE: {
 		"Field Visit",
@@ -175,6 +177,7 @@ MOBILE_ROLE_CREATE = {
 		"Field Trip",
 		"Stage Activity",
 		"Stage Input Request",
+		"Stage Input Dispatch",
 	},
 	QUALITY_INSPECTOR_ROLE: {"Field Visit", "Field Trip", "Inspection", "Seed Harvest Quality Assessment"},
 }
@@ -240,6 +243,13 @@ MOBILE_SERVER_OWNED_FIELDS = {
 		"stage_lock_override_at",
 		"stage_lock_override_reason",
 	},
+	"Stage Input Dispatch": {
+		"stock_entry",
+		"stock_entry_detail",
+		"workflow_status",
+		"quantity_dispatched",
+		"dispatched_by",
+	},
 }
 MOBILE_SERVER_OWNED_FIELDS["Agronomy Report"] |= {
 	"stage_lock_override_by",
@@ -251,7 +261,9 @@ MOBILE_SERVER_OWNED_FIELDS["Agronomy Report"] |= {
 # Crop Cycle Stage is the crop cycle's current stage (see _mobile_stage_lock_error).
 # Inspection is intentionally excluded: it has no `stage` link field server-side,
 # the mobile client only groups inspections to a stage for display.
-STAGE_LOCKED_DOCTYPES = {"Stage Activity", "Agronomy Report", "Inspection"}
+STAGE_LOCKED_DOCTYPES = {
+	"Stage Activity", "Agronomy Report", "Inspection", "Stage Input Dispatch"
+}
 # A record whose stage closed within this many days is still editable, so a
 # device that was offline right at the stage boundary isn't blocked outright.
 STAGE_EDIT_GRACE_DAYS = 1
@@ -782,6 +794,8 @@ MOBILE_FIELD_MAP = {
 		"cropCycleId": "crop_cycle",
 		"stageId": "stage",
 		"inputType": "input_type",
+		"fieldVisitId": "field_visit",
+		"externalId": "external_id",
 		"quantity": "quantity",
 		"requestedDate": "requested_date",
 		"requestDate": "request_date",
@@ -835,6 +849,8 @@ MOBILE_FIELD_MAP = {
 		"gpsAccuracyMeters": "gps_accuracy_meters",
 		"gpsQualityStatus": "gps_quality_status",
 		"deliveryPhoto": "delivery_photo",
+		"evidenceFile": "evidence_file",
+		"workflowStatus": "workflow_status",
 		"receiverSignature": "receiver_signature",
 	},
 	"Crop Cycle Advance Request": {
@@ -1571,10 +1587,12 @@ def _authorize_mobile_write(doctype, operation, name=None, values=None):
 
 def _validate_mobile_visit_context(doctype, name, values):
 	"""Require evidence from this officer's matching visit session."""
-	if doctype not in {"Stage Activity", "Agronomy Report", "Inspection"}:
+	if doctype not in {
+		"Stage Activity", "Agronomy Report", "Inspection", "Stage Input Dispatch"
+	}:
 		return
 	values = values or {}
-	requires_visit = doctype == "Stage Activity" or bool(
+	requires_visit = doctype in {"Stage Activity", "Stage Input Dispatch"} or bool(
 		values.get("field_notes") or values.get("results") or values.get("takes")
 		or values.get("inspection_observations")
 	)

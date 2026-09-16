@@ -1096,6 +1096,14 @@ def sync_input_request_from_stock(doc, method=None):
 	if doc.custom_stage_input_request:
 		request = frappe.get_doc("Stage Input Request", doc.custom_stage_input_request)
 		request.update_fulfillment_status()
+	if frappe.get_meta("Stage Input Dispatch").has_field("workflow_status"):
+		frappe.db.set_value(
+			"Stage Input Dispatch",
+			{"stock_entry": doc.name},
+			"workflow_status",
+			"Stock Posted" if doc.docstatus == 1 else "Cancelled",
+			update_modified=False,
+		)
 	sync_reject_disposition_from_stock(doc, method)
 
 

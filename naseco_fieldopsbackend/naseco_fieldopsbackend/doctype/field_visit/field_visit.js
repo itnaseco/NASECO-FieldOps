@@ -21,6 +21,7 @@ frappe.ui.form.on("Field Visit", {
 					[__("Agronomy Activities"), "Stage Activity", work.activities || []],
 					[__("Agronomy Reports"), "Agronomy Report", work.reports || []],
 					[__("Quality Inspections"), "Inspection", work.inspections || []],
+					[__("Input Dispatches"), "Stage Input Dispatch", work.dispatches || []],
 				];
 				const has_work = Number(work.total || 0) > 0 ||
 					groups.some((group) => group[2].length);

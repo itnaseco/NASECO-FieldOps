@@ -16,6 +16,9 @@
   "request_id",
   "crop_cycle",
   "stage",
+  "field_visit",
+  "external_id",
+  "workflow_status",
   "ux_input_item_section",
   "item_code",
   "item_name",
@@ -45,6 +48,7 @@
   "gps_accuracy_meters",
   "gps_quality_status",
   "delivery_photo",
+  "evidence_file",
   "ux_receiver_acknowledgement_section",
   "received_by_name",
   "received_by",
@@ -129,6 +133,29 @@
    "read_only": 1
   },
   {
+   "fieldname": "field_visit",
+   "fieldtype": "Link",
+   "label": "Field Visit",
+   "options": "Field Visit",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "external_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Mobile External ID",
+   "unique": 1
+  },
+  {
+   "default": "Pending Stock Posting",
+   "fieldname": "workflow_status",
+   "fieldtype": "Select",
+   "label": "Workflow Status",
+   "options": "Pending Stock Posting\nPending Stores Approval\nStock Posted\nAcknowledged\nRejected\nCancelled",
+   "read_only": 1
+  },
+  {
    "fieldname": "ux_input_item_section",
    "fieldtype": "Section Break",
    "label": "Input Item"
@@ -200,7 +227,7 @@
    "in_list_view": 1,
    "label": "Submitted Stock Entry",
    "options": "Stock Entry",
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "ux_stock_documents_column_2_column",
@@ -212,7 +239,6 @@
    "fieldtype": "Data",
    "label": "Stock Entry Item Row",
    "read_only": 1,
-   "reqd": 1,
    "unique": 1
   },
   {
@@ -302,6 +328,11 @@
    "fieldname": "delivery_photo",
    "fieldtype": "Attach Image",
    "label": "Delivery Photo"
+  },
+  {
+   "fieldname": "evidence_file",
+   "fieldtype": "Attach",
+   "label": "Dispatch Evidence"
   },
   {
    "fieldname": "ux_receiver_acknowledgement_section",
