@@ -24,6 +24,9 @@ frappe.ui.form.on("Crop Cycle", {
 		if (can_confirm_planting && frm.doc.planting_date && frm.doc.production_category && !frm.doc.planting_date_confirmed) {
 			frm.add_custom_button(__('Confirm Planting Date'), () => confirm_planting_date(frm), __('Actions'));
 		}
+		if (can_confirm_planting && frm.doc.planting_date_confirmed) {
+			frm.add_custom_button(__('Provision Stage Inputs'), () => provision_stage_inputs(frm), __('Actions'));
+		}
 
 		add_related_record_buttons(frm);
 
@@ -82,15 +85,6 @@ frappe.ui.form.on("Crop Cycle", {
 				});
 		}
 
-		if (frm.doc.current_stage && frm.doc.recipe) {
-			frm.add_custom_button(__('Request Current Stage Inputs'), () => {
-				frappe.new_doc('Stage Input Request', {
-					crop_cycle: frm.doc.name,
-					stage: frm.doc.current_stage
-				});
-			}, __('Create'));
-		}
-
 		frappe.db.get_value('Crop Cycle Settlement', { crop_cycle: frm.doc.name }, 'name')
 			.then(({ message }) => {
 				frm.add_custom_button(
@@ -131,29 +125,49 @@ function confirm_planting_date(frm) {
 		fields: [
 			{
 				fieldtype: 'HTML',
-				options: `<p>${__('Confirm planting for {0} on {1}? This will generate agronomy activities, reports and quality inspections.', [
+				options: `<p>${__('Confirm planting for {0} on {1}? This will generate agronomy schedules and approve the calculated recipe inputs for every stage.', [
 					frappe.utils.escape_html(frm.doc.crop_cycle_id || frm.doc.name),
 					frappe.datetime.str_to_user(frm.doc.planting_date)
 				])}</p>`
 			},
 			{ fieldname: 'notes', fieldtype: 'Small Text', label: __('Confirmation Notes') }
 		],
-		primary_action_label: __('Confirm and Generate Schedules'),
+		primary_action_label: __('Confirm and Provision Cycle'),
 		primary_action(values) {
 			dialog.hide();
 			frappe.call({
 				method: 'naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle.confirm_planting_date',
 				args: { crop_cycle: frm.doc.name, notes: values.notes },
 				freeze: true,
-				freeze_message: __('Confirming planting and generating schedules...'),
+				freeze_message: __('Confirming planting, generating schedules and provisioning inputs...'),
 				callback() {
-					frappe.show_alert({ message: __('Planting confirmed and schedules generated'), indicator: 'green' });
+					frappe.show_alert({ message: __('Planting confirmed; schedules and stage inputs are ready'), indicator: 'green' });
 					frm.reload_doc();
 				}
 			});
 		}
 	});
 	dialog.show();
+}
+
+function provision_stage_inputs(frm) {
+	frappe.call({
+		method: 'naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle.provision_stage_inputs',
+		args: { crop_cycle: frm.doc.name },
+		freeze: true,
+		freeze_message: __('Calculating and approving stage input requirements...'),
+		callback(r) {
+			const result = r.message || {};
+			frappe.show_alert({
+				message: __('Stage inputs ready. Created: {0}; Existing: {1}', [
+					(result.created || []).length,
+					(result.existing || []).length
+				]),
+				indicator: 'green'
+			});
+			frm.reload_doc();
+		}
+	});
 }
 
 function add_related_record_buttons(frm) {

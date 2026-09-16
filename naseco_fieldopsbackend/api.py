@@ -158,7 +158,6 @@ MOBILE_ROLE_WRITE = {
 		"Agronomy Report",
 		"Field Corrective Action",
 		"Stage Activity",
-		"Stage Input Request",
 		"Stage Input Dispatch",
 	},
 	QUALITY_INSPECTOR_ROLE: {
@@ -176,7 +175,6 @@ MOBILE_ROLE_CREATE = {
 		"Field Visit",
 		"Field Trip",
 		"Stage Activity",
-		"Stage Input Request",
 		"Stage Input Dispatch",
 	},
 	QUALITY_INSPECTOR_ROLE: {"Field Visit", "Field Trip", "Inspection", "Seed Harvest Quality Assessment"},
@@ -1280,6 +1278,8 @@ def _map_doc_to_mobile(doctype, doc_dict):
 			readings_by_take.setdefault(reading.get("takeNumber"), []).append(reading)
 		for take in result.get("takes", []):
 			take["readings"] = readings_by_take.get(take.get("takeNumber"), [])
+	if doctype == "Stage Input Request Item" and doc_dict.get("name"):
+		result["inputRequestItemId"] = doc_dict.get("name")
 	return result
 
 

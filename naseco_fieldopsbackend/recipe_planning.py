@@ -203,6 +203,230 @@ def create_stage_input_request_from_plan(crop_cycle, stage=None):
     return request.name
 
 
+def provision_approved_stage_input_requests(crop_cycle):
+    """Create and approve every recipe-backed stage input request atomically.
+
+    The method is intentionally server-owned and idempotent.  Mobile clients only
+    consume the resulting requests; they must never independently derive stock
+    authorisations from cached recipe data.
+    """
+    cycle = (
+        frappe.get_doc("Crop Cycle", crop_cycle)
+        if isinstance(crop_cycle, str)
+        else crop_cycle
+    )
+    if not cycle.planting_date_confirmed:
+        return {"created": [], "existing": [], "stages": 0}
+
+    # planned_inputs is the crop cycle's frozen recipe snapshot. Rebuilding it
+    # after planting confirmation would silently change approved quantities when
+    # the master recipe or valuation rates change.
+    if not cycle.planned_inputs:
+        build_crop_cycle_input_plan(cycle)
+    _validate_automatic_input_approval(cycle)
+
+    rows_by_stage = {}
+    for row in cycle.planned_inputs or []:
+        if flt(row.planned_qty) <= 0:
+            continue
+        rows_by_stage.setdefault(row.stage_name or "Planting", []).append(row)
+
+    if not rows_by_stage:
+        return {"created": [], "existing": [], "stages": 0}
+
+    stage_names = frappe.get_all(
+        "Crop Cycle Stage",
+        filters={"crop_cycle": cycle.name},
+        fields=["name", "stage_name"],
+    )
+    stages = {row.stage_name: row.name for row in stage_names}
+    missing_stages = sorted(set(rows_by_stage) - set(stages))
+    if missing_stages:
+        frappe.throw(
+            _("Crop-cycle stages are missing for recipe stages: {0}.").format(
+                ", ".join(missing_stages)
+            ),
+            title=_("Input Request Provisioning Failed"),
+        )
+
+    default_warehouse = frappe.db.get_single_value(
+        "FieldOps Settings", "default_source_warehouse"
+    )
+    problems = []
+    for stage_name, rows in rows_by_stage.items():
+        for row in rows:
+            warehouse = row.source_warehouse or default_warehouse
+            if not warehouse:
+                problems.append(_("{0}: source warehouse is missing").format(stage_name))
+            elif not frappe.db.exists("Warehouse", warehouse):
+                problems.append(
+                    _("{0}: warehouse {1} does not exist").format(stage_name, warehouse)
+                )
+            if not frappe.db.exists("Item", row.item_code):
+                problems.append(
+                    _("{0}: stock item {1} does not exist").format(
+                        stage_name, row.item_code
+                    )
+                )
+    if problems:
+        frappe.throw(
+            _("Automatic input approval cannot continue:<br>{0}").format(
+                "<br>".join(sorted(set(problems)))
+            ),
+            title=_("Input Request Provisioning Failed"),
+        )
+
+    # Preflight existing records before creating anything. A non-approved manual
+    # request is never silently promoted by automation.
+    existing = []
+    for stage_name, stage_id in stages.items():
+        if stage_name not in rows_by_stage:
+            continue
+        current = frappe.db.get_value(
+            "Stage Input Request",
+            {"crop_cycle": cycle.name, "stage": stage_id, "docstatus": ["<", 2]},
+            ["name", "docstatus", "status"],
+            as_dict=True,
+        )
+        if current and current.docstatus != 1:
+            frappe.throw(
+                _(
+                    "Stage {0} already has unapproved input request {1}. "
+                    "Review or cancel it before provisioning."
+                ).format(stage_name, frappe.bold(current.name)),
+                title=_("Input Request Requires Review"),
+            )
+        if current:
+            existing.append(current.name)
+
+    created = []
+    for stage_name, rows in rows_by_stage.items():
+        stage_id = stages[stage_name]
+        if frappe.db.exists(
+            "Stage Input Request",
+            {"crop_cycle": cycle.name, "stage": stage_id, "docstatus": 1},
+        ):
+            continue
+
+        request = frappe.new_doc("Stage Input Request")
+        request.flags.ignore_permissions = True
+        request.request_id = f"AUTO-{cycle.name}-{stage_id}"[:140]
+        request.crop_cycle = cycle.name
+        request.stage = stage_id
+        request.required_by = min(
+            (row.required_by for row in rows if row.required_by), default=nowdate()
+        )
+        request.source_warehouse = next(
+            (row.source_warehouse for row in rows if row.source_warehouse),
+            default_warehouse,
+        )
+        request.notes = _(
+            "Automatically generated and approved from Crop Recipe {0} when "
+            "planting was confirmed for Crop Cycle {1}."
+        ).format(cycle.recipe, cycle.name)
+        for row in rows:
+            policy_version = (
+                frappe.db.get_value(
+                    "Input Recovery Pricing Policy",
+                    row.pricing_policy,
+                    "policy_version",
+                )
+                if row.pricing_policy
+                else None
+            )
+            request.append(
+                "items",
+                {
+                    "recipe_input_item": row.recipe_input_row,
+                    "item_code": row.item_code,
+                    "requested_qty": row.planned_qty,
+                    "approved_qty": row.planned_qty,
+                    "uom": row.uom,
+                    "source_warehouse": row.source_warehouse or default_warehouse,
+                    "estimated_rate": row.forecast_base_rate,
+                    "recovery_policy": (
+                        "Fully Recoverable"
+                        if flt(row.recoverable_percent) == 100
+                        else "Partially Recoverable"
+                    ),
+                    "recoverable_percent": row.recoverable_percent,
+                    "recovery_rate_basis": "Actual Purchase Cost + Markup",
+                    "recovery_pricing_policy": row.pricing_policy,
+                    "pricing_policy_version": policy_version,
+                    "markup_percent": row.markup_percent,
+                },
+            )
+        request.insert(ignore_permissions=True)
+        request.submit()
+        material_request_name = request.material_request or frappe.db.get_value(
+            "Stage Input Request", request.name, "material_request"
+        )
+        if material_request_name:
+            material_request = frappe.get_doc(
+                "Material Request", material_request_name
+            )
+            if material_request.docstatus == 0:
+                material_request.flags.ignore_permissions = True
+                material_request.submit()
+        created.append(request.name)
+
+    return {
+        "created": created,
+        "existing": existing,
+        "stages": len(rows_by_stage),
+    }
+
+
+def _validate_automatic_input_approval(cycle):
+    if not cycle.recipe:
+        frappe.throw(
+            _("A submitted, active Crop Recipe is required before confirming planting."),
+            title=_("Crop Recipe Required"),
+        )
+    recipe = frappe.get_doc("Crop Recipe", cycle.recipe)
+    if recipe.docstatus != 1 or recipe.status != "Active":
+        frappe.throw(
+            _("Crop Recipe {0} must be submitted and Active.").format(
+                frappe.bold(recipe.name)
+            ),
+            title=_("Crop Recipe Not Active"),
+        )
+    if not cycle.production_contract:
+        frappe.throw(_("A submitted Production Contract is required."))
+    contract = frappe.get_doc("Outgrower Production Contract", cycle.production_contract)
+    if contract.docstatus != 1 or contract.status not in ("Active", "Fulfilled"):
+        frappe.throw(
+            _("Production Contract {0} must be submitted and Active.").format(
+                frappe.bold(contract.name)
+            )
+        )
+    area = flt(cycle.contracted_area_hectares) or (
+        flt(cycle.contracted_area_acres) * HECTARES_PER_ACRE
+    )
+    if area <= 0:
+        frappe.throw(
+            _("Contracted Area (hectares) must be greater than zero."),
+            title=_("Invalid Contracted Area"),
+        )
+
+    recovery = flt(cycle.forecast_input_recovery)
+    harvest_value = flt(cycle.expected_harvest_value)
+    exposure_percent = flt(cycle.max_exposure_percent)
+    if recovery > 0 and harvest_value > 0 and exposure_percent > 0:
+        limit = harvest_value * exposure_percent / 100
+        if recovery > limit:
+            frappe.throw(
+                _(
+                    "Forecast recoverable inputs ({0}) exceed the contract exposure "
+                    "limit ({1})."
+                ).format(
+                    frappe.format_value(recovery, {"fieldtype": "Currency"}),
+                    frappe.format_value(limit, {"fieldtype": "Currency"}),
+                ),
+                title=_("Exposure Limit Exceeded"),
+            )
+
+
 @frappe.whitelist()
 def preview_recipe_demand(recipe, area_hectares, planting_date=None):
     """Preview calculated quantities and risk-adjusted exposure without creating transactions."""

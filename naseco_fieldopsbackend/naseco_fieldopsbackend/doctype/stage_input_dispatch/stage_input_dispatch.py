@@ -28,7 +28,17 @@ class StageInputDispatch(Document):
 		if flt(self.quantity_dispatched) <= 0:
 			frappe.throw(_("Dispatch quantity must be greater than zero."))
 		item = frappe.get_doc("Stage Input Request Item", self.input_request_item)
-		remaining = flt(item.approved_qty) - flt(item.issued_qty)
+		pending = frappe.db.sql(
+			"""
+			select coalesce(sum(quantity_dispatched), 0)
+			  from `tabStage Input Dispatch`
+			 where input_request_item = %s
+			   and name != %s
+			   and coalesce(workflow_status, '') not in ('Cancelled', 'Stock Posted')
+			""",
+			(self.input_request_item, self.name or ""),
+		)[0][0]
+		remaining = flt(item.approved_qty) - flt(item.issued_qty) - flt(pending)
 		if flt(self.quantity_dispatched) > remaining:
 			frappe.throw(
 				_("Dispatch quantity exceeds the approved remaining quantity of {0} {1}.").format(

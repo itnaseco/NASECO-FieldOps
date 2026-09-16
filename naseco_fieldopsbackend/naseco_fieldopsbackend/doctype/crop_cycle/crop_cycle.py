@@ -24,7 +24,8 @@ class CropCycle(Document):
 		self.apply_contract_terms()
 		from naseco_fieldopsbackend.recipe_planning import build_crop_cycle_input_plan
 
-		build_crop_cycle_input_plan(self)
+		if not self.planting_date_confirmed or not self.planned_inputs:
+			build_crop_cycle_input_plan(self)
 
 	def validate(self):
 		self.validate_single_cycle_per_plot()
@@ -154,6 +155,20 @@ class CropCycle(Document):
 					update_modified=False,
 				)
 		sync_crop_cycle_lifecycle(self)
+		self.provision_stage_inputs()
+
+	def provision_stage_inputs(self):
+		"""Provision approved recipe inputs only after planting is confirmed."""
+		if not self.planting_date_confirmed:
+			return
+		previous = self.get_doc_before_save()
+		if previous and previous.planting_date_confirmed:
+			return
+		from naseco_fieldopsbackend.recipe_planning import (
+			provision_approved_stage_input_requests,
+		)
+
+		provision_approved_stage_input_requests(self)
 
 	def on_trash(self):
 		if self.production_contract:
@@ -227,6 +242,21 @@ def _require_planting_confirmation_role():
 
 
 @frappe.whitelist()
+def provision_stage_inputs(crop_cycle):
+	"""Idempotently provision approved recipe inputs for a confirmed cycle."""
+	_require_planting_confirmation_role()
+	doc = frappe.get_doc("Crop Cycle", crop_cycle)
+	doc.check_permission("write")
+	if not doc.planting_date_confirmed:
+		frappe.throw(_("Confirm the Planting Date before provisioning stage inputs."))
+	from naseco_fieldopsbackend.recipe_planning import (
+		provision_approved_stage_input_requests,
+	)
+
+	return provision_approved_stage_input_requests(doc)
+
+
+@frappe.whitelist()
 def confirm_planting_date(crop_cycle, notes=None):
 	_require_planting_confirmation_role()
 	doc = frappe.get_doc("Crop Cycle", crop_cycle)
@@ -236,6 +266,11 @@ def confirm_planting_date(crop_cycle, notes=None):
 	if not doc.production_category:
 		frappe.throw(_("Production Category is required before confirming planting."))
 	if doc.planting_date_confirmed:
+		from naseco_fieldopsbackend.recipe_planning import (
+			provision_approved_stage_input_requests,
+		)
+
+		provision_approved_stage_input_requests(doc)
 		return _planting_confirmation_result(doc)
 
 	doc.db_set(
@@ -248,6 +283,11 @@ def confirm_planting_date(crop_cycle, notes=None):
 	)
 	doc.planting_date_confirmed = 1
 	sync_crop_cycle_lifecycle(doc)
+	from naseco_fieldopsbackend.recipe_planning import (
+		provision_approved_stage_input_requests,
+	)
+
+	provision_approved_stage_input_requests(doc)
 	return _planting_confirmation_result(doc)
 
 
