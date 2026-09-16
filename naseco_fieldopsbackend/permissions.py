@@ -36,6 +36,11 @@ def get_permission_query_conditions(user=None, doctype=None):
 
 	roles = _roles(user)
 	user_sql = frappe.db.escape(user)
+	if doctype == "Field Visit":
+		if OUTGROWER_SUPERVISOR_ROLE in roles or QUALITY_INSPECTOR_ROLE in roles:
+			return f"`tabField Visit`.visited_by = {user_sql}"
+		return "1 = 0"
+
 	if OUTGROWER_SUPERVISOR_ROLE in roles:
 		conditions = {
 			"Outgrower": f"`tabOutgrower`.assigned_supervisor = {user_sql}",
@@ -131,6 +136,10 @@ def agronomy_report_query(user=None):
 
 def inspection_query(user=None):
 	return get_permission_query_conditions(user, "Inspection")
+
+
+def field_visit_query(user=None):
+	return get_permission_query_conditions(user, "Field Visit")
 
 
 def corrective_action_query(user=None):
