@@ -217,12 +217,13 @@
   {
    "fieldname": "ux_visit_work_tab",
    "fieldtype": "Tab Break",
-   "label": "Visit Work",
+   "label": "Field Work",
    "hidden": 1
   },
   {
    "fieldname": "ux_visit_work_section",
    "fieldtype": "Section Break",
+   "description": "Shows only agronomy activities, agronomy reports and quality inspections explicitly linked to this visit.",
    "label": "Documents recorded during this visit"
   },
   {
@@ -241,7 +242,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-01-29 17:30:59.469932",
+ "modified": "2026-09-16 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Naseco FieldOpsBackend",
  "name": "Field Visit",
