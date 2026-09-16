@@ -65,3 +65,84 @@ class FieldVisit(Document):
 
 		distance = R * c
 		return distance
+
+
+@frappe.whitelist()
+def get_visit_work_summary(visit):
+	"""Return compact details for documents explicitly linked to this visit."""
+	if not visit or not frappe.db.exists("Field Visit", visit):
+		frappe.throw("Field Visit not found.", frappe.DoesNotExistError)
+	visit_doc = frappe.get_doc("Field Visit", visit)
+	if not frappe.has_permission("Field Visit", "read", doc=visit_doc):
+		frappe.throw(
+			"You are not permitted to view this Field Visit.",
+			frappe.PermissionError,
+		)
+
+	definitions = (
+		{
+			"key": "activities",
+			"doctype": "Stage Activity",
+			"link_field": "visit",
+			"title_fields": ("title", "activity_name", "activity_template"),
+			"date_fields": ("activity_date", "completed_on", "due_date"),
+		},
+		{
+			"key": "reports",
+			"doctype": "Agronomy Report",
+			"link_field": "field_visit",
+			"title_fields": ("report_number", "stage_name", "report_template"),
+			"date_fields": ("report_date", "location_captured_at"),
+		},
+		{
+			"key": "inspections",
+			"doctype": "Inspection",
+			"link_field": "field_visit",
+			"title_fields": ("inspection_type", "inspection_template"),
+			"date_fields": ("completed_at", "started_at", "scheduled_date"),
+		},
+	)
+	result = {}
+	for definition in definitions:
+		meta = frappe.get_meta(definition["doctype"])
+		if not meta.has_field(definition["link_field"]):
+			result[definition["key"]] = []
+			continue
+		fields = ["name"]
+		for fieldname in (
+			"status",
+			*definition["title_fields"],
+			*definition["date_fields"],
+		):
+			if meta.has_field(fieldname) and fieldname not in fields:
+				fields.append(fieldname)
+		rows = frappe.get_list(
+			definition["doctype"],
+			filters={definition["link_field"]: visit},
+			fields=fields,
+			order_by="modified desc",
+		)
+		result[definition["key"]] = [
+			{
+				"name": row.name,
+				"title": next(
+					(
+						row.get(fieldname)
+						for fieldname in definition["title_fields"]
+						if row.get(fieldname)
+					),
+					row.name,
+				),
+				"status": row.get("status") or "",
+				"date": next(
+					(
+						row.get(fieldname)
+						for fieldname in definition["date_fields"]
+						if row.get(fieldname)
+					),
+					None,
+				),
+			}
+			for row in rows
+		]
+	return result

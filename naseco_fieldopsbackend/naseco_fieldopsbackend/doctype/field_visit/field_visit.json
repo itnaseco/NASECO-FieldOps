@@ -41,7 +41,10 @@
   "photos",
   "notes",
   "ux_findings_section",
-  "findings"
+  "findings",
+  "ux_visit_work_tab",
+  "ux_visit_work_section",
+  "visit_work_summary"
  ],
  "fields": [
   {
@@ -210,6 +213,22 @@
    "fieldtype": "Table",
    "label": "Findings",
    "options": "Visit Finding"
+  },
+  {
+   "fieldname": "ux_visit_work_tab",
+   "fieldtype": "Tab Break",
+   "label": "Visit Work",
+   "hidden": 1
+  },
+  {
+   "fieldname": "ux_visit_work_section",
+   "fieldtype": "Section Break",
+   "label": "Documents recorded during this visit"
+  },
+  {
+   "fieldname": "visit_work_summary",
+   "fieldtype": "HTML",
+   "label": "Visit Work Summary"
   },
   {"fieldname":"field_trip","label":"Field Trip","fieldtype":"Link","options":"Field Trip"},
   {"fieldname":"external_id","label":"External ID","fieldtype":"Data","unique":1},
