@@ -57,6 +57,9 @@ def get_permission_query_conditions(user=None, doctype=None):
 			),
 			"Stage Activity": f"`tabStage Activity`.assigned_to = {user_sql}",
 			"Agronomy Report": f"`tabAgronomy Report`.assigned_supervisor = {user_sql}",
+			"Stage Input Dispatch": (
+				f"`tabStage Input Dispatch`.dispatched_by = {user_sql}"
+			),
 			"Field Corrective Action": (
 				f"`tabField Corrective Action`.assigned_to = {user_sql}"
 			),
@@ -140,6 +143,10 @@ def inspection_query(user=None):
 
 def field_visit_query(user=None):
 	return get_permission_query_conditions(user, "Field Visit")
+
+
+def stage_input_dispatch_query(user=None):
+	return get_permission_query_conditions(user, "Stage Input Dispatch")
 
 
 def corrective_action_query(user=None):

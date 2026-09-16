@@ -117,6 +117,13 @@ def get_visit_work_summary(visit):
 			"title_fields": ("inspection_type", "inspection_template"),
 			"date_fields": ("completed_at", "started_at", "scheduled_date"),
 		},
+		{
+			"key": "dispatches",
+			"doctype": "Stage Input Dispatch",
+			"link_field": "field_visit",
+			"title_fields": ("item_name", "input_name", "input_type"),
+			"date_fields": ("dispatch_date", "received_at"),
+		},
 	)
 	result = {"visit": visit_doc.name, "total": 0}
 	for definition in definitions:
