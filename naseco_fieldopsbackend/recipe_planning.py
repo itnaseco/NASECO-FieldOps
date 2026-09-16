@@ -223,7 +223,7 @@ def provision_approved_stage_input_requests(crop_cycle):
     # the master recipe or valuation rates change.
     if not cycle.planned_inputs:
         build_crop_cycle_input_plan(cycle)
-    _validate_automatic_input_approval(cycle)
+    approval_warnings = _validate_automatic_input_approval(cycle)
 
     rows_by_stage = {}
     for row in cycle.planned_inputs or []:
@@ -324,6 +324,11 @@ def provision_approved_stage_input_requests(crop_cycle):
             "Automatically generated and approved from Crop Recipe {0} when "
             "planting was confirmed for Crop Cycle {1}."
         ).format(cycle.recipe, cycle.name)
+        if approval_warnings:
+            request.notes = _(
+                "Automatically generated from Crop Recipe {0}. Manager approval "
+                "is required before dispatch:<br>{1}"
+            ).format(cycle.recipe, "<br>".join(approval_warnings))
         for row in rows:
             policy_version = (
                 frappe.db.get_value(
@@ -357,6 +362,10 @@ def provision_approved_stage_input_requests(crop_cycle):
                 },
             )
         request.insert(ignore_permissions=True)
+        if approval_warnings:
+            request.db_set("status", "Pending Approval", update_modified=False)
+            created.append(request.name)
+            continue
         request.submit()
         material_request_name = request.material_request or frappe.db.get_value(
             "Stage Input Request", request.name, "material_request"
@@ -378,18 +387,27 @@ def provision_approved_stage_input_requests(crop_cycle):
 
 
 def _validate_automatic_input_approval(cycle):
+    approval_warnings = []
     if not cycle.recipe:
         frappe.throw(
             _("A submitted, active Crop Recipe is required before confirming planting."),
             title=_("Crop Recipe Required"),
         )
     recipe = frappe.get_doc("Crop Recipe", cycle.recipe)
-    if recipe.docstatus != 1 or recipe.status != "Active":
+    # Legacy production recipes pre-date the submit workflow. Their explicit
+    # Legacy-* version is the compatibility marker; ordinary Draft recipes are
+    # never allowed to authorise stock.
+    legacy_recipe = str(recipe.recipe_version or "").startswith("Legacy-")
+    if recipe.status != "Active" and not legacy_recipe:
         frappe.throw(
-            _("Crop Recipe {0} must be submitted and Active.").format(
+            _("Crop Recipe {0} must be Active.").format(
                 frappe.bold(recipe.name)
             ),
             title=_("Crop Recipe Not Active"),
+        )
+    if recipe.docstatus != 1:
+        approval_warnings.append(
+            _("Legacy recipe {0} is not submitted.").format(recipe.name)
         )
     if not cycle.production_contract:
         frappe.throw(_("A submitted Production Contract is required."))
@@ -415,16 +433,16 @@ def _validate_automatic_input_approval(cycle):
     if recovery > 0 and harvest_value > 0 and exposure_percent > 0:
         limit = harvest_value * exposure_percent / 100
         if recovery > limit:
-            frappe.throw(
+            approval_warnings.append(
                 _(
                     "Forecast recoverable inputs ({0}) exceed the contract exposure "
                     "limit ({1})."
                 ).format(
                     frappe.format_value(recovery, {"fieldtype": "Currency"}),
                     frappe.format_value(limit, {"fieldtype": "Currency"}),
-                ),
-                title=_("Exposure Limit Exceeded"),
+                )
             )
+    return approval_warnings
 
 
 @frappe.whitelist()
