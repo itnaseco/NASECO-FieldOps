@@ -846,6 +846,7 @@ MOBILE_FIELD_MAP = {
 		"receivedAt": "received_at",
 		"gpsAccuracyMeters": "gps_accuracy_meters",
 		"gpsQualityStatus": "gps_quality_status",
+		"geolocation": "geolocation",
 		"deliveryPhoto": "delivery_photo",
 		"evidenceFile": "evidence_file",
 		"workflowStatus": "workflow_status",
