@@ -69,7 +69,12 @@ class FieldVisit(Document):
 
 @frappe.whitelist()
 def get_visit_work_summary(visit):
-	"""Return compact details for documents explicitly linked to this visit."""
+	"""Return field work explicitly linked to a Field Visit.
+
+	Mobile records can temporarily retain the visit's offline correlation ID
+	until Frappe naming is reconciled.  Query all authoritative identifiers for
+	the visit instead of silently hiding otherwise valid linked work.
+	"""
 	if not visit or not frappe.db.exists("Field Visit", visit):
 		frappe.throw("Field Visit not found.", frappe.DoesNotExistError)
 	visit_doc = frappe.get_doc("Field Visit", visit)
@@ -78,6 +83,17 @@ def get_visit_work_summary(visit):
 			"You are not permitted to view this Field Visit.",
 			frappe.PermissionError,
 		)
+	visit_identifiers = list(
+		dict.fromkeys(
+			value
+			for value in (
+				visit_doc.name,
+				visit_doc.get("visit_id"),
+				visit_doc.get("external_id"),
+			)
+			if value
+		)
+	)
 
 	definitions = (
 		{
@@ -102,7 +118,7 @@ def get_visit_work_summary(visit):
 			"date_fields": ("completed_at", "started_at", "scheduled_date"),
 		},
 	)
-	result = {}
+	result = {"visit": visit_doc.name, "total": 0}
 	for definition in definitions:
 		meta = frappe.get_meta(definition["doctype"])
 		if not meta.has_field(definition["link_field"]):
@@ -118,7 +134,7 @@ def get_visit_work_summary(visit):
 				fields.append(fieldname)
 		rows = frappe.get_list(
 			definition["doctype"],
-			filters={definition["link_field"]: visit},
+			filters={definition["link_field"]: ["in", visit_identifiers]},
 			fields=fields,
 			order_by="modified desc",
 		)
@@ -145,4 +161,5 @@ def get_visit_work_summary(visit):
 			}
 			for row in rows
 		]
+		result["total"] += len(rows)
 	return result

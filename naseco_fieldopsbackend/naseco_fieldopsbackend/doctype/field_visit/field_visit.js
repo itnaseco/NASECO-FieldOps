@@ -5,6 +5,7 @@ frappe.ui.form.on("Field Visit", {
 	refresh(frm) {
 		frm.set_df_property("ux_visit_work_tab", "hidden", 1);
 		frm.get_field("visit_work_summary").$wrapper.empty();
+		frm.refresh_field("ux_visit_work_tab");
 		if (frm.is_new()) return;
 
 		const visit_name = frm.doc.name;
@@ -19,8 +20,10 @@ frappe.ui.form.on("Field Visit", {
 					[__("Agronomy Reports"), "Agronomy Report", work.reports || []],
 					[__("Quality Inspections"), "Inspection", work.inspections || []],
 				];
-				const has_work = groups.some((group) => group[2].length);
+				const has_work = Number(work.total || 0) > 0 ||
+					groups.some((group) => group[2].length);
 				frm.set_df_property("ux_visit_work_tab", "hidden", !has_work);
+				frm.refresh_field("ux_visit_work_tab");
 				if (!has_work) return;
 				frm.get_field("visit_work_summary").$wrapper.html(
 					groups
@@ -28,6 +31,15 @@ frappe.ui.form.on("Field Visit", {
 						.map((group) => render_visit_work_group(...group))
 						.join("")
 				);
+			},
+			error: () => {
+				if (frm.doc.name !== visit_name) return;
+				frm.set_df_property("ux_visit_work_tab", "hidden", 1);
+				frm.refresh_field("ux_visit_work_tab");
+				frappe.show_alert({
+					message: __("Field Visit work could not be loaded. Check the server logs."),
+					indicator: "red",
+				}, 7);
 			},
 		});
 	},
