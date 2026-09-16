@@ -217,8 +217,7 @@
   {
    "fieldname": "ux_visit_work_tab",
    "fieldtype": "Tab Break",
-   "label": "Field Work",
-   "hidden": 1
+   "label": "Field Work"
   },
   {
    "fieldname": "ux_visit_work_section",

@@ -3,9 +3,11 @@
 
 frappe.ui.form.on("Field Visit", {
 	refresh(frm) {
-		frm.set_df_property("ux_visit_work_tab", "hidden", 1);
+		// The Tab Break must exist in the rendered layout before it can be
+		// conditionally hidden. Defining it as hidden in DocType JSON prevents
+		// some Frappe versions from creating the tab DOM at all.
+		frm.toggle_display("ux_visit_work_tab", false);
 		frm.get_field("visit_work_summary").$wrapper.empty();
-		frm.refresh_field("ux_visit_work_tab");
 		if (frm.is_new()) return;
 
 		const visit_name = frm.doc.name;
@@ -22,8 +24,7 @@ frappe.ui.form.on("Field Visit", {
 				];
 				const has_work = Number(work.total || 0) > 0 ||
 					groups.some((group) => group[2].length);
-				frm.set_df_property("ux_visit_work_tab", "hidden", !has_work);
-				frm.refresh_field("ux_visit_work_tab");
+				frm.toggle_display("ux_visit_work_tab", has_work);
 				if (!has_work) return;
 				frm.get_field("visit_work_summary").$wrapper.html(
 					groups
@@ -34,8 +35,7 @@ frappe.ui.form.on("Field Visit", {
 			},
 			error: () => {
 				if (frm.doc.name !== visit_name) return;
-				frm.set_df_property("ux_visit_work_tab", "hidden", 1);
-				frm.refresh_field("ux_visit_work_tab");
+				frm.toggle_display("ux_visit_work_tab", false);
 				frappe.show_alert({
 					message: __("Field Visit work could not be loaded. Check the server logs."),
 					indicator: "red",
