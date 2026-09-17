@@ -10,9 +10,55 @@ import frappe
 from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle import CropCycle
 from naseco_fieldopsbackend.inspection_scheduler import resolve_activity_templates
 from naseco_fieldopsbackend.inspection_scheduler import sync_crop_cycle_lifecycle
+from naseco_fieldopsbackend.inspection_scheduler import update_crop_cycle_current_stage
+from naseco_fieldopsbackend.inspection_scheduler import inspection_lifecycle_stage_name
 
 
 class TestCropCycle(TestCase):
+	def test_flowering_inspections_map_to_flowering_lifecycle_stage(self):
+		for inspection_type in ("1st Flowering", "2nd Flowering", "3rd Flowering"):
+			self.assertEqual(
+				inspection_lifecycle_stage_name(inspection_type),
+				"Flowering",
+			)
+		self.assertEqual(
+			inspection_lifecycle_stage_name("Pre-flowering"),
+			"Pre-flowering",
+		)
+		self.assertEqual(
+			inspection_lifecycle_stage_name("Pre-harvest"),
+			"Pre-harvest",
+		)
+
+	@patch("naseco_fieldopsbackend.inspection_scheduler.frappe.db.set_value")
+	@patch("naseco_fieldopsbackend.inspection_scheduler.frappe.db.get_value")
+	@patch("naseco_fieldopsbackend.inspection_scheduler.frappe.get_all")
+	def test_completed_vegetative_stage_advances_without_regression(
+		self, get_all, get_value, set_value
+	):
+		get_all.return_value = [
+			frappe._dict(name="FIELD", order_index=1, status="Pending", start_date=None, end_date=None),
+			frappe._dict(name="PLANTING", order_index=2, status="Completed", start_date=None, end_date=None),
+			frappe._dict(name="EMERGENCE", order_index=3, status="Completed", start_date=None, end_date=None),
+			frappe._dict(name="VEGETATIVE", order_index=4, status="Completed", start_date=None, end_date=None),
+			frappe._dict(name="PRE-FLOWERING", order_index=5, status="Pending", start_date=None, end_date=None),
+		]
+		get_value.return_value = "FIELD"
+
+		with patch(
+			"naseco_fieldopsbackend.inspection_scheduler.nowdate",
+			return_value="2026-09-17",
+		):
+			update_crop_cycle_current_stage("CC-TEST")
+
+		set_value.assert_any_call(
+			"Crop Cycle",
+			"CC-TEST",
+			"current_stage",
+			"PRE-FLOWERING",
+			update_modified=False,
+		)
+
 	@patch("naseco_fieldopsbackend.inspection_scheduler.ensure_crop_cycle_stages")
 	def test_lifecycle_is_not_generated_before_planting_confirmation(self, ensure_stages):
 		cycle = frappe._dict(name="CC-TEST", planting_date_confirmed=0)

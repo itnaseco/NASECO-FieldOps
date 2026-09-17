@@ -230,6 +230,18 @@ def create_agronomy_reports(crop_cycle, stages):
 		stage.db_set("agronomy_report", report.name, update_modified=False)
 
 
+def inspection_lifecycle_stage_name(inspection_type):
+	"""Map operational inspection names to the canonical crop-cycle stage."""
+	normalized = (inspection_type or "").strip().casefold().replace("-", " ")
+	if normalized in {"1st flowering", "2nd flowering", "3rd flowering"}:
+		return "Flowering"
+	if normalized == "pre flowering":
+		return "Pre-flowering"
+	if normalized == "pre harvest":
+		return "Pre-harvest"
+	return None
+
+
 def create_inspections(crop_cycle):
 	plot = frappe.get_doc("Farm Plot", crop_cycle.plot) if crop_cycle.plot else None
 	outgrower = frappe.get_doc("Outgrower", plot.outgrower) if plot and plot.outgrower else None
@@ -245,7 +257,11 @@ def create_inspections(crop_cycle):
 		assigned_inspector = get_quality_inspector(
 			crop_cycle, template.default_assigned_to, outgrower
 		)
-		stage = frappe.db.get_value("Crop Cycle Stage", {"crop_cycle": crop_cycle.name, "stage_name": template.crop_stage}) if template.crop_stage else None
+		stage_name = inspection_lifecycle_stage_name(template.inspection_type)
+		stage = frappe.db.get_value(
+			"Crop Cycle Stage",
+			{"crop_cycle": crop_cycle.name, "stage_name": stage_name},
+		) if stage_name else None
 		existing = frappe.db.get_value(
 			"Inspection",
 			{
@@ -258,8 +274,8 @@ def create_inspections(crop_cycle):
 			inspection = frappe.get_doc("Inspection", existing)
 			if inspection.status == "Scheduled":
 				inspection.db_set("scheduled_date", scheduled_date, update_modified=False)
-				if stage and not inspection.stage:
-					inspection.db_set("stage", stage, update_modified=False)
+			if stage and not inspection.stage:
+				inspection.db_set("stage", stage, update_modified=False)
 			scheduled_dates.append(inspection.scheduled_date or scheduled_date)
 			continue
 		inspection = frappe.get_doc(
@@ -426,19 +442,40 @@ def update_crop_cycle_current_stage(crop_cycle):
 	)
 	if not stages:
 		return
+	terminal_statuses = {"Completed", "Skipped", "Cancelled"}
 	existing_current = frappe.db.get_value("Crop Cycle", crop_cycle, "current_stage")
+	existing = next((row for row in stages if row.name == existing_current), None)
+	completed_order = max(
+		(
+			row.order_index or 0
+			for row in stages
+			if row.status in terminal_statuses
+		),
+		default=0,
+	)
 	if existing_current:
-		existing = next((row for row in stages if row.name == existing_current), None)
 		# Calendar dates indicate schedule/overdue state; they must not silently
 		# lock unfinished field work by advancing the authoritative pointer.
-		if existing and existing.status not in ("Completed", "Skipped", "Cancelled"):
+		# A later completed stage is evidence that a stale pointer has regressed;
+		# only that case is allowed to move an unfinished existing pointer.
+		if (
+			existing
+			and existing.status not in terminal_statuses
+			and (existing.order_index or 0) >= completed_order
+		):
 			return
+
+	floor_order = max(
+		completed_order,
+		(existing.order_index or 0) if existing else 0,
+	)
 	today = getdate(nowdate())
 	current = next(
 		(
 			row
 			for row in stages
-			if row.status != "Completed"
+			if row.status not in terminal_statuses
+			and (row.order_index or 0) > floor_order
 			and row.start_date
 			and row.end_date
 			and getdate(row.start_date) <= today <= getdate(row.end_date)
@@ -446,7 +483,14 @@ def update_crop_cycle_current_stage(crop_cycle):
 		None,
 	)
 	if not current:
-		current = next((row for row in stages if row.status != "Completed"), stages[-1])
+		current = next(
+			(
+				row for row in stages
+				if row.status not in terminal_statuses
+				and (row.order_index or 0) > floor_order
+			),
+			stages[-1],
+		)
 	frappe.db.set_value(
 		"Crop Cycle",
 		crop_cycle,
