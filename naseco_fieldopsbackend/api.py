@@ -1660,6 +1660,16 @@ def _evidence_within_completed_visit(doctype, values, visit_doc):
 		if not captured:
 			captured = [values.get("started_at") or values.get("completed_at")]
 		return bool(captured and all(value and start <= frappe.utils.get_datetime(value) <= end for value in captured))
+	if doctype == "Stage Input Dispatch":
+		# Dispatch Date is deliberately a Date field. Mobile deliveries may be
+		# recorded offline during the visit and uploaded only after the officer
+		# completes it, so compare the recorded delivery day with the visit
+		# window instead of requiring the visit to remain open during sync.
+		date_value = values.get("dispatch_date")
+		return bool(
+			date_value
+			and start.date() <= frappe.utils.getdate(date_value) <= end.date()
+		)
 	return False
 
 

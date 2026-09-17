@@ -99,7 +99,7 @@ class StageInputDispatch(Document):
 		visit = frappe.get_doc("Field Visit", self.field_visit)
 		if visit.visited_by != frappe.session.user:
 			frappe.throw(_("The Field Visit is not assigned to the logged-in user."), frappe.PermissionError)
-		if visit.status not in ("in_progress", "ongoing"):
+		if visit.status not in ("in_progress", "ongoing", "completed"):
 			frappe.throw(_("Start the Field Visit before dispatching inputs."))
 		if visit.crop_cycle != self.crop_cycle or visit.stage != self.stage:
 			frappe.throw(_("The dispatch does not match the Field Visit crop cycle and stage."))

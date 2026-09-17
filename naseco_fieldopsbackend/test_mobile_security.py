@@ -1,9 +1,30 @@
 from unittest import TestCase
+from types import SimpleNamespace
 
 from naseco_fieldopsbackend import api
 
 
 class TestMobileSecurity(TestCase):
+	def test_dispatch_recorded_during_visit_can_sync_after_completion(self):
+		visit = SimpleNamespace(
+			actual_start="2026-09-17 08:00:00",
+			actual_end="2026-09-17 10:00:00",
+		)
+		self.assertTrue(
+			api._evidence_within_completed_visit(
+				"Stage Input Dispatch",
+				{"dispatch_date": "2026-09-17"},
+				visit,
+			)
+		)
+		self.assertFalse(
+			api._evidence_within_completed_visit(
+				"Stage Input Dispatch",
+				{"dispatch_date": "2026-09-18"},
+				visit,
+			)
+		)
+
 	def test_only_known_store_or_doctype_names_are_resolved(self):
 		self.assertEqual(api._resolve_doctype("plots", strict=True), "Farm Plot")
 		self.assertEqual(api._resolve_doctype("Farm Plot", strict=True), "Farm Plot")
