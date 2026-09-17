@@ -12,6 +12,24 @@ from frappe.utils import add_days, cint, flt, getdate, now_datetime, nowdate
 NUMERIC_DATA_TYPES = {"Number", "Count", "Percent"}
 
 
+def can_override_agronomy_location():
+	"""Use the FieldOps positioning policy, while allowing the report owner role."""
+	from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.inspection.inspection import (
+		get_positioning_settings,
+	)
+
+	settings = get_positioning_settings()
+	if not settings.allow_positioning_override:
+		return False
+	if frappe.session.user == "Administrator":
+		return True
+	roles = set(frappe.get_roles(frappe.session.user))
+	return bool(
+		"Outgrower Supervisor" in roles
+		or settings.positioning_override_role in roles
+	)
+
+
 def has_raw_value(row):
 	if hasattr(row, "value_captured"):
 		return bool(cint(row.value_captured))
@@ -428,7 +446,25 @@ class AgronomyReport(Document):
 		# Preserve measured GPS accuracy for review, without blocking field entry
 		# or submission on an accuracy threshold.
 		if self.docstatus == 1 and not cint(self.inside_plot_boundary):
-			frappe.throw(_("The agronomy report location must be inside the Farm Plot boundary."))
+			if not cint(self.location_boundary_override):
+				frappe.throw(_(
+					"The agronomy report location is outside the Farm Plot boundary. "
+					"Request a location override and provide a reason to continue."
+				))
+			if not can_override_agronomy_location():
+				frappe.throw(
+					_("You are not permitted to override the agronomy report location."),
+					frappe.PermissionError,
+				)
+			if not (self.location_boundary_override_reason or "").strip():
+				frappe.throw(_("A location boundary override reason is required."))
+			self.location_boundary_override_by = frappe.session.user
+			self.location_boundary_override_at = now_datetime()
+		elif cint(self.inside_plot_boundary):
+			self.location_boundary_override = 0
+			self.location_boundary_override_reason = None
+			self.location_boundary_override_by = None
+			self.location_boundary_override_at = None
 
 	def has_recorded_results(self):
 		return any(has_raw_value(row) for row in self.results)
