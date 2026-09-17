@@ -42,6 +42,11 @@
   "gps_accuracy_meters",
   "location_captured_at",
   "inside_plot_boundary",
+  "ux_location_override_section",
+  "location_boundary_override",
+  "location_boundary_override_reason",
+  "location_boundary_override_by",
+  "location_boundary_override_at",
   "ux_observations_tab",
   "ux_agronomy_observations_section",
   "results",
@@ -303,6 +308,40 @@
    "fieldname": "inside_plot_boundary",
    "fieldtype": "Check",
    "label": "Inside Plot Boundary",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ux_location_override_section",
+   "fieldtype": "Section Break",
+   "label": "Location Boundary Exception"
+  },
+  {
+   "default": "0",
+   "description": "Use only when the captured GPS is outside the mapped plot boundary. The recorded GPS is retained.",
+   "fieldname": "location_boundary_override",
+   "fieldtype": "Check",
+   "label": "Override Plot Boundary"
+  },
+  {
+   "depends_on": "eval:doc.location_boundary_override",
+   "fieldname": "location_boundary_override_reason",
+   "fieldtype": "Small Text",
+   "label": "Override Reason",
+   "mandatory_depends_on": "eval:doc.location_boundary_override"
+  },
+  {
+   "depends_on": "eval:doc.location_boundary_override",
+   "fieldname": "location_boundary_override_by",
+   "fieldtype": "Link",
+   "label": "Override By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.location_boundary_override",
+   "fieldname": "location_boundary_override_at",
+   "fieldtype": "Datetime",
+   "label": "Override At",
    "read_only": 1
   },
   {

@@ -253,6 +253,8 @@ MOBILE_SERVER_OWNED_FIELDS["Agronomy Report"] |= {
 	"stage_lock_override_by",
 	"stage_lock_override_at",
 	"stage_lock_override_reason",
+	"location_boundary_override_by",
+	"location_boundary_override_at",
 }
 
 # Doctypes whose field data may only be created/updated while their linked
@@ -707,6 +709,10 @@ MOBILE_FIELD_MAP = {
 		"gpsAccuracyMeters": "gps_accuracy_meters",
 		"locationCapturedAt": "location_captured_at",
 		"insidePlotBoundary": "inside_plot_boundary",
+		"locationBoundaryOverride": "location_boundary_override",
+		"locationBoundaryOverrideReason": "location_boundary_override_reason",
+		"locationBoundaryOverrideBy": "location_boundary_override_by",
+		"locationBoundaryOverrideAt": "location_boundary_override_at",
 		"overallResult": "overall_result",
 		"passPercentage": "pass_percentage",
 		"evaluatedParameterCount": "evaluated_parameter_count",

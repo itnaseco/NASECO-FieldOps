@@ -15,6 +15,34 @@ from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.agronomy_report.agron
 
 
 class TestAgronomyReport(unittest.TestCase):
+	@patch(
+		"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.agronomy_report.agronomy_report.can_override_agronomy_location",
+		return_value=True,
+	)
+	def test_authorized_boundary_override_preserves_recorded_gps(self, _can_override):
+		report = SimpleNamespace(
+			flags={},
+			docstatus=1,
+			latitude=0.315,
+			longitude=32.582,
+			gps_accuracy_meters=8.5,
+			inside_plot_boundary=0,
+			location_boundary_override=1,
+			location_boundary_override_reason="Plot boundary requires remapping",
+			location_boundary_override_by=None,
+			location_boundary_override_at=None,
+		)
+		with patch(
+			"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.agronomy_report.agronomy_report.frappe.session",
+			SimpleNamespace(user="supervisor@example.com"),
+		):
+			AgronomyReport.validate_location(report)
+		self.assertEqual(report.latitude, 0.315)
+		self.assertEqual(report.longitude, 32.582)
+		self.assertEqual(report.gps_accuracy_meters, 8.5)
+		self.assertEqual(report.location_boundary_override_by, "supervisor@example.com")
+		self.assertIsNotNone(report.location_boundary_override_at)
+
 	@patch("naseco_fieldopsbackend.inspection_scheduler.update_crop_cycle_current_stage")
 	@patch(
 		"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.agronomy_report.agronomy_report.frappe.db.sql"
