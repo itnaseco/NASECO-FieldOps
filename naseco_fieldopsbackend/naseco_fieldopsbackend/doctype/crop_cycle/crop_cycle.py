@@ -156,6 +156,19 @@ class CropCycle(Document):
 				)
 		sync_crop_cycle_lifecycle(self)
 		self.provision_stage_inputs()
+		self.sync_farm_plot_status()
+
+	def sync_farm_plot_status(self):
+		"""Keep the linked Farm Plot's status in step with whether this cycle is running."""
+		if not self.plot:
+			return
+		frappe.db.set_value(
+			"Farm Plot",
+			self.plot,
+			"status",
+			"Active" if self.status == "ACTIVE" else "Idle",
+			update_modified=False,
+		)
 
 	def provision_stage_inputs(self):
 		"""Provision approved recipe inputs only after planting is confirmed."""
@@ -179,6 +192,8 @@ class CropCycle(Document):
 				None,
 				update_modified=False,
 			)
+		if self.plot:
+			frappe.db.set_value("Farm Plot", self.plot, "status", "Idle", update_modified=False)
 
 	def update_status(self):
 		"""

@@ -85,12 +85,13 @@
    "default": "Owned"
   },
   {
-   "default": "Active",
-   "description": "Whether this plot is currently under a running crop cycle.",
+   "default": "Idle",
+   "description": "Automatically set to Active while this plot has a running (ACTIVE) Crop Cycle, and Idle otherwise.",
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Active\nIdle"
+   "options": "Active\nIdle",
+   "read_only": 1
   },
   {
    "fieldname": "synced",

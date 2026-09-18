@@ -286,13 +286,11 @@ class OutgrowerProductionContract(Document):
 		plot = frappe.db.get_value(
 			"Farm Plot",
 			self.farm_plot,
-			["outgrower", "status"],
+			["outgrower"],
 			as_dict=True,
 		)
 		if not plot or plot.outgrower != self.outgrower:
 			frappe.throw(_("Farm Plot must belong to the selected Outgrower."))
-		if plot.status and plot.status != "Active":
-			frappe.throw(_("Only an active Farm Plot can be contracted."))
 		if not self.supplier:
 			frappe.throw(
 				_("Create the Supplier for Outgrower {0} before submitting this contract.").format(
