@@ -56,7 +56,7 @@
   "ux_farm_plot_naming_section",
   "auto_generate_plot_ids",
   "ux_farm_plot_naming_column_2_column",
-  "plot_alpha_suffix_limit",
+  "plot_id_suffix_digits",
   "ux_controlled_override_section",
   "allow_positioning_override",
   "ux_controlled_override_column_2_column",
@@ -369,7 +369,7 @@
   },
   {
    "default": "1",
-   "description": "Generate Farm Plot IDs from the Outgrower ID and an alphabetic suffix, for example H-001-A.",
+   "description": "Generate Farm Plot IDs from the Outgrower ID and an autoincrementing numeric suffix, for example H-0001-001.",
    "fieldname": "auto_generate_plot_ids",
    "fieldtype": "Check",
    "label": "Automatically Generate Farm Plot IDs"
@@ -380,11 +380,11 @@
    "label": "Farm Plot Naming Column 2"
   },
   {
-   "default": "2",
-   "description": "Maximum suffix letters. A value of 2 supports A to ZZ per outgrower.",
-   "fieldname": "plot_alpha_suffix_limit",
+   "default": "3",
+   "description": "Minimum digits used for the numeric plot suffix, zero-padded (e.g. 3 gives -001, -002, ...). The suffix grows automatically once the count exceeds this width.",
+   "fieldname": "plot_id_suffix_digits",
    "fieldtype": "Int",
-   "label": "Maximum Plot Suffix Letters"
+   "label": "Minimum Plot Suffix Digits"
   },
   {
    "fieldname": "ux_controlled_override_section",

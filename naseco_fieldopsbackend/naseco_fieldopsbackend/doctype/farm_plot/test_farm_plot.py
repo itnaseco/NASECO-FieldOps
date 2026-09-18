@@ -10,15 +10,36 @@ import frappe
 
 from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.farm_plot.farm_plot import (
 	FarmPlot,
-	_alpha_suffix,
+	get_next_plot_id,
 )
 
 
 class TestFarmPlot(TestCase):
-	def test_plot_suffix_sequence_supports_multiple_letters(self):
-		self.assertEqual(_alpha_suffix(1), "A")
-		self.assertEqual(_alpha_suffix(26), "Z")
-		self.assertEqual(_alpha_suffix(27), "AA")
+	def test_plot_suffix_sequence_is_zero_padded_and_autoincrements(self):
+		with patch(
+			"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.farm_plot.farm_plot.frappe.db.get_single_value",
+			return_value=3,
+		), patch(
+			"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.farm_plot.farm_plot.frappe.db.sql",
+			return_value=[],
+		), patch(
+			"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.farm_plot.farm_plot.frappe.db.exists",
+			return_value=False,
+		):
+			self.assertEqual(get_next_plot_id("H-0001"), "H-0001-001")
+
+	def test_plot_suffix_sequence_skips_ids_already_in_use(self):
+		with patch(
+			"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.farm_plot.farm_plot.frappe.db.get_single_value",
+			return_value=3,
+		), patch(
+			"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.farm_plot.farm_plot.frappe.db.sql",
+			return_value=[{"plot_id": "H-0001-001"}, {"plot_id": "H-0001-002"}],
+		), patch(
+			"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.farm_plot.farm_plot.frappe.db.exists",
+			return_value=False,
+		):
+			self.assertEqual(get_next_plot_id("H-0001"), "H-0001-003")
 
 	def test_polygon_area_is_returned_in_hectares(self):
 		# A small equatorial polygon close to one hectare.

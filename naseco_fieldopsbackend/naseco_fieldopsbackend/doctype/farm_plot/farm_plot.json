@@ -86,10 +86,11 @@
   },
   {
    "default": "Active",
+   "description": "Whether this plot is currently under a running crop cycle.",
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Active\nIdle\nACTIVE\nIDLE"
+   "options": "Active\nIdle"
   },
   {
    "fieldname": "synced",
