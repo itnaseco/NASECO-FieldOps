@@ -2486,14 +2486,48 @@ def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 
 		_merge_confirmed_cycle_context(data)
 
+		deletions = _get_sync_deletions(sync_doctypes, last_sync_dt)
+
 		return {
 			"data": data,
+			"deletions": deletions,
 			"server_time": datetime.now().isoformat(),
 			"last_sync": last_sync,
 		}
 	except Exception as e:
 		frappe.log_error(f"Get sync data error: {str(e)}")
 		return {"error": str(e)}
+
+
+def _get_sync_deletions(sync_doctypes, last_sync_dt):
+	"""
+	Records deleted from Frappe (e.g. a manager deleting an Outgrower from
+	the desk) simply vanish from the get_all() results above — indistinguishable,
+	to an offline client holding a stale local copy, from "never existed" or
+	"out of scope". Frappe already tombstones every frappe.delete_doc() call
+	into the built-in "Deleted Document" table, so surface that as an explicit
+	feed instead of leaving mobile with no signal to remove its local copy.
+
+	Not scoped by user/region: a deletion for a record mobile never held
+	locally is a harmless no-op there, and the deleted record's own scoping
+	fields are no longer queryable once it's gone.
+	"""
+	if not sync_doctypes:
+		return {}
+	filters = [["deleted_doctype", "in", sync_doctypes]]
+	if last_sync_dt:
+		filters.append(["creation", ">", last_sync_dt])
+	rows = frappe.get_all(
+		"Deleted Document",
+		filters=filters,
+		fields=["deleted_doctype", "deleted_name"],
+		order_by="creation asc",
+	)
+	deletions = {}
+	for row in rows:
+		store = DOCTYPE_TO_STORE.get(row.deleted_doctype, row.deleted_doctype)
+		deletions.setdefault(store, []).append(row.deleted_name)
+	return deletions
 
 
 def _merge_confirmed_cycle_context(data):
@@ -2592,6 +2626,19 @@ def push_sync_data(data):
 				_authorize_mobile_write(
 					doctype, effective_operation, mapped.get("name"), mapped
 				)
+				if effective_operation == "DELETE":
+					# Deletions must actually delete. Falling through to the
+					# update/create branch below would silently resurrect or
+					# edit a record the mobile user asked to remove.
+					name = mapped.get("name")
+					if name and frappe.db.exists(doctype, name):
+						frappe.delete_doc(doctype, name, ignore_permissions=True)
+						status = "deleted"
+					else:
+						status = "not_found"
+					log_sync(frappe.session.user, doctype, name, operation, status)
+					results.append({"status": status, "doctype": doctype, "name": name})
+					continue
 				if mapped.get("name") and frappe.db.exists(doctype, mapped["name"]):
 					doc = frappe.get_doc(doctype, mapped["name"])
 
