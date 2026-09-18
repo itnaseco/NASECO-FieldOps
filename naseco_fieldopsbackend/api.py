@@ -5,7 +5,7 @@ import frappe
 from frappe import _
 import json
 from datetime import datetime
-from frappe.utils import flt
+from frappe.utils import flt, get_fullname
 
 from naseco_fieldopsbackend.uom import normalize_uom
 from naseco_fieldopsbackend.roles import (
@@ -1308,7 +1308,7 @@ def _attach_user_full_names(doctype, source, result=None):
 		if not user_id:
 			continue
 		if user_id not in _user_full_name_cache:
-			_user_full_name_cache[user_id] = frappe.get_fullname(user_id) or user_id
+			_user_full_name_cache[user_id] = get_fullname(user_id) or user_id
 		full_name = _user_full_name_cache[user_id]
 		result[f"{field.fieldname}_full_name"] = full_name
 		mobile_field = reverse.get(field.fieldname)
