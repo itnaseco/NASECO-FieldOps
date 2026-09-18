@@ -350,12 +350,12 @@ def recalculate_plot_measurements(farm_plot):
 
 
 def get_next_plot_id(outgrower):
-	"""Allocate the next alphabetic plot suffix under an outgrower."""
+	"""Allocate the next autoincrementing numeric plot suffix under an outgrower."""
 	prefix = str(outgrower).strip()
-	limit = int(
-		frappe.db.get_single_value("FieldOps Settings", "plot_alpha_suffix_limit") or 2
+	digits = int(
+		frappe.db.get_single_value("FieldOps Settings", "plot_id_suffix_digits") or 3
 	)
-	limit = min(max(limit, 1), 4)
+	digits = min(max(digits, 1), 6)
 
 	# Lock this outgrower's existing rows for the duration of the insert transaction.
 	existing = frappe.db.sql(
@@ -369,19 +369,16 @@ def get_next_plot_id(outgrower):
 		as_dict=True,
 	)
 	used = {row.plot_id for row in existing if row.plot_id}
-	for index in range(1, sum(26**width for width in range(1, limit + 1)) + 1):
-		candidate = f"{prefix}-{_alpha_suffix(index)}"
+
+	suffix_pattern = re.compile(rf"^{re.escape(prefix)}-(\d+)$")
+	next_suffix = 1
+	for plot_id in used:
+		match = suffix_pattern.match(plot_id)
+		if match:
+			next_suffix = max(next_suffix, int(match.group(1)) + 1)
+
+	while True:
+		candidate = f"{prefix}-{str(next_suffix).zfill(digits)}"
 		if candidate not in used and not frappe.db.exists("Farm Plot", candidate):
 			return candidate
-
-	frappe.throw(
-		_("No Farm Plot suffixes remain for Outgrower {0}.").format(frappe.bold(outgrower))
-	)
-
-
-def _alpha_suffix(index):
-	letters = []
-	while index:
-		index, remainder = divmod(index - 1, 26)
-		letters.append(chr(65 + remainder))
-	return "".join(reversed(letters))
+		next_suffix += 1
