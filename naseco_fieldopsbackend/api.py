@@ -2522,6 +2522,7 @@ def _get_sync_deletions(sync_doctypes, last_sync_dt):
 		filters=filters,
 		fields=["deleted_doctype", "deleted_name"],
 		order_by="creation asc",
+		ignore_permissions=True,
 	)
 	deletions = {}
 	for row in rows:
