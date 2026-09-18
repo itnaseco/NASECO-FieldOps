@@ -1287,6 +1287,33 @@ def _map_doc_to_mobile(doctype, doc_dict):
 			take["readings"] = readings_by_take.get(take.get("takeNumber"), [])
 	if doctype == "Stage Input Request Item" and doc_dict.get("name"):
 		result["inputRequestItemId"] = doc_dict.get("name")
+	return _attach_user_full_names(doctype, doc_dict, result)
+
+
+_user_full_name_cache = {}
+
+
+def _attach_user_full_names(doctype, source, result=None):
+	"""Add display-only names for authorized User links without replacing IDs."""
+	result = dict(result if result is not None else source or {})
+	try:
+		meta = _get_meta(doctype)
+	except Exception:
+		return result
+	reverse = {value: key for key, value in MOBILE_FIELD_MAP.get(doctype, {}).items()}
+	for field in meta.fields:
+		if field.fieldtype != "Link" or field.options != "User":
+			continue
+		user_id = (source or {}).get(field.fieldname)
+		if not user_id:
+			continue
+		if user_id not in _user_full_name_cache:
+			_user_full_name_cache[user_id] = frappe.get_fullname(user_id) or user_id
+		full_name = _user_full_name_cache[user_id]
+		result[f"{field.fieldname}_full_name"] = full_name
+		mobile_field = reverse.get(field.fieldname)
+		if mobile_field:
+			result[f"{mobile_field}FullName"] = full_name
 	return result
 
 
@@ -2205,7 +2232,9 @@ def get_modified_records(last_sync_timestamp=None, doctypes=None, doctype=None, 
 						doc_dict = doc.as_dict()
 						if doctype == "Outgrower":
 							doc_dict = _enrich_outgrower_aliases(doc_dict)
-						full_records.append(doc_dict)
+						full_records.append(
+							_attach_user_full_names(doctype, doc_dict, doc_dict)
+						)
 					except Exception as e:
 						frappe.log_error(f"Error fetching {doctype} {record.name}: {str(e)}")
 
