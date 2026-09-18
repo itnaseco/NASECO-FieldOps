@@ -272,6 +272,28 @@ DOCTYPE_TO_STORE = {v: k for k, v in BASE_STORE_TO_DOCTYPE.items()}
 # Input aliases must not choose the outbound canonical mobile store.
 DOCTYPE_TO_STORE["Field Corrective Action"] = "field_corrective_actions"
 
+# Doctypes with no Table/child-table fields (verified against each doctype's
+# JSON). get_sync_data can fetch these with a single bulk frappe.get_all(...)
+# call instead of one frappe.get_doc() per record — the latter issues an
+# extra query per child table per row and was the main cause of the sync
+# endpoint timing out as Attendance/Employee Checkin accumulate daily
+# records. Doctypes with real child tables (Farm Plot, Crop Cycle, Crop
+# Cycle Stage, Field Visit, Inspection, Agronomy Report, Stage Input
+# Request) keep the slower get_doc() path since _map_doc_to_mobile needs
+# their nested data.
+SYNC_DOCTYPES_WITHOUT_CHILD_TABLES = {
+	"Outgrower",
+	"Field Trip",
+	"Field Corrective Action",
+	"Plot Crop Assignment",
+	"Stage Activity",
+	"Stage Input Dispatch",
+	"Crop Production Lot",
+	"Seed Harvest Quality Assessment",
+	"Attendance",
+	"Employee Checkin",
+}
+
 ID_FIELD_MAP = {
 	"Outgrower": "outgrower_id",
 	"Farm Plot": "plot_id",
@@ -2458,14 +2480,25 @@ def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 			if officer_region and doctype == "Farm Plot" and region_outgrowers:
 				filters.append(["outgrower", "in", region_outgrowers])
 
-			records = frappe.get_all(doctype, filters=filters, fields=["name"], order_by="modified asc")
 			full_docs = []
-			for row in records:
-				try:
-					doc = frappe.get_doc(doctype, row.name).as_dict()
-					full_docs.append(_map_doc_to_mobile(doctype, doc))
-				except Exception:
-					frappe.log_error(f"Error fetching {doctype} {row.name}")
+			if doctype in SYNC_DOCTYPES_WITHOUT_CHILD_TABLES:
+				# One query for every row instead of one frappe.get_doc() per
+				# row — safe because this doctype has no child tables for
+				# _map_doc_to_mobile to lose.
+				rows = frappe.get_all(doctype, filters=filters, fields=["*"], order_by="modified asc")
+				for row in rows:
+					try:
+						full_docs.append(_map_doc_to_mobile(doctype, row))
+					except Exception:
+						frappe.log_error(f"Error mapping {doctype} {row.get('name')}")
+			else:
+				records = frappe.get_all(doctype, filters=filters, fields=["name"], order_by="modified asc")
+				for row in records:
+					try:
+						doc = frappe.get_doc(doctype, row.name).as_dict()
+						full_docs.append(_map_doc_to_mobile(doctype, doc))
+					except Exception:
+						frappe.log_error(f"Error fetching {doctype} {row.name}")
 
 			store = DOCTYPE_TO_STORE.get(doctype, doctype)
 			data[store] = full_docs
