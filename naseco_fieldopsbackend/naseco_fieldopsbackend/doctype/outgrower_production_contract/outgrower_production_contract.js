@@ -3,8 +3,12 @@
 
 frappe.ui.form.on('Outgrower Production Contract', {
 	setup(frm) {
+		// A plot is Idle precisely because it has no running crop cycle yet.
+		// Selecting Active here creates a circular dependency: a contract/cycle
+		// cannot be created until the plot is Active, while the plot only becomes
+		// Active when its crop cycle starts.
 		frm.set_query('farm_plot', () => ({
-			filters: { outgrower: frm.doc.outgrower, status: 'Active' }
+			filters: { outgrower: frm.doc.outgrower, status: 'Idle' }
 		}));
 		frm.set_query('variety', () => ({
 			filters: { crop: frm.doc.crop }
