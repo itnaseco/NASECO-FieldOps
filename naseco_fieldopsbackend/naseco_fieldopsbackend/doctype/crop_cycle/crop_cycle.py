@@ -159,14 +159,19 @@ class CropCycle(Document):
 		self.sync_farm_plot_status()
 
 	def sync_farm_plot_status(self):
-		"""Keep the linked Farm Plot's status in step with whether this cycle is running."""
+		"""Reserve the plot for every non-completed Crop Cycle.
+
+		A newly initiated cycle can be PLANNED until its planting/start date. The
+		plot is nevertheless already assigned and must not appear Idle or be
+		available for another production contract.
+		"""
 		if not self.plot:
 			return
 		frappe.db.set_value(
 			"Farm Plot",
 			self.plot,
 			"status",
-			"Active" if self.status == "ACTIVE" else "Idle",
+			farm_plot_status_for_cycle(self.status),
 			update_modified=False,
 		)
 
@@ -214,6 +219,11 @@ class CropCycle(Document):
 				self.status = "ACTIVE"
 		else:
 			self.status = "PLANNED"
+
+
+def farm_plot_status_for_cycle(cycle_status):
+	"""Return the two-state Farm Plot status for a Crop Cycle lifecycle state."""
+	return "Idle" if str(cycle_status or "").upper() == "COMPLETED" else "Active"
 
 
 def get_existing_cycle_for_plot(plot, exclude_cycle=None):

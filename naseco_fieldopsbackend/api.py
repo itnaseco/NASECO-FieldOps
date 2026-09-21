@@ -180,6 +180,11 @@ MOBILE_ROLE_CREATE = {
 	QUALITY_INSPECTOR_ROLE: {"Field Visit", "Field Trip", "Inspection", "Seed Harvest Quality Assessment"},
 }
 MOBILE_SERVER_OWNED_FIELDS = {
+	"Farm Plot": {
+		# Derived exclusively from the linked Crop Cycle lifecycle. Accepting the
+		# mobile cache's older value can incorrectly revert an occupied plot.
+		"status",
+	},
 	"Inspection": {
 		"status",
 		"assigned_to",

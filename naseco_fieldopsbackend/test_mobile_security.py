@@ -42,6 +42,14 @@ class TestMobileSecurity(TestCase):
 		self.assertIn("sampling_protocol_version", fields)
 		self.assertIn("cumulative_total_plants", fields)
 
+	def test_mobile_cannot_overwrite_derived_farm_plot_status(self):
+		values = api._strip_server_owned_mobile_fields(
+			"Farm Plot",
+			{"status": "Idle", "plot_name": "North Field"},
+		)
+		self.assertNotIn("status", values)
+		self.assertEqual(values["plot_name"], "North Field")
+
 	def test_count_sampling_fields_have_mobile_contracts(self):
 		self.assertEqual(
 			api.MOBILE_FIELD_MAP["Inspection Take"]["totalPlantsCounted"],
