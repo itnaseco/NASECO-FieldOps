@@ -8,6 +8,7 @@ from unittest.mock import patch
 import frappe
 
 from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle import CropCycle
+from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle import farm_plot_status_for_cycle
 from naseco_fieldopsbackend.inspection_scheduler import resolve_activity_templates
 from naseco_fieldopsbackend.inspection_scheduler import sync_crop_cycle_lifecycle
 from naseco_fieldopsbackend.inspection_scheduler import update_crop_cycle_current_stage
@@ -15,6 +16,13 @@ from naseco_fieldopsbackend.inspection_scheduler import inspection_lifecycle_sta
 
 
 class TestCropCycle(TestCase):
+	def test_planned_and_running_cycles_reserve_the_plot(self):
+		self.assertEqual(farm_plot_status_for_cycle("PLANNED"), "Active")
+		self.assertEqual(farm_plot_status_for_cycle("ACTIVE"), "Active")
+
+	def test_completed_cycle_releases_the_plot(self):
+		self.assertEqual(farm_plot_status_for_cycle("COMPLETED"), "Idle")
+
 	def test_flowering_inspections_map_to_flowering_lifecycle_stage(self):
 		for inspection_type in ("1st Flowering", "2nd Flowering", "3rd Flowering"):
 			self.assertEqual(
