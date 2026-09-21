@@ -303,10 +303,10 @@ ID_FIELD_MAP = {
 	"Outgrower": "outgrower_id",
 	"Farm Plot": "plot_id",
 	"Crop Cycle": "crop_cycle_id",
-	"Crop Production Lot": "name",
-	"Seed Harvest Quality Assessment": "name",
+	"Crop Production Lot": "external_id",
+	"Seed Harvest Quality Assessment": "external_id",
 	"Crop Cycle Stage": "stage_id",
-	"Agronomy Report": "name",
+	"Agronomy Report": "external_id",
 	"Field Visit": "visit_id",
 	"Field Trip": "external_id",
 	"Inspection": "inspection_id",
@@ -2765,7 +2765,9 @@ def reconcile_mobile_create(store, client_id, payload):
 	fields = [field for field in ("external_id", ID_FIELD_MAP.get(doctype))
 		if field and meta.has_field(field)]
 	if not fields:
-		frappe.throw("This document has no durable mobile correlation field; recovery requires backend configuration.")
+		frappe.throw(
+			_("{0} has no durable mobile correlation field; recovery requires backend configuration.").format(doctype)
+		)
 	lock = hashlib.sha256((doctype + ":" + str(client_id)).encode()).hexdigest()
 	if not frappe.db.sql("SELECT GET_LOCK(%s, 15)", (lock,))[0][0]:
 		frappe.throw("A previous create is still running. Retry sync shortly.")
