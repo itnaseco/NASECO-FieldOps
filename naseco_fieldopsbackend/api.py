@@ -658,7 +658,7 @@ MOBILE_FIELD_MAP = {
 		"parameterCode": "parameter_code",
 		"parameterGroup": "parameter_group",
 		"dataType": "data_type",
-		"options": "options",
+		"selectOptions": "select_options",
 		"appliesTo": "applies_to",
 		"measurementScope": "measurement_scope",
 		"calculationMethod": "calculation_method",
