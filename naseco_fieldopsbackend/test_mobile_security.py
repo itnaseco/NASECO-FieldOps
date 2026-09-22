@@ -17,6 +17,26 @@ class TestMobileSecurity(TestCase):
 			)
 			self.assertIn("status", api.MOBILE_SERVER_OWNED_FIELDS[doctype])
 
+	def test_scalable_quality_configuration_schema_is_installed(self):
+		self.assertTrue(api.frappe.get_meta("Inspection Take Evidence").istable)
+		for doctype, fields in {
+			"Inspection": ("template_version", "configuration_snapshot", "take_evidence"),
+			"Inspection Parameter": ("inspection_attribute", "evidence_policy", "minimum_evidence_files"),
+			"Inspection Template": ("configuration_version", "lifecycle_status", "supersedes_template"),
+			"Crop Cycle": ("verified_inter_row_spacing_m", "spacing_source_inspection"),
+		}.items():
+			meta = api.frappe.get_meta(doctype)
+			for fieldname in fields:
+				self.assertTrue(meta.has_field(fieldname), f"{doctype}.{fieldname}")
+		self.assertTrue(api.frappe.db.exists("Inspection Parameter", "Pest Infested Plants"))
+		self.assertTrue(api.frappe.db.exists("Inspection Parameter", "Inter-row Spacing"))
+
+	def test_take_evidence_has_bidirectional_mobile_mapping(self):
+		mapping = api.MOBILE_FIELD_MAP["Inspection Take Evidence"]
+		self.assertEqual(mapping["takeNumber"], "take_number")
+		self.assertEqual(mapping["parameterId"], "parameter")
+		self.assertEqual(mapping["fileUrl"], "file")
+
 	def test_mobile_expense_becomes_an_erpnext_expense_detail(self):
 		def get_value(doctype, name, fieldname):
 			if doctype == "Employee" and fieldname == "company":

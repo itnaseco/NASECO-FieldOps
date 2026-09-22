@@ -4,8 +4,9 @@
 import frappe
 from frappe import _
 import json
+from collections import defaultdict
 from datetime import datetime
-from frappe.utils import flt, get_fullname
+from frappe.utils import cint, flt, get_fullname
 
 from naseco_fieldopsbackend.uom import normalize_uom
 from naseco_fieldopsbackend.roles import (
@@ -14,6 +15,66 @@ from naseco_fieldopsbackend.roles import (
 	QUALITY_INSPECTOR_ROLE,
 	QUALITY_MANAGER_ROLE,
 )
+
+
+def _require_quality_manager():
+	if frappe.session.user != "Administrator" and QUALITY_MANAGER_ROLE not in frappe.get_roles():
+		frappe.throw(_("Only a Quality Manager can manage published inspection configurations."), frappe.PermissionError)
+
+
+@frappe.whitelist()
+def create_inspection_template_version(template):
+	"""Clone a published template and its standards into an editable draft version."""
+	_require_quality_manager()
+	source = frappe.get_doc("Inspection Template", template)
+	next_version = cint(source.get("configuration_version")) + 1
+	base_name = source.template_name.rsplit(" v", 1)[0]
+	new_name = f"{base_name} v{next_version}"
+	if frappe.db.exists("Inspection Template", new_name):
+		return {"name": new_name, "version": next_version}
+	clone = frappe.copy_doc(source)
+	clone.template_name = new_name
+	clone.configuration_version = next_version
+	clone.lifecycle_status = "Draft"
+	clone.supersedes_template = source.name
+	clone.active = 0
+	clone.effective_from = None
+	clone.effective_to = None
+	clone.insert(ignore_permissions=True)
+	for standard in frappe.get_all(
+		"Inspection Standard",
+		filters={"inspection_template": source.name},
+		pluck="name",
+	):
+		row = frappe.copy_doc(frappe.get_doc("Inspection Standard", standard))
+		row.inspection_template = clone.name
+		row.insert(ignore_permissions=True)
+	frappe.db.commit()
+	return {"name": clone.name, "version": next_version}
+
+
+@frappe.whitelist()
+def publish_inspection_template_version(template):
+	"""Publish a draft version and retire only the version it supersedes."""
+	_require_quality_manager()
+	doc = frappe.get_doc("Inspection Template", template)
+	if doc.lifecycle_status == "Published":
+		return {"name": doc.name, "version": doc.configuration_version}
+	if doc.lifecycle_status != "Draft":
+		frappe.throw(_("Only a Draft inspection template can be published."))
+	if not frappe.db.exists("Inspection Standard", {"inspection_template": doc.name}):
+		frappe.throw(_("Add at least one Inspection Standard before publishing this template."))
+	if doc.supersedes_template and frappe.db.exists("Inspection Template", doc.supersedes_template):
+		frappe.db.set_value(
+			"Inspection Template",
+			doc.supersedes_template,
+			{"lifecycle_status": "Retired", "active": 0, "effective_to": frappe.utils.today()},
+		)
+	doc.db_set(
+		{"lifecycle_status": "Published", "active": 1, "effective_from": doc.effective_from or frappe.utils.today()},
+	)
+	frappe.db.commit()
+	return {"name": doc.name, "version": doc.configuration_version}
 
 # Mobile <-> Frappe mappings
 BASE_STORE_TO_DOCTYPE = {
@@ -206,6 +267,8 @@ MOBILE_SERVER_OWNED_FIELDS = {
 		"reinspection_of",
 		"reinspection_reason",
 		"sampling_protocol_version",
+		"template_version",
+		"configuration_snapshot",
 		"results",
 		"completed_take_count",
 		"farmer_compliance_percent",
@@ -418,6 +481,9 @@ MOBILE_FIELD_MAP = {
 		"availableAdvanceCapacity": "available_advance_capacity",
 		"actualHarvestValue": "actual_harvest_value",
 		"forecastNetPayable": "forecast_net_payable",
+		"verifiedInterRowSpacingM": "verified_inter_row_spacing_m",
+		"spacingSourceInspection": "spacing_source_inspection",
+		"spacingVerifiedOn": "spacing_verified_on",
 	},
 	"Outgrower Production Contract": {
 		"productionContractId": "name",
@@ -568,6 +634,8 @@ MOBILE_FIELD_MAP = {
 	"Inspection": {
 		"inspectionId": "inspection_id",
 		"inspectionTemplateId": "inspection_template",
+		"templateVersion": "template_version",
+		"configurationSnapshot": "configuration_snapshot",
 		"inspectionType": "inspection_type",
 		"cropCycleId": "crop_cycle",
 		"productionContractId": "production_contract",
@@ -637,6 +705,16 @@ MOBILE_FIELD_MAP = {
 		"resultStatus": "result_status",
 		"correctiveActionRequired": "corrective_action_required",
 	},
+	"Inspection Take Evidence": {
+		"evidenceId": "external_id",
+		"takeNumber": "take_number",
+		"parameterId": "parameter",
+		"fileUrl": "file",
+		"fileType": "file_type",
+		"capturedAt": "captured_at",
+		"capturedBy": "captured_by",
+		"fileHash": "file_hash",
+	},
 	"Inspection Result": {
 		"aggregationMethod": "aggregation_method",
 		"observationCount": "observation_count",
@@ -668,6 +746,11 @@ MOBILE_FIELD_MAP = {
 		"dueWindowEndDays": "due_window_end_days",
 		"countsPerHectare": "counts_per_hectare",
 		"defaultAssignedTo": "default_assigned_to",
+		"configurationVersion": "configuration_version",
+		"lifecycleStatus": "lifecycle_status",
+		"supersedesTemplate": "supersedes_template",
+		"effectiveFrom": "effective_from",
+		"effectiveTo": "effective_to",
 	},
 	"Inspection Parameter": {
 		"parameterName": "parameter_name",
@@ -680,6 +763,13 @@ MOBILE_FIELD_MAP = {
 		"calculationMethod": "calculation_method",
 		"denominatorBasis": "denominator_basis",
 		"requiresTakeCounts": "requires_take_counts",
+		"inspectionAttribute": "inspection_attribute",
+		"evidencePolicy": "evidence_policy",
+		"minimumEvidenceFiles": "minimum_evidence_files",
+		"maximumEvidenceFiles": "maximum_evidence_files",
+		"allowMultipleFiles": "allow_multiple_files",
+		"decimalPrecision": "decimal_precision",
+		"active": "active",
 	},
 	"Inspection Standard": {
 		"inspectionTemplateId": "inspection_template",
@@ -694,6 +784,13 @@ MOBILE_FIELD_MAP = {
 		"autoRejectOnFail": "auto_reject_on_fail",
 		"correctiveActionOnFail": "corrective_action_on_fail",
 		"standardNotes": "standard_notes",
+	},
+	"Inspection Attribute": {
+		"attributeName": "attribute_name",
+		"attributeCode": "attribute_code",
+		"attributeGroup": "attribute_group",
+		"attributeType": "attribute_type",
+		"active": "active",
 	},
 	"Agronomy Activity Template": {
 		"activityName": "activity_name",
@@ -1159,6 +1256,11 @@ def _map_mobile_to_doc(doctype, payload):
 				[_map_mobile_child_to_doc("Inspection Take Result", row) for row in value or []]
 			)
 			continue
+		if key in ("takeEvidence", "take_evidence") and doctype == "Inspection":
+			result["take_evidence"] = [
+				_map_mobile_child_to_doc("Inspection Take Evidence", row) for row in value or []
+			]
+			continue
 		if key in ("inspectionObservations", "inspection_observations") and doctype == "Inspection":
 			result["inspection_observations"] = [
 				_map_mobile_child_to_doc("Inspection Observation", row) for row in value or []
@@ -1291,6 +1393,11 @@ def _map_doc_to_mobile(doctype, doc_dict):
 		if key == "take_results" and doctype == "Inspection":
 			result["takeResults"] = [
 				_map_doc_to_mobile("Inspection Take Result", row) for row in value or []
+			]
+			continue
+		if key == "take_evidence" and doctype == "Inspection":
+			result["takeEvidence"] = [
+				_map_doc_to_mobile("Inspection Take Evidence", row) for row in value or []
 			]
 			continue
 		if key == "inspection_observations" and doctype == "Inspection":
@@ -1859,6 +1966,26 @@ def _strip_server_owned_mobile_fields(doctype, values):
 		for observation in values.get("inspection_observations") or []:
 			observation["captured_by"] = frappe.session.user
 			observation["captured_at"] = frappe.utils.now_datetime()
+		if values.get("inspection_template"):
+			existing_version = None
+			existing_snapshot = None
+			if values.get("name") and frappe.db.exists("Inspection", values.get("name")):
+				existing_version, existing_snapshot = frappe.db.get_value(
+					"Inspection",
+					values.get("name"),
+					["template_version", "configuration_snapshot"],
+				)
+			version = frappe.db.get_value(
+				"Inspection Template",
+				values.get("inspection_template"),
+				"configuration_version",
+			)
+			values["template_version"] = existing_version or version or 1
+			values["configuration_snapshot"] = (
+				existing_snapshot
+				or _inspection_configuration_snapshot(values.get("inspection_template"))
+			)
+		_validate_mobile_take_evidence(values)
 	if doctype == "Agronomy Report" and "results" in values:
 		raw_fields = {
 			"parameter_code", "value_captured", "numeric_value", "text_value", "date_value", "remarks"
@@ -1907,6 +2034,112 @@ def _strip_server_owned_mobile_fields(doctype, values):
 					"sanctioned_amount": amount,
 				}]
 	return values
+
+
+def _inspection_configuration_snapshot(template):
+	"""Freeze the rules used for an inspection so later manager edits are auditable."""
+	if not template:
+		return None
+	standards = frappe.get_all(
+		"Inspection Standard",
+		filters={"inspection_template": template},
+		fields=["*"],
+		order_by="creation asc, parameter asc",
+	)
+	parameter_names = sorted({row.parameter for row in standards if row.parameter})
+	parameters = (
+		frappe.get_all(
+			"Inspection Parameter",
+			filters={"name": ["in", parameter_names]},
+			fields=["*"],
+		)
+		if parameter_names else []
+	)
+	return json.dumps(
+		{
+			"template": template,
+			"version": frappe.db.get_value("Inspection Template", template, "configuration_version") or 1,
+			"captured_at": str(frappe.utils.now_datetime()),
+			"standards": [dict(row) for row in standards],
+			"parameters": [dict(row) for row in parameters],
+		},
+		default=str,
+		sort_keys=True,
+	)
+
+
+def _validate_mobile_take_evidence(values):
+	evidence = values.get("take_evidence") or []
+	take_numbers = {cint(row.get("take_number")) for row in values.get("takes") or []}
+	template = values.get("inspection_template")
+	configured_parameters = set(
+		frappe.get_all(
+			"Inspection Standard",
+			filters={"inspection_template": template},
+			pluck="parameter",
+		)
+	) if template else set()
+	seen_ids = set()
+	for row in evidence:
+		take_number = cint(row.get("take_number"))
+		if take_number not in take_numbers:
+			frappe.throw(_("Evidence references take {0}, which does not exist.").format(take_number))
+		if row.get("parameter") and row.get("parameter") not in configured_parameters:
+			frappe.throw(_("Evidence parameter {0} is not configured for this inspection.").format(row.get("parameter")))
+		if not row.get("file"):
+			frappe.throw(_("Every take evidence row requires an uploaded file."))
+		if not row.get("external_id") or row.get("external_id") in seen_ids:
+			frappe.throw(_("Every take evidence file requires a unique mobile evidence ID."))
+		seen_ids.add(row.get("external_id"))
+		row["captured_by"] = frappe.session.user
+		row["captured_at"] = row.get("captured_at") or frappe.utils.now_datetime()
+
+	if not configured_parameters:
+		return
+	policies = {
+		row.name: row
+		for row in frappe.get_all(
+			"Inspection Parameter",
+			filters={"name": ["in", list(configured_parameters)]},
+			fields=["name", "evidence_policy", "minimum_evidence_files", "maximum_evidence_files", "allow_multiple_files"],
+		)
+	}
+	evidence_counts = defaultdict(int)
+	for row in evidence:
+		if row.get("parameter"):
+			evidence_counts[(cint(row.get("take_number")), row.get("parameter"))] += 1
+	for (take_number, parameter), count in evidence_counts.items():
+		policy = policies.get(parameter)
+		if not policy:
+			continue
+		maximum = cint(policy.maximum_evidence_files) or 10
+		if not cint(policy.allow_multiple_files):
+			maximum = 1
+		if count > maximum:
+			frappe.throw(
+				_("Take {0} has {1} evidence files for {2}; the configured maximum is {3}.").format(
+					take_number, count, parameter, maximum
+				)
+			)
+	for result in values.get("take_results") or []:
+		parameter = result.get("parameter")
+		policy = policies.get(parameter)
+		if not policy:
+			continue
+		required = cint(policy.minimum_evidence_files)
+		if policy.evidence_policy == "Required":
+			required = max(required, 1)
+		elif policy.evidence_policy == "Required on Non-zero" and cint(result.get("observed_count")) > 0:
+			required = max(required, 1)
+		else:
+			continue
+		key = (cint(result.get("take_number")), parameter)
+		if evidence_counts[key] < required:
+			frappe.throw(
+				_("Take {0} requires at least {1} evidence file(s) for {2}.").format(
+					key[0], required, parameter
+				)
+			)
 
 
 def _normalize_uom_doc_data(data):
@@ -2512,6 +2745,7 @@ def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 	Get all synced data since last_sync. Returns data grouped by store name.
 	"""
 	try:
+		_sync_verified_inter_row_spacing()
 		args = _get_request_args(kwargs)
 		if last_sync:
 			last_sync_dt = datetime.fromisoformat(str(last_sync).replace('Z', '+00:00'))
@@ -2875,6 +3109,38 @@ def push_sync_data(data):
 	finally:
 		if locals().get("visit_lock"):
 			frappe.db.sql("SELECT RELEASE_LOCK(%s)", (visit_lock,))
+
+
+def _sync_verified_inter_row_spacing():
+	"""Publish the verified Pre-flowering average onto its Crop Cycle."""
+	if not frappe.get_meta("Crop Cycle").has_field("verified_inter_row_spacing_m"):
+		return
+	for inspection in frappe.get_all(
+		"Inspection",
+		filters={"status": "Verified", "inspection_type": "Pre-flowering", "crop_cycle": ["is", "set"]},
+		fields=["name", "crop_cycle", "qa_reviewed_on"],
+	):
+		result = frappe.db.get_value(
+			"Inspection Result",
+			{"parent": inspection.name, "parenttype": "Inspection", "parameter": "Inter-row Spacing"},
+			["measured_value", "observation_count"],
+			as_dict=True,
+		)
+		if not result or result.measured_value is None or cint(result.observation_count) <= 0:
+			continue
+		current_source = frappe.db.get_value("Crop Cycle", inspection.crop_cycle, "spacing_source_inspection")
+		if current_source == inspection.name:
+			continue
+		frappe.db.set_value(
+			"Crop Cycle",
+			inspection.crop_cycle,
+			{
+				"verified_inter_row_spacing_m": flt(result.measured_value),
+				"spacing_source_inspection": inspection.name,
+				"spacing_verified_on": inspection.qa_reviewed_on or frappe.utils.now_datetime(),
+			},
+			update_modified=False,
+		)
 
 @frappe.whitelist()
 def reconcile_mobile_create(store, client_id, payload):

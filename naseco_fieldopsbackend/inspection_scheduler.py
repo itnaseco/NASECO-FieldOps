@@ -1,6 +1,8 @@
 # Copyright (c) 2026, NASECO and contributors
 # For license information, please see license.txt
 
+import json
+
 import frappe
 from frappe import _
 from frappe.utils import add_days, getdate, nowdate
@@ -247,8 +249,8 @@ def create_inspections(crop_cycle):
 	outgrower = frappe.get_doc("Outgrower", plot.outgrower) if plot and plot.outgrower else None
 	templates = frappe.get_all(
 		"Inspection Template",
-		filters={"active": 1},
-		fields=["name", "inspection_type", "crop_stage", "due_days_from_planting", "default_assigned_to"],
+		filters={"active": 1, "lifecycle_status": "Published"},
+		fields=["name", "inspection_type", "crop_stage", "due_days_from_planting", "default_assigned_to", "configuration_version"],
 		order_by="due_days_from_planting asc",
 	)
 	scheduled_dates = []
@@ -276,12 +278,22 @@ def create_inspections(crop_cycle):
 				inspection.db_set("scheduled_date", scheduled_date, update_modified=False)
 			if stage and not inspection.stage:
 				inspection.db_set("stage", stage, update_modified=False)
+			if not inspection.configuration_snapshot:
+				inspection.db_set(
+					{
+						"template_version": template.configuration_version or 1,
+						"configuration_snapshot": inspection_configuration_snapshot(template.name),
+					},
+					update_modified=False,
+				)
 			scheduled_dates.append(inspection.scheduled_date or scheduled_date)
 			continue
 		inspection = frappe.get_doc(
 			{
 				"doctype": "Inspection",
 				"inspection_template": template.name,
+				"template_version": template.configuration_version or 1,
+				"configuration_snapshot": inspection_configuration_snapshot(template.name),
 				"inspection_type": template.inspection_type,
 				"crop_cycle": crop_cycle.name,
 				"stage": stage,
@@ -313,6 +325,35 @@ def create_inspections(crop_cycle):
 			min(future_dates or scheduled_dates),
 			update_modified=False,
 		)
+
+
+def inspection_configuration_snapshot(template):
+	standards = frappe.get_all(
+		"Inspection Standard",
+		filters={"inspection_template": template},
+		fields=["*"],
+		order_by="creation asc, parameter asc",
+	)
+	parameter_names = sorted({row.parameter for row in standards if row.parameter})
+	parameters = (
+		frappe.get_all(
+			"Inspection Parameter",
+			filters={"name": ["in", parameter_names]},
+			fields=["*"],
+		)
+		if parameter_names else []
+	)
+	return json.dumps(
+		{
+			"template": template,
+			"version": frappe.db.get_value("Inspection Template", template, "configuration_version") or 1,
+			"captured_at": str(frappe.utils.now_datetime()),
+			"standards": [dict(row) for row in standards],
+			"parameters": [dict(row) for row in parameters],
+		},
+		default=str,
+		sort_keys=True,
+	)
 
 
 def get_quality_inspector(crop_cycle, template_default=None, outgrower=None):
