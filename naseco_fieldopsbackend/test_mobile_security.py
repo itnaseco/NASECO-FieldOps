@@ -1,10 +1,55 @@
 from unittest import TestCase
+from unittest.mock import patch
 from types import SimpleNamespace
 
 from naseco_fieldopsbackend import api
 
 
 class TestMobileSecurity(TestCase):
+	def test_hr_self_service_documents_have_durable_mobile_ids(self):
+		for doctype in ("Expense Claim", "Leave Application", "Employee Advance"):
+			self.assertIn(doctype, api.MOBILE_HR_SELF_SERVICE_DOCTYPES)
+			self.assertEqual(api.ID_FIELD_MAP[doctype], "external_id")
+			self.assertTrue(api.frappe.get_meta(doctype).has_field("external_id"))
+			self.assertEqual(
+				api.MOBILE_FIELD_MAP[doctype][api._reverse_id_field_name(doctype)],
+				"external_id",
+			)
+			self.assertIn("status", api.MOBILE_SERVER_OWNED_FIELDS[doctype])
+
+	def test_mobile_expense_becomes_an_erpnext_expense_detail(self):
+		def get_value(doctype, name, fieldname):
+			if doctype == "Employee" and fieldname == "company":
+				return "NASECO"
+			return None
+
+		with patch.object(api.frappe.db, "get_value", side_effect=get_value):
+			values = api._complete_mobile_hr_fields(
+				"Expense Claim",
+				{
+					"dateSubmitted": "2026-09-22",
+					"amount": 125000,
+					"category": "Travel",
+					"description": "Field visit transport",
+				},
+				{"employee": "HR-EMP-0001"},
+			)
+
+		self.assertEqual(values["company"], "NASECO")
+		self.assertEqual(values["posting_date"], "2026-09-22")
+		self.assertEqual(
+			values["expenses"],
+			[
+				{
+					"expense_date": "2026-09-22",
+					"expense_type": "Travel",
+					"description": "Field visit transport",
+					"amount": 125000,
+					"sanctioned_amount": 125000,
+				}
+			],
+		)
+
 	def test_dispatch_recorded_during_visit_can_sync_after_completion(self):
 		visit = SimpleNamespace(
 			actual_start="2026-09-17 08:00:00",
