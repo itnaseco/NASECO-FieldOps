@@ -127,6 +127,11 @@ MOBILE_CONTEXT_DOCTYPES = {
 	"Outgrower Production Contract",
 	"Crop Production Lot",
 }
+MOBILE_HR_SELF_SERVICE_DOCTYPES = {
+	"Expense Claim",
+	"Leave Application",
+	"Employee Advance",
+}
 MOBILE_ROLE_READ = {
 	OUTGROWER_SUPERVISOR_ROLE: MOBILE_CONTEXT_DOCTYPES
 	| {
@@ -180,6 +185,12 @@ MOBILE_ROLE_CREATE = {
 	QUALITY_INSPECTOR_ROLE: {"Field Visit", "Field Trip", "Inspection", "Seed Harvest Quality Assessment"},
 }
 MOBILE_SERVER_OWNED_FIELDS = {
+	"Leave Application": {"status", "leave_approver", "workflow_state"},
+	"Employee Advance": {"status", "workflow_state", "paid_amount", "claimed_amount"},
+	"Expense Claim": {
+		"status", "workflow_state", "approval_status", "total_claimed_amount",
+		"total_sanctioned_amount", "total_amount_reimbursed",
+	},
 	"Farm Plot": {
 		# Derived exclusively from the linked Crop Cycle lifecycle. Accepting the
 		# mobile cache's older value can incorrectly revert an occupied plot.
@@ -297,9 +308,14 @@ SYNC_DOCTYPES_WITHOUT_CHILD_TABLES = {
 	"Seed Harvest Quality Assessment",
 	"Attendance",
 	"Employee Checkin",
+	"Leave Application",
+	"Employee Advance",
 }
 
 ID_FIELD_MAP = {
+	"Expense Claim": "external_id",
+	"Leave Application": "external_id",
+	"Employee Advance": "external_id",
 	"Outgrower": "outgrower_id",
 	"Farm Plot": "plot_id",
 	"Crop Cycle": "crop_cycle_id",
@@ -969,7 +985,8 @@ MOBILE_FIELD_MAP = {
 		"time": "time",
 	},
 	"Leave Application": {
-		"applicationId": "application_id",
+		"applicationId": "external_id",
+		"userId": "employee",
 		"leaveType": "leave_type",
 		"fromDate": "from_date",
 		"toDate": "to_date",
@@ -980,16 +997,22 @@ MOBILE_FIELD_MAP = {
 		"attachments": "attachments_json",
 	},
 	"Employee Advance": {
-		"advanceId": "advance_id",
+		"advanceId": "external_id",
+		"userId": "employee",
 		"postingDate": "posting_date",
 		"purpose": "purpose",
 		"amount": "advance_amount",
+		"currency": "currency",
+		"exchangeRate": "exchange_rate",
+		"advanceAccount": "advance_account",
+		"modeOfPayment": "mode_of_payment",
 		"repayFromSalary": "repay_from_salary",
 		"status": "status",
 		"attachments": "attachments_json",
 	},
 	"Expense Claim": {
-		"expenseId": "expense_id",
+		"expenseId": "external_id",
+		"userId": "employee",
 		"dateSubmitted": "date_submitted",
 		"amount": "total_claimed_amount",
 		"category": "category",
@@ -1303,7 +1326,30 @@ def _map_doc_to_mobile(doctype, doc_dict):
 	if doctype in ID_FIELD_MAP and ID_FIELD_MAP[doctype] in doc_dict:
 		mobile_id_field = _reverse_id_field_name(doctype)
 		if mobile_id_field:
-			result[mobile_id_field] = doc_dict.get(ID_FIELD_MAP[doctype])
+			result[mobile_id_field] = (
+				doc_dict.get(ID_FIELD_MAP[doctype]) or doc_dict.get("name")
+			)
+	if doctype == "Leave Application":
+		approver = doc_dict.get("leave_approver") or ""
+		result["approverEmail"] = result.get("approverEmail") or approver
+		result["approverName"] = (
+			result.get("approverName") or (get_fullname(approver) if approver else "")
+		)
+	if doctype == "Expense Claim":
+		expenses = doc_dict.get("expenses") or []
+		first_expense = expenses[0] if expenses else {}
+		result["dateSubmitted"] = (
+			result.get("dateSubmitted") or doc_dict.get("posting_date")
+		)
+		result["amount"] = (
+			result.get("amount") or doc_dict.get("total_claimed_amount") or 0
+		)
+		result["category"] = (
+			result.get("category") or first_expense.get("expense_type") or ""
+		)
+		result["description"] = (
+			result.get("description") or first_expense.get("description")
+		)
 	if doctype == "Outgrower":
 		_enrich_outgrower_aliases(result)
 	if doctype == "Inspection":
@@ -1384,6 +1430,8 @@ def _mobile_allowed_doctypes(mode="read"):
 	allowed = set(MOBILE_REFERENCE_DOCTYPES) if mode == "read" else set()
 	if mode == "read" and frappe.session.user != "Guest":
 		allowed.update({"Attendance", "Employee Checkin"})
+	if frappe.session.user != "Guest":
+		allowed.update(MOBILE_HR_SELF_SERVICE_DOCTYPES)
 	role_map = MOBILE_ROLE_READ if mode == "read" else MOBILE_ROLE_WRITE
 	for role, doctypes in role_map.items():
 		if role in roles:
@@ -1405,6 +1453,11 @@ def _mobile_scope_names(doctype, user=None):
 	if doctype in {"Attendance", "Employee Checkin"}:
 		employees = _get_attendance_employee_ids({})
 		return set(frappe.get_all(doctype, filters={"employee": ["in", employees]}, pluck="name")) if employees else set()
+	if doctype in MOBILE_HR_SELF_SERVICE_DOCTYPES:
+		employees = _get_attendance_employee_ids({})
+		return set(
+			frappe.get_all(doctype, filters={"employee": ["in", employees]}, pluck="name")
+		) if employees else set()
 	user = user or frappe.session.user
 	roles = _mobile_roles(user)
 	if _mobile_has_management_access(roles) or doctype in MOBILE_REFERENCE_DOCTYPES:
@@ -1515,6 +1568,8 @@ def _mobile_record_is_in_scope(doctype, name=None, values=None):
 		return True
 	values = values or {}
 	user = frappe.session.user
+	if doctype in MOBILE_HR_SELF_SERVICE_DOCTYPES:
+		return values.get("employee") in set(_get_attendance_employee_ids({}))
 	if doctype == "Outgrower":
 		return values.get("assigned_supervisor") == user
 	if doctype == "Farm Plot":
@@ -1629,7 +1684,7 @@ def _authorize_mobile_write(doctype, operation, name=None, values=None):
 		for role, doctypes in MOBILE_ROLE_CREATE.items():
 			if role in roles:
 				allowed.update(doctypes)
-		if doctype not in allowed:
+		if doctype not in allowed and doctype not in MOBILE_HR_SELF_SERVICE_DOCTYPES:
 			frappe.throw(
 				_("Mobile users cannot create {0}; use the assigned schedule.").format(doctype),
 				frappe.PermissionError,
@@ -1822,6 +1877,35 @@ def _strip_server_owned_mobile_fields(doctype, values):
 		values["results"] = raw_results
 	if doctype == "Seed Harvest Quality Assessment":
 		values["inspected_by"] = frappe.session.user
+	if doctype in MOBILE_HR_SELF_SERVICE_DOCTYPES:
+		employees = _get_attendance_employee_ids({})
+		if not employees:
+			frappe.throw(
+				_("Your Frappe user is not linked to an active Employee record."),
+				frappe.PermissionError,
+			)
+		employee = employees[0]
+		values["employee"] = employee
+		company = frappe.db.get_value("Employee", employee, "company")
+		if company:
+			values["company"] = company
+		if doctype == "Leave Application":
+			values.setdefault("posting_date", frappe.utils.today())
+		if doctype == "Employee Advance":
+			currency = frappe.db.get_value("Company", company, "default_currency") if company else None
+			values["currency"] = values.get("currency") or currency
+			values["exchange_rate"] = values.get("exchange_rate") or 1
+		if doctype == "Expense Claim" and not values.get("expenses"):
+			amount = values.pop("total_claimed_amount", None)
+			expense_type = values.pop("category", None)
+			if amount is not None and expense_type:
+				values["expenses"] = [{
+					"expense_date": values.get("posting_date") or frappe.utils.today(),
+					"expense_type": expense_type,
+					"description": values.pop("description", None),
+					"amount": amount,
+					"sanctioned_amount": amount,
+				}]
 	return values
 
 
@@ -1898,6 +1982,11 @@ def _filter_fields(doctype, data):
 
 def _resolve_employee_fields(doctype, payload, result):
 	meta = _get_meta(doctype)
+	if doctype in MOBILE_HR_SELF_SERVICE_DOCTYPES:
+		employees = _get_attendance_employee_ids({})
+		if employees and meta.has_field("employee"):
+			result["employee"] = employees[0]
+		return _complete_mobile_hr_fields(doctype, payload, result)
 	user_id = (payload or {}).get("userId") or (payload or {}).get("userEmail") or (payload or {}).get("email")
 	if user_id and meta.has_field("employee"):
 		emp = frappe.db.get_value("Employee", {"user_id": user_id}, "name")
@@ -1944,6 +2033,37 @@ def _resolve_employee_fields(doctype, payload, result):
 			elif meta.has_field("amount"):
 				result.setdefault("amount", (payload or {}).get("amount"))
 
+	return result
+
+
+def _complete_mobile_hr_fields(doctype, payload, result):
+	"""Supply required HRMS fields from the authenticated employee context."""
+	employee = result.get("employee")
+	company = frappe.db.get_value("Employee", employee, "company") if employee else None
+	if company:
+		result["company"] = company
+	if doctype == "Leave Application":
+		result.setdefault("posting_date", frappe.utils.today())
+	elif doctype == "Employee Advance":
+		currency = frappe.db.get_value("Company", company, "default_currency") if company else None
+		result["currency"] = result.get("currency") or currency
+		result["exchange_rate"] = result.get("exchange_rate") or 1
+	elif doctype == "Expense Claim" and not result.get("expenses"):
+		result["posting_date"] = (
+			(payload or {}).get("dateSubmitted")
+			or result.get("posting_date")
+			or frappe.utils.today()
+		)
+		amount = (payload or {}).get("amount")
+		expense_type = (payload or {}).get("category")
+		if amount is not None and expense_type:
+			result["expenses"] = [{
+				"expense_date": result.get("posting_date") or frappe.utils.today(),
+				"expense_type": expense_type,
+				"description": (payload or {}).get("description"),
+				"amount": amount,
+				"sanctioned_amount": amount,
+			}]
 	return result
 
 
@@ -2417,6 +2537,9 @@ def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 			"Stage Input Dispatch",
 			"Crop Production Lot",
 			"Seed Harvest Quality Assessment",
+			"Expense Claim",
+			"Leave Application",
+			"Employee Advance",
 		]
 		sync_doctypes = [
 			doctype
