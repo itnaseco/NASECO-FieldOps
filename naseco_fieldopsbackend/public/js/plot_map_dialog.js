@@ -3,10 +3,8 @@
 
 frappe.provide('naseco_fieldopsbackend');
 
-// Shared "View on Map" dialog for a Farm Plot. Accepts a plain plot object
-// (a Farm Plot doc, or an frm.doc) carrying: polygon (Plot Vertex rows),
-// area_hectares, perimeter_meters, centroid_lat, centroid_lng, plot_name,
-// plot_id, outgrower. Used by both the Farm Plot form and the Farm Plot list view.
+// Shared "View on Map" dialog for a Farm Plot. Keep the polygon itself clear:
+// plot metadata belongs in the collapsible legend, not over small parcels.
 naseco_fieldopsbackend.show_plot_map_dialog = function (plot) {
 	let vertices = plot.polygon || [];
 
@@ -17,23 +15,21 @@ naseco_fieldopsbackend.show_plot_map_dialog = function (plot) {
 
 	vertices = [...vertices].sort((a, b) => a.order_index - b.order_index);
 	let coordinates = vertices.map(v => [parseFloat(v.latitude), parseFloat(v.longitude)]);
-
-	let centerLat = plot.centroid_lat || coordinates[0][0];
-	let centerLng = plot.centroid_lng || coordinates[0][1];
+	let centerLat = parseFloat(plot.centroid_lat) || coordinates[0][0];
+	let centerLng = parseFloat(plot.centroid_lng) || coordinates[0][1];
+	const area = Number(plot.area_hectares) || 0;
+	const perimeter = Number(plot.perimeter_meters) || 0;
+	const plot_label = plot.plot_name || plot.plot_id || plot.name || '';
+	const owner = plot.outgrower || __('Not available');
 
 	const map_id = "plot_map_container_" + Date.now() + "_" + Math.random().toString(36).slice(2);
 	let rendered_map = null;
 	let dialog_closed = false;
 
 	let d = new frappe.ui.Dialog({
-		title: __('Plot Map: {0}', [plot.plot_name || plot.plot_id || plot.name]),
+		title: __('Plot Map: {0}', [plot_label]),
 		size: 'extra-large',
-		fields: [
-			{
-				fieldtype: 'HTML',
-				fieldname: 'map_html'
-			}
-		]
+		fields: [{ fieldtype: 'HTML', fieldname: 'map_html' }]
 	});
 
 	d.$wrapper.one("hidden.bs.modal", () => {
@@ -51,25 +47,23 @@ naseco_fieldopsbackend.show_plot_map_dialog = function (plot) {
 					${__('Loading map...')}
 				</div>
 			</div>
-			<div class="plot-map-legend" id="plot_map_legend" style="position: absolute; bottom: 20px; left: 20px; background: var(--card-bg, #fff); border-radius: 10px; box-shadow: 0 6px 24px rgba(0,0,0,0.18); z-index: 1000; max-width: 260px; overflow: hidden;">
+			<div class="plot-map-legend" style="position: absolute; bottom: 20px; left: 20px; background: var(--card-bg, #fff); border-radius: 10px; box-shadow: 0 6px 24px rgba(0,0,0,0.18); z-index: 1000; max-width: 290px; overflow: hidden;">
 				<div class="plot-map-legend-header" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; cursor: pointer; user-select: none;">
-					<h5 style="margin: 0; font-size: 14px; font-weight: bold;">📍 ${__('Map Legend')}</h5>
+					<h5 style="margin: 0; font-size: 14px; font-weight: bold;">${__('Map Legend')}</h5>
 					<span class="plot-map-legend-toggle" style="transition: transform 0.2s ease; font-size: 12px;">▾</span>
 				</div>
 				<div class="plot-map-legend-body" style="padding: 0 15px 15px; max-height: 400px; opacity: 1; transition: max-height 0.2s ease, opacity 0.2s ease, padding 0.2s ease;">
-					<div style="display: flex; align-items: center; margin: 8px 0;">
+					<div style="display: flex; align-items: center; margin: 8px 0 12px;">
 						<div style="width: 20px; height: 3px; background: #2563eb; margin-right: 10px;"></div>
 						<span style="font-size: 12px;">${__('Plot Boundary')}</span>
 					</div>
-					<div style="display: flex; align-items: center; margin: 8px 0;">
-						<div style="width: 16px; height: 20px; background: #dc3545; clip-path: polygon(50% 0%, 100% 100%, 0% 100%); margin-right: 10px;"></div>
-						<span style="font-size: 12px;">${__('Centroid')}</span>
-					</div>
-					<div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #eee;">
-						<div style="font-size: 11px; color: #666;">
-							<strong>${__('Area')}:</strong> ${(plot.area_hectares || 0).toFixed(3)} ${__('hectares')}<br>
-							<strong>${__('Perimeter')}:</strong> ${(plot.perimeter_meters || 0).toFixed(1)} m
-						</div>
+					<div style="padding-top: 10px; border-top: 1px solid #eee; font-size: 11px; color: var(--text-muted, #666); line-height: 1.7;">
+						<div><strong>${__('Plot')}:</strong> ${frappe.utils.escape_html(plot_label)}</div>
+						<div><strong>${__('Area')}:</strong> ${area.toFixed(3)} ${__('hectares')}</div>
+						<div><strong>${__('Perimeter')}:</strong> ${perimeter.toFixed(1)} m</div>
+						<div><strong>${__('Vertices')}:</strong> ${coordinates.length}</div>
+						<div><strong>${__('Location')}:</strong> ${centerLat.toFixed(6)}, ${centerLng.toFixed(6)}</div>
+						<div><strong>${__('Owner')}:</strong> ${frappe.utils.escape_html(String(owner))}</div>
 					</div>
 				</div>
 			</div>
@@ -93,14 +87,10 @@ naseco_fieldopsbackend.show_plot_map_dialog = function (plot) {
 		d.fields_dict.map_html.$wrapper.find('.plot-map-legend').toggleClass('collapsed');
 	});
 
-	const shown = new Promise((resolve) => {
-		d.$wrapper.one('shown.bs.modal', resolve);
-	});
+	const shown = new Promise((resolve) => d.$wrapper.one('shown.bs.modal', resolve));
 	const leaflet_ready = load_leaflet();
-
 	d.show();
 	d.$wrapper.find('.modal-dialog .modal-content').addClass('plot-map-modal-modern');
-
 	Promise.all([shown, leaflet_ready]).then(render_map);
 
 	function load_leaflet() {
@@ -124,51 +114,55 @@ naseco_fieldopsbackend.show_plot_map_dialog = function (plot) {
 			rendered_map = L.map(map_element, {
 				zoomControl: true,
 				attributionControl: true,
+				minZoom: 2,
 				maxZoom: 23,
-				zoomSnap: 0.25
+				zoomSnap: 0.25,
+				zoomDelta: 0.5
 			}).setView([centerLat, centerLng], 17);
 			const map = rendered_map;
 
+			// Satellite tiles are commonly native through z19. Leaflet may safely
+			// over-zoom that imagery to z23, which provides a sub-5 m viewport for
+			// inspecting very small plots without requesting nonexistent tiles.
+			const satellite_options = {
+				attribution: 'Tiles © Esri',
+				maxNativeZoom: 19,
+				maxZoom: 23
+			};
 			let baseLayers = {
-				"🛰️ Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-					attribution: 'Tiles © Esri',
+				"Satellite": L.tileLayer(
+					'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+					satellite_options
+				),
+				"Street Map": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+					attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+					maxNativeZoom: 19,
 					maxZoom: 23
 				}),
-				"🗺️ Street Map": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-					attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-					maxZoom: 19
-				}),
-				"🏞️ Terrain": L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+				"Terrain": L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
 					attribution: '© <a href="https://opentopomap.org">OpenTopoMap</a>',
-					maxZoom: 17
+					maxNativeZoom: 17,
+					maxZoom: 23
 				}),
-				"🌐 Hybrid": L.layerGroup([
-					L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-						attribution: 'Tiles © Esri',
-						maxZoom: 23
-					}),
+				"Hybrid": L.layerGroup([
+					L.tileLayer(
+						'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+						satellite_options
+					),
 					L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png', {
 						attribution: '© CartoDB',
-						maxZoom: 19,
+						maxNativeZoom: 19,
+						maxZoom: 23,
 						pane: 'shadowPane'
 					})
 				])
 			};
 
-			baseLayers["🛰️ Satellite"].addTo(map);
+			baseLayers.Satellite.addTo(map);
+			L.control.layers(baseLayers, null, { position: 'topright', collapsed: false }).addTo(map);
+			L.control.scale({ position: 'bottomright', imperial: false, metric: true }).addTo(map);
 
-			L.control.layers(baseLayers, null, {
-				position: 'topright',
-				collapsed: false
-			}).addTo(map);
-
-			L.control.scale({
-				position: 'bottomright',
-				imperial: false,
-				metric: true
-			}).addTo(map);
-
-			let polygon = L.polygon(coordinates, {
+			const polygon = L.polygon(coordinates, {
 				color: '#2563eb',
 				fillColor: '#2563eb',
 				fillOpacity: 0.12,
@@ -176,74 +170,15 @@ naseco_fieldopsbackend.show_plot_map_dialog = function (plot) {
 				className: 'plot-polygon'
 			}).addTo(map);
 
-			let polygonCenter = polygon.getBounds().getCenter();
-			let areaLabel = L.divIcon({
-				className: 'area-label',
-				html: `<div style="background: rgba(37, 99, 235, 0.92); color: white; padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
-					${(plot.area_hectares || 0).toFixed(3)} hectares
-				</div>`,
-				iconSize: [100, 30],
-				iconAnchor: [50, 15]
-			});
-			L.marker(polygonCenter, { icon: areaLabel }).addTo(map);
-
-			if (plot.centroid_lat && plot.centroid_lng) {
-				L.marker([centerLat, centerLng], {
-					icon: L.icon({
-						iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-						shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-						iconSize: [30, 45],
-						iconAnchor: [15, 45],
-						popupAnchor: [1, -34],
-						shadowSize: [45, 45]
-					})
-				}).addTo(map).bindPopup(`
-					<div style="font-family: sans-serif; min-width: 200px;">
-						<h4 style="margin: 0 0 12px 0; color: #dc3545; border-bottom: 2px solid #dc3545; padding-bottom: 8px;">
-							📍 ${plot.plot_name || plot.plot_id || ''}
-						</h4>
-						<table style="width: 100%; font-size: 12px; border-collapse: collapse;">
-							<tr style="border-bottom: 1px solid #eee;">
-								<td style="padding: 6px 0;"><strong>📐 Area:</strong></td>
-								<td style="padding: 6px 0; text-align: right;">${(plot.area_hectares || 0).toFixed(3)} hectares</td>
-							</tr>
-							<tr style="border-bottom: 1px solid #eee;">
-								<td style="padding: 6px 0;"><strong>📏 Perimeter:</strong></td>
-								<td style="padding: 6px 0; text-align: right;">${(plot.perimeter_meters || 0).toFixed(1)} m</td>
-							</tr>
-							<tr style="border-bottom: 1px solid #eee;">
-								<td style="padding: 6px 0;"><strong>📌 Vertices:</strong></td>
-								<td style="padding: 6px 0; text-align: right;">${coordinates.length}</td>
-							</tr>
-							<tr style="border-bottom: 1px solid #eee;">
-								<td style="padding: 6px 0;"><strong>🧭 Centroid:</strong></td>
-								<td style="padding: 6px 0; text-align: right; font-size: 10px;">${centerLat.toFixed(5)}, ${centerLng.toFixed(5)}</td>
-							</tr>
-							<tr>
-								<td style="padding: 6px 0;"><strong>👨‍🌾 Owner:</strong></td>
-								<td style="padding: 6px 0; text-align: right;">${plot.outgrower || 'N/A'}</td>
-							</tr>
-						</table>
-					</div>
-				`, {
-					maxWidth: 300
-				}).openPopup();
-			}
-
-			map.fitBounds(polygon.getBounds(), { padding: [80, 80] });
-
-			setTimeout(function () {
-				map.invalidateSize();
-			}, 100);
+			map.fitBounds(polygon.getBounds(), { padding: [50, 50], maxZoom: 21 });
+			setTimeout(() => map.invalidateSize(), 100);
 
 			if (!document.getElementById('plot-map-polygon-anim-style')) {
 				let style = document.createElement('style');
 				style.id = 'plot-map-polygon-anim-style';
 				style.innerHTML = `
 					.plot-polygon { transition: all 0.3s ease; }
-					.plot-polygon:hover { fill-opacity: 0.4 !important; }
-					.leaflet-popup-content { margin: 15px; }
-					.leaflet-popup-content h4 { font-weight: 600; }
+					.plot-polygon:hover { fill-opacity: 0.3 !important; }
 				`;
 				document.head.appendChild(style);
 			}
