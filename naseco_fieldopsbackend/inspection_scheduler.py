@@ -5,7 +5,7 @@ import json
 
 import frappe
 from frappe import _
-from frappe.utils import add_days, getdate, nowdate
+from frappe.utils import add_days, cint, getdate, nowdate
 
 from naseco_fieldopsbackend.crop_cycle_lifecycle import LIFECYCLE_STAGES, get_stage
 
@@ -265,6 +265,9 @@ def create_inspections(crop_cycle):
 		order_by="due_days_from_planting asc",
 	)
 	templates = resolve_inspection_templates(templates)
+	templates = select_applicable_inspection_templates(
+		crop_cycle, templates, outgrower=outgrower
+	)
 	scheduled_dates = []
 	for template in templates:
 		scheduled_date = add_days(crop_cycle.planting_date, template.due_days_from_planting or 0)
@@ -353,13 +356,99 @@ def resolve_inspection_templates(templates):
 	]
 
 
-def inspection_configuration_snapshot(template):
-	standards = frappe.get_all(
+def select_applicable_inspection_templates(crop_cycle, templates, outgrower=None):
+	"""Choose one deterministic template version per inspection type.
+
+	Templates without rules are global fallbacks. A matching plot/outgrower rule
+	wins over region/crop/global rules. Equal-scoring templates are rejected
+	because silently scheduling both would create ambiguous field work.
+	"""
+	selected = {}
+	for template in templates:
+		score = _template_applicability_score(template.name, crop_cycle, outgrower)
+		if score is None:
+			continue
+		key = (template.inspection_type or template.name).strip().casefold()
+		current = selected.get(key)
+		if current and current[0] == score and current[1].name != template.name:
+			frappe.throw(
+				_("Inspection templates {0} and {1} have equally specific applicability rules for Crop Cycle {2}.").format(
+					frappe.bold(current[1].name), frappe.bold(template.name), frappe.bold(crop_cycle.name)
+				),
+				title=_("Ambiguous Quality Inspection Configuration"),
+			)
+		if not current or score > current[0]:
+			selected[key] = (score, template)
+	return [item[1] for item in selected.values()]
+
+
+def _template_applicability_score(template, crop_cycle, outgrower=None):
+	if not frappe.db.exists("DocType", "Inspection Template Applicability"):
+		return 0
+	rules = frappe.get_all(
+		"Inspection Template Applicability",
+		filters={"parent": template, "parenttype": "Inspection Template", "active": 1},
+		fields=["*"],
+	)
+	if not rules:
+		return 0
+	context = {
+		"crop": crop_cycle.get("crop"),
+		"variety": crop_cycle.get("variety"),
+		"production_category": crop_cycle.get("production_category"),
+		"seed_class": crop_cycle.get("seed_class"),
+		"region": outgrower.get("region") if outgrower else None,
+		"season": crop_cycle.get("season"),
+		"outgrower": outgrower.name if outgrower else None,
+		"plot": crop_cycle.get("plot"),
+	}
+	weights = {
+		"plot": 1000,
+		"outgrower": 900,
+		"region": 500,
+		"variety": 300,
+		"crop": 200,
+		"seed_class": 120,
+		"production_category": 100,
+		"season": 50,
+	}
+	anchor = getdate(crop_cycle.planting_date) if crop_cycle.get("planting_date") else getdate(nowdate())
+	matches = []
+	for rule in rules:
+		if rule.effective_from and anchor < getdate(rule.effective_from):
+			continue
+		if rule.effective_to and anchor > getdate(rule.effective_to):
+			continue
+		if any(rule.get(field) and rule.get(field) != context.get(field) for field in weights):
+			continue
+		specificity = sum(weight for field, weight in weights.items() if rule.get(field))
+		matches.append(cint(rule.priority) * 10000 + specificity)
+	return max(matches) if matches else None
+
+
+def get_template_standard_rows(template):
+	"""Return template-owned rows, falling back to legacy Standard records."""
+	if frappe.db.exists("DocType", "Inspection Template Parameter"):
+		rows = frappe.get_all(
+			"Inspection Template Parameter",
+			filters={"parent": template, "parenttype": "Inspection Template", "active": 1},
+			fields=["*"],
+			order_by="display_order asc, idx asc",
+		)
+		if rows:
+			for row in rows:
+				row.inspection_template = template
+			return rows
+	return frappe.get_all(
 		"Inspection Standard",
 		filters={"inspection_template": template},
 		fields=["*"],
-		order_by="creation asc, parameter asc",
+		order_by="display_order asc, creation asc, parameter asc",
 	)
+
+
+def inspection_configuration_snapshot(template):
+	standards = get_template_standard_rows(template)
 	parameter_names = sorted({row.parameter for row in standards if row.parameter})
 	parameters = (
 		frappe.get_all(
@@ -374,6 +463,7 @@ def inspection_configuration_snapshot(template):
 			"template": template,
 			"version": frappe.db.get_value("Inspection Template", template, "configuration_version") or 1,
 			"captured_at": str(frappe.utils.now_datetime()),
+			"schema_version": 2,
 			"standards": [dict(row) for row in standards],
 			"parameters": [dict(row) for row in parameters],
 		},

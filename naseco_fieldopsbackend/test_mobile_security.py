@@ -19,10 +19,12 @@ class TestMobileSecurity(TestCase):
 
 	def test_scalable_quality_configuration_schema_is_installed(self):
 		self.assertTrue(api.frappe.get_meta("Inspection Take Evidence").istable)
+		self.assertTrue(api.frappe.get_meta("Inspection Template Parameter").istable)
+		self.assertTrue(api.frappe.get_meta("Inspection Template Applicability").istable)
 		for doctype, fields in {
 			"Inspection": ("template_version", "configuration_snapshot", "take_evidence"),
 			"Inspection Parameter": ("inspection_attribute", "evidence_policy", "minimum_evidence_files"),
-			"Inspection Template": ("configuration_version", "lifecycle_status", "supersedes_template"),
+			"Inspection Template": ("configuration_version", "lifecycle_status", "supersedes_template", "quality_parameters", "applicability_rules"),
 			"Crop Cycle": ("verified_inter_row_spacing_m", "spacing_source_inspection"),
 		}.items():
 			meta = api.frappe.get_meta(doctype)
@@ -30,6 +32,10 @@ class TestMobileSecurity(TestCase):
 				self.assertTrue(meta.has_field(fieldname), f"{doctype}.{fieldname}")
 		self.assertTrue(api.frappe.db.exists("Inspection Parameter", "Pest Infested Plants"))
 		self.assertTrue(api.frappe.db.exists("Inspection Parameter", "Inter-row Spacing"))
+		self.assertEqual(
+			api.STORE_TO_DOCTYPE["inspection_template_parameters"],
+			"Inspection Template Parameter",
+		)
 
 	def test_take_evidence_has_bidirectional_mobile_mapping(self):
 		mapping = api.MOBILE_FIELD_MAP["Inspection Take Evidence"]
