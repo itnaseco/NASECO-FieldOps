@@ -291,6 +291,10 @@ def confirm_planting_date(crop_cycle, notes=None):
 	if not doc.production_category:
 		frappe.throw(_("Production Category is required before confirming planting."))
 	if doc.planting_date_confirmed:
+		# Confirmation is also the supported idempotent repair action. If an
+		# earlier scheduler/configuration defect left this confirmed cycle without
+		# inspections, rerunning confirmation now fills the missing schedule.
+		sync_crop_cycle_lifecycle(doc, require_inspection_templates=True)
 		from naseco_fieldopsbackend.recipe_planning import (
 			provision_approved_stage_input_requests,
 		)
@@ -307,7 +311,7 @@ def confirm_planting_date(crop_cycle, notes=None):
 		},
 	)
 	doc.planting_date_confirmed = 1
-	sync_crop_cycle_lifecycle(doc)
+	sync_crop_cycle_lifecycle(doc, require_inspection_templates=True)
 	from naseco_fieldopsbackend.recipe_planning import (
 		provision_approved_stage_input_requests,
 	)

@@ -13,6 +13,7 @@ from naseco_fieldopsbackend.inspection_scheduler import resolve_activity_templat
 from naseco_fieldopsbackend.inspection_scheduler import sync_crop_cycle_lifecycle
 from naseco_fieldopsbackend.inspection_scheduler import update_crop_cycle_current_stage
 from naseco_fieldopsbackend.inspection_scheduler import inspection_lifecycle_stage_name
+from naseco_fieldopsbackend.inspection_scheduler import resolve_inspection_templates
 
 
 class TestCropCycle(TestCase):
@@ -142,6 +143,20 @@ class TestCropCycle(TestCase):
 		cycle = SimpleNamespace(name="CYCLE-NEW", plot="PLOT-001")
 
 		CropCycle.validate_single_cycle_per_plot(cycle)
+
+
+class TestInspectionTemplateResolution(TestCase):
+	def test_accepts_published_and_legacy_active_templates(self):
+		templates = [
+			frappe._dict(name="Published", lifecycle_status="Published"),
+			frappe._dict(name="Legacy", lifecycle_status=None),
+			frappe._dict(name="Draft", lifecycle_status="Draft"),
+			frappe._dict(name="Retired", lifecycle_status="Retired"),
+		]
+
+		resolved = resolve_inspection_templates(templates)
+
+		self.assertEqual([row.name for row in resolved], ["Published", "Legacy"])
 
 
 class TestAgronomyActivityTemplateResolution(TestCase):
