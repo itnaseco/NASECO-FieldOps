@@ -4,7 +4,6 @@
 import frappe
 from frappe import _
 import json
-import io
 from collections import defaultdict
 from datetime import datetime
 from frappe.utils import cint, flt, get_fullname
@@ -27,21 +26,6 @@ def _contains_file_reference(value, file_url):
 	if isinstance(value, (list, tuple)):
 		return any(_contains_file_reference(item, file_url) for item in value)
 	return False
-
-
-def _valid_image_content(content, file_name=None):
-	if not isinstance(content, (bytes, bytearray)) or len(content) < 12:
-		return False
-	name = (file_name or "").lower()
-	if name.endswith(".png"):
-		return content.startswith(b"\x89PNG\r\n\x1a\n")
-	if name.endswith((".jpg", ".jpeg")):
-		return content.startswith(b"\xff\xd8")
-	if name.endswith(".gif"):
-		return content.startswith((b"GIF87a", b"GIF89a"))
-	if name.endswith(".webp"):
-		return content.startswith(b"RIFF") and content[8:12] == b"WEBP"
-	return content.startswith((b"\x89PNG\r\n\x1a\n", b"\xff\xd8", b"GIF87a", b"GIF89a"))
 
 
 def _mobile_file_is_in_scope(file_doc):
@@ -96,82 +80,9 @@ def download_mobile_media(file_url):
 	file_doc = frappe.get_doc("File", file_name)
 	if not _mobile_file_is_in_scope(file_doc):
 		frappe.throw(_("You are not permitted to download this mobile media file."), frappe.PermissionError)
-	content = file_doc.get_content()
-	if (file_doc.file_name or "").lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".webp")) and not _valid_image_content(content, file_doc.file_name):
-		frappe.throw(_("The stored image is corrupt and must be regenerated."), frappe.ValidationError)
 	frappe.local.response.filename = file_doc.file_name
-	frappe.local.response.filecontent = content
+	frappe.local.response.filecontent = file_doc.get_content()
 	frappe.local.response.type = "download"
-
-
-def _plot_polygon_preview(doc):
-	from PIL import Image, ImageDraw
-
-	points = []
-	for row in doc.get("polygon") or []:
-		lat = row.get("latitude")
-		lng = row.get("longitude")
-		if lat is not None and lng is not None:
-			points.append((float(lng), float(lat)))
-	if len(points) < 3:
-		return None
-	width, height, padding = 1200, 800, 90
-	min_x, max_x = min(p[0] for p in points), max(p[0] for p in points)
-	min_y, max_y = min(p[1] for p in points), max(p[1] for p in points)
-	x_span = max(max_x - min_x, 0.0000001)
-	y_span = max(max_y - min_y, 0.0000001)
-	mapped = [
-		(
-			padding + ((x - min_x) / x_span) * (width - padding * 2),
-			padding + ((max_y - y) / y_span) * (height - padding * 2),
-		)
-		for x, y in points
-	]
-	image = Image.new("RGB", (width, height), "#edf4f1")
-	draw = ImageDraw.Draw(image)
-	draw.polygon(mapped, fill="#b9ded3", outline="#006b5d", width=12)
-	buffer = io.BytesIO()
-	image.save(buffer, format="PNG", optimize=True)
-	return buffer.getvalue()
-
-
-@frappe.whitelist()
-def repair_corrupt_plot_map_images():
-	"""Replace only corrupt/missing Farm Plot images with polygon previews."""
-	_require_quality_manager()
-	from frappe.utils.file_manager import save_file
-
-	repaired = []
-	skipped = []
-	for name in frappe.get_all("Farm Plot", pluck="name"):
-		doc = frappe.get_doc("Farm Plot", name)
-		file_url = (doc.get("map_image_base64") or "").strip()
-		valid = False
-		if file_url:
-			file_name = frappe.db.get_value("File", {"file_url": file_url}, "name")
-			if file_name:
-				file_doc = frappe.get_doc("File", file_name)
-				try:
-					valid = _valid_image_content(file_doc.get_content(), file_doc.file_name)
-				except Exception:
-					valid = False
-		if valid:
-			continue
-		preview = _plot_polygon_preview(doc)
-		if not preview:
-			skipped.append(name)
-			continue
-		new_file = save_file(
-			f"plot_{frappe.scrub(name)}_recovered.png",
-			preview,
-			"Farm Plot",
-			name,
-			is_private=0,
-		)
-		doc.db_set("map_image_base64", new_file.file_url, update_modified=False)
-		repaired.append(name)
-	frappe.db.commit()
-	return {"repaired": repaired, "skipped_without_polygon": skipped}
 
 
 def _require_quality_manager():
