@@ -16,7 +16,7 @@ def generate_crop_cycle_schedules_for_doc(crop_cycle):
 	doc = frappe.get_doc("Crop Cycle", crop_cycle)
 	if not doc.planting_date_confirmed:
 		frappe.throw(_("Confirm the Planting Date before generating schedules."))
-	sync_crop_cycle_lifecycle(doc)
+	sync_crop_cycle_lifecycle(doc, require_inspection_templates=True)
 	frappe.db.commit()
 	return {
 		"lifecycle_initialized": doc.lifecycle_initialized,
@@ -31,7 +31,7 @@ def generate_crop_cycle_schedules(crop_cycle):
 	return sync_crop_cycle_lifecycle(crop_cycle)
 
 
-def sync_crop_cycle_lifecycle(crop_cycle):
+def sync_crop_cycle_lifecycle(crop_cycle, require_inspection_templates=False):
 	"""Idempotently synchronize lifecycle stages and all operational schedules."""
 	if not crop_cycle.name or not crop_cycle.get("planting_date_confirmed"):
 		return
@@ -39,14 +39,21 @@ def sync_crop_cycle_lifecycle(crop_cycle):
 	stages = ensure_crop_cycle_stages(crop_cycle)
 	create_agronomy_reports(crop_cycle, stages)
 	create_agronomy_activities(crop_cycle, stages)
+	inspection_count = 0
 	if crop_cycle.planting_date and crop_cycle.production_category:
-		create_inspections(crop_cycle)
+		inspection_count = create_inspections(crop_cycle)
+		if require_inspection_templates and not inspection_count:
+			frappe.throw(
+				_(
+					"No active Published Inspection Template is available. "
+					"Publish at least one template before confirming the Planting Date."
+				),
+				title=_("Quality Inspection Schedule Not Generated"),
+			)
 
 	flags = {
 		"lifecycle_initialized": 1,
-		"inspection_schedule_generated": int(
-			bool(crop_cycle.planting_date and crop_cycle.production_category)
-		),
+		"inspection_schedule_generated": int(bool(inspection_count)),
 		"agronomy_schedule_generated": int(bool(crop_cycle.planting_date)),
 		"agronomy_report_schedule_generated": int(bool(crop_cycle.planting_date)),
 	}
@@ -247,12 +254,17 @@ def inspection_lifecycle_stage_name(inspection_type):
 def create_inspections(crop_cycle):
 	plot = frappe.get_doc("Farm Plot", crop_cycle.plot) if crop_cycle.plot else None
 	outgrower = frappe.get_doc("Outgrower", plot.outgrower) if plot and plot.outgrower else None
+	# Fetch active templates first and resolve lifecycle state in Python. Older
+	# installations can contain active templates with a blank lifecycle_status;
+	# those are the pre-versioning equivalent of Published and must remain
+	# schedulable after the scalable quality-configuration migration.
 	templates = frappe.get_all(
 		"Inspection Template",
-		filters={"active": 1, "lifecycle_status": "Published"},
-		fields=["name", "inspection_type", "crop_stage", "due_days_from_planting", "default_assigned_to", "configuration_version"],
+		filters={"active": 1},
+		fields=["name", "inspection_type", "crop_stage", "due_days_from_planting", "default_assigned_to", "configuration_version", "lifecycle_status"],
 		order_by="due_days_from_planting asc",
 	)
+	templates = resolve_inspection_templates(templates)
 	scheduled_dates = []
 	for template in templates:
 		scheduled_date = add_days(crop_cycle.planting_date, template.due_days_from_planting or 0)
@@ -325,6 +337,20 @@ def create_inspections(crop_cycle):
 			min(future_dates or scheduled_dates),
 			update_modified=False,
 		)
+	return len(scheduled_dates)
+
+
+def resolve_inspection_templates(templates):
+	"""Return versions that may generate new inspection schedules.
+
+	Blank lifecycle state is accepted only for active legacy rows fetched by
+	``create_inspections``. Draft and Retired versions never generate work.
+	"""
+	return [
+		template
+		for template in templates
+		if not template.lifecycle_status or template.lifecycle_status == "Published"
+	]
 
 
 def inspection_configuration_snapshot(template):
