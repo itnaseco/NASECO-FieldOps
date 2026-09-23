@@ -33,6 +33,10 @@ POSITIONING_DEFAULTS = {
 STANDARD_FIELDS = [
 	"name",
 	"parameter",
+	"production_category",
+	"seed_class",
+	"section_label",
+	"display_order",
 	"mandatory",
 	"comparison_rule",
 	"aggregation_method",
@@ -263,26 +267,29 @@ class Inspection(Document):
 			)
 
 	def get_standards(self):
-		if not self.inspection_template or not self.production_category:
+		if not self.inspection_template:
 			return []
 
-		filters = {
-			"inspection_template": self.inspection_template,
-			"production_category": self.production_category,
-		}
-		if self.seed_class:
-			filters["seed_class"] = self.seed_class
-		standards = frappe.get_all(
-			"Inspection Standard", filters=filters, fields=STANDARD_FIELDS,
-			order_by="creation asc, parameter asc",
+		candidates = frappe.get_all(
+			"Inspection Standard",
+			filters={"inspection_template": self.inspection_template},
+			fields=STANDARD_FIELDS,
+			order_by="display_order asc, creation asc, parameter asc",
 		)
-		if not standards and self.seed_class:
-			# Category-wide standards remain valid until class-specific rules are configured.
-			filters["seed_class"] = ["is", "not set"]
-			standards = frappe.get_all(
-				"Inspection Standard", filters=filters, fields=STANDARD_FIELDS,
-				order_by="creation asc, parameter asc",
-			)
+		# Resolve category/class specificity independently per parameter so a
+		# template can mix global rules with category-specific overrides.
+		resolved = {}
+		for standard in candidates:
+			if standard.production_category and standard.production_category != self.production_category:
+				continue
+			if standard.seed_class and standard.seed_class != self.seed_class:
+				continue
+			score = int(bool(standard.production_category)) * 2 + int(bool(standard.seed_class))
+			current = resolved.get(standard.parameter)
+			if not current or score > current[0]:
+				resolved[standard.parameter] = (score, standard)
+		standards = [item[1] for item in resolved.values()]
+		standards.sort(key=lambda row: (cint(row.display_order), row.parameter or ""))
 		for standard in standards:
 			parameter = frappe.db.get_value(
 				"Inspection Parameter",

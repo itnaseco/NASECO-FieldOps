@@ -14,6 +14,7 @@ from naseco_fieldopsbackend.inspection_scheduler import sync_crop_cycle_lifecycl
 from naseco_fieldopsbackend.inspection_scheduler import update_crop_cycle_current_stage
 from naseco_fieldopsbackend.inspection_scheduler import inspection_lifecycle_stage_name
 from naseco_fieldopsbackend.inspection_scheduler import resolve_inspection_templates
+from naseco_fieldopsbackend.inspection_scheduler import select_applicable_inspection_templates
 
 
 class TestCropCycle(TestCase):
@@ -157,6 +158,25 @@ class TestInspectionTemplateResolution(TestCase):
 		resolved = resolve_inspection_templates(templates)
 
 		self.assertEqual([row.name for row in resolved], ["Published", "Legacy"])
+
+	@patch("naseco_fieldopsbackend.inspection_scheduler._template_applicability_score")
+	def test_uses_most_specific_template_per_inspection_type(self, score):
+		score.side_effect = lambda name, cycle, outgrower: {
+			"Global Pre": 0,
+			"Regional Pre": 500,
+			"Flowering": 0,
+		}[name]
+		templates = [
+			frappe._dict(name="Global Pre", inspection_type="Pre-flowering"),
+			frappe._dict(name="Regional Pre", inspection_type="Pre-flowering"),
+			frappe._dict(name="Flowering", inspection_type="1st Flowering"),
+		]
+
+		resolved = select_applicable_inspection_templates(
+			frappe._dict(name="CC-TEST"), templates
+		)
+
+		self.assertEqual([row.name for row in resolved], ["Regional Pre", "Flowering"])
 
 
 class TestAgronomyActivityTemplateResolution(TestCase):

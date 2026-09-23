@@ -216,7 +216,8 @@ def repair_corrupt_plot_map_images():
 
 
 def _require_quality_manager():
-	if frappe.session.user != "Administrator" and QUALITY_MANAGER_ROLE not in frappe.get_roles():
+	roles = frappe.get_roles()
+	if frappe.session.user != "Administrator" and QUALITY_MANAGER_ROLE not in roles and "System Manager" not in roles:
 		frappe.throw(_("Only a Quality Manager can manage published inspection configurations."), frappe.PermissionError)
 
 
@@ -260,8 +261,11 @@ def publish_inspection_template_version(template):
 		return {"name": doc.name, "version": doc.configuration_version}
 	if doc.lifecycle_status != "Draft":
 		frappe.throw(_("Only a Draft inspection template can be published."))
-	if not frappe.db.exists("Inspection Standard", {"inspection_template": doc.name}):
+	parameter_rows = doc.get("quality_parameters") or []
+	if not parameter_rows and not frappe.db.exists("Inspection Standard", {"inspection_template": doc.name}):
 		frappe.throw(_("Add at least one Inspection Standard before publishing this template."))
+	if parameter_rows:
+		_materialize_template_parameter_standards(doc)
 	if doc.supersedes_template and frappe.db.exists("Inspection Template", doc.supersedes_template):
 		frappe.db.set_value(
 			"Inspection Template",
@@ -273,6 +277,46 @@ def publish_inspection_template_version(template):
 	)
 	frappe.db.commit()
 	return {"name": doc.name, "version": doc.configuration_version}
+
+
+def _materialize_template_parameter_standards(template_doc):
+	"""Maintain legacy Inspection Standard rows for existing server logic.
+
+	Draft versions are not used by inspections, so rebuilding only that draft's
+	compatibility rows cannot change historical inspections.
+	"""
+	for name in frappe.get_all(
+		"Inspection Standard",
+		filters={"inspection_template": template_doc.name},
+		pluck="name",
+	):
+		frappe.delete_doc("Inspection Standard", name, ignore_permissions=True)
+	for row in template_doc.get("quality_parameters") or []:
+		if not cint(row.active):
+			continue
+		frappe.get_doc(
+			{
+				"doctype": "Inspection Standard",
+				"inspection_template": template_doc.name,
+				"parameter": row.parameter,
+				"production_category": row.production_category,
+				"seed_class": row.seed_class,
+				"section_label": row.section_label,
+				"display_order": row.display_order,
+				"mandatory": row.mandatory,
+				"comparison_rule": row.comparison_rule,
+				"minimum_value": row.minimum_value,
+				"maximum_value": row.maximum_value,
+				"expected_text": row.expected_text,
+				"unit": row.unit,
+				"good_label": row.good_label,
+				"poor_label": row.poor_label,
+				"aggregation_method": row.aggregation_method,
+				"auto_reject_on_fail": row.auto_reject_on_fail,
+				"corrective_action_on_fail": row.corrective_action_on_fail,
+				"standard_notes": row.standard_notes,
+			}
+		).insert(ignore_permissions=True)
 
 # Mobile <-> Frappe mappings
 BASE_STORE_TO_DOCTYPE = {
@@ -291,6 +335,8 @@ BASE_STORE_TO_DOCTYPE = {
 	"inspection_templates": "Inspection Template",
 	"inspection_parameters": "Inspection Parameter",
 	"inspection_standards": "Inspection Standard",
+	"inspection_template_parameters": "Inspection Template Parameter",
+	"inspection_template_applicability": "Inspection Template Applicability",
 	"agronomy_activity_templates": "Agronomy Activity Template",
 	"agronomy_report_templates": "Agronomy Report Template",
 	"agronomy_reports": "Agronomy Report",
@@ -340,6 +386,8 @@ STORE_TO_DOCTYPE.update({
 	"InspectionTemplate": "Inspection Template",
 	"InspectionParameter": "Inspection Parameter",
 	"InspectionStandard": "Inspection Standard",
+	"InspectionTemplateParameter": "Inspection Template Parameter",
+	"InspectionTemplateApplicability": "Inspection Template Applicability",
 	"AgronomyActivityTemplate": "Agronomy Activity Template",
 	"AgronomyReportTemplate": "Agronomy Report Template",
 	"AgronomyReport": "Agronomy Report",
@@ -375,6 +423,8 @@ MOBILE_REFERENCE_DOCTYPES = {
 	"Inspection Parameter",
 	"Inspection Template",
 	"Inspection Standard",
+	"Inspection Template Parameter",
+	"Inspection Template Applicability",
 	"Agronomy Activity Template",
 	"Agronomy Report Template",
 	"Crop Cycle Stage",
@@ -982,6 +1032,33 @@ MOBILE_FIELD_MAP = {
 		"autoRejectOnFail": "auto_reject_on_fail",
 		"correctiveActionOnFail": "corrective_action_on_fail",
 		"standardNotes": "standard_notes",
+		"sectionLabel": "section_label",
+		"displayOrder": "display_order",
+	},
+	"Inspection Template Parameter": {
+		"inspectionTemplateId": "parent",
+		"inspectionAttribute": "inspection_attribute",
+		"sectionLabel": "section_label",
+		"displayOrder": "display_order",
+		"productionCategory": "production_category",
+		"seedClass": "seed_class",
+		"comparisonRule": "comparison_rule",
+		"minimumValue": "minimum_value",
+		"maximumValue": "maximum_value",
+		"expectedText": "expected_text",
+		"goodLabel": "good_label",
+		"poorLabel": "poor_label",
+		"aggregationMethod": "aggregation_method",
+		"autoRejectOnFail": "auto_reject_on_fail",
+		"correctiveActionOnFail": "corrective_action_on_fail",
+		"standardNotes": "standard_notes",
+	},
+	"Inspection Template Applicability": {
+		"inspectionTemplateId": "parent",
+		"productionCategory": "production_category",
+		"seedClass": "seed_class",
+		"effectiveFrom": "effective_from",
+		"effectiveTo": "effective_to",
 	},
 	"Inspection Attribute": {
 		"attributeName": "attribute_name",
@@ -2238,45 +2315,19 @@ def _inspection_configuration_snapshot(template):
 	"""Freeze the rules used for an inspection so later manager edits are auditable."""
 	if not template:
 		return None
-	standards = frappe.get_all(
-		"Inspection Standard",
-		filters={"inspection_template": template},
-		fields=["*"],
-		order_by="creation asc, parameter asc",
-	)
-	parameter_names = sorted({row.parameter for row in standards if row.parameter})
-	parameters = (
-		frappe.get_all(
-			"Inspection Parameter",
-			filters={"name": ["in", parameter_names]},
-			fields=["*"],
-		)
-		if parameter_names else []
-	)
-	return json.dumps(
-		{
-			"template": template,
-			"version": frappe.db.get_value("Inspection Template", template, "configuration_version") or 1,
-			"captured_at": str(frappe.utils.now_datetime()),
-			"standards": [dict(row) for row in standards],
-			"parameters": [dict(row) for row in parameters],
-		},
-		default=str,
-		sort_keys=True,
-	)
+	from naseco_fieldopsbackend.inspection_scheduler import inspection_configuration_snapshot
+	return inspection_configuration_snapshot(template)
 
 
 def _validate_mobile_take_evidence(values):
 	evidence = values.get("take_evidence") or []
 	take_numbers = {cint(row.get("take_number")) for row in values.get("takes") or []}
 	template = values.get("inspection_template")
-	configured_parameters = set(
-		frappe.get_all(
-			"Inspection Standard",
-			filters={"inspection_template": template},
-			pluck="parameter",
-		)
-	) if template else set()
+	if template:
+		from naseco_fieldopsbackend.inspection_scheduler import get_template_standard_rows
+		configured_parameters = {row.parameter for row in get_template_standard_rows(template) if row.parameter}
+	else:
+		configured_parameters = set()
 	seen_ids = set()
 	for row in evidence:
 		take_number = cint(row.get("take_number"))
