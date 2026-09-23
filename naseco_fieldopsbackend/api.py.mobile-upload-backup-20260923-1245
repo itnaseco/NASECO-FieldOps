@@ -5,8 +5,6 @@ import frappe
 from frappe import _
 import json
 import io
-import os
-import base64
 from collections import defaultdict
 from datetime import datetime
 from frappe.utils import cint, flt, get_fullname
@@ -44,45 +42,6 @@ def _valid_image_content(content, file_name=None):
 	if name.endswith(".webp"):
 		return content.startswith(b"RIFF") and content[8:12] == b"WEBP"
 	return content.startswith((b"\x89PNG\r\n\x1a\n", b"\xff\xd8", b"GIF87a", b"GIF89a"))
-
-
-@frappe.whitelist()
-def upload_mobile_media(filename, filedata, is_private=1):
-	"""Save an authenticated mobile attachment from exact base64 bytes.
-
-	Frappe's modern upload_file endpoint only reads multipart request.files and
-	ignores JSON filedata. Keeping this transport explicit prevents binary data
-	from being text-reencoded by mobile/proxy multipart implementations.
-	"""
-	from frappe.utils import cint
-	from frappe.utils.file_manager import save_file
-
-	filename = os.path.basename((filename or "").strip())
-	if not filename or not filedata:
-		frappe.throw(_("A filename and file data are required."), frappe.ValidationError)
-	try:
-		content = base64.b64decode(filedata, validate=True)
-	except Exception:
-		frappe.throw(_("The uploaded file is not valid base64 data."), frappe.ValidationError)
-	if not content or len(content) > 25 * 1024 * 1024:
-		frappe.throw(_("The uploaded file is empty or exceeds the 25 MB mobile limit."), frappe.ValidationError)
-	image_extensions = (".png", ".jpg", ".jpeg", ".gif", ".webp")
-	if filename.lower().endswith(image_extensions) and not _valid_image_content(content, filename):
-		frappe.throw(_("The uploaded image is corrupt or incomplete."), frappe.ValidationError)
-	file_doc = save_file(
-		filename,
-		content,
-		dt=None,
-		dn=None,
-		is_private=cint(is_private),
-	)
-	return {
-		"name": file_doc.name,
-		"file_name": file_doc.file_name,
-		"file_url": file_doc.file_url,
-		"is_private": file_doc.is_private,
-		"file_size": file_doc.file_size,
-	}
 
 
 def _mobile_file_is_in_scope(file_doc):
