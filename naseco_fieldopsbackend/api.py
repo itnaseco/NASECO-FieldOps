@@ -1605,7 +1605,7 @@ def _map_doc_to_mobile(doctype, doc_dict):
 	reverse = {v: k for k, v in mapping.items()}
 	result = {}
 	for key, value in (doc_dict or {}).items():
-		if key in ("doctype", "owner", "modified_by", "docstatus", "idx", "parent", "parenttype", "parentfield"):
+		if key in ("doctype", "owner", "modified_by", "docstatus", "idx", "parent", "parenttype", "parentfield") and key not in reverse:
 			continue
 		if key == "creation":
 			result["createdAt"] = value
@@ -2912,6 +2912,8 @@ def get_reference_data():
 			"Inspection Parameter": ["*"],
 			"Inspection Template": ["*"],
 			"Inspection Standard": ["*"],
+			"Inspection Template Parameter": ["*"],
+			"Inspection Template Applicability": ["*"],
 			"Agronomy Activity Template": ["*"],
 			"Agronomy Report Template": ["*"],
 			"Crop Cycle Stage": ["*"]
@@ -3043,6 +3045,8 @@ def get_sync_data(last_sync=None, officer_region=None, **kwargs):
 			"Inspection Parameter",
 			"Inspection Template",
 			"Inspection Standard",
+			"Inspection Template Parameter",
+			"Inspection Template Applicability",
 			"Agronomy Activity Template",
 			"Agronomy Report Template",
 			"Crop Cycle Stage",
