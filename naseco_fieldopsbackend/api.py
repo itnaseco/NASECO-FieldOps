@@ -258,7 +258,9 @@ def publish_inspection_template_version(template):
 	_require_quality_manager()
 	doc = frappe.get_doc("Inspection Template", template)
 	if doc.lifecycle_status == "Published":
-		return {"name": doc.name, "version": doc.configuration_version}
+		migrated = _migrate_unstarted_scheduled_inspections(doc)
+		frappe.db.commit()
+		return {"name": doc.name, "version": doc.configuration_version, "migrated_inspections": migrated}
 	if doc.lifecycle_status != "Draft":
 		frappe.throw(_("Only a Draft inspection template can be published."))
 	parameter_rows = doc.get("quality_parameters") or []
@@ -275,8 +277,9 @@ def publish_inspection_template_version(template):
 	doc.db_set(
 		{"lifecycle_status": "Published", "active": 1, "effective_from": doc.effective_from or frappe.utils.today()},
 	)
+	migrated = _migrate_unstarted_scheduled_inspections(doc)
 	frappe.db.commit()
-	return {"name": doc.name, "version": doc.configuration_version}
+	return {"name": doc.name, "version": doc.configuration_version, "migrated_inspections": migrated}
 
 
 def _materialize_template_parameter_standards(template_doc):
@@ -317,6 +320,52 @@ def _materialize_template_parameter_standards(template_doc):
 				"standard_notes": row.standard_notes,
 			}
 		).insert(ignore_permissions=True)
+
+
+def _migrate_unstarted_scheduled_inspections(template_doc):
+	"""Move untouched Scheduled inspections along an explicit version chain.
+
+	Inspections with any captured field evidence remain pinned to their frozen
+	snapshot. Updating `modified` is intentional so incremental mobile sync pulls
+	the replacement capture schema immediately.
+	"""
+	source = template_doc.get("supersedes_template")
+	if not source:
+		return []
+	snapshot = _inspection_configuration_snapshot(template_doc.name)
+	migrated = []
+	for name in frappe.get_all(
+		"Inspection",
+		filters={
+			"inspection_template": source,
+			"status": "Scheduled",
+			"docstatus": ["<", 2],
+		},
+		pluck="name",
+	):
+		if any(
+			frappe.db.count(child, {"parent": name})
+			for child in (
+				"Inspection Take",
+				"Inspection Take Result",
+				"Inspection Take Evidence",
+				"Inspection Observation",
+				"Inspection Result",
+			)
+		):
+			continue
+		frappe.db.set_value(
+			"Inspection",
+			name,
+			{
+				"inspection_template": template_doc.name,
+				"template_version": template_doc.configuration_version or 1,
+				"configuration_snapshot": snapshot,
+			},
+			update_modified=True,
+		)
+		migrated.append(name)
+	return migrated
 
 # Mobile <-> Frappe mappings
 BASE_STORE_TO_DOCTYPE = {

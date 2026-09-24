@@ -43,6 +43,20 @@ class TestMobileSecurity(TestCase):
 		self.assertEqual(mapping["parameterId"], "parameter")
 		self.assertEqual(mapping["fileUrl"], "file")
 
+	def test_template_child_rows_retain_parent_for_mobile_resolution(self):
+		row = api._map_doc_to_mobile(
+			"Inspection Template Parameter",
+			{
+				"name": "ROW-1",
+				"parent": "Pre-Flowering V2",
+				"parenttype": "Inspection Template",
+				"parameter": "Pest Infested Plants",
+				"mandatory": 1,
+			},
+		)
+		self.assertEqual(row["inspectionTemplateId"], "Pre-Flowering V2")
+		self.assertEqual(row["parameter"], "Pest Infested Plants")
+
 	def test_mobile_expense_becomes_an_erpnext_expense_detail(self):
 		def get_value(doctype, name, fieldname):
 			if doctype == "Employee" and fieldname == "company":
