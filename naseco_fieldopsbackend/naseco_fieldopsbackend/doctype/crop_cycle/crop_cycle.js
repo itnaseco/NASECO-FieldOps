@@ -28,6 +28,8 @@ frappe.ui.form.on("Crop Cycle", {
 			frm.add_custom_button(__('Provision Stage Inputs'), () => provision_stage_inputs(frm), __('Actions'));
 		}
 
+		add_close_current_stage_button(frm);
+
 		add_related_record_buttons(frm);
 
 		frm.add_custom_button(__('New Production Lot'), () => {
@@ -232,4 +234,84 @@ function show_schedule_indicators(frm) {
 			frm.doc.forecast_net_payable >= 0 ? 'green' : 'red'
 		);
 	}
+}
+
+function add_close_current_stage_button(frm) {
+	if (!frm.doc.current_stage || frm.doc.status === 'COMPLETED') return;
+	const allowed = ['System Manager', 'Outgrower Manager', 'Quality Manager'];
+	if (!allowed.some((role) => frappe.user_roles.includes(role))) return;
+
+	frm.add_custom_button(__('Close Current Stage'), async () => {
+		const readiness = await frappe.call({
+			method: 'naseco_fieldopsbackend.stage_progress.get_stage_close_readiness',
+			args: {
+				crop_cycle: frm.doc.name,
+				stage: frm.doc.current_stage,
+			},
+			freeze: true,
+			freeze_message: __('Checking required stage work...'),
+		});
+		const result = readiness.message || {};
+		if (['Completed', 'Skipped', 'Cancelled'].includes(result.stage_status)) {
+			frappe.msgprint({
+				title: __('Stage Already Closed'),
+				indicator: 'blue',
+				message: __('The current stage is already closed. No further transition was made.'),
+			});
+			return;
+		}
+		if (!result.ready) {
+			const rows = (result.blockers || []).map((row) => {
+				const label = frappe.utils.escape_html(row.title || row.name || '');
+				const status = frappe.utils.escape_html(row.status || 'Pending');
+				const reason = frappe.utils.escape_html(row.reason || '');
+				const route = `/app/${frappe.router.slug(row.doctype)}/${encodeURIComponent(row.name)}`;
+				return `<li><a href="${route}">${label}</a> - ${status}<br><small>${reason}</small></li>`;
+			}).join('');
+			frappe.msgprint({
+				title: __('Stage Is Not Ready'),
+				indicator: 'red',
+				message: `<p>${__('Complete the following required work before closing this stage:')}</p><ul>${rows}</ul>`,
+			});
+			return;
+		}
+
+		const dialog = new frappe.ui.Dialog({
+			title: __('Close Current Stage'),
+			fields: [
+				{
+					fieldtype: 'HTML',
+					options: `<p>${__('Close {0}? This action advances the crop cycle and makes this stage read-only.', [frappe.utils.escape_html(result.stage_name || result.stage)])}</p>`,
+				},
+				{
+					fieldname: 'closure_notes',
+					fieldtype: 'Small Text',
+					label: __('Closure Notes'),
+				},
+			],
+			primary_action_label: __('Close Stage'),
+			primary_action: async (values) => {
+				dialog.disable_primary_action();
+				try {
+					await frappe.call({
+						method: 'naseco_fieldopsbackend.stage_progress.close_current_crop_cycle_stage',
+						args: {
+							crop_cycle: frm.doc.name,
+							expected_stage: result.stage,
+							expected_stage_modified: result.stage_modified,
+							closure_notes: values.closure_notes,
+						},
+						freeze: true,
+						freeze_message: __('Closing stage...'),
+					});
+					dialog.hide();
+					frappe.show_alert({message: __('Stage closed'), indicator: 'green'});
+					await frm.reload_doc();
+				} finally {
+					dialog.enable_primary_action();
+				}
+			},
+		});
+		dialog.show();
+	}, __('Actions'));
 }

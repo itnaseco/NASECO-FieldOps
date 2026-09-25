@@ -591,6 +591,12 @@ def create_agronomy_activities(crop_cycle, stages):
 
 
 def update_crop_cycle_current_stage(crop_cycle):
+	"""Initialize a missing current-stage pointer without advancing it.
+
+	Stage advancement is an explicit Frappe Desk action implemented by
+	``stage_progress.close_current_crop_cycle_stage``. Schedule generation may
+	create or refresh stages, but must never close or advance an existing one.
+	"""
 	stages = frappe.get_all(
 		"Crop Cycle Stage",
 		filters={"crop_cycle": crop_cycle},
@@ -599,40 +605,16 @@ def update_crop_cycle_current_stage(crop_cycle):
 	)
 	if not stages:
 		return
-	terminal_statuses = {"Completed", "Skipped", "Cancelled"}
 	existing_current = frappe.db.get_value("Crop Cycle", crop_cycle, "current_stage")
-	existing = next((row for row in stages if row.name == existing_current), None)
-	completed_order = max(
-		(
-			row.order_index or 0
-			for row in stages
-			if row.status in terminal_statuses
-		),
-		default=0,
-	)
-	if existing_current:
-		# Calendar dates indicate schedule/overdue state; they must not silently
-		# lock unfinished field work by advancing the authoritative pointer.
-		# A later completed stage is evidence that a stale pointer has regressed;
-		# only that case is allowed to move an unfinished existing pointer.
-		if (
-			existing
-			and existing.status not in terminal_statuses
-			and (existing.order_index or 0) >= completed_order
-		):
-			return
-
-	floor_order = max(
-		completed_order,
-		(existing.order_index or 0) if existing else 0,
-	)
+	if existing_current and any(row.name == existing_current for row in stages):
+		return existing_current
+	terminal_statuses = {"Completed", "Skipped", "Cancelled"}
 	today = getdate(nowdate())
 	current = next(
 		(
 			row
 			for row in stages
 			if row.status not in terminal_statuses
-			and (row.order_index or 0) > floor_order
 			and row.start_date
 			and row.end_date
 			and getdate(row.start_date) <= today <= getdate(row.end_date)
@@ -644,7 +626,6 @@ def update_crop_cycle_current_stage(crop_cycle):
 			(
 				row for row in stages
 				if row.status not in terminal_statuses
-				and (row.order_index or 0) > floor_order
 			),
 			stages[-1],
 		)
@@ -655,6 +636,15 @@ def update_crop_cycle_current_stage(crop_cycle):
 		current.name,
 		update_modified=False,
 	)
+	if current.status == "Pending":
+		frappe.db.set_value(
+			"Crop Cycle Stage",
+			current.name,
+			"status",
+			"In Progress",
+			update_modified=False,
+		)
+	return current.name
 
 
 def create_todo(allocated_to, reference_type, reference_name, description, date=None, priority="Medium"):

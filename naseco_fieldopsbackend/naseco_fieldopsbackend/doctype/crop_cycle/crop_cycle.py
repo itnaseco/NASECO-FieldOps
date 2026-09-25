@@ -31,6 +31,18 @@ class CropCycle(Document):
 		self.validate_single_cycle_per_plot()
 		self.validate_planting_window()
 		self.validate_confirmed_planting_date()
+		self.validate_current_stage_is_backend_owned()
+
+	def validate_current_stage_is_backend_owned(self):
+		"""Prevent form/API saves from bypassing the Close Current Stage action."""
+		if self.is_new():
+			return
+		previous = self.get_doc_before_save()
+		if previous and previous.current_stage != self.current_stage:
+			frappe.throw(
+				_("Current Stage is backend-managed. Use Close Current Stage from the Crop Cycle form."),
+				frappe.PermissionError,
+			)
 
 	def validate_confirmed_planting_date(self):
 		if self.is_new() or not self.planting_date_confirmed:

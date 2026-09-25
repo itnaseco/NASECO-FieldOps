@@ -6,6 +6,36 @@ from naseco_fieldopsbackend import api
 
 
 class TestMobileSecurity(TestCase):
+	def test_field_visit_owner_is_server_owned(self):
+		fields = api.MOBILE_SERVER_OWNED_FIELDS["Field Visit"]
+		self.assertIn("visited_by", fields)
+		values = api._strip_server_owned_mobile_fields(
+			"Field Visit", {"visited_by": "another@example.com", "status": "in_progress"}
+		)
+		self.assertNotIn("visited_by", values)
+
+	def test_starting_scheduled_visit_claims_authenticated_user(self):
+		values = {"status": "in_progress"}
+		existing = SimpleNamespace(visited_by=None, status="scheduled")
+		with patch.object(api.frappe, "session", SimpleNamespace(user="alice@example.com")):
+			with patch.object(api.frappe.db, "get_value", return_value=existing):
+				api._secure_mobile_visit_owner("UPDATE", "VISIT-1", values)
+		self.assertEqual(values["visited_by"], "alice@example.com")
+
+	def test_another_user_cannot_take_over_active_visit(self):
+		values = {"status": "completed"}
+		existing = SimpleNamespace(visited_by="alice@example.com", status="in_progress")
+		with patch.object(api.frappe, "session", SimpleNamespace(user="bob@example.com")):
+			with patch.object(api.frappe.db, "get_value", return_value=existing):
+				with self.assertRaises(Exception):
+					api._secure_mobile_visit_owner("UPDATE", "VISIT-1", values)
+
+	def test_scheduled_create_remains_unclaimed_until_start(self):
+		values = {"status": "scheduled"}
+		with patch.object(api.frappe, "session", SimpleNamespace(user="alice@example.com")):
+			api._secure_mobile_visit_owner("CREATE", None, values)
+		self.assertIsNone(values["visited_by"])
+
 	def test_hr_self_service_documents_have_durable_mobile_ids(self):
 		for doctype in ("Expense Claim", "Leave Application", "Employee Advance"):
 			self.assertIn(doctype, api.MOBILE_HR_SELF_SERVICE_DOCTYPES)

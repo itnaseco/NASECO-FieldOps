@@ -43,7 +43,7 @@ class TestCropCycle(TestCase):
 	@patch("naseco_fieldopsbackend.inspection_scheduler.frappe.db.set_value")
 	@patch("naseco_fieldopsbackend.inspection_scheduler.frappe.db.get_value")
 	@patch("naseco_fieldopsbackend.inspection_scheduler.frappe.get_all")
-	def test_completed_vegetative_stage_advances_without_regression(
+	def test_scheduler_never_advances_an_existing_current_stage(
 		self, get_all, get_value, set_value
 	):
 		get_all.return_value = [
@@ -61,13 +61,7 @@ class TestCropCycle(TestCase):
 		):
 			update_crop_cycle_current_stage("CC-TEST")
 
-		set_value.assert_any_call(
-			"Crop Cycle",
-			"CC-TEST",
-			"current_stage",
-			"PRE-FLOWERING",
-			update_modified=False,
-		)
+		set_value.assert_not_called()
 
 	@patch("naseco_fieldopsbackend.inspection_scheduler.ensure_crop_cycle_stages")
 	def test_lifecycle_is_not_generated_before_planting_confirmation(self, ensure_stages):
