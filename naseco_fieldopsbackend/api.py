@@ -554,6 +554,25 @@ MOBILE_SERVER_OWNED_FIELDS = {
 		# mobile cache's older value can incorrectly revert an occupied plot.
 		"status",
 	},
+	"Crop Cycle": {
+		# Stage advancement is a Frappe Desk/backend transition. Mobile caches
+		# may report these values but can never author them.
+		"current_stage",
+		"status",
+	},
+	"Crop Cycle Stage": {
+		"status",
+		"completion_percentage",
+		"closed_by",
+		"closed_at",
+		"closure_notes",
+	},
+	"Field Visit": {
+		# Ownership is assigned from frappe.session.user during the first start
+		# transition and is immutable through the generic mobile payload.
+		"visited_by",
+		"completed_by",
+	},
 	"Inspection": {
 		"status",
 		"assigned_to",
@@ -2082,6 +2101,12 @@ def _mobile_stage_lock_error(doctype, name, values):
 			return None
 
 	if stage_order < current_order:
+		stage_status = frappe.db.get_value("Crop Cycle Stage", stage, "status")
+		if str(stage_status or "").strip().casefold() in {"completed", "skipped", "cancelled"}:
+			return _(
+				"This {0} belongs to an explicitly closed crop-cycle stage and is read-only. "
+				"Ask a manager to unlock it for a correction if needed."
+			).format(doctype)
 		stage_end = frappe.db.get_value("Crop Cycle Stage", stage, "end_date")
 		if stage_end and (frappe.utils.getdate() - frappe.utils.getdate(stage_end)).days <= STAGE_EDIT_GRACE_DAYS:
 			return None
@@ -2120,6 +2145,8 @@ def _authorize_mobile_write(doctype, operation, name=None, values=None):
 				_("Mobile users cannot create {0}; use the assigned schedule.").format(doctype),
 				frappe.PermissionError,
 			)
+	if doctype == "Field Visit" and operation in ("CREATE", "UPDATE"):
+		_secure_mobile_visit_owner(operation, name, values)
 	if not _mobile_record_is_in_scope(doctype, name, values):
 		frappe.throw(
 			_("This {0} is outside your FieldOps assignment.").format(doctype),
@@ -2130,6 +2157,67 @@ def _authorize_mobile_write(doctype, operation, name=None, values=None):
 		stage_lock_error = _mobile_stage_lock_error(doctype, name, values)
 		if stage_lock_error:
 			frappe.throw(stage_lock_error, frappe.PermissionError)
+
+
+def _normalized_visit_status(value):
+	return str(value or "").strip().lower().replace(" ", "_")
+
+
+def _secure_mobile_visit_owner(operation, name, values):
+	"""Bind a Field Visit to the authenticated user who starts it.
+
+	The old sync path stamped ``visited_by`` on every update. On a shared
+	device that silently transferred another officer's active visit to the
+	second login. This function makes the owner server-derived and immutable.
+	"""
+	values = values or {}
+	user = frappe.session.user
+	status = _normalized_visit_status(values.get("status"))
+
+	if operation == "CREATE":
+		# A future scheduled visit is unclaimed. Offline visits that already
+		# started or completed are owned by the authenticated uploader.
+		values["visited_by"] = user if status in ("in_progress", "ongoing", "completed") else None
+		if status == "completed" and frappe.get_meta("Field Visit").has_field("completed_by"):
+			values["completed_by"] = user
+		return
+
+	existing = frappe.db.get_value(
+		"Field Visit",
+		name,
+		["visited_by", "status"],
+		as_dict=True,
+	)
+	if not existing:
+		return
+	owner = existing.visited_by
+	existing_status = _normalized_visit_status(existing.status)
+	next_status = status or existing_status
+
+	if owner and owner != user:
+		frappe.throw(
+			_("This Field Visit belongs to {0}. Only that user can change or complete it.").format(owner),
+			frappe.PermissionError,
+		)
+	if not owner and existing_status in ("in_progress", "ongoing", "completed"):
+		frappe.throw(
+			_("This Field Visit has no verified owner and requires manager review."),
+			frappe.PermissionError,
+		)
+	if not owner and existing_status in ("scheduled", "planned") and next_status in (
+		"in_progress", "ongoing", "completed"
+	):
+		owner = user
+
+	values["visited_by"] = owner
+	if next_status == "completed":
+		if owner != user:
+			frappe.throw(
+				_("Only the user who started this Field Visit can complete it."),
+				frappe.PermissionError,
+			)
+		if frappe.get_meta("Field Visit").has_field("completed_by"):
+			values["completed_by"] = user
 
 
 def _validate_mobile_visit_context(doctype, name, values):
@@ -2276,7 +2364,6 @@ def _strip_server_owned_mobile_fields(doctype, values):
 		for fieldname in ("manager_review_status", "reviewed_by", "reviewed_at", "review_notes", "calculated_distance_km"):
 			values.pop(fieldname, None)
 	if doctype == "Field Visit":
-		values["visited_by"] = frappe.session.user
 		values["external_id"] = values.get("external_id") or values.get("visit_id")
 		values.pop("distance_from_plot", None)
 	if doctype == "Inspection":
