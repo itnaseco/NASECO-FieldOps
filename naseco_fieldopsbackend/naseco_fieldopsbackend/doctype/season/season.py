@@ -65,6 +65,9 @@ def update_season_statuses():
 		status = get_season_status(season.start_date, season.end_date)
 		if season.season_status != status:
 			frappe.db.set_value("Season", season.name, "season_status", status, update_modified=False)
+			from naseco_fieldopsbackend.mobile_sync import record_direct_mobile_change
+
+			record_direct_mobile_change("Season", season.name)
 
 
 @frappe.whitelist()

@@ -167,6 +167,12 @@ has_permission = {
 # Hook on document methods and events
 
 doc_events = {
+	"*": {
+		# One durable change row is the authoritative signal for mobile clients.
+		# on_change also runs for Document.db_set(), unlike on_update alone.
+		"on_change": "naseco_fieldopsbackend.mobile_sync.record_mobile_change",
+		"on_trash": "naseco_fieldopsbackend.mobile_sync.record_mobile_deletion",
+	},
 	"Stock Entry": {
 		"before_validate": "naseco_fieldopsbackend.fieldops_finance.populate_stock_entry_context",
 		"before_submit": "naseco_fieldopsbackend.fieldops_finance.populate_stock_entry_context",
@@ -196,6 +202,7 @@ scheduler_events = {
 	"daily": [
 		"naseco_fieldopsbackend.lifecycle_tasks.update_active_crop_cycle_stages",
 		"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.season.season.update_season_statuses",
+		"naseco_fieldopsbackend.mobile_sync.prune_mobile_sync_changes",
 	],
 # 	"hourly": [
 # 		"naseco_fieldopsbackend.tasks.hourly"

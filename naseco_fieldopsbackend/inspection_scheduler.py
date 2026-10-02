@@ -636,6 +636,9 @@ def update_crop_cycle_current_stage(crop_cycle):
 		current.name,
 		update_modified=False,
 	)
+	from naseco_fieldopsbackend.mobile_sync import record_direct_mobile_change
+
+	record_direct_mobile_change("Crop Cycle", crop_cycle)
 	if current.status == "Pending":
 		frappe.db.set_value(
 			"Crop Cycle Stage",
@@ -644,6 +647,7 @@ def update_crop_cycle_current_stage(crop_cycle):
 			"In Progress",
 			update_modified=False,
 		)
+		record_direct_mobile_change("Crop Cycle Stage", current.name)
 	return current.name
 
 

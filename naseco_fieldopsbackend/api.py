@@ -2346,6 +2346,11 @@ def mobile_unlock_stage_document(doctype, name, reason=None):
 			"stage_lock_override_reason": (reason or "").strip() or None,
 		},
 	)
+	# frappe.db.set_value bypasses document events. Write the durable mobile
+	# ledger entry in this same transaction before committing the unlock.
+	from naseco_fieldopsbackend.mobile_sync import record_direct_mobile_change
+
+	record_direct_mobile_change(doctype, name)
 	frappe.db.commit()
 	return {"success": True, "name": name}
 
