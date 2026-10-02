@@ -193,6 +193,9 @@ def close_current_crop_cycle_stage(
 	if stage_meta.has_field("closure_notes"):
 		stage_values["closure_notes"] = (closure_notes or "").strip() or None
 	frappe.db.set_value("Crop Cycle Stage", stage_doc.name, stage_values)
+	from naseco_fieldopsbackend.mobile_sync import record_direct_mobile_change
+
+	record_direct_mobile_change("Crop Cycle Stage", stage_doc.name)
 
 	next_rows = frappe.get_all(
 		"Crop Cycle Stage",
@@ -210,6 +213,8 @@ def close_current_crop_cycle_stage(
 		next_values = {"status": "In Progress"}
 		frappe.db.set_value("Crop Cycle Stage", next_stage, next_values)
 		frappe.db.set_value("Crop Cycle", cycle.name, "current_stage", next_stage)
+		record_direct_mobile_change("Crop Cycle Stage", next_stage)
+		record_direct_mobile_change("Crop Cycle", cycle.name)
 	else:
 		# Keep the pointer on the completed final stage. Crop Cycle completion is
 		# governed separately by the existing harvest lifecycle.
