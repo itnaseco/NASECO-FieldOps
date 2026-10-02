@@ -153,7 +153,7 @@ class AgronomyReport(Document):
 
 	def on_submit(self):
 		self.sync_actual_planting_date()
-		self.complete_related_stage()
+		self.sync_related_stage_progress()
 		self.create_corrective_actions()
 		self.sync_todo_status("Closed")
 
@@ -526,7 +526,12 @@ class AgronomyReport(Document):
 
 		sync_crop_cycle_lifecycle(cycle)
 
-	def complete_related_stage(self):
+	def sync_related_stage_progress(self):
+		"""Record report-backed work without closing or advancing the stage.
+
+		Stage closure is an explicit manager action handled by
+		``close_current_crop_cycle_stage`` after every readiness gate passes.
+		"""
 		if not self.stage or not self.crop_cycle:
 			return
 		activities = frappe.get_all(
@@ -577,8 +582,6 @@ class AgronomyReport(Document):
 			},
 			update_modified=False,
 		)
-		from naseco_fieldopsbackend.stage_progress import complete_stage_if_ready
-		complete_stage_if_ready(self.stage, self.crop_cycle)
 
 	def create_corrective_actions(self):
 		failed = [

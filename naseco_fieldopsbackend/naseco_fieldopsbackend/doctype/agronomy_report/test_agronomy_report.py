@@ -43,7 +43,6 @@ class TestAgronomyReport(unittest.TestCase):
 		self.assertEqual(report.location_boundary_override_by, "supervisor@example.com")
 		self.assertIsNotNone(report.location_boundary_override_at)
 
-	@patch("naseco_fieldopsbackend.inspection_scheduler.update_crop_cycle_current_stage")
 	@patch(
 		"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.agronomy_report.agronomy_report.frappe.db.sql"
 	)
@@ -53,8 +52,8 @@ class TestAgronomyReport(unittest.TestCase):
 	@patch(
 		"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.agronomy_report.agronomy_report.frappe.get_all"
 	)
-	def test_submitted_report_completes_every_stage_activity(
-		self, get_all, set_value, sql, update_current_stage
+	def test_submitted_report_records_progress_without_closing_stage(
+		self, get_all, set_value, sql
 	):
 		get_all.return_value = [
 			SimpleNamespace(name="ACT-1", mandatory=1),
@@ -66,7 +65,7 @@ class TestAgronomyReport(unittest.TestCase):
 			crop_cycle="CYCLE-TEST",
 		)
 
-		AgronomyReport.complete_related_stage(report)
+		AgronomyReport.sync_related_stage_progress(report)
 
 		activity_updates = [
 			entry for entry in set_value.call_args_list if entry.args[0] == "Stage Activity"
@@ -84,9 +83,13 @@ class TestAgronomyReport(unittest.TestCase):
 		stage_update = next(
 			entry for entry in set_value.call_args_list if entry.args[0] == "Crop Cycle Stage"
 		)
-		self.assertEqual(stage_update.args[2]["completion_percentage"], 100)
+		self.assertEqual(stage_update.args[2]["status"], "In Progress")
+		self.assertEqual(stage_update.args[2]["completion_percentage"], 90)
+		self.assertEqual(stage_update.args[2]["agronomy_report"], "AGR-TEST")
 		self.assertEqual(sql.call_count, 2)
-		update_current_stage.assert_called_once_with("CYCLE-TEST")
+		self.assertFalse(
+			any(entry.args[0] == "Crop Cycle" for entry in set_value.call_args_list)
+		)
 
 	def test_lifecycle_has_nine_ordered_stages(self):
 		self.assertEqual(len(STAGE_NAMES), 9)
