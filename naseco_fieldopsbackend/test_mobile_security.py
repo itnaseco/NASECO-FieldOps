@@ -6,6 +6,33 @@ from naseco_fieldopsbackend import api
 
 
 class TestMobileSecurity(TestCase):
+	def test_mobile_plot_polygon_removes_duplicate_and_closing_vertices(self):
+		polygon = api._normalize_mobile_plot_polygon(
+			[
+				{"lat": 0.1, "lng": 32.1},
+				{"lat": 0.1, "lng": 32.1},
+				{"lat": 0.2, "lng": 32.1},
+				{"lat": 0.2, "lng": 32.2},
+				{"lat": 0.1, "lng": 32.1},
+			]
+		)
+		self.assertEqual(len(polygon), 3)
+		self.assertEqual([row["orderIndex"] for row in polygon], [1, 2, 3])
+
+	def test_mobile_plot_mapping_uses_clean_polygon(self):
+		values = api._map_mobile_to_doc(
+			"Farm Plot",
+			{
+				"polygon": [
+					{"lat": 0.1, "lng": 32.1},
+					{"lat": 0.1, "lng": 32.1},
+					{"lat": 0.2, "lng": 32.1},
+					{"lat": 0.2, "lng": 32.2},
+				]
+			},
+		)
+		self.assertEqual(len(values["polygon"]), 3)
+
 	def test_field_visit_owner_is_server_owned(self):
 		fields = api.MOBILE_SERVER_OWNED_FIELDS["Field Visit"]
 		self.assertIn("visited_by", fields)
