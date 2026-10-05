@@ -7,6 +7,7 @@ import json
 import io
 import os
 import base64
+import math
 from collections import defaultdict
 from datetime import datetime
 from frappe.utils import cint, flt, get_fullname
@@ -1511,6 +1512,45 @@ def _apply_legacy_area_response(doctype, result):
 			result[old_key] = flt(result.get(new_key)) / factor
 
 
+def _normalize_mobile_plot_polygon(vertices, tolerance_meters=0.5):
+	"""Return an ordered Farm Plot boundary without duplicate coordinates."""
+	cleaned = []
+	earth_radius_m = 6371008.8
+
+	def distance_meters(first, second):
+		lat1 = math.radians(first["lat"])
+		lat2 = math.radians(second["lat"])
+		d_lat = lat2 - lat1
+		d_lng = math.radians(second["lng"] - first["lng"])
+		a = (
+			math.sin(d_lat / 2) ** 2
+			+ math.cos(lat1) * math.cos(lat2) * math.sin(d_lng / 2) ** 2
+		)
+		return earth_radius_m * 2 * math.atan2(math.sqrt(a), math.sqrt(max(0, 1 - a)))
+
+	for row in vertices or []:
+		if not isinstance(row, dict):
+			continue
+		lat_value = row.get("lat", row.get("latitude"))
+		lng_value = row.get("lng", row.get("longitude"))
+		if lat_value in (None, "") or lng_value in (None, ""):
+			continue
+		try:
+			point = {"lat": float(lat_value), "lng": float(lng_value)}
+		except (TypeError, ValueError):
+			continue
+		if not (-90 <= point["lat"] <= 90 and -180 <= point["lng"] <= 180):
+			continue
+		if any(distance_meters(existing, point) <= tolerance_meters for existing in cleaned):
+			continue
+		cleaned.append(point)
+
+	return [
+		{"lat": point["lat"], "lng": point["lng"], "orderIndex": index}
+		for index, point in enumerate(cleaned, start=1)
+	]
+
+
 def _map_mobile_to_doc(doctype, payload):
 	payload = dict(payload or {})
 	if doctype == "Outgrower":
@@ -1539,6 +1579,7 @@ def _map_mobile_to_doc(doctype, payload):
 			result["photos"] = [{"file": p} for p in value or []]
 			continue
 		if key == "polygon" and doctype == "Farm Plot":
+			value = _normalize_mobile_plot_polygon(value)
 			result["polygon"] = [
 				{
 					MOBILE_FIELD_MAP["Plot Vertex"].get("lat", "latitude"): v.get("lat"),
