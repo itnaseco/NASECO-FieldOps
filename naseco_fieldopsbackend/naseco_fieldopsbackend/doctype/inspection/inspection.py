@@ -200,7 +200,8 @@ class Inspection(Document):
 		self.aggregate_results(standards)
 		self.calculate_compliance()
 		self.calculate_inspection_quality()
-		self.complete_if_all_takes_done()
+		# Lifecycle completion is explicit; reaching the sampling target alone
+		# must never submit the inspection.
 		self.calculate_certification_totals()
 		self.validate_completion()
 
@@ -462,12 +463,8 @@ class Inspection(Document):
 			frappe.throw(_("{0} must be a non-negative whole-number count.").format(parameter_name))
 		if cint(total_plants) <= 0:
 			frappe.throw(_("Total Plants Counted must be greater than zero."))
-		if cint(count) > cint(total_plants):
-			frappe.throw(
-				_("{0} cannot exceed Total Plants Counted ({1}).").format(
-					parameter_name, cint(total_plants)
-				)
-			)
+		# Counts above the denominator are retained as quality exceptions rather
+		# than rejected during field capture.
 
 	def calculate_take_completion(self, standards):
 		take_standards = [
@@ -518,7 +515,9 @@ class Inspection(Document):
 			if take.take_status == "Complete":
 				completed += 1
 
-		self.completed_take_count = completed
+		# Count every persisted take. Detailed completeness remains available on
+		# each take_status and in the quality report.
+		self.completed_take_count = len(self.takes or [])
 		self.cumulative_total_plants = sum(
 			cint(take.total_plants_counted)
 			for take in self.takes or []
@@ -683,11 +682,18 @@ class Inspection(Document):
 		if rule == "At Least":
 			passed = measured is not None and flt(measured) >= flt(standard.minimum_value)
 		elif rule == "At Most":
-			passed = measured is not None and flt(measured) <= flt(standard.maximum_value)
+			passed = measured is not None and (
+				standard.maximum_value in (None, "")
+				or flt(measured) <= flt(standard.maximum_value)
+			)
 		elif rule == "Between":
 			passed = (
 				measured is not None
-				and flt(standard.minimum_value) <= flt(measured) <= flt(standard.maximum_value)
+				and flt(measured) >= flt(standard.minimum_value)
+				and (
+					standard.maximum_value in (None, "")
+					or flt(measured) <= flt(standard.maximum_value)
+				)
 			)
 		elif rule == "Equals":
 			passed = text == (standard.expected_text or "").strip().lower()
@@ -795,9 +801,17 @@ class Inspection(Document):
 			if row.positioning_override:
 				override_count += 1
 
-			if previous:
-				distance = self.haversine_distance(previous[0], previous[1], point[0], point[1])
-				row.distance_from_previous_take_m = round(distance, 2)
+			recorded_distance = (
+				flt(row.take_distance_m)
+				if getattr(row, "take_distance_m", None) not in (None, "")
+				else None
+			)
+			if recorded_distance is not None or previous:
+				distance = recorded_distance if recorded_distance is not None else self.haversine_distance(
+					previous[0], previous[1], point[0], point[1]
+				)
+				if recorded_distance is None:
+					row.distance_from_previous_take_m = round(distance, 2)
 				distances.append(distance)
 				if distance < settings.minimum_take_spacing_m:
 					row.spacing_status = "Too Close"
@@ -806,7 +820,8 @@ class Inspection(Document):
 				else:
 					row.spacing_status = "Within Standard"
 					compliant_spacing_count += 1
-				segments.append(
+				if previous:
+					segments.append(
 					{
 						"from_take_number": previous[2],
 						"to_take_number": cint(row.take_number),
@@ -815,9 +830,8 @@ class Inspection(Document):
 						"distance_m": round(distance, 2),
 						"spacing_status": row.spacing_status,
 					}
-				)
+					)
 			else:
-				row.distance_from_previous_take_m = 0
 				row.spacing_status = "First Take"
 			previous = (*point, cint(row.take_number))
 
@@ -847,11 +861,8 @@ class Inspection(Document):
 			if not row.is_new():
 				continue
 			if not self.has_valid_coordinates(row):
-				frappe.throw(
-					_("Inspection Take {0} requires valid automatically captured coordinates.").format(
-						row.take_number
-					)
-				)
+				row.gps_quality_status = "Poor"
+				continue
 
 			distance = (
 				flt(row.distance_from_previous_take_m)
@@ -884,13 +895,9 @@ class Inspection(Document):
 					)
 				row.positioning_override_by = frappe.session.user
 			elif issues:
-				frappe.throw(
-					_("Inspection Take {0} does not meet positioning requirements: {1}").format(
-						row.take_number,
-						" ".join(issues),
-					),
-					title=_("Inspection Take Positioning"),
-				)
+				# Retain capture-quality failures for reporting instead of rejecting
+				# the take submitted by a field inspector.
+				row.gps_quality_status = "Poor"
 
 	def has_valid_coordinates(self, take):
 		if take.latitude is None or take.longitude is None:
@@ -927,16 +934,8 @@ class Inspection(Document):
 			self.inspection_quality_score = "Acceptable"
 
 	def complete_if_all_takes_done(self):
-		if self.status == "Cancelled":
-			return
-		if cint(self.completed_take_count) < (cint(self.required_take_count) or 1):
-			return
-		if not cint(self.controls_completed):
-			return
-		self.status = "Awaiting QA Review"
-		self.qa_review_status = "Pending"
-		if not self.completed_at:
-			self.completed_at = now_datetime()
+		# Kept for compatibility with older callers. Completion is explicit.
+		return
 
 	def calculate_certification_totals(self):
 		area = self.plot_area_hectares or 0
@@ -960,20 +959,8 @@ class Inspection(Document):
 	def validate_completion(self):
 		if self.status not in ("Awaiting QA Review", "Verified"):
 			return
-		if self.completed_take_count < (self.required_take_count or 1):
-			frappe.throw(
-				_("Complete all required inspection takes before submitting. Completed {0} of {1}.").format(
-					self.completed_take_count, self.required_take_count
-				)
-			)
-		if not cint(self.controls_completed):
-			frappe.throw(_("Complete all mandatory inspection-level controls before completion."))
-		mandatory_parameters = {row.parameter for row in self.get_standards() if row.mandatory}
-		if any(
-			row.parameter in mandatory_parameters and row.result_status == "Not Evaluated"
-			for row in self.results or []
-		):
-			frappe.throw(_("All configured inspection attributes must be evaluated before submitting."))
+		# Targets and mandatory rules determine QA quality, not whether the
+		# inspector is allowed to submit the captured field record.
 		if not self.completed_at:
 			self.completed_at = now_datetime()
 
