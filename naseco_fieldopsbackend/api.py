@@ -1013,6 +1013,16 @@ MOBILE_FIELD_MAP = {
 		"positioningOverride": "positioning_override",
 		"positioningOverrideReason": "positioning_override_reason",
 		"positioningOverrideBy": "positioning_override_by",
+		"startLatitude": "start_latitude",
+		"startLongitude": "start_longitude",
+		"startGpsAccuracyMeters": "start_gps_accuracy_meters",
+		"startedAt": "started_at",
+		"endLatitude": "end_latitude",
+		"endLongitude": "end_longitude",
+		"endGpsAccuracyMeters": "end_gps_accuracy_meters",
+		"endedAt": "ended_at",
+		"takeDistanceM": "take_distance_m",
+		"captureExceptionCodes": "capture_exception_codes",
 	},
 	"Inspection Take Result": {
 		"takeNumber": "take_number",
@@ -2398,6 +2408,7 @@ def mobile_unlock_stage_document(doctype, name, reason=None):
 
 def _strip_server_owned_mobile_fields(doctype, values):
 	values = dict(values or {})
+	requested_inspection_status = values.get("status") if doctype == "Inspection" else None
 	for fieldname in MOBILE_SERVER_OWNED_FIELDS.get(doctype, set()):
 		values.pop(fieldname, None)
 	if doctype == "Outgrower" and OUTGROWER_SUPERVISOR_ROLE in _mobile_roles():
@@ -2416,8 +2427,16 @@ def _strip_server_owned_mobile_fields(doctype, values):
 		# Enables create-scope validation while preventing inspectors from
 		# assigning inspections to another user through a crafted payload.
 		values["assigned_to"] = frappe.session.user
+		if requested_inspection_status == "Awaiting QA Review":
+			values["status"] = "Awaiting QA Review"
+			values["qa_review_status"] = "Pending"
+			values["completed_at"] = values.get("completed_at") or frappe.utils.now_datetime()
 		for take in values.get("takes") or []:
 			take["captured_by"] = frappe.session.user
+			if isinstance(take.get("capture_exception_codes"), (list, tuple)):
+				take["capture_exception_codes"] = ", ".join(
+					str(code).strip() for code in take["capture_exception_codes"] if str(code).strip()
+				)
 			if take.get("positioning_override"):
 				take["positioning_override_by"] = frappe.session.user
 		for observation in values.get("inspection_observations") or []:
@@ -2552,25 +2571,7 @@ def _validate_mobile_take_evidence(values):
 					take_number, count, parameter, maximum
 				)
 			)
-	for result in values.get("take_results") or []:
-		parameter = result.get("parameter")
-		policy = policies.get(parameter)
-		if not policy:
-			continue
-		required = cint(policy.minimum_evidence_files)
-		if policy.evidence_policy == "Required":
-			required = max(required, 1)
-		elif policy.evidence_policy == "Required on Non-zero" and cint(result.get("observed_count")) > 0:
-			required = max(required, 1)
-		else:
-			continue
-		key = (cint(result.get("take_number")), parameter)
-		if evidence_counts[key] < required:
-			frappe.throw(
-				_("Take {0} requires at least {1} evidence file(s) for {2}.").format(
-					key[0], required, parameter
-				)
-			)
+	# Evidence remains associated with its parameter, but absence is advisory.
 
 
 def _normalize_uom_doc_data(data):
