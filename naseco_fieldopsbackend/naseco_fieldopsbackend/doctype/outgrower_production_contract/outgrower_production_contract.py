@@ -13,6 +13,7 @@ from naseco_fieldopsbackend.fieldops_finance import (
 )
 from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.season.season import get_season_for_date
 from naseco_fieldopsbackend.seed_configuration import get_variety_seed_item, validate_seed_scope
+from naseco_fieldopsbackend.parent_seed_calculation import calculate_parent_requirement
 
 
 class OutgrowerProductionContract(Document):
@@ -206,13 +207,32 @@ class OutgrowerProductionContract(Document):
 			return
 		if self.crop_recipe:
 			recipe = frappe.get_doc("Crop Recipe", self.crop_recipe)
-			for source in recipe.parent_seed_items or []:
+			all_sources = list(recipe.parent_seed_items or [])
+			variety_sources = [source for source in all_sources if source.variety == self.variety]
+			for source in variety_sources or [source for source in all_sources if not source.variety]:
+				analysis = None
+				if getattr(recipe, "parent_seed_calculation_method", None) == "Ratio and Lot Analysis":
+					analysis = get_default_parent_seed_analysis(
+						parent_variety=getattr(source, "parent_variety", None),
+						seed_category=getattr(source, "required_seed_category", None),
+						seed_class=getattr(source, "required_seed_class", None),
+						season=self.season,
+						reference_date=self.planting_start_date or self.agreement_date,
+					)
 				self.append("parent_seed_items", {
 					"parent_role": source.parent_role,
+					"parent_variety": getattr(source, "parent_variety", None),
+					"required_seed_category": getattr(source, "required_seed_category", None),
+					"required_seed_class": getattr(source, "required_seed_class", None),
+					"ratio_value": source.ratio_value,
+					"population_percent": getattr(source, "population_percent", None),
+					"expected_plants_per_hectare": getattr(source, "expected_plants_per_hectare", None),
+					"lot_analysis": analysis,
 					"item": source.item_code,
 					"uom": source.stock_uom or source.uom,
 					"quantity_kg_per_hectare": source.quantity_per_hectare,
-					"rate": frappe.db.get_value("Item", source.item_code, "standard_rate"),
+					"allowance_percent": getattr(recipe, "seed_requirement_allowance_percent", 0),
+					"rate": frappe.db.get_value("Item", source.item_code, "standard_rate") if source.item_code else 0,
 				})
 			if self.parent_seed_items:
 				return
@@ -230,12 +250,55 @@ class OutgrowerProductionContract(Document):
 	def validate_parent_seed_items(self):
 		seen = set()
 		for row in self.parent_seed_items or []:
+			if row.lot_analysis:
+				self.calculate_parent_seed_row(row)
+			elif self.docstatus == 1 and row.parent_variety:
+				frappe.throw(_("Select an approved Parent Seed Lot Analysis for {0} ({1}).").format(row.parent_variety, row.parent_role))
 			key = (row.parent_role, row.item)
 			if key in seen:
 				frappe.throw(_("Parent Seed Item {0} is duplicated for role {1}.").format(row.item, row.parent_role))
 			seen.add(key)
-			if flt(row.quantity_kg_per_hectare) <= 0:
+			if self.docstatus == 1 and (not row.item or flt(row.quantity_kg_per_hectare) <= 0):
 				frappe.throw(_("Parent seed quantity per hectare must be greater than zero."))
+
+	def calculate_parent_seed_row(self, row):
+		analysis = frappe.get_doc("Parent Seed Lot Analysis", row.lot_analysis)
+		if analysis.docstatus != 1 or analysis.status != "Approved":
+			frappe.throw(_("Parent Seed Lot Analysis {0} must be approved.").format(analysis.name))
+		for fieldname in ("parent_variety", "required_seed_category", "required_seed_class"):
+			expected = row.get(fieldname)
+			actual = analysis.get("seed_category" if fieldname == "required_seed_category" else "seed_class" if fieldname == "required_seed_class" else fieldname)
+			if (expected or None) != (actual or None):
+				frappe.throw(_("Lot Analysis {0} does not match the recipe parent seed scope.").format(analysis.name))
+		recipe = frappe.get_doc("Crop Recipe", self.crop_recipe)
+		all_sources = list(recipe.parent_seed_items or [])
+		sources = [source for source in all_sources if source.variety == self.variety] or [source for source in all_sources if not source.variety]
+		total_ratio = sum(flt(source.ratio_value) for source in sources)
+		try:
+			result = calculate_parent_requirement(
+				total_plants_per_hectare=recipe.expected_plants_per_hectare,
+				parent_ratio=row.ratio_value,
+				total_ratio=total_ratio,
+				germination_percent=analysis.germination_percent,
+				thousand_kernel_weight_g=analysis.thousand_kernel_weight_g,
+				area_hectares=self.contracted_area_hectares,
+				allowance_percent=recipe.seed_requirement_allowance_percent,
+			)
+		except ValueError as exc:
+			frappe.throw(str(exc))
+		row.item = analysis.item_code
+		row.batch_no = analysis.batch_no
+		row.uom = frappe.db.get_value("Item", analysis.item_code, "stock_uom")
+		row.germination_percent = analysis.germination_percent
+		row.thousand_kernel_weight_g = analysis.thousand_kernel_weight_g
+		row.population_percent = float(result["population_percent"])
+		row.expected_plants_per_hectare = float(result["expected_plants_per_hectare"])
+		row.required_kernels_per_hectare = float(result["required_kernels_per_hectare"])
+		row.base_quantity_kg_per_hectare = float(result["base_kg_per_hectare"])
+		row.allowance_percent = recipe.seed_requirement_allowance_percent
+		row.quantity_kg_per_hectare = float(result["planned_kg_per_hectare"])
+		row.planned_quantity = float(result["planned_quantity_kg"])
+		row.rate = row.rate or frappe.db.get_value("Item", analysis.item_code, "standard_rate")
 
 	def calculate_contract_values(self):
 		if not flt(self.contracted_area_hectares) and flt(self.contracted_area_acres):
@@ -273,6 +336,8 @@ class OutgrowerProductionContract(Document):
 		self.expected_harvest_value = flt(self.expected_yield_qty) * flt(self.contract_rate)
 		if self.parent_seed_items:
 			for row in self.parent_seed_items:
+				if row.lot_analysis:
+					self.calculate_parent_seed_row(row)
 				row.planned_quantity = flt(row.quantity_kg_per_hectare) * flt(self.contracted_area_hectares)
 				row.amount = flt(row.planned_quantity) * flt(row.rate)
 			self.planned_parent_seed_qty = sum(flt(row.planned_quantity) for row in self.parent_seed_items)
@@ -503,6 +568,29 @@ def is_planting_window_within_season(
 		<= getdate(planting_end_date)
 		<= getdate(season_end_date)
 	)
+
+
+def get_default_parent_seed_analysis(*, parent_variety, seed_category, seed_class=None, season=None, reference_date=None):
+	if not parent_variety or not seed_category:
+		return None
+	rows = frappe.db.sql(
+		"""select name from `tabParent Seed Lot Analysis`
+		where docstatus=1 and status='Approved'
+		  and parent_variety=%(parent_variety)s and seed_category=%(seed_category)s
+		  and (%(seed_class)s is null or seed_class=%(seed_class)s)
+		  and (%(season)s is null or season=%(season)s)
+		  and (%(reference_date)s is null or valid_until is null or valid_until >= %(reference_date)s)
+		order by test_date desc, modified desc limit 1""",
+		{
+			"parent_variety": parent_variety,
+			"seed_category": seed_category,
+			"seed_class": seed_class,
+			"season": season,
+			"reference_date": reference_date,
+		},
+		pluck=True,
+	)
+	return rows[0] if rows else None
 
 
 @frappe.whitelist()

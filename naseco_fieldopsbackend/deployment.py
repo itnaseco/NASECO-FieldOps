@@ -19,6 +19,7 @@ FIELDOPS_ROLE_NAMES = (
 	"FieldOps Finance Approver",
 	"FieldOps Stores User",
 	"FieldOps Operations Approver",
+	"Parent Seed Manager",
 )
 FIELDOPS_ROLE_PROFILES = (
 	"FieldOps Finance",

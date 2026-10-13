@@ -1,0 +1,27 @@
+{
+ "actions": [],
+ "autoname": "format:{output_variety}-PARENTAGE-{version}",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": ["output_variety", "crop", "version", "status", "effective_from", "effective_to", "parents", "notes", "amended_from"],
+ "fields": [
+  {"fieldname": "output_variety", "fieldtype": "Link", "in_list_view": 1, "label": "Output Variety", "options": "Crop Variety", "reqd": 1},
+  {"fetch_from": "output_variety.crop", "fieldname": "crop", "fieldtype": "Link", "in_list_view": 1, "label": "Crop", "options": "Crop", "read_only": 1},
+  {"default": "1", "fieldname": "version", "fieldtype": "Int", "in_list_view": 1, "label": "Version", "reqd": 1},
+  {"default": "Draft", "fieldname": "status", "fieldtype": "Select", "in_list_view": 1, "label": "Status", "options": "Draft\nActive\nRetired\nCancelled", "read_only": 1},
+  {"default": "Today", "fieldname": "effective_from", "fieldtype": "Date", "label": "Effective From", "reqd": 1},
+  {"fieldname": "effective_to", "fieldtype": "Date", "label": "Effective To"},
+  {"fieldname": "parents", "fieldtype": "Table", "label": "Parent Varieties", "options": "Seed Variety Parent", "reqd": 1},
+  {"fieldname": "notes", "fieldtype": "Small Text", "label": "Notes"},
+  {"fieldname": "amended_from", "fieldtype": "Link", "label": "Amended From", "no_copy": 1, "options": "Seed Variety Parentage", "print_hide": 1, "read_only": 1}
+ ],
+ "is_submittable": 1,
+ "module": "Naseco FieldOpsBackend",
+ "name": "Seed Variety Parentage",
+ "permissions": [
+  {"cancel": 1, "create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "submit": 1, "write": 1},
+  {"cancel": 1, "create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "Parent Seed Manager", "share": 1, "submit": 1, "write": 1},
+  {"read": 1, "report": 1, "role": "Outgrower Manager"}
+ ]
+}

@@ -1,0 +1,19 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "istable": 1,
+ "field_order": ["parent_role", "parent_variety", "required_seed_category", "required_seed_class", "sequence", "notes"],
+ "fields": [
+  {"fieldname": "parent_role", "fieldtype": "Select", "in_list_view": 1, "label": "Parent Role", "options": "Female\nMale\nPollinator\nOther", "reqd": 1},
+  {"fieldname": "parent_variety", "fieldtype": "Link", "in_list_view": 1, "label": "Parent Variety", "options": "Crop Variety", "reqd": 1},
+  {"fieldname": "required_seed_category", "fieldtype": "Link", "in_list_view": 1, "label": "Required Seed Category", "options": "Seed Category", "reqd": 1},
+  {"fieldname": "required_seed_class", "fieldtype": "Link", "in_list_view": 1, "label": "Required Seed Class", "options": "Seed Class"},
+  {"default": "1", "fieldname": "sequence", "fieldtype": "Int", "label": "Sequence", "reqd": 1},
+  {"fieldname": "notes", "fieldtype": "Small Text", "label": "Notes"}
+ ],
+ "module": "Naseco FieldOpsBackend",
+ "name": "Seed Variety Parent",
+ "permissions": []
+}

@@ -28,6 +28,9 @@
   "ux_inputs_section",
   "inputs",
   "ux_parent_seed_section",
+  "parent_seed_calculation_method",
+  "expected_plants_per_hectare",
+  "seed_requirement_allowance_percent",
   "parent_seed_items",
   "ux_lifecycle_tab",
   "ux_effective_dates_and_approval_section",
@@ -181,6 +184,28 @@
    "fieldname": "ux_parent_seed_section",
    "fieldtype": "Section Break",
    "label": "Parent Seed"
+  },
+  {
+   "description": "Legacy recipes retain manually approved kg/ha. New recipe versions calculate kg/ha from explicit ratios and approved lot analyses.",
+   "fieldname": "parent_seed_calculation_method",
+   "fieldtype": "Select",
+   "label": "Parent Seed Calculation",
+   "options": "Legacy Fixed Kg/Ha\nRatio and Lot Analysis"
+  },
+  {
+   "depends_on": "eval:doc.parent_seed_calculation_method==\"Ratio and Lot Analysis\"",
+   "description": "Combined Male and Female target population per hectare.",
+   "fieldname": "expected_plants_per_hectare",
+   "fieldtype": "Int",
+   "label": "Expected Plants per Hectare",
+   "non_negative": 1
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.parent_seed_calculation_method==\"Ratio and Lot Analysis\"",
+   "fieldname": "seed_requirement_allowance_percent",
+   "fieldtype": "Percent",
+   "label": "Operational Seed Allowance %"
   },
   {
    "fieldname": "parent_seed_items",
