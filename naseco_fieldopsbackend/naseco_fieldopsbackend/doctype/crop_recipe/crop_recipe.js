@@ -74,9 +74,23 @@ frappe.ui.form.on("Crop Recipe", {
     frm.set_query("variety", "parent_seed_items", () => ({ filters: { crop: frm.doc.crop } }));
     frm.set_query("item_code", "parent_seed_items", (doc, cdt, cdn) => ({
       query: "naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_recipe.crop_recipe.parent_seed_item_query",
-      filters: { variety: locals[cdt][cdn].variety, crop: frm.doc.crop }
+	  filters: {
+		variety: locals[cdt][cdn].variety,
+		parent_variety: locals[cdt][cdn].parent_variety,
+		seed_category: locals[cdt][cdn].required_seed_category,
+		seed_class: locals[cdt][cdn].required_seed_class,
+		crop: frm.doc.crop
+	  }
     }));
+	frm.set_query("parentage", "parent_seed_items", (doc, cdt, cdn) => ({
+	  filters: { output_variety: locals[cdt][cdn].variety, docstatus: 1, status: "Active" }
+	}));
   },
+	onload(frm) {
+	  if (frm.is_new() && !frm.doc.parent_seed_calculation_method) {
+		frm.set_value("parent_seed_calculation_method", "Ratio and Lot Analysis");
+	  }
+	},
   refresh(frm) {
     set_stage_options(frm);
     sync_input_stage_indexes(frm);
@@ -125,6 +139,30 @@ frappe.ui.form.on("Crop Recipe", {
     set_stage_options(frm);
     sync_input_stage_indexes(frm);
   },
+});
+
+function populate_parent_from_parentage(frm, cdt, cdn) {
+  const row = locals[cdt][cdn];
+  if (!row.parentage || !row.parent_role) return;
+  frappe.call({
+	method: "naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_recipe.crop_recipe.get_parentage_parent",
+	args: { parentage: row.parentage, parent_role: row.parent_role },
+	callback({ message }) {
+	  if (!message) return;
+	  frappe.model.set_value(cdt, cdn, "variety", message.output_variety);
+	  frappe.model.set_value(cdt, cdn, "parent_variety", message.parent_variety);
+	  frappe.model.set_value(cdt, cdn, "required_seed_category", message.required_seed_category);
+	  frappe.model.set_value(cdt, cdn, "required_seed_class", message.required_seed_class);
+	}
+  });
+}
+
+frappe.ui.form.on("Recipe Parent Seed Item", {
+  parentage: populate_parent_from_parentage,
+  parent_role: populate_parent_from_parentage,
+  ratio_value(frm) {
+	frm.dirty();
+  }
 });
 
 frappe.ui.form.on("Crop Recipe Variety", {

@@ -1,0 +1,35 @@
+{
+ "actions": [],
+ "autoname": "format:PSLA-.YYYY.-.#####",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": ["parent_variety", "seed_category", "seed_class", "item_code", "batch_no", "season", "germination_percent", "thousand_kernel_weight_g", "test_date", "valid_until", "status", "tested_by", "approved_by", "approved_on", "test_reference", "attachment", "notes", "amended_from"],
+ "fields": [
+  {"fieldname": "parent_variety", "fieldtype": "Link", "in_list_view": 1, "label": "Parent Variety", "options": "Crop Variety", "reqd": 1},
+  {"fieldname": "seed_category", "fieldtype": "Link", "in_list_view": 1, "label": "Seed Category", "options": "Seed Category", "reqd": 1},
+  {"fieldname": "seed_class", "fieldtype": "Link", "label": "Seed Class", "options": "Seed Class"},
+  {"fieldname": "item_code", "fieldtype": "Link", "in_list_view": 1, "label": "Parent Seed Item", "options": "Item", "reqd": 1},
+  {"fieldname": "batch_no", "fieldtype": "Link", "in_list_view": 1, "label": "Batch", "options": "Batch", "reqd": 1},
+  {"fieldname": "season", "fieldtype": "Link", "in_list_view": 1, "label": "Season", "options": "Season", "reqd": 1},
+  {"fieldname": "germination_percent", "fieldtype": "Percent", "in_list_view": 1, "label": "Germination %", "precision": 4, "reqd": 1},
+  {"fieldname": "thousand_kernel_weight_g", "fieldtype": "Float", "in_list_view": 1, "label": "Thousand-Kernel Weight (g)", "non_negative": 1, "precision": 6, "reqd": 1},
+  {"default": "Today", "fieldname": "test_date", "fieldtype": "Date", "label": "Test Date", "reqd": 1},
+  {"fieldname": "valid_until", "fieldtype": "Date", "label": "Valid Until"},
+  {"default": "Draft", "fieldname": "status", "fieldtype": "Select", "in_list_view": 1, "label": "Status", "options": "Draft\nApproved\nExpired\nRejected\nCancelled", "read_only": 1},
+  {"fieldname": "tested_by", "fieldtype": "Link", "label": "Tested By", "options": "Employee"},
+  {"fieldname": "approved_by", "fieldtype": "Link", "label": "Approved By", "options": "User", "read_only": 1},
+  {"fieldname": "approved_on", "fieldtype": "Datetime", "label": "Approved On", "read_only": 1},
+  {"fieldname": "test_reference", "fieldtype": "Data", "label": "Test Reference"},
+  {"fieldname": "attachment", "fieldtype": "Attach", "label": "Laboratory Evidence"},
+  {"fieldname": "notes", "fieldtype": "Small Text", "label": "Notes"},
+  {"fieldname": "amended_from", "fieldtype": "Link", "label": "Amended From", "no_copy": 1, "options": "Parent Seed Lot Analysis", "print_hide": 1, "read_only": 1}
+ ],
+ "is_submittable": 1,
+ "module": "Naseco FieldOpsBackend",
+ "name": "Parent Seed Lot Analysis",
+ "permissions": [
+  {"cancel": 1, "create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "submit": 1, "write": 1},
+  {"cancel": 1, "create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "Parent Seed Manager", "share": 1, "submit": 1, "write": 1},
+  {"read": 1, "report": 1, "role": "Outgrower Manager"}
+ ]
+}

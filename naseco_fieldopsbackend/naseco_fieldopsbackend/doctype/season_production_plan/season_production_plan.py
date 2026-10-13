@@ -212,7 +212,7 @@ class SeasonProductionPlan(Document):
 	def sync_parent_seed_requirements(self):
 		"""Rebuild parent-seed demand from target hectares and recipe components."""
 		self.set("parent_seed_requirements", [])
-		for values in aggregate_parent_seed_requirements(self.production_targets):
+		for values in aggregate_parent_seed_requirements(self.production_targets, season=self.season):
 			self.append("parent_seed_requirements", values)
 
 	def sync_input_requirements(self):
@@ -557,7 +557,7 @@ def get_season_actuals(season, company):
 	)
 
 
-def aggregate_parent_seed_requirements(production_targets):
+def aggregate_parent_seed_requirements(production_targets, season=None):
 	"""Calculate every recipe parent-seed component required by production targets."""
 	requirements = {}
 	for target in production_targets:
@@ -568,10 +568,41 @@ def aggregate_parent_seed_requirements(production_targets):
 		variety_items = [item for item in all_parent_items if getattr(item, "variety", None) == getattr(target, "variety", None)]
 		parent_items = variety_items or [item for item in all_parent_items if not getattr(item, "variety", None)]
 		for item in parent_items:
-			conversion = get_item_uom_conversion(item.item_code, item.uom)
+			item_code = item.item_code
+			quantity_per_hectare = flt(item.quantity_per_hectare)
+			lot_analysis = None
+			analysis = None
+			calculation_method = getattr(recipe, "parent_seed_calculation_method", None)
+			if calculation_method == "Ratio and Lot Analysis":
+				from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.outgrower_production_contract.outgrower_production_contract import get_default_parent_seed_analysis
+				from naseco_fieldopsbackend.parent_seed_calculation import calculate_parent_requirement
+
+				lot_analysis = get_default_parent_seed_analysis(
+					parent_variety=item.parent_variety,
+					seed_category=item.required_seed_category,
+					seed_class=item.required_seed_class,
+					season=season,
+					reference_date=target.planting_window_from,
+				)
+				if not lot_analysis:
+					frappe.throw(_("No approved Parent Seed Lot Analysis is available for {0} ({1}) in Season {2}.").format(item.parent_variety, item.parent_role, season))
+				analysis = frappe.get_doc("Parent Seed Lot Analysis", lot_analysis)
+				total_ratio = sum(flt(row.ratio_value) for row in parent_items)
+				calculation = calculate_parent_requirement(
+					total_plants_per_hectare=recipe.expected_plants_per_hectare,
+					parent_ratio=item.ratio_value,
+					total_ratio=total_ratio,
+					germination_percent=analysis.germination_percent,
+					thousand_kernel_weight_g=analysis.thousand_kernel_weight_g,
+					area_hectares=1,
+					allowance_percent=recipe.seed_requirement_allowance_percent,
+				)
+				item_code = analysis.item_code
+				quantity_per_hectare = float(calculation["planned_kg_per_hectare"])
+			conversion = get_item_uom_conversion(item_code, "Kg" if calculation_method == "Ratio and Lot Analysis" else item.uom)
 			key = (
 				target.crop_recipe, item.ratio_group, item.parent_role, flt(item.ratio_value),
-				item.item_code, conversion.uom, conversion.stock_uom, item.source_warehouse,
+				item_code, lot_analysis, conversion.uom, conversion.stock_uom, item.source_warehouse,
 				item.recovery_policy or "Fully Recoverable", flt(item.recoverable_percent),
 			)
 			values = requirements.setdefault(
@@ -581,9 +612,14 @@ def aggregate_parent_seed_requirements(production_targets):
 					"ratio_group": item.ratio_group,
 					"parent_role": item.parent_role,
 					"ratio_value": flt(item.ratio_value),
-					"item_code": item.item_code,
+					"item_code": item_code,
+					"parent_variety": getattr(item, "parent_variety", None),
+					"lot_analysis": lot_analysis,
+					"germination_percent": analysis.germination_percent if analysis else None,
+					"thousand_kernel_weight_g": analysis.thousand_kernel_weight_g if analysis else None,
+					"expected_plants_per_hectare": getattr(item, "expected_plants_per_hectare", None),
 					"target_hectares": 0,
-					"quantity_per_hectare": flt(item.quantity_per_hectare),
+					"quantity_per_hectare": quantity_per_hectare,
 					"uom": conversion.uom,
 					"conversion_factor": flt(conversion.conversion_factor),
 					"required_qty": 0,
@@ -594,7 +630,7 @@ def aggregate_parent_seed_requirements(production_targets):
 					"recoverable_percent": flt(item.recoverable_percent),
 				},
 			)
-			required_qty = flt(target.target_hectares) * flt(item.quantity_per_hectare)
+			required_qty = flt(target.target_hectares) * quantity_per_hectare
 			values["target_hectares"] += flt(target.target_hectares)
 			values["required_qty"] += required_qty
 			values["required_stock_qty"] += required_qty * flt(conversion.conversion_factor)

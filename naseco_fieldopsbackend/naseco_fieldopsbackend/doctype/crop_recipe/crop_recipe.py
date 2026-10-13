@@ -6,6 +6,8 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt, getdate, now_datetime
 
+from decimal import Decimal, ROUND_HALF_UP
+
 from naseco_fieldopsbackend.crop_cycle_lifecycle import (
 	STAGE_NAMES,
 	canonical_stage_name,
@@ -18,6 +20,12 @@ class CropRecipe(Document):
 	def before_validate(self):
 		self.recipe_version = self.recipe_version or "Legacy-1.0"
 		self.effective_from = self.effective_from or self.creation or now_datetime()
+		if not self.parent_seed_calculation_method:
+			# Missing values identify recipes created before the configurable
+			# calculation model. Keep them on their historical behaviour during
+			# fixture import, migrations and API updates. Desk explicitly selects
+			# Ratio and Lot Analysis for newly-created recipes.
+			self.parent_seed_calculation_method = "Legacy Fixed Kg/Ha"
 		if not self.status:
 			self.status = "Active" if self.docstatus == 1 else "Draft"
 
@@ -117,6 +125,10 @@ class CropRecipe(Document):
 			frappe.throw(_("Add at least one enabled Applicable Variety."))
 
 	def validate_parent_seed_items(self):
+		if self.parent_seed_calculation_method == "Ratio and Lot Analysis":
+			self.validate_ratio_parent_seed_items()
+			return
+
 		seen = set()
 		for row in self.parent_seed_items or []:
 			if row.variety and frappe.db.get_value("Crop Variety", row.variety, "crop") != self.crop:
@@ -138,6 +150,45 @@ class CropRecipe(Document):
 			conversion = get_item_uom_conversion(row.item_code, row.uom or item.stock_uom)
 			row.uom = conversion.uom
 			row.stock_uom = conversion.stock_uom
+
+	def validate_ratio_parent_seed_items(self):
+		if flt(self.expected_plants_per_hectare) <= 0:
+			frappe.throw(_("Expected Plants per Hectare must be greater than zero for ratio-based parent seed calculation."))
+		if flt(self.seed_requirement_allowance_percent) < 0:
+			frappe.throw(_("Operational Seed Allowance cannot be negative."))
+		if self.variety_scope != "Selected Varieties":
+			frappe.throw(_("Ratio-based parent seed calculation requires Selected Varieties so every output variety has explicit parents."))
+
+		enabled_varieties = {row.variety for row in self.applicable_varieties or [] if row.enabled}
+		rows_by_variety = {variety: [] for variety in enabled_varieties}
+		for row in self.parent_seed_items or []:
+			if row.variety not in enabled_varieties:
+				frappe.throw(_("Parent seed row {0} must reference an enabled Applicable Variety.").format(row.idx))
+			if row.parent_role not in ("Female", "Male"):
+				frappe.throw(_("Ratio-based recipe row {0} must use Female or Male as Parent Role.").format(row.idx))
+			if not row.parentage or not row.parent_variety or not row.required_seed_category:
+				frappe.throw(_("Complete Parentage, Parent Variety and Required Seed Category in row {0}.").format(row.idx))
+			if flt(row.ratio_value) <= 0 or flt(row.ratio_value) != int(flt(row.ratio_value)):
+				frappe.throw(_("Ratio Value in row {0} must be a positive whole number.").format(row.idx))
+			parentage = frappe.get_doc("Seed Variety Parentage", row.parentage)
+			if parentage.docstatus != 1 or parentage.status != "Active" or parentage.output_variety != row.variety:
+				frappe.throw(_("Parentage {0} must be active and belong to output variety {1}.").format(row.parentage, row.variety))
+			match = next((p for p in parentage.parents if p.parent_role == row.parent_role), None)
+			if not match or match.parent_variety != row.parent_variety:
+				frappe.throw(_("The {0} parent in row {1} does not match parentage {2}.").format(row.parent_role, row.idx, row.parentage))
+			if match.required_seed_category != row.required_seed_category or (match.required_seed_class or None) != (row.required_seed_class or None):
+				frappe.throw(_("Seed category or class in row {0} does not match its parentage.").format(row.idx))
+			rows_by_variety[row.variety].append(row)
+
+		for variety, rows in rows_by_variety.items():
+			roles = [row.parent_role for row in rows]
+			if sorted(roles) != ["Female", "Male"]:
+				frappe.throw(_("Output variety {0} must have exactly one Female and one Male ratio row.").format(variety))
+			total_ratio = sum(Decimal(str(row.ratio_value)) for row in rows)
+			for row in rows:
+				share = Decimal(str(row.ratio_value)) / total_ratio
+				row.population_percent = float((share * Decimal("100")).quantize(Decimal("0.000001"), rounding=ROUND_HALF_UP))
+				row.expected_plants_per_hectare = float((Decimal(str(self.expected_plants_per_hectare)) * share).quantize(Decimal("0.000001"), rounding=ROUND_HALF_UP))
 
 	def set_input_item_defaults(self, row):
 		if row.resource_type == "Stock Item":
@@ -214,7 +265,10 @@ def get_recipe_target_defaults(recipe_name, variety):
 def parent_seed_item_query(doctype, txt, searchfield, start, page_len, filters):
 	filters = frappe.parse_json(filters) if isinstance(filters, str) else (filters or {})
 	variety = filters.get("variety")
-	crop = filters.get("crop") or frappe.db.get_value("Crop Variety", variety, "crop")
+	parent_variety = filters.get("parent_variety")
+	seed_category = filters.get("seed_category")
+	seed_class = filters.get("seed_class")
+	crop = filters.get("crop") or frappe.db.get_value("Crop Variety", parent_variety or variety, "crop")
 	return frappe.db.sql(
 		"""select candidates.item_code, candidates.item_name, candidates.parent_variety
 		from (
@@ -224,6 +278,9 @@ def parent_seed_item_query(doctype, txt, searchfield, start, page_len, filters):
 				on mapping.item_code = item.name and mapping.item_purpose = \"Parent Seed\"
 			inner join `tabCrop Variety` mapped_variety on mapped_variety.name = mapping.parent
 			where mapped_variety.crop = %(crop)s and mapped_variety.can_be_used_as_parent_seed = 1
+			  and (%(parent_variety)s is null or mapped_variety.name = %(parent_variety)s)
+			  and (%(seed_category)s is null or mapping.seed_category = %(seed_category)s)
+			  and (%(seed_class)s is null or mapping.seed_class = %(seed_class)s)
 			  and item.disabled = 0 and item.is_stock_item = 1
 			union
 			select item.name, item.item_name, parent_variety.name, 0
@@ -236,8 +293,25 @@ def parent_seed_item_query(doctype, txt, searchfield, start, page_len, filters):
 		group by candidates.item_code, candidates.item_name, candidates.parent_variety
 		order by max(candidates.is_default) desc, candidates.item_code
 		limit %(start)s, %(page_len)s""",
-		{"crop": crop, "txt": f"%{txt}%", "start": start, "page_len": page_len},
+		{"crop": crop, "parent_variety": parent_variety, "seed_category": seed_category,
+		 "seed_class": seed_class, "txt": f"%{txt}%", "start": start, "page_len": page_len},
 	)
+
+
+@frappe.whitelist()
+def get_parentage_parent(parentage, parent_role):
+	doc = frappe.get_doc("Seed Variety Parentage", parentage)
+	if doc.docstatus != 1 or doc.status != "Active":
+		frappe.throw(_("Select an active submitted Seed Variety Parentage."))
+	row = next((item for item in doc.parents if item.parent_role == parent_role), None)
+	if not row:
+		frappe.throw(_("Parentage {0} does not define role {1}.").format(parentage, parent_role))
+	return {
+		"output_variety": doc.output_variety,
+		"parent_variety": row.parent_variety,
+		"required_seed_category": row.required_seed_category,
+		"required_seed_class": row.required_seed_class,
+	}
 
 
 @frappe.whitelist()

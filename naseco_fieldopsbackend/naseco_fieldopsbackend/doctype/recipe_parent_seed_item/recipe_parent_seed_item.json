@@ -7,13 +7,19 @@
  "field_order": [
   "ux_details_section",
   "variety",
+  "parentage",
+  "parent_variety",
   "ux_additional_details_section",
   "parent_role",
   "ratio_group",
+  "required_seed_category",
+  "required_seed_class",
   "ux_additional_details_column_2_column",
   "item_code",
   "ux_quantities_and_values_section",
   "ratio_value",
+  "population_percent",
+  "expected_plants_per_hectare",
   "quantity_per_hectare",
   "uom",
   "stock_uom",
@@ -37,6 +43,20 @@
    "options": "Crop Variety"
   },
   {
+   "fieldname": "parentage",
+   "fieldtype": "Link",
+   "label": "Seed Variety Parentage",
+   "options": "Seed Variety Parentage"
+  },
+  {
+   "description": "Genetic parent variety. This is separate from the applicable production variety above.",
+   "fieldname": "parent_variety",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Parent Variety",
+   "options": "Crop Variety"
+  },
+  {
    "fieldname": "ux_additional_details_section",
    "fieldtype": "Section Break",
    "label": "Additional Details"
@@ -55,6 +75,18 @@
    "fieldtype": "Data",
    "label": "Ratio Group",
    "reqd": 1
+  },
+  {
+   "fieldname": "required_seed_category",
+   "fieldtype": "Link",
+   "label": "Required Seed Category",
+   "options": "Seed Category"
+  },
+  {
+   "fieldname": "required_seed_class",
+   "fieldtype": "Link",
+   "label": "Required Seed Class",
+   "options": "Seed Class"
   },
   {
    "fieldname": "ux_additional_details_column_2_column",
@@ -81,11 +113,26 @@
    "non_negative": 1
   },
   {
+   "fieldname": "population_percent",
+   "fieldtype": "Percent",
+   "label": "Population %",
+   "precision": 6,
+   "read_only": 1
+  },
+  {
+   "fieldname": "expected_plants_per_hectare",
+   "fieldtype": "Float",
+   "label": "Expected Plants per Hectare",
+   "precision": 6,
+   "read_only": 1
+  },
+  {
    "fieldname": "quantity_per_hectare",
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Quantity per Hectare",
-   "non_negative": 1
+   "non_negative": 1,
+   "read_only_depends_on": "eval:parent.parent_seed_calculation_method==\"Ratio and Lot Analysis\""
   },
   {
    "fieldname": "uom",

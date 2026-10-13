@@ -45,6 +45,19 @@ frappe.ui.form.on('Outgrower Production Contract', {
 				seed_class: frm.doc.seed_class
 			}
 		}));
+		frm.set_query('lot_analysis', 'parent_seed_items', (doc, cdt, cdn) => {
+			const row = locals[cdt][cdn];
+			return {
+				filters: {
+					docstatus: 1,
+					status: 'Approved',
+					parent_variety: row.parent_variety,
+					seed_category: row.required_seed_category,
+					seed_class: row.required_seed_class,
+					season: frm.doc.season
+				}
+			};
+		});
 	},
 
 	onload(frm) {
@@ -315,6 +328,20 @@ function calculate_contract_values(frm) {
 }
 
 frappe.ui.form.on('Contract Parent Seed Item', {
+	lot_analysis(frm, cdt, cdn) {
+		const row = locals[cdt][cdn];
+		if (!row.lot_analysis) return;
+		frappe.db.get_value('Parent Seed Lot Analysis', row.lot_analysis, [
+			'item_code', 'batch_no', 'germination_percent', 'thousand_kernel_weight_g'
+		]).then(({ message }) => {
+			if (!message) return;
+			frappe.model.set_value(cdt, cdn, 'item', message.item_code);
+			frappe.model.set_value(cdt, cdn, 'batch_no', message.batch_no);
+			frappe.model.set_value(cdt, cdn, 'germination_percent', message.germination_percent);
+			frappe.model.set_value(cdt, cdn, 'thousand_kernel_weight_g', message.thousand_kernel_weight_g);
+			frappe.show_alert({message: __('Save the contract to calculate the audited parent-seed requirement.'), indicator: 'blue'});
+		});
+	},
 	quantity_kg_per_hectare: calculate_contract_values,
 	rate: calculate_contract_values,
 	parent_seed_items_remove: calculate_contract_values
