@@ -203,7 +203,10 @@ class OutgrowerProductionContract(Document):
 			self.append("signatories", values)
 
 	def initialize_parent_seed_items(self):
-		if self.docstatus != 0 or self.parent_seed_items:
+		if self.docstatus != 0:
+			return
+		if self.parent_seed_items:
+			self.refresh_parent_seed_rows_from_recipe()
 			return
 		if self.crop_recipe:
 			recipe = frappe.get_doc("Crop Recipe", self.crop_recipe)
@@ -254,6 +257,8 @@ class OutgrowerProductionContract(Document):
 	def validate_parent_seed_items(self):
 		seen = set()
 		for row in self.parent_seed_items or []:
+			if self.docstatus == 0:
+				self.refresh_parent_seed_row_from_recipe(row)
 			basis = row.calculation_basis or ("Approved Lot Analysis" if row.lot_analysis else "Legacy Fixed Kg/Ha")
 			row.calculation_basis = basis
 			if basis in ("Recipe Planning Assumption", "Approved Lot Analysis"):
@@ -264,6 +269,56 @@ class OutgrowerProductionContract(Document):
 			seen.add(key)
 			if self.docstatus == 1 and (not row.item or flt(row.quantity_kg_per_hectare) <= 0):
 				frappe.throw(_("Parent seed quantity per hectare must be greater than zero."))
+
+	def refresh_parent_seed_rows_from_recipe(self):
+		for row in self.parent_seed_items or []:
+			self.refresh_parent_seed_row_from_recipe(row)
+
+	def refresh_parent_seed_row_from_recipe(self, row):
+		if not self.crop_recipe:
+			return
+		recipe = frappe.get_doc("Crop Recipe", self.crop_recipe)
+		if getattr(recipe, "parent_seed_calculation_method", None) != "Ratio and Lot Analysis":
+			row.calculation_basis = "Legacy Fixed Kg/Ha"
+			return
+		sources = [source for source in recipe.parent_seed_items or [] if source.variety == self.variety]
+		if not sources:
+			sources = [source for source in recipe.parent_seed_items or [] if not source.variety]
+		source = next((candidate for candidate in sources if row.source_recipe_row and candidate.name == row.source_recipe_row), None)
+		if not source:
+			source = next(
+				(
+					candidate for candidate in sources
+					if candidate.parent_role == row.parent_role
+					and (candidate.parent_variety or None) == (row.parent_variety or None)
+				),
+				None,
+			)
+		if not source:
+			frappe.throw(
+				_("Parent seed row {0} no longer matches Crop Recipe {1}. Reload the contract parent-seed inputs.").format(
+					row.idx, self.crop_recipe
+				)
+			)
+		row.source_recipe_row = source.name
+		row.calculation_basis = source.calculation_basis or "Recipe Planning Assumption"
+		row.parent_role = source.parent_role
+		row.parent_variety = source.parent_variety
+		row.required_seed_category = source.required_seed_category
+		row.required_seed_class = source.required_seed_class
+		row.ratio_value = source.ratio_value
+		row.population_percent = source.population_percent
+		row.expected_plants_per_hectare = source.expected_plants_per_hectare
+		row.lot_analysis = source.lot_analysis if row.calculation_basis == "Approved Lot Analysis" else None
+		row.item = source.item_code
+		row.batch_no = source.batch_no if row.calculation_basis == "Approved Lot Analysis" else None
+		row.germination_percent = source.germination_percent
+		row.thousand_kernel_weight_g = source.thousand_kernel_weight_g
+		row.analysis_test_date = source.analysis_test_date if row.calculation_basis == "Approved Lot Analysis" else None
+		row.analysis_valid_until = source.analysis_valid_until if row.calculation_basis == "Approved Lot Analysis" else None
+		row.uom = source.stock_uom or source.uom
+		row.quantity_kg_per_hectare = source.quantity_per_hectare
+		row.allowance_percent = recipe.seed_requirement_allowance_percent
 
 	def calculate_parent_seed_row(self, row):
 		basis = row.calculation_basis or ("Approved Lot Analysis" if row.lot_analysis else "Recipe Planning Assumption")
