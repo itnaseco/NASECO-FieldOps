@@ -14,6 +14,7 @@ from naseco_fieldopsbackend.crop_cycle_lifecycle import (
 	get_stage,
 )
 from naseco_fieldopsbackend.uom import get_item_uom_conversion
+from naseco_fieldopsbackend.parent_seed_calculation import calculate_parent_requirement
 
 
 class CropRecipe(Document):
@@ -189,6 +190,56 @@ class CropRecipe(Document):
 				share = Decimal(str(row.ratio_value)) / total_ratio
 				row.population_percent = float((share * Decimal("100")).quantize(Decimal("0.000001"), rounding=ROUND_HALF_UP))
 				row.expected_plants_per_hectare = float((Decimal(str(self.expected_plants_per_hectare)) * share).quantize(Decimal("0.000001"), rounding=ROUND_HALF_UP))
+				self.apply_parent_seed_calculation_basis(row, total_ratio)
+
+	def apply_parent_seed_calculation_basis(self, row, total_ratio):
+		basis = row.calculation_basis or "Recipe Planning Assumption"
+		row.calculation_basis = basis
+		if basis == "Approved Lot Analysis":
+			if not row.lot_analysis:
+				frappe.throw(_("Select an approved Parent Seed Lot Analysis in row {0}.").format(row.idx))
+			analysis = frappe.get_doc("Parent Seed Lot Analysis", row.lot_analysis)
+			if analysis.docstatus != 1 or analysis.status != "Approved":
+				frappe.throw(_("Parent Seed Lot Analysis {0} must be approved.").format(analysis.name))
+			if analysis.parent_variety != row.parent_variety:
+				frappe.throw(_("Lot Analysis {0} does not match parent variety {1}.").format(analysis.name, row.parent_variety))
+			if (analysis.seed_category or None) != (row.required_seed_category or None) or (analysis.seed_class or None) != (row.required_seed_class or None):
+				frappe.throw(_("Lot Analysis {0} does not match the required seed category and class in row {1}.").format(analysis.name, row.idx))
+			row.item_code = analysis.item_code
+			row.batch_no = analysis.batch_no
+			row.germination_percent = analysis.germination_percent
+			row.thousand_kernel_weight_g = analysis.thousand_kernel_weight_g
+			row.analysis_test_date = analysis.test_date
+			row.analysis_valid_until = analysis.valid_until
+		else:
+			if basis != "Recipe Planning Assumption":
+				frappe.throw(_("Invalid parent-seed calculation basis in row {0}.").format(row.idx))
+			row.lot_analysis = None
+			row.batch_no = None
+			row.analysis_test_date = None
+			row.analysis_valid_until = None
+
+		if not 0 < flt(row.germination_percent) <= 100:
+			frappe.throw(_("Germination percentage in row {0} must be greater than zero and at most 100.").format(row.idx))
+		if flt(row.thousand_kernel_weight_g) <= 0:
+			frappe.throw(_("Thousand-kernel weight in row {0} must be greater than zero.").format(row.idx))
+		if not row.item_code:
+			frappe.throw(_("Select the parent seed Item in row {0}.").format(row.idx))
+
+		try:
+			result = calculate_parent_requirement(
+				total_plants_per_hectare=self.expected_plants_per_hectare,
+				parent_ratio=row.ratio_value,
+				total_ratio=total_ratio,
+				germination_percent=row.germination_percent,
+				thousand_kernel_weight_g=row.thousand_kernel_weight_g,
+				allowance_percent=self.seed_requirement_allowance_percent,
+			)
+		except ValueError as exc:
+			frappe.throw(str(exc))
+		row.quantity_per_hectare = float(result["planned_kg_per_hectare"])
+		row.uom = frappe.db.get_value("Item", row.item_code, "stock_uom")
+		row.stock_uom = row.uom
 
 	def set_input_item_defaults(self, row):
 		if row.resource_type == "Stock Item":

@@ -20,6 +20,13 @@
   "ratio_value",
   "population_percent",
   "expected_plants_per_hectare",
+  "calculation_basis",
+  "lot_analysis",
+  "germination_percent",
+  "thousand_kernel_weight_g",
+  "batch_no",
+  "analysis_test_date",
+  "analysis_valid_until",
   "quantity_per_hectare",
   "uom",
   "stock_uom",
@@ -124,6 +131,55 @@
    "fieldtype": "Float",
    "label": "Expected Plants per Hectare",
    "precision": 6,
+   "read_only": 1
+  },
+  {
+   "default": "Recipe Planning Assumption",
+   "fieldname": "calculation_basis",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Calculation Basis",
+   "options": "Recipe Planning Assumption\nApproved Lot Analysis"
+  },
+  {
+   "depends_on": "eval:doc.calculation_basis==\"Approved Lot Analysis\"",
+   "fieldname": "lot_analysis",
+   "fieldtype": "Link",
+   "label": "Parent Seed Lot Analysis",
+   "options": "Parent Seed Lot Analysis"
+  },
+  {
+   "fieldname": "germination_percent",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Germination %",
+   "precision": 4,
+   "read_only_depends_on": "eval:doc.calculation_basis==\"Approved Lot Analysis\""
+  },
+  {
+   "fieldname": "thousand_kernel_weight_g",
+   "fieldtype": "Float",
+   "label": "Thousand-Kernel Weight (g)",
+   "precision": 6,
+   "read_only_depends_on": "eval:doc.calculation_basis==\"Approved Lot Analysis\""
+  },
+  {
+   "fieldname": "batch_no",
+   "fieldtype": "Link",
+   "label": "Analysis Batch",
+   "options": "Batch",
+   "read_only": 1
+  },
+  {
+   "fieldname": "analysis_test_date",
+   "fieldtype": "Date",
+   "label": "Analysis Test Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "analysis_valid_until",
+   "fieldtype": "Date",
+   "label": "Analysis Valid Until",
    "read_only": 1
   },
   {
