@@ -22,7 +22,11 @@ function ensure_parent_seed_rows(frm, variety) {
 }
 
 function parent_seed_row_is_configured(row) {
-  return Boolean(row.item_code || flt(row.ratio_value) || flt(row.quantity_per_hectare) || row.uom || row.source_warehouse);
+  return Boolean(
+	row.item_code || row.lot_analysis || flt(row.germination_percent) ||
+	flt(row.thousand_kernel_weight_g) || flt(row.ratio_value) ||
+	flt(row.quantity_per_hectare) || row.uom || row.source_warehouse
+  );
 }
 
 function remove_incomplete_parent_seed_rows(frm, variety) {
@@ -85,6 +89,19 @@ frappe.ui.form.on("Crop Recipe", {
 	frm.set_query("parentage", "parent_seed_items", (doc, cdt, cdn) => ({
 	  filters: { output_variety: locals[cdt][cdn].variety, docstatus: 1, status: "Active" }
 	}));
+	frm.set_query("lot_analysis", "parent_seed_items", (doc, cdt, cdn) => {
+	  const row = locals[cdt][cdn];
+	  return {
+		filters: {
+		  docstatus: 1,
+		  status: "Approved",
+		  parent_variety: row.parent_variety,
+		  seed_category: row.required_seed_category,
+		  seed_class: row.required_seed_class,
+		  item_code: row.item_code || undefined
+		}
+	  };
+	});
   },
 	onload(frm) {
 	  if (frm.is_new() && !frm.doc.parent_seed_calculation_method) {
@@ -149,6 +166,13 @@ function populate_parent_from_parentage(frm, cdt, cdn) {
 	args: { parentage: row.parentage, parent_role: row.parent_role },
 	callback({ message }) {
 	  if (!message) return;
+	  const selectedAnalysisIsCompatible =
+		row.parent_variety === message.parent_variety &&
+		row.required_seed_category === message.required_seed_category &&
+		(row.required_seed_class || null) === (message.required_seed_class || null);
+	  if (!selectedAnalysisIsCompatible && row.lot_analysis) {
+		frappe.model.set_value(cdt, cdn, "lot_analysis", null);
+	  }
 	  frappe.model.set_value(cdt, cdn, "variety", message.output_variety);
 	  frappe.model.set_value(cdt, cdn, "parent_variety", message.parent_variety);
 	  frappe.model.set_value(cdt, cdn, "required_seed_category", message.required_seed_category);
@@ -160,6 +184,33 @@ function populate_parent_from_parentage(frm, cdt, cdn) {
 frappe.ui.form.on("Recipe Parent Seed Item", {
   parentage: populate_parent_from_parentage,
   parent_role: populate_parent_from_parentage,
+  calculation_basis(frm, cdt, cdn) {
+	const row = locals[cdt][cdn];
+	if (row.calculation_basis === "Recipe Planning Assumption") {
+	  frappe.model.set_value(cdt, cdn, "lot_analysis", null);
+	  frappe.model.set_value(cdt, cdn, "batch_no", null);
+	  frappe.model.set_value(cdt, cdn, "analysis_test_date", null);
+	  frappe.model.set_value(cdt, cdn, "analysis_valid_until", null);
+	}
+  },
+  lot_analysis(frm, cdt, cdn) {
+	const row = locals[cdt][cdn];
+	if (!row.lot_analysis) return;
+	frappe.db.get_doc("Parent Seed Lot Analysis", row.lot_analysis).then((analysis) => {
+	  frappe.run_serially([
+		() => frappe.model.set_value(cdt, cdn, "calculation_basis", "Approved Lot Analysis"),
+		() => frappe.model.set_value(cdt, cdn, "parent_variety", analysis.parent_variety),
+		() => frappe.model.set_value(cdt, cdn, "required_seed_category", analysis.seed_category),
+		() => frappe.model.set_value(cdt, cdn, "required_seed_class", analysis.seed_class),
+		() => frappe.model.set_value(cdt, cdn, "item_code", analysis.item_code),
+		() => frappe.model.set_value(cdt, cdn, "batch_no", analysis.batch_no),
+		() => frappe.model.set_value(cdt, cdn, "germination_percent", analysis.germination_percent),
+		() => frappe.model.set_value(cdt, cdn, "thousand_kernel_weight_g", analysis.thousand_kernel_weight_g),
+		() => frappe.model.set_value(cdt, cdn, "analysis_test_date", analysis.test_date),
+		() => frappe.model.set_value(cdt, cdn, "analysis_valid_until", analysis.valid_until)
+	  ]);
+	});
+  },
   ratio_value(frm) {
 	frm.dirty();
   }

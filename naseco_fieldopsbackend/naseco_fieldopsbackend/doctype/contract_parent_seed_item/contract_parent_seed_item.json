@@ -16,9 +16,13 @@
   "population_percent",
   "expected_plants_per_hectare",
   "ux_additional_details_column_2_column",
+  "calculation_basis",
+  "source_recipe_row",
   "lot_analysis",
   "item",
   "batch_no",
+  "analysis_test_date",
+  "analysis_valid_until",
   "ux_quantities_and_values_section",
   "germination_percent",
   "thousand_kernel_weight_g",
@@ -57,7 +61,9 @@
    "fieldtype": "Column Break",
    "label": "Additional Details Column 2"
   },
-  {"fieldname": "lot_analysis", "fieldtype": "Link", "label": "Parent Seed Lot Analysis", "options": "Parent Seed Lot Analysis"},
+  {"fieldname": "calculation_basis", "fieldtype": "Select", "in_list_view": 1, "label": "Calculation Basis", "options": "Legacy Fixed Kg/Ha\nRecipe Planning Assumption\nApproved Lot Analysis", "read_only": 1},
+  {"fieldname": "source_recipe_row", "fieldtype": "Data", "label": "Source Recipe Row", "read_only": 1},
+  {"fieldname": "lot_analysis", "fieldtype": "Link", "label": "Parent Seed Lot Analysis", "options": "Parent Seed Lot Analysis", "read_only": 1},
   {
    "fieldname": "item",
    "fieldtype": "Link",
@@ -66,6 +72,8 @@
    "in_list_view": 1
   },
   {"fieldname": "batch_no", "fieldtype": "Link", "label": "Batch", "options": "Batch", "read_only": 1},
+  {"fieldname": "analysis_test_date", "fieldtype": "Date", "label": "Analysis Test Date", "read_only": 1},
+  {"fieldname": "analysis_valid_until", "fieldtype": "Date", "label": "Analysis Valid Until", "read_only": 1},
   {
    "fieldname": "ux_quantities_and_values_section",
    "fieldtype": "Section Break",
