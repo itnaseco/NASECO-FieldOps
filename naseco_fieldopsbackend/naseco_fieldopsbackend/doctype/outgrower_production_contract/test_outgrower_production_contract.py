@@ -94,6 +94,54 @@ class TestOutgrowerProductionContract(TestCase):
 	@patch(
 		"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.outgrower_production_contract.outgrower_production_contract.frappe.get_doc"
 	)
+	def test_draft_contract_refreshes_assumption_from_recipe_without_lot(self, get_doc):
+		source = frappe._dict(
+			name="recipe-parent-row-1",
+			variety="HYBRID-A",
+			calculation_basis="Recipe Planning Assumption",
+			parent_role="Female",
+			parent_variety="PARENT-F",
+			required_seed_category="Basic Seed",
+			required_seed_class=None,
+			ratio_value=4,
+			population_percent=80,
+			expected_plants_per_hectare=40000,
+			lot_analysis=None,
+			item_code="PARENT-F-SEED",
+			batch_no=None,
+			germination_percent=91,
+			thousand_kernel_weight_g=280,
+			analysis_test_date=None,
+			analysis_valid_until=None,
+			stock_uom="Kg",
+			uom="Kg",
+			quantity_per_hectare=12.923077,
+		)
+		get_doc.return_value = frappe._dict(
+			parent_seed_calculation_method="Ratio and Lot Analysis",
+			seed_requirement_allowance_percent=5,
+			parent_seed_items=[source],
+		)
+		row = frappe._dict(
+			source_recipe_row="recipe-parent-row-1",
+			calculation_basis="Approved Lot Analysis",
+			lot_analysis=None,
+			parent_role="Female",
+			parent_variety="PARENT-F",
+		)
+		contract = frappe._dict(crop_recipe="RECIPE-1", variety="HYBRID-A")
+
+		OutgrowerProductionContract.refresh_parent_seed_row_from_recipe(contract, row)
+
+		self.assertEqual(row.calculation_basis, "Recipe Planning Assumption")
+		self.assertIsNone(row.lot_analysis)
+		self.assertEqual(row.germination_percent, 91)
+		self.assertEqual(row.thousand_kernel_weight_g, 280)
+		self.assertEqual(row.quantity_kg_per_hectare, 12.923077)
+
+	@patch(
+		"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.outgrower_production_contract.outgrower_production_contract.frappe.get_doc"
+	)
 	def test_calculates_harvest_from_recipe_variety_yield(self, get_doc):
 		get_doc.return_value = frappe._dict(
 			variety_scope="Selected Varieties",
