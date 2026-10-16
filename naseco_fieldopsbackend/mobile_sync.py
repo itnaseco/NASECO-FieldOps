@@ -271,7 +271,7 @@ def get_mobile_changes(cursor=None, limit=DEFAULT_PAGE_SIZE):
 
 	limit = max(1, min(cint(limit) or DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE))
 	latest = _latest_cursor()
-	if not cursor or cursor == "0":
+	if not cursor or (cursor == "0" and latest != "0"):
 		return {
 			"data": {},
 			"deletions": {},
@@ -315,6 +315,19 @@ def get_mobile_changes(cursor=None, limit=DEFAULT_PAGE_SIZE):
 	data = {}
 	deletions = {}
 	requires_full_sync = any(cint(row.requires_full_sync) for row in page)
+	if requires_full_sync:
+		# A full scoped snapshot supersedes every ledger entry already committed
+		# at request start, not just this page. Returning the page cursor causes
+		# clients to download the same snapshot again for every historical page.
+		# Changes committed after this watermark remain available on the next pull.
+		return {
+			"data": {},
+			"deletions": {},
+			"cursor": latest,
+			"has_more": False,
+			"requires_full_sync": True,
+			"reason": "scope_changed",
+		}
 	for row in latest_by_document.values():
 		if row.document_type not in allowed:
 			continue
