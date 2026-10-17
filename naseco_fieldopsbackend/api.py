@@ -801,6 +801,21 @@ MOBILE_FIELD_MAP = {
 		"verifiedInterRowSpacingM": "verified_inter_row_spacing_m",
 		"spacingSourceInspection": "spacing_source_inspection",
 		"spacingVerifiedOn": "spacing_verified_on",
+		"plannedInputs": "planned_inputs",
+	},
+	"Crop Cycle Planned Input": {
+		"inputId": "name",
+		"stageName": "stage_name",
+		"stageCode": "stage_code",
+		"recipeInputRow": "recipe_input_row",
+		"itemCode": "item_code",
+		"quantityPerHectare": "quantity_per_hectare",
+		"plannedQuantity": "planned_qty",
+		"unit": "uom",
+		"stockUom": "stock_uom",
+		"plannedStockQuantity": "planned_stock_qty",
+		"requiredBy": "required_by",
+		"sourceWarehouse": "source_warehouse",
 	},
 	"Outgrower Production Contract": {
 		"productionContractId": "name",
@@ -1774,6 +1789,12 @@ def _map_doc_to_mobile(doctype, doc_dict):
 				stage["inputsPerHectare"] = inputs
 				stages.append(stage)
 			result["stages"] = stages
+			continue
+		if key == "planned_inputs" and doctype == "Crop Cycle":
+			result["plannedInputs"] = [
+				_map_doc_to_mobile("Crop Cycle Planned Input", row)
+				for row in value or []
+			]
 			continue
 		if key == "parent_seed_items" and doctype == "Outgrower Production Contract":
 			result["parentSeeds"] = [
