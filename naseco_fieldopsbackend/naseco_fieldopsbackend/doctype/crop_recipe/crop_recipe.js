@@ -72,6 +72,19 @@ function sync_input_stage_indexes(frm) {
   frm.refresh_field("inputs");
 }
 
+function stage_day_number(row) {
+  if (row.start_day_offset == null || row.end_day_offset == null) return null;
+  const start = cint(row.start_day_offset);
+  const end = cint(row.end_day_offset);
+  if (end < start) return null;
+  return start === 0 && end === 0 ? __("Day 1") : __("Day {0}", [end]);
+}
+
+function refresh_stage_day_number(cdt, cdn) {
+  const row = locals[cdt][cdn];
+  frappe.model.set_value(cdt, cdn, "day_number", stage_day_number(row));
+}
+
 frappe.ui.form.on("Crop Recipe", {
   setup(frm) {
     frm.set_query("variety", "applicable_varieties", () => ({ filters: { crop: frm.doc.crop } }));
@@ -247,6 +260,12 @@ frappe.ui.form.on("Recipe Stage", {
   },
   order_index(frm) {
     sync_input_stage_indexes(frm);
+  },
+  start_day_offset(frm, cdt, cdn) {
+    refresh_stage_day_number(cdt, cdn);
+  },
+  end_day_offset(frm, cdt, cdn) {
+    refresh_stage_day_number(cdt, cdn);
   },
 });
 

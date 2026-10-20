@@ -17,6 +17,19 @@ from naseco_fieldopsbackend.uom import get_item_uom_conversion
 from naseco_fieldopsbackend.parent_seed_calculation import calculate_parent_requirement
 
 
+def get_stage_day_number(start_day_offset, end_day_offset):
+	"""Return the human-facing milestone day for a recipe stage window."""
+	if start_day_offset in (None, "") or end_day_offset in (None, ""):
+		return None
+	start = int(start_day_offset)
+	end = int(end_day_offset)
+	if end < start:
+		return None
+	# Planting is the operational first day even though its scheduling offset
+	# is zero. Other milestones retain the configured end offset verbatim.
+	return "Day 1" if start == 0 and end == 0 else f"Day {end}"
+
+
 class CropRecipe(Document):
 	def before_validate(self):
 		self.recipe_version = self.recipe_version or "Legacy-1.0"
@@ -57,6 +70,7 @@ class CropRecipe(Document):
 			if s.end_day_offset < s.start_day_offset:
 				frappe.throw(_("Stage {0} has an invalid day window.").format(stage.name))
 			s.duration_days = s.end_day_offset - s.start_day_offset + 1
+			s.day_number = get_stage_day_number(s.start_day_offset, s.end_day_offset)
 			stage_index[s.stage_name] = s.order_index
 			if s.name and s.stage_name:
 				stage_name_by_row[s.name] = s.stage_name
