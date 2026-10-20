@@ -17,6 +17,7 @@
   "start_day_offset",
   "ux_dates_and_location_column_2_column",
   "end_day_offset",
+  "day_number",
   "ux_location_section",
   "agronomy_report_template",
   "ux_related_rows_section",
@@ -91,6 +92,13 @@
    "in_list_view": 1,
    "label": "End Day Offset",
    "reqd": 1
+  },
+  {
+   "fieldname": "day_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Day Number",
+   "read_only": 1
   },
   {
    "fieldname": "ux_location_section",
