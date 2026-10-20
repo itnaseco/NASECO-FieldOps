@@ -25,9 +25,13 @@ def get_stage_day_number(start_day_offset, end_day_offset):
 	end = int(end_day_offset)
 	if end < start:
 		return None
-	# Planting is the operational first day even though its scheduling offset
-	# is zero. Other milestones retain the configured end offset verbatim.
-	return "Day 1" if start == 0 and end == 0 else f"Day {end}"
+	# Pre-planting windows are described from their earliest configured offset,
+	# while non-negative stages use their end milestone. Planting is the
+	# operational first day even though its scheduling offset is zero.
+	if start < 0:
+		days_prior = abs(start)
+		return f"{days_prior} {'Day' if days_prior == 1 else 'Days'} Prior"
+	return "1" if start == 0 and end == 0 else str(end)
 
 
 class CropRecipe(Document):
