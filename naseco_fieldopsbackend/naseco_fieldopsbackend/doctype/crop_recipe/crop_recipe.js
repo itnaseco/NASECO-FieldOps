@@ -77,7 +77,13 @@ function stage_day_number(row) {
   const start = cint(row.start_day_offset);
   const end = cint(row.end_day_offset);
   if (end < start) return null;
-  return start === 0 && end === 0 ? __("Day 1") : __("Day {0}", [end]);
+  if (start < 0) {
+    const daysPrior = Math.abs(start);
+    return daysPrior === 1
+      ? __("1 Day Prior")
+      : __("{0} Days Prior", [daysPrior]);
+  }
+  return start === 0 && end === 0 ? "1" : String(end);
 }
 
 function refresh_stage_day_number(cdt, cdn) {
