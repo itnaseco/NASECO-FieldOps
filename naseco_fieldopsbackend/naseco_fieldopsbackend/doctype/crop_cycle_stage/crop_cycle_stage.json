@@ -198,8 +198,11 @@
    "role": "Outgrower Supervisor"
   }
  ],
+ "search_fields": "stage_name,stage_code,crop_cycle",
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
+ "title_field": "stage_name",
  "track_changes": 1
 }
