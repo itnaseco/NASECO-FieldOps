@@ -4,22 +4,24 @@ app_publisher = "Naseco"
 app_description = "Backend for Naseco FieldOps Mobile App"
 app_email = "admin@naseco.com"
 app_license = "mit"
+app_logo_url = "/assets/naseco_fieldopsbackend/images/naseco-fieldops.svg"
+app_home = "/desk/naseco-fieldops"
 
 # Apps
 # ------------------
 
 required_apps = ["erpnext"]
 
-# Each item in the list will be shown as an app in the apps page
-# add_to_apps_screen = [
-# 	{
-# 		"name": "naseco_fieldopsbackend",
-# 		"logo": "/assets/naseco_fieldopsbackend/logo.png",
-# 		"title": "Naseco FieldOpsBackend",
-# 		"route": "/naseco_fieldopsbackend",
-# 		"has_permission": "naseco_fieldopsbackend.api.permission.has_app_permission"
-# 	}
-# ]
+# Each item in the list will be shown as an app in the apps page.
+add_to_apps_screen = [
+	{
+		"name": app_name,
+		"logo": app_logo_url,
+		"title": "NASECO FieldOps",
+		"route": app_home,
+		"sequence_id": 10,
+	}
+]
 
 # Includes in <head>
 # ------------------

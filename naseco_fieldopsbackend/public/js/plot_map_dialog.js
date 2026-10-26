@@ -91,18 +91,44 @@ naseco_fieldopsbackend.show_plot_map_dialog = function (plot) {
 	const leaflet_ready = load_leaflet();
 	d.show();
 	d.$wrapper.find('.modal-dialog .modal-content').addClass('plot-map-modal-modern');
-	Promise.all([shown, leaflet_ready]).then(render_map);
+	Promise.all([shown, leaflet_ready]).then(render_map).catch(show_map_load_error);
 
 	function load_leaflet() {
-		if (!document.getElementById('leaflet-css')) {
-			let link = document.createElement('link');
-			link.id = 'leaflet-css';
-			link.rel = 'stylesheet';
-			link.href = '/assets/frappe/js/lib/leaflet/leaflet.css';
-			document.head.appendChild(link);
+		if (window.L && typeof window.L.map === 'function') {
+			return Promise.resolve(window.L);
 		}
-		if (typeof L !== 'undefined') return Promise.resolve();
-		return frappe.require('/assets/frappe/js/lib/leaflet/leaflet.js');
+		if (!window.__naseco_fieldops_leaflet_promise) {
+			window.__naseco_fieldops_leaflet_promise = Promise.all([
+				frappe.require('leaflet.bundle.js'),
+				frappe.require('leaflet.bundle.css')
+			]).then(() => {
+				if (!window.L || typeof window.L.map !== 'function') {
+					throw new Error(__('Leaflet map library did not initialize correctly.'));
+				}
+				return window.L;
+			}).catch((error) => {
+				window.__naseco_fieldops_leaflet_promise = null;
+				throw error;
+			});
+		}
+		return window.__naseco_fieldops_leaflet_promise;
+	}
+
+	function show_map_load_error(error) {
+		console.error('Unable to load Leaflet map assets:', error);
+		const map_element = d.fields_dict.map_html.$wrapper.find('#' + map_id)[0];
+		if (map_element) {
+			$(map_element).html(`
+				<div class="text-danger" style="padding: 24px;">
+					${__('Map assets could not be loaded. Reload the page and try again.')}
+				</div>
+			`);
+		}
+		frappe.msgprint({
+			title: __('Map Error'),
+			message: __('The map library could not be loaded.'),
+			indicator: 'red'
+		});
 	}
 
 	function render_map() {
@@ -111,6 +137,7 @@ naseco_fieldopsbackend.show_plot_map_dialog = function (plot) {
 			if (dialog_closed || !map_element || !document.body.contains(map_element)) return;
 			map_element.querySelector('.plot-map-loading')?.remove();
 
+			const L = window.L;
 			rendered_map = L.map(map_element, {
 				zoomControl: true,
 				attributionControl: true,
