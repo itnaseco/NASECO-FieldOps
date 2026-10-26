@@ -1,0 +1,17 @@
+{
+ "app": "naseco_fieldopsbackend",
+ "doctype": "Dock",
+ "items": [
+  {
+   "added": 0,
+   "hidden": 0,
+   "icon": "leaf",
+   "link_to": "NASECO FieldOps",
+   "link_type": "Sidebar",
+   "title": "NASECO FieldOps"
+  }
+ ],
+ "name": "naseco_fieldopsbackend",
+ "standard": 1,
+ "user": ""
+}

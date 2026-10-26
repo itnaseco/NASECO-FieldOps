@@ -1125,16 +1125,32 @@ function escape_take_value(value) {
 }
 
 function load_leaflet(callback) {
-	if (!document.getElementById('leaflet-css')) {
-		let link = document.createElement('link');
-		link.id = 'leaflet-css';
-		link.rel = 'stylesheet';
-		link.href = '/assets/frappe/js/lib/leaflet/leaflet.css';
-		document.head.appendChild(link);
+	let leaflet_ready;
+	if (window.L && typeof window.L.map === 'function') {
+		leaflet_ready = Promise.resolve(window.L);
+	} else {
+		if (!window.__naseco_fieldops_leaflet_promise) {
+			window.__naseco_fieldops_leaflet_promise = Promise.all([
+				frappe.require('leaflet.bundle.js'),
+				frappe.require('leaflet.bundle.css')
+			]).then(() => {
+				if (!window.L || typeof window.L.map !== 'function') {
+					throw new Error(__('Leaflet map library did not initialize correctly.'));
+				}
+				return window.L;
+			}).catch((error) => {
+				window.__naseco_fieldops_leaflet_promise = null;
+				throw error;
+			});
+		}
+		leaflet_ready = window.__naseco_fieldops_leaflet_promise;
 	}
-	if (typeof L !== 'undefined') {
-		callback();
-		return;
-	}
-	frappe.require('/assets/frappe/js/lib/leaflet/leaflet.js', callback);
+	leaflet_ready.then(callback).catch((error) => {
+		console.error('Unable to load Inspection Take map assets', error);
+		frappe.msgprint({
+			title: __('Map Error'),
+			message: __('The map library could not be loaded. Reload the page and try again.'),
+			indicator: 'red'
+		});
+	});
 }

@@ -137,16 +137,15 @@ def execute():
 
 def ensure_role_profiles():
 	for profile_name, roles in ROLE_PROFILES.items():
-		doc = (
-			frappe.get_doc("Role Profile", profile_name)
-			if frappe.db.exists("Role Profile", profile_name)
-			else frappe.new_doc("Role Profile")
-		)
+		existing = frappe.db.exists("Role Profile", profile_name)
+		doc = frappe.get_doc("Role Profile", profile_name) if existing else frappe.new_doc("Role Profile")
+		available_roles = [role for role in roles if frappe.db.exists("Role", role)]
+		if existing and [row.role for row in doc.roles] == available_roles:
+			continue
 		doc.role_profile = profile_name
 		doc.set("roles", [])
-		for role in roles:
-			if frappe.db.exists("Role", role):
-				doc.append("roles", {"role": role})
+		for role in available_roles:
+			doc.append("roles", {"role": role})
 		doc.save(ignore_permissions=True)
 
 
