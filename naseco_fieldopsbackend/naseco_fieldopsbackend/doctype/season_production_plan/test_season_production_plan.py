@@ -127,6 +127,24 @@ class TestSeasonProductionPlan(TestCase):
 		self.assertEqual(target.planned_yield_kg_per_hectare, 3900)
 		self.assertEqual(get_recipe_yield.call_count, 1)
 
+	@patch("naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.season_production_plan.season_production_plan.get_recipe_variety_yield")
+	@patch("naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.season_production_plan.season_production_plan.frappe.get_doc")
+	def test_invalid_zero_yield_snapshot_is_refreshed(self, get_doc, get_recipe_yield):
+		get_recipe_yield.return_value = 4500
+		target = SimpleNamespace(
+			crop_recipe="Bazooka Standard", yield_source_recipe="Bazooka Standard",
+			recipe_yield_kg_per_hectare=0, planned_yield_kg_per_hectare=0,
+			yield_override_reason=None,
+		)
+		plan = SimpleNamespace(production_targets=[target])
+
+		SeasonProductionPlan.sync_target_recipe_yields(plan)
+
+		self.assertEqual(target.recipe_yield_kg_per_hectare, 4500)
+		self.assertEqual(target.planned_yield_kg_per_hectare, 4500)
+		self.assertEqual(target.yield_source_recipe, "Bazooka Standard")
+		self.assertEqual(get_recipe_yield.call_count, 1)
+
 	@patch("naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.season_production_plan.season_production_plan.get_item_uom_conversion")
 	@patch("naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.season_production_plan.season_production_plan.frappe.get_doc")
 	def test_parent_seed_requirements_include_all_recipe_roles(self, get_doc, get_conversion):
@@ -159,3 +177,32 @@ class TestSeasonProductionPlan(TestCase):
 		self.assertEqual(by_role["Female"]["required_stock_qty"], 240)
 		self.assertEqual(by_role["Male"]["required_stock_qty"], 60)
 		self.assertEqual(by_role["Female"]["ratio_value"], 4)
+
+	@patch("naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.season_production_plan.season_production_plan.get_item_uom_conversion")
+	@patch("naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.season_production_plan.season_production_plan.frappe.get_doc")
+	def test_parent_seed_plan_consumes_frozen_recipe_snapshot(self, get_doc, get_conversion):
+		get_doc.return_value = SimpleNamespace(
+			parent_seed_calculation_method="Ratio and Lot Analysis",
+			parent_seed_items=[SimpleNamespace(
+				variety="Bazooka", ratio_group="Primary", parent_role="Female",
+				ratio_value=4, item_code="B53-BASIC", quantity_per_hectare=18.75,
+				uom="Kg", lot_analysis="LOT-ANALYSIS-001", germination_percent=88,
+				thousand_kernel_weight_g=330, expected_plants_per_hectare=48000,
+				parent_variety="B53", source_warehouse="Seed Stores",
+				recovery_policy="Fully Recoverable", recoverable_percent=100,
+			)],
+		)
+		get_conversion.return_value = SimpleNamespace(
+			uom="Kg", stock_uom="Kg", conversion_factor=1,
+		)
+
+		rows = aggregate_parent_seed_requirements([
+			SimpleNamespace(
+				crop_recipe="Bazooka Standard", variety="Bazooka", target_hectares=10,
+			)
+		])
+
+		self.assertEqual(len(rows), 1)
+		self.assertEqual(rows[0]["quantity_per_hectare"], 18.75)
+		self.assertEqual(rows[0]["required_stock_qty"], 187.5)
+		self.assertEqual(rows[0]["lot_analysis"], "LOT-ANALYSIS-001")

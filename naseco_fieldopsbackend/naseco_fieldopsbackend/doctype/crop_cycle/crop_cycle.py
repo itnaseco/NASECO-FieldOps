@@ -137,11 +137,14 @@ class CropCycle(Document):
 	def validate_single_cycle_per_plot(self):
 		if not self.plot:
 			return
+		# Status is derived later in before_save; use its authoritative input.
+		if getattr(self, "actual_harvest_date", None):
+			return
 
 		existing_cycle = get_existing_cycle_for_plot(self.plot, self.name)
 		if existing_cycle:
 			frappe.throw(
-				_("Farm Plot {0} is already assigned to Crop Cycle {1}. A plot can have only one Crop Cycle.").format(
+				_("Farm Plot {0} already has unfinished Crop Cycle {1}. Complete it before starting another cycle.").format(
 					frappe.bold(self.plot),
 					frappe.bold(existing_cycle.crop_cycle_id or existing_cycle.name),
 				),
@@ -183,7 +186,7 @@ class CropCycle(Document):
 			"Farm Plot",
 			self.plot,
 			"status",
-			farm_plot_status_for_cycle(self.status),
+			("Active" if get_existing_cycle_for_plot(self.plot) else "Idle"),
 			update_modified=False,
 		)
 
@@ -210,7 +213,8 @@ class CropCycle(Document):
 				update_modified=False,
 			)
 		if self.plot:
-			frappe.db.set_value("Farm Plot", self.plot, "status", "Idle", update_modified=False)
+			status = "Active" if get_existing_cycle_for_plot(self.plot, self.name) else "Idle"
+			frappe.db.set_value("Farm Plot", self.plot, "status", status, update_modified=False)
 
 	def update_status(self):
 		"""
@@ -239,15 +243,20 @@ def farm_plot_status_for_cycle(cycle_status):
 
 
 def get_existing_cycle_for_plot(plot, exclude_cycle=None):
-	return frappe.db.get_value(
-		"Crop Cycle",
-		{
-			"plot": plot,
-			"name": ["!=", exclude_cycle],
-		},
-		["name", "crop_cycle_id"],
-		as_dict=True,
+	"""Return unfinished occupancy, serializing saves on the reusable plot.
+
+	A current locking read avoids a stale repeatable-read snapshot after a
+	concurrent creator commits. Unknown/blank statuses remain occupied.
+	"""
+	frappe.db.sql("SELECT name FROM `tabFarm Plot` WHERE name=%s FOR UPDATE", (plot,))
+	rows = frappe.db.sql(
+		"SELECT name, crop_cycle_id FROM `tabCrop Cycle` "
+		"WHERE plot=%s AND name!=%s AND docstatus<2 "
+		"AND COALESCE(status, '')!='COMPLETED' "
+		"ORDER BY creation, name LIMIT 1 FOR UPDATE",
+		(plot, exclude_cycle or ""), as_dict=True,
 	)
+	return rows[0] if rows else None
 
 
 @frappe.whitelist()

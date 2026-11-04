@@ -135,7 +135,7 @@
   {
    "fieldname": "ux_dates_and_schedule_section",
    "fieldtype": "Section Break",
-   "label": "Dates and Schedule"
+   "label": "Effective Dates"
   },
   {
    "fieldname": "effective_from",
@@ -151,8 +151,7 @@
   },
   {
    "fieldname": "ux_dates_and_schedule_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Dates and Schedule Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "amended_from",
@@ -166,7 +165,7 @@
   {
    "fieldname": "ux_location_and_map_section",
    "fieldtype": "Section Break",
-   "label": "Location and Map"
+   "label": "Template Version"
   },
   {
    "fieldname": "template_name",
@@ -178,8 +177,7 @@
   },
   {
    "fieldname": "ux_location_and_map_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Location and Map Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "1",
@@ -196,7 +194,7 @@
   {
    "fieldname": "ux_financial_and_quantity_details_section",
    "fieldtype": "Section Break",
-   "label": "Financial and Quantity Details"
+   "label": "Pricing and Recovery Terms"
   },
   {
    "fieldname": "pricing_policy",
@@ -220,7 +218,7 @@
   {
    "fieldname": "ux_quality_and_results_section",
    "fieldtype": "Section Break",
-   "label": "Quality and Results"
+   "label": "Quality and Legal Terms"
   },
   {
    "fieldname": "legal_reference",

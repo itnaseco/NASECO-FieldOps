@@ -33,8 +33,7 @@
   },
   {
    "fieldname": "ux_additional_details_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Additional Details Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "parent_seed_item",
@@ -76,8 +75,7 @@
   },
   {
    "fieldname": "ux_quantities_and_values_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Quantities and Values Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "rate",

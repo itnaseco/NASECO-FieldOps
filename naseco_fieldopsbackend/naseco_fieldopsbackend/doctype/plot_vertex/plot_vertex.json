@@ -42,8 +42,7 @@
   },
   {
    "fieldname": "ux_location_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Location Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "longitude",

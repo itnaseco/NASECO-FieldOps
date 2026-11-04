@@ -8,6 +8,8 @@
  "field_order": [
   "ux_overview_tab",
   "ux_crop_cycle_context_section",
+  "production_plan",
+  "production_target_id",
   "crop_cycle",
   "production_contract",
   "outgrower",
@@ -54,6 +56,21 @@
    "label": "Crop Cycle Context"
   },
   {
+   "fieldname": "production_plan",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Production Plan",
+   "options": "Season Production Plan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_target_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Production Target ID",
+   "read_only": 1
+  },
+  {
    "fieldname": "crop_cycle",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -79,8 +96,7 @@
   },
   {
    "fieldname": "ux_crop_cycle_context_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Crop Cycle Context Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "supplier",
@@ -184,8 +200,7 @@
   },
   {
    "fieldname": "ux_supplier_payment_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Supplier Payment Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "paid_amount",

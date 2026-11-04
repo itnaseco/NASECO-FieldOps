@@ -1,7 +1,7 @@
 {
  "app": "naseco_fieldopsbackend",
  "charts": [],
- "content": "[{\"id\":\"shortcut-1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Input Requests\",\"col\":3}},{\"id\":\"shortcut-2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Input Dispatches\",\"col\":3}},{\"id\":\"shortcut-3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Material Requests\",\"col\":3}},{\"id\":\"shortcut-4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Entries\",\"col\":3}},{\"id\":\"navigation-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Navigation</b></span>\",\"col\":12}},{\"id\":\"card-1\",\"type\":\"card\",\"data\":{\"card_name\":\"Input Distribution\",\"col\":4}},{\"id\":\"card-2\",\"type\":\"card\",\"data\":{\"card_name\":\"Stock Masters\",\"col\":4}},{\"id\":\"card-3\",\"type\":\"card\",\"data\":{\"card_name\":\"Input Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"shortcut-1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Input Requests\",\"col\":3}},{\"id\":\"shortcut-2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Input Dispatches\",\"col\":3}},{\"id\":\"shortcut-3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Material Requests\",\"col\":3}},{\"id\":\"shortcut-4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Entries\",\"col\":3}},{\"id\":\"shortcut-5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Requests for Quotation\",\"col\":3}},{\"id\":\"shortcut-6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Supplier Quotations\",\"col\":3}},{\"id\":\"shortcut-7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Orders\",\"col\":3}},{\"id\":\"shortcut-8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Receipts\",\"col\":3}},{\"id\":\"nav-shortcut-parent-seed-lot-analysis\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Parent Seed Lot Analysis\",\"col\":3}},{\"id\":\"navigation-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Navigation</b></span>\",\"col\":12}},{\"id\":\"card-1\",\"type\":\"card\",\"data\":{\"card_name\":\"Input Distribution\",\"col\":3}},{\"id\":\"card-2\",\"type\":\"card\",\"data\":{\"card_name\":\"Buying & Procurement\",\"col\":3}},{\"id\":\"card-3\",\"type\":\"card\",\"data\":{\"card_name\":\"Stock Masters\",\"col\":3}},{\"id\":\"card-4\",\"type\":\"card\",\"data\":{\"card_name\":\"Input Reports\",\"col\":3}},{\"id\":\"nav-parent-seed-inventory\",\"type\":\"card\",\"data\":{\"card_name\":\"Parent Seed Inventory\",\"col\":4}}]",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
@@ -67,8 +67,71 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Buying & Procurement",
+   "link_count": 5,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Requests for Quotation",
+   "link_count": 0,
+   "link_to": "Request for Quotation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Supplier Quotations",
+   "link_count": 0,
+   "link_to": "Supplier Quotation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase Orders",
+   "link_count": 0,
+   "link_to": "Purchase Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase Receipts",
+   "link_count": 0,
+   "link_to": "Purchase Receipt",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Suppliers",
+   "link_count": 0,
+   "link_to": "Supplier",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Stock Masters",
-   "link_count": 4,
+   "link_count": 5,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -117,6 +180,17 @@
    "type": "Link"
   },
   {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Input Recovery Pricing Policy",
+   "link_count": 0,
+   "link_to": "Input Recovery Pricing Policy",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
    "hidden": 0,
    "is_query_report": 0,
    "label": "Input Reports",
@@ -142,6 +216,69 @@
    "label": "Financial Exposure",
    "link_count": 0,
    "link_to": "Crop Cycle Financial Exposure",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Parent Seed Inventory",
+   "link_count": 5,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Parent Seed Lot Analysis",
+   "link_count": 0,
+   "link_to": "Parent Seed Lot Analysis",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item",
+   "link_count": 0,
+   "link_to": "Item",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Batch",
+   "link_count": 0,
+   "link_to": "Batch",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Stock Balance",
+   "link_count": 0,
+   "link_to": "Stock Balance",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Stock Ledger",
+   "link_count": 0,
+   "link_to": "Stock Ledger",
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
@@ -189,6 +326,51 @@
    "format": "",
    "label": "Stock Entries",
    "link_to": "Stock Entry",
+   "stats_filter": "",
+   "type": "DocType"
+  },
+  {
+   "color": "Cyan",
+   "doc_view": "List",
+   "format": "",
+   "label": "Requests for Quotation",
+   "link_to": "Request for Quotation",
+   "stats_filter": "",
+   "type": "DocType"
+  },
+  {
+   "color": "Yellow",
+   "doc_view": "List",
+   "format": "",
+   "label": "Supplier Quotations",
+   "link_to": "Supplier Quotation",
+   "stats_filter": "",
+   "type": "DocType"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "format": "",
+   "label": "Purchase Orders",
+   "link_to": "Purchase Order",
+   "stats_filter": "",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "format": "",
+   "label": "Purchase Receipts",
+   "link_to": "Purchase Receipt",
+   "stats_filter": "",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "format": "",
+   "label": "Parent Seed Lot Analysis",
+   "link_to": "Parent Seed Lot Analysis",
    "stats_filter": "",
    "type": "DocType"
   }

@@ -7,6 +7,8 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "production_plan",
+  "production_target_id",
   "ux_details_section",
   "assignment_id",
   "plot",
@@ -16,6 +18,21 @@
   "active"
  ],
  "fields": [
+  {
+   "fieldname": "production_plan",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Production Plan",
+   "options": "Season Production Plan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_target_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Production Target ID",
+   "read_only": 1
+  },
   {
    "fieldname": "ux_details_section",
    "fieldtype": "Section Break",
@@ -44,8 +61,7 @@
   },
   {
    "fieldname": "ux_details_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Details Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "season",

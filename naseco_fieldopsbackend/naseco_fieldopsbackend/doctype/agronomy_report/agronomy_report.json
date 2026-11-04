@@ -6,6 +6,8 @@
  "field_order": [
   "ux_overview_tab",
   "ux_report_summary_section",
+  "production_plan",
+  "production_target_id",
   "report_template",
   "report_number",
   "status",
@@ -89,6 +91,21 @@
    "label": "Report Summary"
   },
   {
+   "fieldname": "production_plan",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Production Plan",
+   "options": "Season Production Plan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_target_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Production Target ID",
+   "read_only": 1
+  },
+  {
    "fieldname": "report_template",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -113,8 +130,7 @@
   },
   {
    "fieldname": "ux_report_summary_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Report Summary Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "crop_cycle",
@@ -137,6 +153,12 @@
    "in_list_view": 1,
    "label": "Stage",
    "read_only": 1
+  },
+  {
+   "fieldname": "field_visit",
+   "label": "Field Visit",
+   "fieldtype": "Link",
+   "options": "Field Visit"
   },
   {
    "fieldname": "ux_production_context_tab",
@@ -185,8 +207,7 @@
   },
   {
    "fieldname": "ux_context_snapshot_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Context Snapshot Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "season",
@@ -249,8 +270,7 @@
   },
   {
    "fieldname": "ux_window_and_report_date_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Window and Report Date Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "calendar_week",
@@ -406,8 +426,7 @@
   },
   {
    "fieldname": "ux_evaluation_result_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Evaluation Result Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "critical_failure_count",
@@ -519,8 +538,6 @@
    "fieldtype": "Check",
    "hidden": 1,
    "label": "Synced"
-  },
-  {"fieldname":"field_visit","label":"Field Visit","fieldtype":"Link","options":"Field Visit"
   }
  ],
  "is_submittable": 1,

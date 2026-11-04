@@ -31,6 +31,12 @@
   "parent_seed_calculation_method",
   "expected_plants_per_hectare",
   "seed_requirement_allowance_percent",
+  "parent_seed_preparation_status",
+  "parent_seed_formula_version",
+  "parent_seed_prepared_by",
+  "parent_seed_prepared_on",
+  "parent_seed_input_hash",
+  "parent_seed_preparation_summary",
   "parent_seed_items",
   "ux_lifecycle_tab",
   "ux_effective_dates_and_approval_section",
@@ -90,8 +96,7 @@
   },
   {
    "fieldname": "ux_recipe_summary_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Recipe Summary Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "crop",
@@ -130,7 +135,7 @@
   {
    "fieldname": "ux_variety_applicability_section",
    "fieldtype": "Section Break",
-   "label": "Variety Applicability"
+   "label": "Applicability and Expected Yield"
   },
   {
    "default": "All Crop Varieties",
@@ -154,14 +159,14 @@
    "fieldtype": "Float",
    "label": "Expected Yield (Kg/Ha)",
    "non_negative": 1,
-   "precision": 2,
+   "precision": 1,
    "depends_on": "eval:doc.variety_scope==\"All Crop Varieties\"",
    "mandatory_depends_on": "eval:doc.docstatus==1 && doc.variety_scope==\"All Crop Varieties\""
   },
   {
    "fieldname": "ux_stages_section",
    "fieldtype": "Section Break",
-   "label": "Stages"
+   "label": "Stage Schedule"
   },
   {
    "fieldname": "stages",
@@ -172,7 +177,7 @@
   {
    "fieldname": "ux_inputs_section",
    "fieldtype": "Section Break",
-   "label": "Inputs"
+   "label": "Crop Input Plan"
   },
   {
    "fieldname": "inputs",
@@ -183,12 +188,13 @@
   {
    "fieldname": "ux_parent_seed_section",
    "fieldtype": "Section Break",
-   "label": "Parent Seed"
+   "label": "Parent Seed Requirements"
   },
   {
    "description": "Legacy recipes retain manually approved kg/ha. New recipe versions calculate kg/ha from explicit ratios and approved lot analyses.",
    "fieldname": "parent_seed_calculation_method",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Parent Seed Calculation",
    "options": "Legacy Fixed Kg/Ha\nRatio and Lot Analysis"
   },
@@ -197,21 +203,74 @@
    "description": "Combined Male and Female target population per hectare.",
    "fieldname": "expected_plants_per_hectare",
    "fieldtype": "Int",
+   "hidden": 1,
    "label": "Expected Plants per Hectare",
-   "non_negative": 1
+   "non_negative": 1,
+   "read_only": 1
   },
   {
    "default": "0",
    "depends_on": "eval:doc.parent_seed_calculation_method==\"Ratio and Lot Analysis\"",
    "fieldname": "seed_requirement_allowance_percent",
    "fieldtype": "Percent",
-   "label": "Operational Seed Allowance %"
+   "hidden": 1,
+   "label": "Operational Seed Allowance %",
+   "precision": 1,
+   "read_only": 1
+  },
+  {
+   "default": "Not Prepared",
+   "depends_on": "eval:doc.parent_seed_calculation_method==\"Ratio and Lot Analysis\"",
+   "fieldname": "parent_seed_preparation_status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Parent Seed Preparation Status",
+   "options": "Not Prepared\nPrepared\nOutdated\nLegacy Preserved",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.parent_seed_calculation_method==\"Ratio and Lot Analysis\"",
+   "fieldname": "parent_seed_formula_version",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Calculation Formula Version",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.parent_seed_calculation_method==\"Ratio and Lot Analysis\"",
+   "fieldname": "parent_seed_prepared_by",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Prepared By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.parent_seed_calculation_method==\"Ratio and Lot Analysis\"",
+   "fieldname": "parent_seed_prepared_on",
+   "fieldtype": "Datetime",
+   "hidden": 1,
+   "label": "Prepared On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "parent_seed_input_hash",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Parent Seed Input Hash",
+   "read_only": 1
+  },
+  {
+   "fieldname": "parent_seed_preparation_summary",
+   "fieldtype": "HTML",
+   "label": "Prepared Parent Seed Requirements"
   },
   {
    "fieldname": "parent_seed_items",
    "fieldtype": "Table",
-   "label": "Basic / Parent Seed Ratios and Inputs",
-   "options": "Recipe Parent Seed Item"
+   "label": "Parent Seed Requirements",
+   "options": "Recipe Parent Seed Item",
+   "read_only": 1
   },
   {
    "fieldname": "ux_lifecycle_tab",
@@ -244,8 +303,7 @@
   },
   {
    "fieldname": "ux_effective_dates_and_approval_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Effective Dates and Approval Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "amended_from",

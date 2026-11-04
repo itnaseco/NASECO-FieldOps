@@ -1,0 +1,21 @@
+{
+ "columns": "[{\"fieldname\": \"item_name\", \"label\": \"Item Name\", \"width\": 287}, {\"fieldname\": \"status_field\", \"label\": \"Status\", \"width\": 134, \"type\": \"Status\"}, {\"fieldname\": \"item_code\", \"label\": \"Item Code\", \"width\": 200}, {\"fieldname\": \"item_group\", \"label\": \"Item Group\", \"width\": 151}, {\"fieldname\": \"efris_commodity_code\", \"label\": \"EFRIS Commodity Code\", \"width\": 94}, {\"fieldname\": \"stock_uom\", \"label\": \"Default Unit of Measure\", \"width\": 200}, {\"fieldname\": \"is_fixed_asset\", \"label\": \"Is Fixed Asset\", \"width\": 94}, {\"fieldname\": \"is_sales_item\", \"label\": \"Allow Sales\", \"width\": 94}]",
+ "creation": "2026-11-04 14:49:12.451962",
+ "docstatus": 0,
+ "doctype": "List Filter",
+ "filter_name": "Agricultural Inputs",
+ "filters": "[[\"Item\", \"item_group\", \"=\", \"Agricultural Inputs\"]]",
+ "for_user": "",
+ "idx": 0,
+ "is_standard": 1,
+ "layout_order": 8,
+ "modified": "2026-11-04 14:49:12.451962",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Item-Agricultural Inputs",
+ "owner": "Administrator",
+ "reference_doctype": "Item",
+ "route_signature": "item_group=Agricultural Inputs",
+ "sort_field": "modified",
+ "sort_order": "asc"
+}

@@ -7,34 +7,49 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "ux_details_section",
+  "form_layout_0_section_break",
+  "production_plan",
+  "production_target_id",
   "crop_cycle",
   "stage_name",
-  "status",
   "stage_id",
-  "crop",
   "stage_code",
-  "ux_details_column_2_column",
+  "crop",
   "order_index",
-  "duration_days",
-  "completion_percentage",
-  "agronomy_report",
-  "mandatory_activity_count",
-  "ux_dates_and_location_section",
+  "status",
+  "form_layout_10_section_break",
   "start_date",
   "end_date",
-  "ux_dates_and_location_column_2_column",
+  "duration_days",
+  "completion_percentage",
+  "mandatory_activity_count",
   "completed_activity_count",
-  "ux_related_tables_section",
+  "agronomy_report",
+  "form_layout_18_section_break",
   "inputs",
-  "ux_notes_and_review_section",
+  "form_layout_20_section_break",
   "notes"
  ],
  "fields": [
   {
-   "fieldname": "ux_details_section",
+   "fieldname": "form_layout_0_section_break",
    "fieldtype": "Section Break",
-   "label": "Details"
+   "label": "Stage Identity"
+  },
+  {
+   "fieldname": "production_plan",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Production Plan",
+   "options": "Season Production Plan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_target_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Production Target ID",
+   "read_only": 1
   },
   {
    "fieldname": "crop_cycle",
@@ -52,23 +67,10 @@
    "reqd": 1
   },
   {
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "Status",
-   "options": "Pending\nIn Progress\nCompleted\nSkipped",
-   "default": "Pending"
-  },
-  {
    "fieldname": "stage_id",
    "fieldtype": "Data",
    "label": "Stage ID",
    "unique": 1
-  },
-  {
-   "fieldname": "crop",
-   "fieldtype": "Link",
-   "label": "Crop",
-   "options": "Crop"
   },
   {
    "fieldname": "stage_code",
@@ -79,15 +81,38 @@
    "reqd": 1
   },
   {
-   "fieldname": "ux_details_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Details Column 2"
+   "fieldname": "crop",
+   "fieldtype": "Link",
+   "label": "Crop",
+   "options": "Crop"
   },
   {
    "fieldname": "order_index",
    "fieldtype": "Int",
    "label": "Order Index",
    "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nIn Progress\nCompleted\nSkipped",
+   "default": "Pending"
+  },
+  {
+   "fieldname": "form_layout_10_section_break",
+   "fieldtype": "Section Break",
+   "label": "Schedule and Progress"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
   },
   {
    "fieldname": "duration_days",
@@ -101,38 +126,11 @@
    "default": "0"
   },
   {
-   "fieldname": "agronomy_report",
-   "fieldtype": "Link",
-   "label": "Agronomy Report",
-   "options": "Agronomy Report",
-   "read_only": 1
-  },
-  {
    "default": "0",
    "fieldname": "mandatory_activity_count",
    "fieldtype": "Int",
    "label": "Mandatory Activities",
    "read_only": 1
-  },
-  {
-   "fieldname": "ux_dates_and_location_section",
-   "fieldtype": "Section Break",
-   "label": "Dates and Location"
-  },
-  {
-   "fieldname": "start_date",
-   "fieldtype": "Date",
-   "label": "Start Date"
-  },
-  {
-   "fieldname": "end_date",
-   "fieldtype": "Date",
-   "label": "End Date"
-  },
-  {
-   "fieldname": "ux_dates_and_location_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Dates and Location Column 2"
   },
   {
    "default": "0",
@@ -142,9 +140,16 @@
    "read_only": 1
   },
   {
-   "fieldname": "ux_related_tables_section",
+   "fieldname": "agronomy_report",
+   "fieldtype": "Link",
+   "label": "Agronomy Report",
+   "options": "Agronomy Report",
+   "read_only": 1
+  },
+  {
+   "fieldname": "form_layout_18_section_break",
    "fieldtype": "Section Break",
-   "label": "Related Tables"
+   "label": "Stage Inputs"
   },
   {
    "fieldname": "inputs",
@@ -153,9 +158,9 @@
    "options": "Recipe Input Item"
   },
   {
-   "fieldname": "ux_notes_and_review_section",
+   "fieldname": "form_layout_20_section_break",
    "fieldtype": "Section Break",
-   "label": "Notes and Review"
+   "label": "Notes"
   },
   {
    "fieldname": "notes",

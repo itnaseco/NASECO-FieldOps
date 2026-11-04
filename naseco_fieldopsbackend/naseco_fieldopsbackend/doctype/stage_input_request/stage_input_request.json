@@ -9,6 +9,8 @@
  "field_order": [
   "ux_overview_tab",
   "ux_request_context_section",
+  "production_plan",
+  "production_target_id",
   "request_id",
   "crop_cycle",
   "production_contract",
@@ -58,6 +60,21 @@
    "label": "Request Context"
   },
   {
+   "fieldname": "production_plan",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Production Plan",
+   "options": "Season Production Plan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_target_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Production Target ID",
+   "read_only": 1
+  },
+  {
    "fieldname": "request_id",
    "fieldtype": "Data",
    "label": "External Request ID",
@@ -88,8 +105,7 @@
   },
   {
    "fieldname": "ux_request_context_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Request Context Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "company",
@@ -141,8 +157,7 @@
   },
   {
    "fieldname": "ux_request_and_approval_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Request and Approval Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "source_warehouse",
@@ -259,8 +274,7 @@
   },
   {
    "fieldname": "ux_legacy_mobile_fields_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Legacy Mobile Fields Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "input_type",

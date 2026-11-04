@@ -7,6 +7,8 @@
  "field_order": [
   "ux_overview_tab",
   "ux_assessment_context_section",
+  "production_plan",
+  "production_target_id",
   "assessment_status",
   "crop_cycle",
   "production_contract",
@@ -72,6 +74,21 @@
    "label": "Assessment Context"
   },
   {
+   "fieldname": "production_plan",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Production Plan",
+   "options": "Season Production Plan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_target_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Production Target ID",
+   "read_only": 1
+  },
+  {
    "default": "Draft",
    "fieldname": "assessment_status",
    "fieldtype": "Select",
@@ -106,8 +123,7 @@
   },
   {
    "fieldname": "ux_assessment_context_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Assessment Context Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "outgrower",
@@ -162,8 +178,7 @@
   },
   {
    "fieldname": "ux_erpnext_receipt_and_quality_inspection_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "ERPNext Receipt and Quality Inspection Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "item_code",
@@ -219,8 +234,7 @@
   },
   {
    "fieldname": "ux_delivered_and_net_dry_quantity_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Delivered and Net Dry Quantity Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "moisture_target_percent",
@@ -342,8 +356,7 @@
   },
   {
    "fieldname": "ux_provisional_contract_pricing_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Provisional Contract Pricing Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "provisional_payable_value",
@@ -386,8 +399,7 @@
   },
   {
    "fieldname": "ux_review_trail_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Review Trail Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "amended_from",

@@ -5,34 +5,41 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "ux_details_section",
+  "form_layout_0_section_break",
   "report_name",
-  "stage_name",
-  "critical_failure_override",
   "report_number",
-  "active",
-  "overall_pass_threshold_percent",
-  "instructions",
-  "ux_dates_and_location_section",
-  "window_start_day",
-  "ux_dates_and_location_column_2_column",
-  "window_end_day",
-  "ux_location_and_map_section",
+  "stage_name",
   "template_version",
-  "ux_related_tables_section",
+  "active",
+  "instructions",
+  "form_layout_7_section_break",
+  "window_start_day",
+  "window_end_day",
+  "form_layout_10_section_break",
+  "overall_pass_threshold_percent",
+  "critical_failure_override",
+  "form_layout_13_section_break",
   "parameters"
  ],
  "fields": [
   {
-   "fieldname": "ux_details_section",
+   "fieldname": "form_layout_0_section_break",
    "fieldtype": "Section Break",
-   "label": "Details"
+   "label": "Template Identity"
   },
   {
    "fieldname": "report_name",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Report Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "report_number",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Report Number",
    "reqd": 1,
    "unique": 1
   },
@@ -46,17 +53,10 @@
   },
   {
    "default": "1",
-   "fieldname": "critical_failure_override",
-   "fieldtype": "Check",
-   "label": "Critical Failure Overrides Score"
-  },
-  {
-   "fieldname": "report_number",
+   "fieldname": "template_version",
    "fieldtype": "Int",
-   "in_list_view": 1,
-   "label": "Report Number",
-   "reqd": 1,
-   "unique": 1
+   "label": "Template Version",
+   "reqd": 1
   },
   {
    "default": "1",
@@ -66,21 +66,14 @@
    "label": "Active"
   },
   {
-   "default": "100",
-   "fieldname": "overall_pass_threshold_percent",
-   "fieldtype": "Percent",
-   "label": "Overall Pass Threshold",
-   "reqd": 1
-  },
-  {
    "fieldname": "instructions",
    "fieldtype": "Text Editor",
    "label": "Instructions"
   },
   {
-   "fieldname": "ux_dates_and_location_section",
+   "fieldname": "form_layout_7_section_break",
    "fieldtype": "Section Break",
-   "label": "Dates and Location"
+   "label": "Reporting Window"
   },
   {
    "fieldname": "window_start_day",
@@ -89,32 +82,33 @@
    "reqd": 1
   },
   {
-   "fieldname": "ux_dates_and_location_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Dates and Location Column 2"
-  },
-  {
    "fieldname": "window_end_day",
    "fieldtype": "Int",
    "label": "Window End Day",
    "reqd": 1
   },
   {
-   "fieldname": "ux_location_and_map_section",
+   "fieldname": "form_layout_10_section_break",
    "fieldtype": "Section Break",
-   "label": "Location and Map"
+   "label": "Evaluation Policy"
   },
   {
-   "default": "1",
-   "fieldname": "template_version",
-   "fieldtype": "Int",
-   "label": "Template Version",
+   "default": "100",
+   "fieldname": "overall_pass_threshold_percent",
+   "fieldtype": "Percent",
+   "label": "Overall Pass Threshold",
    "reqd": 1
   },
   {
-   "fieldname": "ux_related_tables_section",
+   "default": "1",
+   "fieldname": "critical_failure_override",
+   "fieldtype": "Check",
+   "label": "Critical Failure Overrides Score"
+  },
+  {
+   "fieldname": "form_layout_13_section_break",
    "fieldtype": "Section Break",
-   "label": "Related Tables"
+   "label": "Report Parameters"
   },
   {
    "fieldname": "parameters",

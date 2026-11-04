@@ -9,6 +9,8 @@
  "field_order": [
   "ux_overview_tab",
   "ux_visit_context_section",
+  "production_plan",
+  "production_target_id",
   "visit_id",
   "field_trip",
   "external_id",
@@ -58,11 +60,38 @@
    "label": "Visit Context"
   },
   {
+   "fieldname": "production_plan",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Production Plan",
+   "options": "Season Production Plan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_target_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Production Target ID",
+   "read_only": 1
+  },
+  {
    "fieldname": "visit_id",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Visit ID",
    "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "field_trip",
+   "label": "Field Trip",
+   "fieldtype": "Link",
+   "options": "Field Trip"
+  },
+  {
+   "fieldname": "external_id",
+   "label": "External ID",
+   "fieldtype": "Data",
    "unique": 1
   },
   {
@@ -92,8 +121,7 @@
   },
   {
    "fieldname": "ux_visit_context_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Visit Context Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "visit_status",
@@ -145,8 +173,7 @@
   },
   {
    "fieldname": "ux_visit_details_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Visit Details Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "scheduled_date",
@@ -171,9 +198,28 @@
    "precision": 6
   },
   {
+   "fieldname": "gps_accuracy_m",
+   "label": "GPS Accuracy (m)",
+   "fieldtype": "Float"
+  },
+  {
+   "fieldname": "actual_start",
+   "label": "Actual Start",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "actual_end",
+   "label": "Actual End",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "positioning_exception_reason",
+   "label": "Positioning Exception Reason",
+   "fieldtype": "Small Text"
+  },
+  {
    "fieldname": "ux_gps_location_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "GPS Location Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "distance_from_plot",
@@ -223,19 +269,12 @@
    "fieldname": "ux_visit_work_section",
    "fieldtype": "Section Break",
    "description": "Shows only agronomy activities, agronomy reports and quality inspections explicitly linked to this visit.",
-   "label": "Documents recorded during this visit"
+   "label": "Field Work and Linked Documents"
   },
   {
    "fieldname": "visit_work_summary",
    "fieldtype": "HTML",
    "label": "Visit Work Summary"
-  },
-  {"fieldname":"field_trip","label":"Field Trip","fieldtype":"Link","options":"Field Trip"},
-  {"fieldname":"external_id","label":"External ID","fieldtype":"Data","unique":1},
-  {"fieldname":"gps_accuracy_m","label":"GPS Accuracy (m)","fieldtype":"Float"},
-  {"fieldname":"actual_start","label":"Actual Start","fieldtype":"Datetime"},
-  {"fieldname":"actual_end","label":"Actual End","fieldtype":"Datetime"},
-  {"fieldname":"positioning_exception_reason","label":"Positioning Exception Reason","fieldtype":"Small Text"
   }
  ],
  "grid_page_length": 50,

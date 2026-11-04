@@ -6,24 +6,24 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "ux_details_section",
+  "form_layout_0_section_break",
   "doctype_name",
+  "doc_name",
   "user",
+  "resolved",
+  "form_layout_5_section_break",
   "mobile_data",
   "server_data",
+  "form_layout_8_section_break",
   "resolution",
-  "resolved",
   "resolved_by",
-  "ux_dates_and_location_section",
-  "resolved_at",
-  "ux_notes_and_review_section",
-  "doc_name"
+  "resolved_at"
  ],
  "fields": [
   {
-   "fieldname": "ux_details_section",
+   "fieldname": "form_layout_0_section_break",
    "fieldtype": "Section Break",
-   "label": "Details"
+   "label": "Conflicted Record"
   },
   {
    "fieldname": "doctype_name",
@@ -32,10 +32,27 @@
    "reqd": 1
   },
   {
+   "fieldname": "doc_name",
+   "fieldtype": "Data",
+   "label": "Document Name",
+   "reqd": 1
+  },
+  {
    "fieldname": "user",
    "fieldtype": "Link",
    "label": "User",
    "options": "User"
+  },
+  {
+   "fieldname": "resolved",
+   "fieldtype": "Check",
+   "label": "Resolved",
+   "default": "0"
+  },
+  {
+   "fieldname": "form_layout_5_section_break",
+   "fieldtype": "Section Break",
+   "label": "Competing Values"
   },
   {
    "fieldname": "mobile_data",
@@ -50,17 +67,16 @@
    "options": "JSON"
   },
   {
+   "fieldname": "form_layout_8_section_break",
+   "fieldtype": "Section Break",
+   "label": "Resolution"
+  },
+  {
    "fieldname": "resolution",
    "fieldtype": "Select",
    "label": "Resolution",
    "options": "Server Wins\nMobile Wins\nMerged\nPending",
    "default": "Pending"
-  },
-  {
-   "fieldname": "resolved",
-   "fieldtype": "Check",
-   "label": "Resolved",
-   "default": "0"
   },
   {
    "fieldname": "resolved_by",
@@ -69,25 +85,9 @@
    "options": "User"
   },
   {
-   "fieldname": "ux_dates_and_location_section",
-   "fieldtype": "Section Break",
-   "label": "Dates and Location"
-  },
-  {
    "fieldname": "resolved_at",
    "fieldtype": "Datetime",
    "label": "Resolved At"
-  },
-  {
-   "fieldname": "ux_notes_and_review_section",
-   "fieldtype": "Section Break",
-   "label": "Notes and Review"
-  },
-  {
-   "fieldname": "doc_name",
-   "fieldtype": "Data",
-   "label": "Document Name",
-   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,

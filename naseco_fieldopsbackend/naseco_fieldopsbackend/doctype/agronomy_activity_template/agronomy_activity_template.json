@@ -6,29 +6,27 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "ux_details_section",
+  "form_layout_0_section_break",
   "activity_name",
   "crop_recipe",
   "stage_name",
-  "evidence_required",
+  "active",
+  "description",
+  "form_layout_6_section_break",
   "day_offset_from_planting",
-  "ux_details_column_2_column",
+  "day_offset_end",
   "responsible_party",
   "priority",
   "mandatory",
-  "active",
-  "ux_dates_and_location_section",
-  "day_offset_end",
-  "ux_quality_and_results_section",
-  "inspection_related",
-  "ux_notes_and_review_section",
-  "description"
+  "form_layout_12_section_break",
+  "evidence_required",
+  "inspection_related"
  ],
  "fields": [
   {
-   "fieldname": "ux_details_section",
+   "fieldname": "form_layout_0_section_break",
    "fieldtype": "Section Break",
-   "label": "Details"
+   "label": "Activity Identity"
   },
   {
    "fieldname": "activity_name",
@@ -54,10 +52,21 @@
    "reqd": 1
   },
   {
-   "default": "0",
-   "fieldname": "evidence_required",
+   "default": "1",
+   "fieldname": "active",
    "fieldtype": "Check",
-   "label": "Evidence Required"
+   "in_list_view": 1,
+   "label": "Active"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "form_layout_6_section_break",
+   "fieldtype": "Section Break",
+   "label": "Schedule and Responsibility"
   },
   {
    "fieldname": "day_offset_from_planting",
@@ -67,9 +76,9 @@
    "reqd": 1
   },
   {
-   "fieldname": "ux_details_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Details Column 2"
+   "fieldname": "day_offset_end",
+   "fieldtype": "Int",
+   "label": "Day Offset End"
   },
   {
    "default": "Supervisor / Farmer",
@@ -94,42 +103,21 @@
    "label": "Mandatory"
   },
   {
-   "default": "1",
-   "fieldname": "active",
+   "fieldname": "form_layout_12_section_break",
+   "fieldtype": "Section Break",
+   "label": "Evidence and Inspection"
+  },
+  {
+   "default": "0",
+   "fieldname": "evidence_required",
    "fieldtype": "Check",
-   "in_list_view": 1,
-   "label": "Active"
-  },
-  {
-   "fieldname": "ux_dates_and_location_section",
-   "fieldtype": "Section Break",
-   "label": "Dates and Location"
-  },
-  {
-   "fieldname": "day_offset_end",
-   "fieldtype": "Int",
-   "label": "Day Offset End"
-  },
-  {
-   "fieldname": "ux_quality_and_results_section",
-   "fieldtype": "Section Break",
-   "label": "Quality and Results"
+   "label": "Evidence Required"
   },
   {
    "default": "0",
    "fieldname": "inspection_related",
    "fieldtype": "Check",
    "label": "Inspection Related"
-  },
-  {
-   "fieldname": "ux_notes_and_review_section",
-   "fieldtype": "Section Break",
-   "label": "Notes and Review"
-  },
-  {
-   "fieldname": "description",
-   "fieldtype": "Text",
-   "label": "Description"
   }
  ],
  "index_web_pages_for_search": 1,

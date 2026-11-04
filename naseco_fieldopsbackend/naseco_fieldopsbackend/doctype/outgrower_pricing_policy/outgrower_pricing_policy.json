@@ -91,8 +91,7 @@
   },
   {
    "fieldname": "ux_policy_summary_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Policy Summary Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "allow_on_submit": 1,
@@ -147,8 +146,7 @@
   },
   {
    "fieldname": "ux_policy_scope_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Policy Scope Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "UGX",
@@ -207,8 +205,7 @@
   },
   {
    "fieldname": "ux_yield_and_price_rules_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Yield and Price Rules Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "grain_item",
@@ -282,8 +279,7 @@
   },
   {
    "fieldname": "ux_harvest_quality_rules_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Harvest Quality Rules Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "5",
@@ -331,8 +327,7 @@
   },
   {
    "fieldname": "ux_deferred_genetic_purity_bonus_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Deferred Genetic-Purity Bonus Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "50",
@@ -363,7 +358,7 @@
   {
    "fieldname": "ux_deadlines_and_eligibility_section",
    "fieldtype": "Section Break",
-   "label": "Deadlines and Eligibility"
+   "label": "Payment Deadlines and Eligibility"
   },
   {
    "default": "75",
@@ -387,8 +382,7 @@
   },
   {
    "fieldname": "ux_deadlines_and_eligibility_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Deadlines and Eligibility Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "85",

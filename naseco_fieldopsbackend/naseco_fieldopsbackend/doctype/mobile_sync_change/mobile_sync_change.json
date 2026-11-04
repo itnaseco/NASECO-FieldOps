@@ -6,15 +6,22 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "form_layout_0_section_break",
   "document_type",
   "document_name",
   "external_id",
   "store_name",
+  "form_layout_5_section_break",
   "operation",
   "requires_full_sync",
   "source_modified"
  ],
  "fields": [
+  {
+   "fieldname": "form_layout_0_section_break",
+   "fieldtype": "Section Break",
+   "label": "Changed Record"
+  },
   {
    "fieldname": "document_type",
    "fieldtype": "Link",
@@ -43,6 +50,11 @@
    "in_list_view": 1,
    "label": "Mobile Store",
    "reqd": 1
+  },
+  {
+   "fieldname": "form_layout_5_section_break",
+   "fieldtype": "Section Break",
+   "label": "Sync Operation"
   },
   {
    "fieldname": "operation",

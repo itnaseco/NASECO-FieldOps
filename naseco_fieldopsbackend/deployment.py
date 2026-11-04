@@ -141,7 +141,6 @@ CORE_AGRONOMY_ACTIVITIES = (
 	"Harvesting and sorting",
 	"Deliver accepted seed harvest",
 )
-VERSIONED_SEASONS = ("2026 B",)
 VERSIONED_PRICING_POLICIES = (
 	"2026B Maize Basic Seed Pricing",
 	"2026B Maize Certified Seed Pricing",
@@ -177,14 +176,17 @@ FIXTURES = [
 	},
 	_named_fixture("Agronomy Report Template", CORE_AGRONOMY_REPORT_TEMPLATES),
 	_named_fixture("Agronomy Activity Template", CORE_AGRONOMY_ACTIVITIES),
-	_named_fixture("Crop Recipe", ("Maize Production (Standard)",)),
-	_named_fixture("Season", VERSIONED_SEASONS),
 	_named_fixture("Outgrower Pricing Policy", VERSIONED_PRICING_POLICIES),
 	_named_fixture("Production Contract Template", VERSIONED_CONTRACT_TEMPLATES),
 ]
 
 
 TRANSACTIONAL_DOCTYPES = {
+	# Crop Recipe is a controlled, submittable business master. Importing it as
+	# a fixture during migrate overwrites the live document, its docstatus and
+	# all child tables. It must be managed as site data, never fixture data.
+	"Crop Recipe",
+	"Season",
 	"Agronomy Report",
 	"Crop Cycle",
 	"Crop Cycle Advance Request",

@@ -23,6 +23,11 @@ class TestDeploymentFixtures(unittest.TestCase):
 	def test_fixture_manifest_excludes_operational_doctypes(self):
 		fixture_doctypes = {fixture["dt"] for fixture in FIXTURES}
 		self.assertFalse(fixture_doctypes & TRANSACTIONAL_DOCTYPES)
+		self.assertNotIn(
+			"Crop Recipe",
+			fixture_doctypes,
+			"Submittable Crop Recipes must not be overwritten during fixture sync",
+		)
 
 	def test_fixture_directory_matches_manifest(self):
 		expected = {frappe.scrub(fixture["dt"]) for fixture in FIXTURES}

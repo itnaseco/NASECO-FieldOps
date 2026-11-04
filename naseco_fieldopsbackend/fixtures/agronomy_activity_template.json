@@ -2,7 +2,7 @@
  {
   "active": 1,
   "activity_name": "Planting",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 0,
   "day_offset_from_planting": 0,
   "description": null,
@@ -20,7 +20,7 @@
  {
   "active": 1,
   "activity_name": "Spraying",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 3,
   "day_offset_from_planting": 2,
   "description": null,
@@ -38,7 +38,7 @@
  {
   "active": 1,
   "activity_name": "Germination check",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 10,
   "day_offset_from_planting": 10,
   "description": null,
@@ -56,7 +56,7 @@
  {
   "active": 1,
   "activity_name": "Scouting for pests",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 15,
   "day_offset_from_planting": 15,
   "description": null,
@@ -74,7 +74,7 @@
  {
   "active": 1,
   "activity_name": "Selective herbicide application",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 21,
   "day_offset_from_planting": 21,
   "description": null,
@@ -92,7 +92,7 @@
  {
   "active": 1,
   "activity_name": "Check herbicide performance",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 26,
   "day_offset_from_planting": 26,
   "description": null,
@@ -110,7 +110,7 @@
  {
   "active": 1,
   "activity_name": "Thinning and removal of offtypes",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 30,
   "day_offset_from_planting": 27,
   "description": null,
@@ -128,7 +128,7 @@
  {
   "active": 1,
   "activity_name": "Urea 40% N 6% S application",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 30,
   "day_offset_from_planting": 30,
   "description": null,
@@ -146,7 +146,7 @@
  {
   "active": 1,
   "activity_name": "Scouting for pests and rouging",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 35,
   "day_offset_from_planting": 31,
   "description": null,
@@ -164,7 +164,7 @@
  {
   "active": 1,
   "activity_name": "Spot manual weeding",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 40,
   "day_offset_from_planting": 36,
   "description": null,
@@ -182,7 +182,7 @@
  {
   "active": 1,
   "activity_name": "Second top dress with Urea 46% N",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 45,
   "day_offset_from_planting": 45,
   "description": null,
@@ -200,7 +200,7 @@
  {
   "active": 1,
   "activity_name": "Prepare field for detassling",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 50,
   "day_offset_from_planting": 50,
   "description": null,
@@ -218,7 +218,7 @@
  {
   "active": 1,
   "activity_name": "Mobilise detassling labour",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 54,
   "day_offset_from_planting": 53,
   "description": null,
@@ -236,7 +236,7 @@
  {
   "active": 1,
   "activity_name": "Detassling starts and labour training",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 60,
   "day_offset_from_planting": 55,
   "description": null,
@@ -254,7 +254,7 @@
  {
   "active": 1,
   "activity_name": "Check field for emerging tassels",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 70,
   "day_offset_from_planting": 60,
   "description": null,
@@ -272,7 +272,7 @@
  {
   "active": 1,
   "activity_name": "Scout for ear rot, smut and termites",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 85,
   "day_offset_from_planting": 75,
   "description": null,
@@ -290,7 +290,7 @@
  {
   "active": 1,
   "activity_name": "Male line removal",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 90,
   "day_offset_from_planting": 90,
   "description": null,
@@ -308,7 +308,7 @@
  {
   "active": 1,
   "activity_name": "Pre-harvest inspection readiness",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 135,
   "day_offset_from_planting": 120,
   "description": null,
@@ -326,7 +326,7 @@
  {
   "active": 1,
   "activity_name": "Recruit and contract outgrower",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": -1,
   "day_offset_from_planting": -30,
   "description": null,
@@ -344,7 +344,7 @@
  {
   "active": 1,
   "activity_name": "Harvesting and sorting",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 180,
   "day_offset_from_planting": 140,
   "description": null,
@@ -362,7 +362,7 @@
  {
   "active": 1,
   "activity_name": "Deliver accepted seed harvest",
-  "crop_recipe": "Maize Production (Standard)",
+  "crop_recipe": null,
   "day_offset_end": 190,
   "day_offset_from_planting": 180,
   "description": null,

@@ -7,6 +7,8 @@
  "field_order": [
   "ux_overview_tab",
   "ux_dispatch_context_section",
+  "production_plan",
+  "production_target_id",
   "dispatch_id",
   "dispatch_date",
   "dispatched_by",
@@ -70,6 +72,21 @@
    "label": "Dispatch Context"
   },
   {
+   "fieldname": "production_plan",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Production Plan",
+   "options": "Season Production Plan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_target_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Production Target ID",
+   "read_only": 1
+  },
+  {
    "fieldname": "dispatch_id",
    "fieldtype": "Data",
    "hidden": 1,
@@ -101,8 +118,7 @@
   },
   {
    "fieldname": "ux_dispatch_context_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Dispatch Context Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "input_request_item",
@@ -188,8 +204,7 @@
   },
   {
    "fieldname": "ux_input_item_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Input Item Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "quantity",
@@ -231,8 +246,7 @@
   },
   {
    "fieldname": "ux_stock_documents_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Stock Documents Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "stock_entry_detail",
@@ -273,8 +287,7 @@
   },
   {
    "fieldname": "ux_recovery_pricing_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Recovery Pricing Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "pricing_policy_version",

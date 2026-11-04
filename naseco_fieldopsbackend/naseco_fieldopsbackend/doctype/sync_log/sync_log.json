@@ -6,28 +6,38 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "ux_details_section",
+  "form_layout_0_section_break",
   "doctype_name",
+  "doc_name",
+  "operation",
   "status",
   "user",
-  "operation",
-  "error_message",
-  "sync_data",
-  "ux_dates_and_location_section",
   "sync_timestamp",
-  "ux_notes_and_review_section",
-  "doc_name"
+  "form_layout_7_section_break",
+  "sync_data",
+  "error_message"
  ],
  "fields": [
   {
-   "fieldname": "ux_details_section",
+   "fieldname": "form_layout_0_section_break",
    "fieldtype": "Section Break",
-   "label": "Details"
+   "label": "Sync Event"
   },
   {
    "fieldname": "doctype_name",
    "fieldtype": "Data",
    "label": "DocType Name"
+  },
+  {
+   "fieldname": "doc_name",
+   "fieldtype": "Data",
+   "label": "Document Name"
+  },
+  {
+   "fieldname": "operation",
+   "fieldtype": "Select",
+   "label": "Operation",
+   "options": "CREATE\nUPDATE\nDELETE"
   },
   {
    "fieldname": "status",
@@ -43,15 +53,15 @@
    "options": "User"
   },
   {
-   "fieldname": "operation",
-   "fieldtype": "Select",
-   "label": "Operation",
-   "options": "CREATE\nUPDATE\nDELETE"
+   "fieldname": "sync_timestamp",
+   "fieldtype": "Datetime",
+   "label": "Sync Timestamp",
+   "default": "Now"
   },
   {
-   "fieldname": "error_message",
-   "fieldtype": "Text",
-   "label": "Error Message"
+   "fieldname": "form_layout_7_section_break",
+   "fieldtype": "Section Break",
+   "label": "Payload and Error"
   },
   {
    "fieldname": "sync_data",
@@ -60,25 +70,9 @@
    "options": "JSON"
   },
   {
-   "fieldname": "ux_dates_and_location_section",
-   "fieldtype": "Section Break",
-   "label": "Dates and Location"
-  },
-  {
-   "fieldname": "sync_timestamp",
-   "fieldtype": "Datetime",
-   "label": "Sync Timestamp",
-   "default": "Now"
-  },
-  {
-   "fieldname": "ux_notes_and_review_section",
-   "fieldtype": "Section Break",
-   "label": "Notes and Review"
-  },
-  {
-   "fieldname": "doc_name",
-   "fieldtype": "Data",
-   "label": "Document Name"
+   "fieldname": "error_message",
+   "fieldtype": "Text",
+   "label": "Error Message"
   }
  ],
  "index_web_pages_for_search": 1,

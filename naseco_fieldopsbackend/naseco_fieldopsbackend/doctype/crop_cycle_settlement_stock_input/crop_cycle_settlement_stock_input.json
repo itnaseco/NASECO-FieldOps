@@ -81,8 +81,7 @@
   },
   {
    "fieldname": "ux_quantities_and_values_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Quantities and Values Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "recovery_policy",

@@ -45,8 +45,7 @@
   },
   {
    "fieldname": "ux_details_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Details Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "0",

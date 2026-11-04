@@ -1,0 +1,21 @@
+{
+ "columns": "[{\"fieldname\": \"plan_title\", \"label\": \"Plan Title\", \"width\": 244}, {\"fieldname\": \"season\", \"label\": \"Season\", \"width\": 59}, {\"fieldname\": \"execution_status\", \"label\": \"Execution Status\", \"width\": 118}, {\"fieldname\": \"target_hectares\", \"label\": \"Target Hectares\", \"width\": 133}, {\"fieldname\": \"planned_production_qty\", \"label\": \"Planned Production (Kg)\", \"width\": 176}, {\"fieldname\": \"maximum_exposure_percent\", \"label\": \"Maximum Exposure %\", \"width\": 279}, {\"fieldname\": \"status_field\", \"label\": \"Status\", \"width\": 133}]",
+ "creation": "2026-11-04 00:27:32.786501",
+ "docstatus": 0,
+ "doctype": "List Filter",
+ "filter_name": "Active Production Plan",
+ "filters": "[[\"Season Production Plan\", \"status\", \"=\", \"Active\"]]",
+ "for_user": "",
+ "idx": 0,
+ "is_standard": 1,
+ "layout_order": 1,
+ "modified": "2026-11-04 13:36:53.464536",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Season Production Plan-Active Production Plan",
+ "owner": "Administrator",
+ "reference_doctype": "Season Production Plan",
+ "route_signature": "status=Active",
+ "sort_field": "modified",
+ "sort_order": "desc"
+}

@@ -19,6 +19,7 @@
   "ux_identity_and_contact_tab",
   "ux_identity_section",
   "national_id",
+  "outgrower_type",
   "phone",
   "ux_identity_column_2_column",
   "email",
@@ -39,14 +40,13 @@
   "default_bank_account",
   "bank_account",
   "ux_supplier_and_payment_details_column_2_column",
-  "outgrower_type",
-  "synced",
   "ux_farm_plots_tab",
   "ux_farm_plots_section",
   "farm_plots_html",
   "ux_additional_details_tab",
   "ux_additional_details_section",
-  "years_since_registration"
+  "years_since_registration",
+  "synced"
  ],
  "fields": [
   {
@@ -80,8 +80,7 @@
   },
   {
    "fieldname": "ux_outgrower_summary_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Outgrower Summary Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "farmer_status",
@@ -124,14 +123,19 @@
    "unique": 1
   },
   {
+   "fieldname": "outgrower_type",
+   "fieldtype": "Select",
+   "label": "Outgrower Type",
+   "options": "Individual\nGroup\nCooperative\nCompany"
+  },
+  {
    "fieldname": "phone",
    "fieldtype": "Data",
    "label": "Phone"
   },
   {
    "fieldname": "ux_identity_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Identity Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "email",
@@ -195,8 +199,7 @@
   },
   {
    "fieldname": "ux_assignment_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Assignment Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "0",
@@ -236,20 +239,7 @@
   },
   {
    "fieldname": "ux_supplier_and_payment_details_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Supplier and Payment Details Column 2"
-  },
-  {
-   "fieldname": "outgrower_type",
-   "fieldtype": "Select",
-   "label": "Outgrower Type",
-   "options": "Individual\nGroup\nCooperative\nCompany"
-  },
-  {
-   "default": "0",
-   "fieldname": "synced",
-   "fieldtype": "Check",
-   "label": "Synced"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "ux_farm_plots_tab",
@@ -264,7 +254,7 @@
   {
    "fieldname": "farm_plots_html",
    "fieldtype": "HTML",
-   "label": "Farm Plots Display"
+   "label": ""
   },
   {
    "fieldname": "ux_additional_details_tab",
@@ -282,6 +272,12 @@
    "label": "Years Since Registration",
    "precision": "1",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "synced",
+   "fieldtype": "Check",
+   "label": "Synced"
   }
  ],
  "grid_page_length": 50,
