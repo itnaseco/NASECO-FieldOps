@@ -37,6 +37,8 @@
   "ux_production_scope_tab",
   "ux_crop_and_variety_section",
   "season",
+  "production_plan",
+  "production_target_id",
   "crop",
   "variety",
   "ux_crop_and_variety_column_2_column",
@@ -165,8 +167,7 @@
   },
   {
    "fieldname": "ux_contract_summary_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Contract Summary Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "company",
@@ -211,8 +212,7 @@
   },
   {
    "fieldname": "ux_templates_and_policies_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Templates and Policies Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "pricing_policy",
@@ -262,8 +262,7 @@
   },
   {
    "fieldname": "ux_signed_party_snapshot_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Signed Party Snapshot Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "sub_county_snapshot",
@@ -321,6 +320,17 @@
    "reqd": 1
   },
   {
+   "fieldname": "production_plan",
+   "fieldtype": "Link",
+   "label": "Production Plan",
+   "options": "Season Production Plan"
+  },
+  {
+   "fieldname": "production_target_id",
+   "fieldtype": "Data",
+   "label": "Production Target ID"
+  },
+  {
    "fieldname": "crop",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -337,8 +347,7 @@
   },
   {
    "fieldname": "ux_crop_and_variety_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Crop and Variety Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "production_category",
@@ -394,8 +403,7 @@
   },
   {
    "fieldname": "ux_area_and_quota_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Area and Quota Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "1000",
@@ -446,8 +454,7 @@
   },
   {
    "fieldname": "ux_agreement_period_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Agreement Period Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "contract_end_date",
@@ -474,8 +481,7 @@
   },
   {
    "fieldname": "ux_planting_and_harvest_window_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Planting and Harvest Window Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "allow_on_submit": 1,
@@ -566,8 +572,7 @@
   },
   {
    "fieldname": "ux_exposure_and_payment_terms_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Exposure and Payment Terms Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "70",
@@ -629,8 +634,7 @@
   },
   {
    "fieldname": "ux_legacy_parent_seed_snapshot_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Legacy Parent Seed Snapshot Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "parent_seed_rate",
@@ -803,8 +807,7 @@
   },
   {
    "fieldname": "ux_signing_status_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Signing Status Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "company_signatory",
@@ -853,8 +856,7 @@
   },
   {
    "fieldname": "ux_linked_records_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Linked Records Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "amended_from",

@@ -9,6 +9,8 @@
  "field_order": [
   "ux_overview_tab",
   "ux_inspection_summary_section",
+  "production_plan",
+  "production_target_id",
   "inspection_id",
   "inspection_template",
   "inspection_type",
@@ -109,6 +111,21 @@
    "label": "Inspection Summary"
   },
   {
+   "fieldname": "production_plan",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Production Plan",
+   "options": "Season Production Plan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_target_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Production Target ID",
+   "read_only": 1
+  },
+  {
    "fieldname": "inspection_id",
    "fieldtype": "Data",
    "label": "Inspection ID",
@@ -131,8 +148,7 @@
   },
   {
    "fieldname": "ux_inspection_summary_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Inspection Summary Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "Scheduled",
@@ -164,6 +180,18 @@
    "reqd": 1
   },
   {
+   "fieldname": "stage",
+   "label": "Crop Cycle Stage",
+   "fieldtype": "Link",
+   "options": "Crop Cycle Stage"
+  },
+  {
+   "fieldname": "field_visit",
+   "label": "Field Visit",
+   "fieldtype": "Link",
+   "options": "Field Visit"
+  },
+  {
    "fieldname": "production_contract",
    "fieldtype": "Link",
    "label": "Production Contract",
@@ -185,8 +213,7 @@
   },
   {
    "fieldname": "ux_production_context_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Production Context Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "crop",
@@ -238,8 +265,7 @@
   },
   {
    "fieldname": "ux_assignment_and_timing_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Assignment and Timing Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "completed_at",
@@ -277,8 +303,7 @@
   },
   {
    "fieldname": "ux_take_progress_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Take Progress Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "completed_take_count",
@@ -374,8 +399,7 @@
   },
   {
    "fieldname": "ux_compliance_outcome_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Compliance Outcome Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "supervisor_compliance_status",
@@ -492,8 +516,7 @@
   },
   {
    "fieldname": "ux_spacing_standards_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Spacing Standards Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "maximum_take_spacing_standard_m",
@@ -532,8 +555,7 @@
   },
   {
    "fieldname": "ux_spacing_performance_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Spacing Performance Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "0",
@@ -615,16 +637,13 @@
   {
    "fieldname": "ux_sync_section",
    "fieldtype": "Section Break",
-   "label": "Sync"
+   "label": "Linked Field Records"
   },
   {
    "default": "0",
    "fieldname": "synced",
    "fieldtype": "Check",
    "label": "Synced"
-  },
-  {"fieldname":"stage","label":"Crop Cycle Stage","fieldtype":"Link","options":"Crop Cycle Stage"},
-  {"fieldname":"field_visit","label":"Field Visit","fieldtype":"Link","options":"Field Visit"
   }
  ],
  "grid_page_length": 50,

@@ -1,0 +1,79 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "transition_scope",
+  "transition",
+  "from_state",
+  "to_state",
+  "changed_by",
+  "changed_on",
+  "reason",
+  "offline_risk_acknowledged"
+ ],
+ "fields": [
+  {
+   "fieldname": "transition_scope",
+   "fieldtype": "Data",
+   "label": "Transition Scope",
+   "read_only": 1
+  },
+  {
+   "fieldname": "transition",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Transition",
+   "read_only": 1
+  },
+  {
+   "fieldname": "from_state",
+   "fieldtype": "Data",
+   "label": "From State",
+   "read_only": 1
+  },
+  {
+   "fieldname": "to_state",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "To State",
+   "read_only": 1
+  },
+  {
+   "fieldname": "changed_by",
+   "fieldtype": "Link",
+   "label": "Changed By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "changed_on",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Changed On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "label": "Reason",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "offline_risk_acknowledged",
+   "fieldtype": "Check",
+   "label": "Offline Risk Acknowledged",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "module": "Naseco FieldOpsBackend",
+ "name": "Season Governance Transition",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

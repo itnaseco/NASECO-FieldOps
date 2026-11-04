@@ -45,6 +45,26 @@ frappe.ui.form.on("Season Production Plan", {
 			frappe.set_route("season-command-centre", { plan: frm.doc.name });
 		}, __("Navigate"));
 
+		const materialRequests = [...new Set(
+			(frm.doc.input_requirements || [])
+				.map((row) => row.material_request)
+				.filter(Boolean)
+		)];
+		if (materialRequests.length) {
+			frm.add_custom_button(
+				__("View Material Requests ({0})", [materialRequests.length]),
+				() => {
+					if (materialRequests.length === 1) {
+						frappe.set_route("Form", "Material Request", materialRequests[0]);
+						return;
+					}
+					frappe.route_options = { name: ["in", materialRequests] };
+					frappe.set_route("List", "Material Request");
+				},
+				__("Navigate")
+			);
+		}
+
 		frm.add_custom_button(__("Refresh Actuals"), () => {
 			frappe.call({
 				method: "naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.season_production_plan.season_production_plan.refresh_plan_actuals",

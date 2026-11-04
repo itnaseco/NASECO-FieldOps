@@ -8,6 +8,8 @@
  "field_order": [
   "ux_overview_tab",
   "ux_source_document_section",
+  "production_plan",
+  "production_target_id",
   "source_type",
   "source_name",
   "source_parameter",
@@ -51,6 +53,21 @@
    "label": "Source Document"
   },
   {
+   "fieldname": "production_plan",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Production Plan",
+   "options": "Season Production Plan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_target_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Production Target ID",
+   "read_only": 1
+  },
+  {
    "default": "Inspection",
    "fieldname": "source_type",
    "fieldtype": "Select",
@@ -74,8 +91,7 @@
   },
   {
    "fieldname": "ux_source_document_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Source Document Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "inspection",
@@ -109,8 +125,7 @@
   },
   {
    "fieldname": "ux_production_context_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Production Context Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "outgrower",
@@ -158,8 +173,7 @@
   },
   {
    "fieldname": "ux_assignment_and_due_date_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Assignment and Due Date Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "due_date",

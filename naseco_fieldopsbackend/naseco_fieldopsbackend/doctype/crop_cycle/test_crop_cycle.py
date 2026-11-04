@@ -18,6 +18,37 @@ from naseco_fieldopsbackend.inspection_scheduler import select_applicable_inspec
 
 
 class TestCropCycle(TestCase):
+	@patch("naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle.get_existing_cycle_for_plot")
+	def test_completed_history_does_not_conflict_with_new_cycle(self, lookup):
+		cycle = SimpleNamespace(name="OLD", plot="PLOT", actual_harvest_date="2026-10-01")
+		CropCycle.validate_single_cycle_per_plot(cycle)
+		lookup.assert_not_called()
+
+	@patch("naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle.frappe.db.set_value")
+	@patch("naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle.get_existing_cycle_for_plot")
+	def test_saving_completed_history_keeps_occupied_plot_active(self, lookup, set_value):
+		lookup.return_value = frappe._dict(name="NEW")
+		CropCycle.sync_farm_plot_status(SimpleNamespace(plot="PLOT", status="COMPLETED"))
+		self.assertEqual(set_value.call_args.args[3], "Active")
+
+	@patch("naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle.frappe.db.set_value")
+	@patch("naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle.get_existing_cycle_for_plot")
+	def test_deleting_history_keeps_new_cycle_plot_active(self, lookup, set_value):
+		lookup.return_value = frappe._dict(name="NEW")
+		CropCycle.on_trash(SimpleNamespace(name="OLD", plot="PLOT", production_contract=None))
+		lookup.assert_called_once_with("PLOT", "OLD")
+		self.assertEqual(set_value.call_args.args[3], "Active")
+
+	@patch("naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle.frappe.db.sql")
+	def test_occupancy_uses_serialized_current_read_and_excludes_completed(self, sql):
+		from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle import get_existing_cycle_for_plot
+		sql.side_effect = [[("PLOT",)], []]
+		self.assertIsNone(get_existing_cycle_for_plot("PLOT", "SELF"))
+		self.assertIn("FOR UPDATE", sql.call_args_list[0].args[0])
+		self.assertIn("FOR UPDATE", sql.call_args_list[1].args[0])
+		self.assertIn("COALESCE(status, '')!='COMPLETED'", sql.call_args_list[1].args[0])
+		self.assertEqual(sql.call_args_list[1].args[1], ("PLOT", "SELF"))
+
 	def test_planned_and_running_cycles_reserve_the_plot(self):
 		self.assertEqual(farm_plot_status_for_cycle("PLANNED"), "Active")
 		self.assertEqual(farm_plot_status_for_cycle("ACTIVE"), "Active")
@@ -113,6 +144,22 @@ class TestCropCycle(TestCase):
 		self.assertEqual(cycle.contract_rate, 2500)
 		self.assertEqual(cycle.plot, "PLOT-001")
 		self.assertEqual(cycle.production_category, "Certified")
+
+	@patch(
+		"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle.frappe.get_doc"
+	)
+	def test_contract_remains_source_of_cycle_season_without_governance_gate(self, get_doc):
+		get_doc.return_value = frappe._dict({
+			"name": "OPC-2026-00001", "docstatus": 1, "status": "Active",
+			"linked_crop_cycle": None, "season": "2026B",
+		})
+		cycle = SimpleNamespace(
+			name="CYCLE-NEW", production_contract="OPC-2026-00001",
+			season="2027A",
+		)
+		cycle.set = lambda fieldname, value: setattr(cycle, fieldname, value)
+		CropCycle.apply_contract_terms(cycle)
+		self.assertEqual(cycle.season, "2026B")
 
 	@patch(
 		"naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.crop_cycle.crop_cycle.frappe.throw",

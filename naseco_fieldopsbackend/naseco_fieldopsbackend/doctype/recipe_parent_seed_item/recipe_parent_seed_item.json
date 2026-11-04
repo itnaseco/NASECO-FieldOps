@@ -16,6 +16,7 @@
   "required_seed_class",
   "ux_additional_details_column_2_column",
   "item_code",
+  "item_selection_source",
   "ux_quantities_and_values_section",
   "ratio_value",
   "population_percent",
@@ -24,9 +25,15 @@
   "lot_analysis",
   "germination_percent",
   "thousand_kernel_weight_g",
+  "assumption_source",
+  "assumption_reason",
   "batch_no",
   "analysis_test_date",
   "analysis_valid_until",
+  "required_kernels_per_hectare",
+  "base_quantity_per_hectare",
+  "allowance_percent_snapshot",
+  "calculation_formula_version",
   "quantity_per_hectare",
   "uom",
   "stock_uom",
@@ -46,7 +53,8 @@
    "fieldname": "variety",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Applicable Production Variety",
+   "columns": 2,
+   "label": "Output Variety",
    "options": "Crop Variety"
   },
   {
@@ -60,6 +68,7 @@
    "fieldname": "parent_variety",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "columns": 2,
    "label": "Parent Variety",
    "options": "Crop Variety"
   },
@@ -72,6 +81,7 @@
    "fieldname": "parent_role",
    "fieldtype": "Select",
    "in_list_view": 1,
+   "columns": 1,
    "label": "Parent Role",
    "options": "Female\nMale\nBasic Seed",
    "reqd": 1
@@ -97,15 +107,21 @@
   },
   {
    "fieldname": "ux_additional_details_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Additional Details Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "item_code",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "columns": 2,
    "label": "Seed Item",
    "options": "Item"
+  },
+  {
+   "fieldname": "item_selection_source",
+   "fieldtype": "Data",
+   "label": "Item Selection Source",
+   "read_only": 1
   },
   {
    "fieldname": "ux_quantities_and_values_section",
@@ -116,28 +132,30 @@
    "fieldname": "ratio_value",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Ratio Value",
-   "non_negative": 1
+   "columns": 1,
+   "label": "Ratio",
+   "non_negative": 1,
+   "precision": 1
   },
   {
    "fieldname": "population_percent",
    "fieldtype": "Percent",
    "label": "Population %",
-   "precision": 6,
+   "precision": 1,
    "read_only": 1
   },
   {
    "fieldname": "expected_plants_per_hectare",
    "fieldtype": "Float",
    "label": "Expected Plants per Hectare",
-   "precision": 6,
+   "precision": 1,
    "read_only": 1
   },
   {
    "default": "Recipe Planning Assumption",
    "fieldname": "calculation_basis",
    "fieldtype": "Select",
-   "in_list_view": 1,
+   "in_list_view": 0,
    "label": "Calculation Basis",
    "options": "Recipe Planning Assumption\nApproved Lot Analysis"
   },
@@ -151,17 +169,29 @@
   {
    "fieldname": "germination_percent",
    "fieldtype": "Percent",
-   "in_list_view": 1,
+   "in_list_view": 0,
    "label": "Germination %",
-   "precision": 4,
+   "precision": 1,
    "read_only_depends_on": "eval:doc.calculation_basis==\"Approved Lot Analysis\""
   },
   {
    "fieldname": "thousand_kernel_weight_g",
    "fieldtype": "Float",
    "label": "Thousand-Kernel Weight (g)",
-   "precision": 6,
+   "precision": 1,
    "read_only_depends_on": "eval:doc.calculation_basis==\"Approved Lot Analysis\""
+  },
+  {
+   "depends_on": "eval:doc.calculation_basis==\"Recipe Planning Assumption\"",
+   "fieldname": "assumption_source",
+   "fieldtype": "Data",
+   "label": "Assumption Source"
+  },
+  {
+   "depends_on": "eval:doc.calculation_basis==\"Recipe Planning Assumption\"",
+   "fieldname": "assumption_reason",
+   "fieldtype": "Small Text",
+   "label": "Assumption Reason"
   },
   {
    "fieldname": "batch_no",
@@ -183,11 +213,40 @@
    "read_only": 1
   },
   {
+   "fieldname": "required_kernels_per_hectare",
+   "fieldtype": "Float",
+   "label": "Required Kernels per Hectare",
+   "precision": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "base_quantity_per_hectare",
+   "fieldtype": "Float",
+   "label": "Base Quantity per Hectare (Kg)",
+   "precision": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "allowance_percent_snapshot",
+   "fieldtype": "Percent",
+   "label": "Allowance % Snapshot",
+   "precision": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "calculation_formula_version",
+   "fieldtype": "Data",
+   "label": "Formula Version",
+   "read_only": 1
+  },
+  {
    "fieldname": "quantity_per_hectare",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Quantity per Hectare",
+   "columns": 2,
+   "label": "Planned Kg/Ha",
    "non_negative": 1,
+   "precision": 1,
    "read_only_depends_on": "eval:parent.parent_seed_calculation_method==\"Ratio and Lot Analysis\""
   },
   {
@@ -205,8 +264,7 @@
   },
   {
    "fieldname": "ux_quantities_and_values_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Quantities and Values Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "Fully Recoverable",
@@ -220,7 +278,8 @@
    "default": "100",
    "fieldname": "recoverable_percent",
    "fieldtype": "Percent",
-   "label": "Recoverable %"
+   "label": "Recoverable %",
+   "precision": 1
   },
   {
    "fieldname": "source_warehouse",

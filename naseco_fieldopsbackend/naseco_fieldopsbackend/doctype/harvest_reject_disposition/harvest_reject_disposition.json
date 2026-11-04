@@ -8,6 +8,8 @@
  "field_order": [
   "ux_overview_tab",
   "ux_summary_section",
+  "production_plan",
+  "production_target_id",
   "status",
   "crop_cycle",
   "production_contract",
@@ -51,6 +53,21 @@
    "label": "Summary"
   },
   {
+   "fieldname": "production_plan",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Production Plan",
+   "options": "Season Production Plan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_target_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Production Target ID",
+   "read_only": 1
+  },
+  {
    "default": "Draft",
    "fieldname": "status",
    "fieldtype": "Select",
@@ -75,8 +92,7 @@
   },
   {
    "fieldname": "ux_summary_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Summary Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "production_lot",
@@ -126,7 +142,7 @@
   {
    "fieldname": "ux_financial_and_quantity_details_section",
    "fieldtype": "Section Break",
-   "label": "Financial and Quantity Details"
+   "label": "Stock and Receipt Documents"
   },
   {
    "fieldname": "purchase_receipt",
@@ -150,8 +166,7 @@
   },
   {
    "fieldname": "ux_financial_and_quantity_details_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Financial and Quantity Details Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "source_warehouse",
@@ -181,7 +196,7 @@
   {
    "fieldname": "ux_quality_and_results_section",
    "fieldtype": "Section Break",
-   "label": "Quality and Results"
+   "label": "Rejected Quantity and Reason"
   },
   {
    "fieldname": "quality_assessment",
@@ -201,8 +216,7 @@
   },
   {
    "fieldname": "ux_quality_and_results_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Quality and Results Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "rejected_qty",

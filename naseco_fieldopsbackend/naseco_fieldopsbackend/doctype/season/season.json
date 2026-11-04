@@ -6,21 +6,22 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "ux_details_section",
+  "form_layout_0_section_break",
   "season_name",
   "season_id",
-  "ux_details_column_2_column",
   "season_status",
-  "ux_dates_and_location_section",
+  "operational_status",
+  "form_layout_5_section_break",
   "start_date",
-  "ux_dates_and_location_column_2_column",
-  "end_date"
+  "end_date",
+  "form_layout_8_section_break",
+  "governance_history"
  ],
  "fields": [
   {
-   "fieldname": "ux_details_section",
+   "fieldname": "form_layout_0_section_break",
    "fieldtype": "Section Break",
-   "label": "Details"
+   "label": "Season Identity and Status"
   },
   {
    "fieldname": "season_name",
@@ -36,11 +37,6 @@
    "unique": 1
   },
   {
-   "fieldname": "ux_details_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Details Column 2"
-  },
-  {
    "default": "Not Started",
    "fieldname": "season_status",
    "fieldtype": "Select",
@@ -50,9 +46,19 @@
    "read_only": 1
   },
   {
-   "fieldname": "ux_dates_and_location_section",
+   "default": "Preparation",
+   "fieldname": "operational_status",
+   "hidden": 1,
+   "fieldtype": "Select",
+   "in_list_view": 0,
+   "label": "Operational Status",
+   "options": "Preparation\nOpen\nClosing\nClosed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "form_layout_5_section_break",
    "fieldtype": "Section Break",
-   "label": "Dates and Location"
+   "label": "Season Dates"
   },
   {
    "fieldname": "start_date",
@@ -62,16 +68,24 @@
    "reqd": 1
   },
   {
-   "fieldname": "ux_dates_and_location_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Dates and Location Column 2"
-  },
-  {
    "fieldname": "end_date",
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "End Date",
    "reqd": 1
+  },
+  {
+   "fieldname": "form_layout_8_section_break",
+   "fieldtype": "Section Break",
+   "label": "Governance History"
+  },
+  {
+   "fieldname": "governance_history",
+   "hidden": 1,
+   "fieldtype": "Table",
+   "label": "Governance History",
+   "options": "Season Governance Transition",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,

@@ -58,7 +58,8 @@
   {
    "fieldname": "markup_percent_override",
    "fieldtype": "Percent",
-   "label": "Risk Markup Override %"
+   "label": "Risk Markup Override %",
+   "precision": 1
   },
   {
    "fieldname": "recipe_stage",
@@ -86,12 +87,12 @@
    "fieldname": "conversion_factor",
    "fieldtype": "Float",
    "label": "Conversion Factor",
+   "precision": 1,
    "read_only": 1
   },
   {
    "fieldname": "ux_additional_details_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Additional Details Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "stage_index",
@@ -108,7 +109,8 @@
    "description": "Recovery rate per Stock UOM.",
    "fieldname": "contract_recovery_rate",
    "fieldtype": "Currency",
-   "label": "Contract Recovery Rate per Stock UOM"
+   "label": "Contract Recovery Rate per Stock UOM",
+   "precision": 1
   },
   {
    "fieldname": "item_code",
@@ -123,6 +125,7 @@
    "fieldtype": "Float",
    "hidden": 1,
    "label": "Legacy Quantity Per Acre",
+   "precision": 1,
    "read_only": 1
   },
   {
@@ -130,14 +133,16 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Quantity Per Hectare",
-   "non_negative": 1
+   "non_negative": 1,
+   "precision": 1
   },
   {
    "default": "100",
    "depends_on": "eval:[\"Fully Recoverable\", \"Partially Recoverable\"].includes(doc.recovery_policy)",
    "fieldname": "recoverable_percent",
    "fieldtype": "Percent",
-   "label": "Recoverable %"
+   "label": "Recoverable %",
+   "precision": 1
   },
   {
    "default": "Fully Recoverable",
@@ -156,8 +161,7 @@
   },
   {
    "fieldname": "ux_quantities_and_values_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Quantities and Values Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "Actual Valuation",
@@ -178,12 +182,14 @@
    "fieldtype": "Float",
    "hidden": 1,
    "label": "Legacy Stock Quantity Per Acre",
+   "precision": 1,
    "read_only": 1
   },
   {
    "fieldname": "stock_quantity_per_hectare",
    "fieldtype": "Float",
    "label": "Stock Quantity Per Hectare",
+   "precision": 1,
    "read_only": 1
   },
   {

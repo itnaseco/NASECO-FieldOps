@@ -20,6 +20,8 @@
   "synced",
   "ux_crop_context_section",
   "season",
+  "production_plan",
+  "production_target_id",
   "crop",
   "variety",
   "production_category",
@@ -119,8 +121,7 @@
   },
   {
    "fieldname": "ux_cycle_summary_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Cycle Summary Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "plot",
@@ -165,6 +166,19 @@
    "read_only": 1
   },
   {
+   "fieldname": "production_plan",
+   "fieldtype": "Link",
+   "label": "Production Plan",
+   "options": "Season Production Plan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_target_id",
+   "fieldtype": "Data",
+   "label": "Production Target ID",
+   "read_only": 1
+  },
+  {
    "fieldname": "crop",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -190,8 +204,7 @@
   },
   {
    "fieldname": "ux_crop_context_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Crop Context Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "seed_class",
@@ -267,7 +280,7 @@
   {
    "fieldname": "ux_schedules_section",
    "fieldtype": "Section Break",
-   "label": "Schedules"
+   "label": "Generated Schedules"
   },
   {
    "fieldname": "next_inspection_date",
@@ -290,8 +303,7 @@
   },
   {
    "fieldname": "ux_schedules_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Schedules Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "0",
@@ -353,8 +365,7 @@
   },
   {
    "fieldname": "ux_contracted_harvest_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Contracted Harvest Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "expected_yield_kg_per_hectare",
@@ -408,8 +419,7 @@
   },
   {
    "fieldname": "ux_actual_harvest_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Actual Harvest Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fetch_from": "harvest_item.stock_uom",
@@ -446,7 +456,7 @@
   {
    "fieldname": "ux_financial_exposure_section",
    "fieldtype": "Section Break",
-   "label": "Financial Exposure"
+   "label": "Forecast and Exposure"
   },
   {
    "fieldname": "forecast_input_recovery",
@@ -478,8 +488,7 @@
   },
   {
    "fieldname": "ux_financial_exposure_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Financial Exposure Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "pending_cash_advance",

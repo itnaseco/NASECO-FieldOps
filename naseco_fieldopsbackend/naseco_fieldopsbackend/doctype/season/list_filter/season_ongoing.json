@@ -1,0 +1,21 @@
+{
+ "columns": "[{\"fieldname\": \"name\", \"label\": \"ID\", \"width\": 222}, {\"fieldname\": \"season_name\", \"label\": \"Season Name\", \"width\": 222}, {\"fieldname\": \"season_status\", \"label\": \"Status\", \"width\": 222}, {\"fieldname\": \"start_date\", \"label\": \"Start Date\", \"width\": 222}, {\"fieldname\": \"end_date\", \"label\": \"End Date\", \"width\": 222}]",
+ "creation": "2026-11-03 11:44:46.477871",
+ "docstatus": 0,
+ "doctype": "List Filter",
+ "filter_name": "Ongoing",
+ "filters": "[[\"Season\", \"season_status\", \"=\", \"Ongoing\"]]",
+ "for_user": "",
+ "idx": 0,
+ "is_standard": 1,
+ "layout_order": 1,
+ "modified": "2026-11-03 11:44:46.477871",
+ "modified_by": "Administrator",
+ "module": "Naseco FieldOpsBackend",
+ "name": "Season-Ongoing",
+ "owner": "Administrator",
+ "reference_doctype": "Season",
+ "route_signature": "season_status=Ongoing",
+ "sort_field": "modified",
+ "sort_order": "desc"
+}

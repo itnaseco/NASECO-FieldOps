@@ -7,6 +7,8 @@
  "field_order": [
   "ux_overview_tab",
   "ux_lot_summary_section",
+  "production_plan",
+  "production_target_id",
   "lot_number",
   "status",
   "crop_cycle",
@@ -57,6 +59,21 @@
    "label": "Lot Summary"
   },
   {
+   "fieldname": "production_plan",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Production Plan",
+   "options": "Season Production Plan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_target_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Production Target ID",
+   "read_only": 1
+  },
+  {
    "fieldname": "lot_number",
    "fieldtype": "Int",
    "in_list_view": 1,
@@ -98,8 +115,7 @@
   },
   {
    "fieldname": "ux_lot_summary_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Lot Summary Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "outgrower",
@@ -155,8 +171,7 @@
   },
   {
    "fieldname": "ux_five_day_planting_lot_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Five-Day Planting Lot Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "area_hectares",
@@ -197,8 +212,7 @@
   },
   {
    "fieldname": "ux_parent_seed_traceability_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Parent Seed Traceability Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "parent_seed_qty",

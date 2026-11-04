@@ -53,8 +53,7 @@
   },
   {
    "fieldname": "ux_details_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Details Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "data_type",
@@ -246,8 +245,7 @@
   },
   {
    "fieldname": "ux_quality_and_results_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Quality and Results Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "Not Evaluated",

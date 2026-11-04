@@ -47,8 +47,7 @@
   },
   {
    "fieldname": "ux_quantities_and_values_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Quantities and Values Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "Fixed Rate",
@@ -81,8 +80,7 @@
   },
   {
    "fieldname": "ux_quality_and_results_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Quality and Results Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "description": "Exclusive upper genetic-purity boundary. Leave zero for no upper limit.",

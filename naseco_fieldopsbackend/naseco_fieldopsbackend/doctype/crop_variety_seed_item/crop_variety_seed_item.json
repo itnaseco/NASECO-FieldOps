@@ -32,8 +32,7 @@
   },
   {
    "fieldname": "ux_details_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Details Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "seed_class",
@@ -66,8 +65,7 @@
   },
   {
    "fieldname": "ux_additional_details_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Additional Details Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "0",

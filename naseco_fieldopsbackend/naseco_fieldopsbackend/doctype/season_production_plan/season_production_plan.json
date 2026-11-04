@@ -15,6 +15,10 @@
   "status",
   "calendar_status",
   "ux_governance_tab",
+  "execution_status",
+  "contracting_open",
+  "production_open",
+  "governance_history",
   "ux_responsible_teams_section",
   "outgrower_manager",
   "quality_manager",
@@ -42,6 +46,7 @@
   "ux_inputs_and_seed_tab",
   "ux_input_requirements_section",
   "input_requirements",
+  "procurement_allocations",
   "stock_coverage_percent",
   "ux_parent_seed_requirements_section",
   "parent_seed_requirements",
@@ -122,8 +127,7 @@
   },
   {
    "fieldname": "ux_plan_summary_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Plan Summary Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "1",
@@ -155,6 +159,40 @@
    "label": "Governance"
   },
   {
+   "default": "Not Activated",
+   "fieldname": "execution_status",
+   "hidden": 1,
+   "fieldtype": "Select",
+   "in_list_view": 0,
+   "label": "Execution Status",
+   "options": "Not Activated\nActive\nClosed",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "contracting_open",
+   "hidden": 1,
+   "fieldtype": "Check",
+   "label": "Contracting Open",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "production_open",
+   "hidden": 1,
+   "fieldtype": "Check",
+   "label": "Production Open",
+   "read_only": 1
+  },
+  {
+   "fieldname": "governance_history",
+   "hidden": 1,
+   "fieldtype": "Table",
+   "label": "Governance History",
+   "options": "Season Governance Transition",
+   "read_only": 1
+  },
+  {
    "fieldname": "ux_responsible_teams_section",
    "fieldtype": "Section Break",
    "label": "Responsible Teams"
@@ -175,8 +213,7 @@
   },
   {
    "fieldname": "ux_responsible_teams_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Responsible Teams Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "finance_approver",
@@ -211,8 +248,7 @@
   },
   {
    "fieldname": "ux_financial_controls_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Financial Controls Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "budget",
@@ -247,7 +283,7 @@
   {
    "fieldname": "ux_approved_baseline_section",
    "fieldtype": "Section Break",
-   "label": "Approved Baseline"
+   "label": "Approved Target Baseline"
   },
   {
    "fieldname": "target_outgrowers",
@@ -278,8 +314,7 @@
   },
   {
    "fieldname": "ux_approved_baseline_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Approved Baseline Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "planned_production_qty",
@@ -316,6 +351,15 @@
    "options": "Season Input Requirement",
    "cannot_add_rows": 1,
    "cannot_delete_rows": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "procurement_allocations",
+   "hidden": 1,
+   "read_only": 1,
+   "fieldtype": "Table",
+   "label": "Procurement Allocations",
+   "options": "Season Procurement Allocation"
   },
   {
    "fieldname": "stock_coverage_percent",
@@ -425,7 +469,7 @@
   {
    "fieldname": "ux_operational_actuals_section",
    "fieldtype": "Section Break",
-   "label": "Operational Actuals"
+   "label": "Operational Progress"
   },
   {
    "fieldname": "contracted_outgrowers",
@@ -461,8 +505,7 @@
   },
   {
    "fieldname": "ux_operational_actuals_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Operational Actuals Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "delivered_net_dry_qty",
@@ -491,7 +534,7 @@
   {
    "fieldname": "ux_financial_actuals_section",
    "fieldtype": "Section Break",
-   "label": "Financial Actuals"
+   "label": "Financial Position"
   },
   {
    "fieldname": "recoverable_input_value",
@@ -513,8 +556,7 @@
   },
   {
    "fieldname": "ux_financial_actuals_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Financial Actuals Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "assessed_harvest_value",

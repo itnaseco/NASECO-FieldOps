@@ -33,4 +33,3 @@ class FieldOpsSettings(Document):
 			frappe.throw(_("Minimum spacing compliance must be between 0 and 100 percent."))
 		if self.allow_positioning_override and not self.positioning_override_role:
 			frappe.throw(_("Select the role permitted to override positioning standards."))
-

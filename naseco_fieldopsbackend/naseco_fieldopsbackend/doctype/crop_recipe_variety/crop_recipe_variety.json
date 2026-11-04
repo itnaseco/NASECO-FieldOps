@@ -9,7 +9,8 @@
   "ux_additional_details_section",
   "enabled",
   "ux_quantities_and_values_section",
-  "expected_yield_kg_per_hectare"
+  "expected_yield_kg_per_hectare",
+  "expected_plants_per_hectare_override"
  ],
  "fields": [
   {
@@ -49,8 +50,16 @@
    "in_list_view": 1,
    "label": "Expected Yield (Kg/Ha)",
    "non_negative": 1,
-   "precision": 2,
+   "precision": 1,
    "reqd": 1
+  },
+  {
+   "description": "Optional parent-seed population override. Leave blank to use the Crop Recipe default.",
+   "fieldname": "expected_plants_per_hectare_override",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Target Plants/Ha Override",
+   "non_negative": 1
   }
  ],
  "istable": 1,

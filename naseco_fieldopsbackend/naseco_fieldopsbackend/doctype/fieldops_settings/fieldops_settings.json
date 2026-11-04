@@ -48,6 +48,8 @@
   "maximum_take_spacing_m",
   "minimum_spacing_compliance_percent",
   "ux_controls_tab",
+  "season_governance_mode",
+  "season_governance_enforced_at",
   "ux_exposure_controls_section",
   "maximum_exposure_percent",
   "harvest_qa_haircut_percent",
@@ -93,8 +95,7 @@
   },
   {
    "fieldname": "ux_operational_approvers_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Operational Approvers Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "stores_approver",
@@ -133,8 +134,7 @@
   },
   {
    "fieldname": "ux_harvest_warehouses_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Harvest Warehouses Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "reject_warehouse",
@@ -185,8 +185,7 @@
   },
   {
    "fieldname": "ux_payment_defaults_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Payment Defaults Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "advance_paid_account",
@@ -210,8 +209,7 @@
   },
   {
    "fieldname": "ux_accounts_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Accounts Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "input_subsidy_account",
@@ -268,8 +266,7 @@
   },
   {
    "fieldname": "ux_gps_acquisition_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "GPS Acquisition Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "30",
@@ -307,8 +304,7 @@
   },
   {
    "fieldname": "ux_inspection_take_spacing_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Inspection Take Spacing Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "7",
@@ -329,6 +325,22 @@
    "fieldname": "ux_controls_tab",
    "fieldtype": "Tab Break",
    "label": "Controls"
+  },
+  {
+   "default": "Warning",
+   "fieldname": "season_governance_mode",
+   "hidden": 1,
+   "fieldtype": "Select",
+   "label": "Season Governance Mode",
+   "options": "Warning\nEnforced",
+   "read_only": 1
+  },
+  {
+   "fieldname": "season_governance_enforced_at",
+   "hidden": 1,
+   "fieldtype": "Datetime",
+   "label": "Season Governance Enforced At",
+   "read_only": 1
   },
   {
    "fieldname": "ux_exposure_controls_section",
@@ -353,8 +365,7 @@
   },
   {
    "fieldname": "ux_exposure_controls_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Exposure Controls Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "1",
@@ -376,8 +387,7 @@
   },
   {
    "fieldname": "ux_farm_plot_naming_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Farm Plot Naming Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "3",
@@ -389,7 +399,7 @@
   {
    "fieldname": "ux_controlled_override_section",
    "fieldtype": "Section Break",
-   "label": "Controlled Override"
+   "label": "Positioning Override Controls"
   },
   {
    "default": "1",
@@ -399,8 +409,7 @@
   },
   {
    "fieldname": "ux_controlled_override_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Controlled Override Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "System Manager",

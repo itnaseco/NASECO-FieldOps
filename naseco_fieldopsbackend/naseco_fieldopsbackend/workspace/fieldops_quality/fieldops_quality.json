@@ -16,7 +16,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Quality Operations",
-   "link_count": 4,
+   "link_count": 6,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -60,6 +60,28 @@
    "label": "ERP Quality Inspections",
    "link_count": 0,
    "link_to": "Quality Inspection",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Parent Seed Lot Analysis",
+   "link_count": 0,
+   "link_to": "Parent Seed Lot Analysis",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Harvest Reject Disposition",
+   "link_count": 0,
+   "link_to": "Harvest Reject Disposition",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"

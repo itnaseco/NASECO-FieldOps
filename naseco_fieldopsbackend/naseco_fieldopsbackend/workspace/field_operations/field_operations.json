@@ -1,7 +1,7 @@
 {
  "app": "naseco_fieldopsbackend",
  "charts": [],
- "content": "[{\"id\":\"shortcut-1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outgrowers\",\"col\":3}},{\"id\":\"shortcut-2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Farm Plots\",\"col\":3}},{\"id\":\"shortcut-3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Crop Cycles\",\"col\":3}},{\"id\":\"shortcut-4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Field Visits\",\"col\":3}},{\"id\":\"navigation-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Navigation</b></span>\",\"col\":12}},{\"id\":\"card-1\",\"type\":\"card\",\"data\":{\"card_name\":\"Grower Operations\",\"col\":4}},{\"id\":\"card-2\",\"type\":\"card\",\"data\":{\"card_name\":\"Crop Execution\",\"col\":4}},{\"id\":\"card-3\",\"type\":\"card\",\"data\":{\"card_name\":\"Operational Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"shortcut-1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outgrowers\",\"col\":3}},{\"id\":\"shortcut-2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Farm Plots\",\"col\":3}},{\"id\":\"shortcut-3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Crop Cycles\",\"col\":3}},{\"id\":\"shortcut-4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Field Visits\",\"col\":3}},{\"id\":\"nav-shortcut-field-trip\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Field Trip\",\"col\":3}},{\"id\":\"navigation-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Navigation</b></span>\",\"col\":12}},{\"id\":\"card-1\",\"type\":\"card\",\"data\":{\"card_name\":\"Grower Operations\",\"col\":4}},{\"id\":\"card-2\",\"type\":\"card\",\"data\":{\"card_name\":\"Crop Execution\",\"col\":4}},{\"id\":\"card-3\",\"type\":\"card\",\"data\":{\"card_name\":\"Operational Reports\",\"col\":4}},{\"id\":\"nav-field-visits-and-trips\",\"type\":\"card\",\"data\":{\"card_name\":\"Field Visits & Trips\",\"col\":4}}]",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
@@ -156,6 +156,47 @@
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Field Visits & Trips",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Field Trip",
+   "link_count": 0,
+   "link_to": "Field Trip",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Field Visit",
+   "link_count": 0,
+   "link_to": "Field Visit",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Visit Findings",
+   "link_count": 0,
+   "link_to": "Finding",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
  "module": "Naseco FieldOpsBackend",
@@ -200,6 +241,15 @@
    "format": "",
    "label": "Field Visits",
    "link_to": "Field Visit",
+   "stats_filter": "",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "format": "",
+   "label": "Field Trip",
+   "link_to": "Field Trip",
    "stats_filter": "",
    "type": "DocType"
   }

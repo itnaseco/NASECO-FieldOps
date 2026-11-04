@@ -613,15 +613,15 @@ class OutgrowerProductionContract(Document):
 			frappe.throw(_("Target Inspection Take Spacing must be greater than zero."))
 
 	def validate_no_active_contract(self):
-		existing = frappe.db.get_value(
-			"Outgrower Production Contract",
-			{
-				"farm_plot": self.farm_plot,
-				"docstatus": 1,
-				"name": ["!=", self.name],
-				"status": ["in", ["Active", "Suspended"]],
-			},
+		# Retain duplicate-contract protection without plan-capacity governance.
+		frappe.db.sql("SELECT name FROM `tabFarm Plot` WHERE name=%s FOR UPDATE", (self.farm_plot,))
+		existing_rows = frappe.db.sql(
+			"SELECT name FROM `tabOutgrower Production Contract` "
+			"WHERE farm_plot=%s AND docstatus=1 AND name!=%s "
+			"AND status IN ('Active', 'Suspended') LIMIT 1 FOR UPDATE",
+			(self.farm_plot, self.name),
 		)
+		existing = existing_rows[0][0] if existing_rows else None
 		if existing:
 			frappe.throw(
 				_("Farm Plot {0} already has active Production Contract {1}.").format(

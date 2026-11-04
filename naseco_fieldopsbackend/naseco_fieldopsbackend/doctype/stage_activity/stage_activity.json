@@ -9,6 +9,8 @@
  "field_order": [
   "ux_overview_tab",
   "ux_summary_section",
+  "production_plan",
+  "production_target_id",
   "activity_id",
   "crop_cycle",
   "title",
@@ -54,6 +56,21 @@
    "fieldname": "ux_summary_section",
    "fieldtype": "Section Break",
    "label": "Summary"
+  },
+  {
+   "fieldname": "production_plan",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Production Plan",
+   "options": "Season Production Plan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_target_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Production Target ID",
+   "read_only": 1
   },
   {
    "fieldname": "activity_id",
@@ -120,7 +137,7 @@
   {
    "fieldname": "ux_dates_and_schedule_section",
    "fieldtype": "Section Break",
-   "label": "Dates and Schedule"
+   "label": "Activity Dates"
   },
   {
    "fieldname": "activity_date",
@@ -141,8 +158,7 @@
   },
   {
    "fieldname": "ux_dates_and_schedule_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Dates and Schedule Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "completed_by",
@@ -161,7 +177,7 @@
   {
    "fieldname": "ux_location_and_map_section",
    "fieldtype": "Section Break",
-   "label": "Location and Map"
+   "label": "Activity Template"
   },
   {
    "fieldname": "activity_template",
@@ -195,8 +211,7 @@
   },
   {
    "fieldname": "ux_operational_details_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Operational Details Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "Manual",
@@ -214,7 +229,7 @@
   {
    "fieldname": "ux_notes_and_audit_section",
    "fieldtype": "Section Break",
-   "label": "Notes and Audit"
+   "label": "Completion Notes and Audit"
   },
   {
    "fieldname": "description",

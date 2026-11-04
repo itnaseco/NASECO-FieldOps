@@ -151,12 +151,17 @@ class SeasonProductionPlan(Document):
 			if not row.crop_recipe:
 				continue
 			recipe_changed = row.yield_source_recipe != row.crop_recipe
-			if not recipe_changed and row.recipe_yield_kg_per_hectare not in (None, ""):
+			# A zero snapshot is not a valid baseline. It commonly remains on a
+			# draft target when the recipe yield is completed after the target was
+			# added. Refresh that invalid snapshot while preserving valid historical
+			# snapshots and deliberate positive planned-yield overrides.
+			invalid_recipe_snapshot = flt(row.recipe_yield_kg_per_hectare) <= 0
+			if not recipe_changed and not invalid_recipe_snapshot:
 				continue
 			recipe_yield = get_recipe_variety_yield(frappe.get_doc("Crop Recipe", row.crop_recipe), getattr(row, "variety", None))
 			row.recipe_yield_kg_per_hectare = flt(recipe_yield)
 			row.yield_source_recipe = row.crop_recipe
-			if recipe_changed or row.planned_yield_kg_per_hectare in (None, ""):
+			if recipe_changed or flt(row.planned_yield_kg_per_hectare) <= 0:
 				row.planned_yield_kg_per_hectare = flt(recipe_yield)
 				row.yield_override_reason = None
 
@@ -570,35 +575,8 @@ def aggregate_parent_seed_requirements(production_targets, season=None):
 		for item in parent_items:
 			item_code = item.item_code
 			quantity_per_hectare = flt(item.quantity_per_hectare)
-			lot_analysis = None
-			analysis = None
+			lot_analysis = getattr(item, "lot_analysis", None)
 			calculation_method = getattr(recipe, "parent_seed_calculation_method", None)
-			if calculation_method == "Ratio and Lot Analysis":
-				from naseco_fieldopsbackend.naseco_fieldopsbackend.doctype.outgrower_production_contract.outgrower_production_contract import get_default_parent_seed_analysis
-				from naseco_fieldopsbackend.parent_seed_calculation import calculate_parent_requirement
-
-				lot_analysis = get_default_parent_seed_analysis(
-					parent_variety=item.parent_variety,
-					seed_category=item.required_seed_category,
-					seed_class=item.required_seed_class,
-					season=season,
-					reference_date=target.planting_window_from,
-				)
-				if not lot_analysis:
-					frappe.throw(_("No approved Parent Seed Lot Analysis is available for {0} ({1}) in Season {2}.").format(item.parent_variety, item.parent_role, season))
-				analysis = frappe.get_doc("Parent Seed Lot Analysis", lot_analysis)
-				total_ratio = sum(flt(row.ratio_value) for row in parent_items)
-				calculation = calculate_parent_requirement(
-					total_plants_per_hectare=recipe.expected_plants_per_hectare,
-					parent_ratio=item.ratio_value,
-					total_ratio=total_ratio,
-					germination_percent=analysis.germination_percent,
-					thousand_kernel_weight_g=analysis.thousand_kernel_weight_g,
-					area_hectares=1,
-					allowance_percent=recipe.seed_requirement_allowance_percent,
-				)
-				item_code = analysis.item_code
-				quantity_per_hectare = float(calculation["planned_kg_per_hectare"])
 			conversion = get_item_uom_conversion(item_code, "Kg" if calculation_method == "Ratio and Lot Analysis" else item.uom)
 			key = (
 				target.crop_recipe, item.ratio_group, item.parent_role, flt(item.ratio_value),
@@ -615,8 +593,8 @@ def aggregate_parent_seed_requirements(production_targets, season=None):
 					"item_code": item_code,
 					"parent_variety": getattr(item, "parent_variety", None),
 					"lot_analysis": lot_analysis,
-					"germination_percent": analysis.germination_percent if analysis else None,
-					"thousand_kernel_weight_g": analysis.thousand_kernel_weight_g if analysis else None,
+					"germination_percent": getattr(item, "germination_percent", None),
+					"thousand_kernel_weight_g": getattr(item, "thousand_kernel_weight_g", None),
 					"expected_plants_per_hectare": getattr(item, "expected_plants_per_hectare", None),
 					"target_hectares": 0,
 					"quantity_per_hectare": quantity_per_hectare,

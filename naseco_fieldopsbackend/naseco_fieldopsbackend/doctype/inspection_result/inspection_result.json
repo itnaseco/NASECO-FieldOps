@@ -109,8 +109,7 @@
   },
   {
    "fieldname": "ux_location_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Location Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "incidence_percent",
@@ -134,8 +133,7 @@
   },
   {
    "fieldname": "ux_quantities_and_values_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Quantities and Values Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "text_value",
@@ -175,8 +173,7 @@
   },
   {
    "fieldname": "ux_quality_and_results_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Quality and Results Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "0",

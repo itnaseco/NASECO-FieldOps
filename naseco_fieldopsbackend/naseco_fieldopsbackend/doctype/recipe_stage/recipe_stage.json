@@ -60,8 +60,7 @@
   },
   {
    "fieldname": "ux_additional_details_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Additional Details Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "duration_days",
@@ -83,8 +82,7 @@
   },
   {
    "fieldname": "ux_dates_and_location_column_2_column",
-   "fieldtype": "Column Break",
-   "label": "Dates and Location Column 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "end_day_offset",
