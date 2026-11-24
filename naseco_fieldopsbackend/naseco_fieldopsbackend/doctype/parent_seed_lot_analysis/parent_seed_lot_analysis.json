@@ -11,6 +11,7 @@
   "seed_class",
   "item_code",
   "batch_no",
+  "finished_batch",
   "season",
   "form_layout_8_tab_break",
   "form_layout_9_section_break",
@@ -77,6 +78,13 @@
    "label": "Batch",
    "options": "Batch",
    "reqd": 1
+  },
+  {
+   "fieldname": "finished_batch",
+   "fieldtype": "Link",
+   "label": "Finished Batch Provenance",
+   "options": "Seed Finished Batch",
+   "description": "Optional for historical analyses; link new processed parent-seed batches to their field harvest source."
   },
   {
    "fieldname": "season",

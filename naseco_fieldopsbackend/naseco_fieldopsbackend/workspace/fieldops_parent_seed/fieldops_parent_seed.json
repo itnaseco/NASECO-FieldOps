@@ -1,0 +1,32 @@
+{
+ "doctype": "Workspace",
+ "name": "FieldOps Parent Seed",
+ "title": "FieldOps Parent Seed",
+ "label": "FieldOps Parent Seed",
+ "module": "Naseco FieldOpsBackend",
+ "app": "naseco_fieldopsbackend",
+ "parent_page": "NASECO FieldOps",
+ "public": 1,
+ "is_hidden": 0,
+ "icon": "leaf",
+ "type": "Workspace",
+ "sequence_id": 45,
+ "content": "[{\"id\":\"parent-plan\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Plan and Identity</b></span>\",\"col\":12}},{\"id\":\"parent-plan-1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Production Plans\",\"col\":3}},{\"id\":\"parent-plan-2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Parentage\",\"col\":3}},{\"id\":\"parent-plan-3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Crop Recipes\",\"col\":3}},{\"id\":\"parent-field\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Field Production</b></span>\",\"col\":12}},{\"id\":\"parent-field-1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Crop Cycles\",\"col\":3}},{\"id\":\"parent-field-2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Harvest Lots\",\"col\":3}},{\"id\":\"parent-supply\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Supply and Quality</b></span>\",\"col\":12}},{\"id\":\"parent-supply-1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Processing Handoffs\",\"col\":3}},{\"id\":\"parent-supply-2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Finished Batches\",\"col\":3}},{\"id\":\"parent-supply-3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Lot Analyses\",\"col\":3}},{\"id\":\"parent-supply-4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"ERPNext Batches\",\"col\":3}}]",
+ "shortcuts": [
+  {"type": "DocType", "link_to": "Season Production Plan", "label": "Production Plans", "doc_view": "List"},
+  {"type": "DocType", "link_to": "Seed Variety Parentage", "label": "Parentage", "doc_view": "List"},
+  {"type": "DocType", "link_to": "Crop Recipe", "label": "Crop Recipes", "doc_view": "List"},
+  {"type": "DocType", "link_to": "Crop Cycle", "label": "Crop Cycles", "doc_view": "List"},
+  {"type": "DocType", "link_to": "Seed Field Harvest Lot", "label": "Harvest Lots", "doc_view": "List"},
+  {"type": "DocType", "link_to": "Seed Processing Handoff", "label": "Processing Handoffs", "doc_view": "List"},
+  {"type": "DocType", "link_to": "Seed Finished Batch", "label": "Finished Batches", "doc_view": "List"},
+  {"type": "DocType", "link_to": "Parent Seed Lot Analysis", "label": "Lot Analyses", "doc_view": "List"},
+  {"type": "DocType", "link_to": "Batch", "label": "ERPNext Batches", "doc_view": "List"}
+ ],
+ "links": [],
+ "roles": [],
+ "charts": [],
+ "number_cards": [],
+ "quick_lists": [],
+ "custom_blocks": []
+}

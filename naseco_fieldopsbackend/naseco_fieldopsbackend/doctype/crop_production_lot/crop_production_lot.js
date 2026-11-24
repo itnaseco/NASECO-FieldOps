@@ -23,5 +23,11 @@ frappe.ui.form.on("Crop Production Lot", {
 				production_lot: frm.doc.name
 			});
 		}, __("Navigate"));
+		frm.add_custom_button(__("New Field Harvest Lot"), () => {
+			frappe.new_doc("Seed Field Harvest Lot", {production_lot: frm.doc.name});
+		}, __("Create"));
+		frm.add_custom_button(__("View Field Harvest Lots"), () => {
+			frappe.set_route("List", "Seed Field Harvest Lot", {production_lot: frm.doc.name});
+		}, __("Navigate"));
 	}
 });
