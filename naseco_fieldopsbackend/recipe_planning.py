@@ -108,11 +108,19 @@ def round_rate(value, increment):
 
 
 def iter_recipe_inputs(recipe):
-    for row in recipe.inputs or []:
-        yield row, row.recipe_stage
-    for stage in recipe.stages or []:
-        for row in stage.get("inputs") or []:
-            yield row, stage.stage_name
+    """Use the recipe input plan; nested stage rows are a legacy fallback.
+
+    Season demand uses the same precedence. Counting both sources here would
+    overstate cycle demand when a recipe retains historical nested rows.
+    """
+    recipe_inputs = list(recipe.inputs or [])
+    if recipe_inputs:
+        for row in recipe_inputs:
+            yield row, row.recipe_stage
+    else:
+        for stage in recipe.stages or []:
+            for row in stage.get("inputs") or []:
+                yield row, stage.stage_name
     for row in recipe.parent_seed_items or []:
         yield frappe._dict({
             "name": row.name, "resource_type": "Stock Item", "item_code": row.item_code,

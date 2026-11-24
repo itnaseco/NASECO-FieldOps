@@ -1,0 +1,29 @@
+{
+ "doctype": "DocType",
+ "name": "Seed Processing Handoff",
+ "module": "Naseco FieldOpsBackend",
+ "engine": "InnoDB",
+ "autoname": "format:SPH-{YYYY}-{#####}",
+ "track_changes": 1,
+ "field_order": ["source_section", "harvest_lot", "dispatch_date", "dispatched_qty_kg", "processor_name", "external_dispatch_reference", "handoff_section", "processing_system", "processing_reference", "handoff_evidence", "notes", "reconciliation_section", "reconciliation_html"],
+ "fields": [
+  {"fieldname": "source_section", "fieldtype": "Section Break", "label": "Harvest Dispatch"},
+  {"fieldname": "harvest_lot", "fieldtype": "Link", "label": "Seed Field Harvest Lot", "options": "Seed Field Harvest Lot", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "dispatch_date", "fieldtype": "Date", "label": "Dispatch Date", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "dispatched_qty_kg", "fieldtype": "Float", "label": "Dispatched Quantity (kg)", "reqd": 1, "precision": "1"},
+  {"fieldname": "processor_name", "fieldtype": "Data", "label": "Processor Name"},
+  {"fieldname": "external_dispatch_reference", "fieldtype": "Data", "label": "External Dispatch Reference"},
+  {"fieldname": "handoff_section", "fieldtype": "Section Break", "label": "Processing Reference"},
+  {"fieldname": "processing_system", "fieldtype": "Select", "label": "Processing System", "options": "External\nERPNext Manufacturing\nCustom", "default": "External", "reqd": 1},
+  {"fieldname": "processing_reference", "fieldtype": "Data", "label": "Processing Reference", "description": "External reference now; future Work Order or custom processing job identifier."},
+  {"fieldname": "handoff_evidence", "fieldtype": "Attach", "label": "Handoff Evidence"},
+  {"fieldname": "notes", "fieldtype": "Small Text", "label": "Notes"},
+  {"fieldname": "reconciliation_section", "fieldtype": "Section Break", "label": "Quantity Reconciliation"},
+  {"fieldname": "reconciliation_html", "fieldtype": "HTML", "label": "Quantity Reconciliation"}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "report": 1},
+  {"role": "Parent Seed Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "report": 1},
+  {"role": "Outgrower Manager", "read": 1, "report": 1}
+ ]
+}

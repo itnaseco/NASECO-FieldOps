@@ -1,0 +1,29 @@
+{
+ "doctype": "DocType",
+ "name": "Seed Finished Batch",
+ "module": "Naseco FieldOpsBackend",
+ "engine": "InnoDB",
+ "autoname": "format:SFB-{YYYY}-{#####}",
+ "track_changes": 1,
+ "field_order": ["source_section", "processing_handoff", "harvest_lot", "batch_section", "item_code", "batch_no", "received_date", "received_qty_kg", "stock_voucher_type", "stock_voucher", "external_receipt_reference", "receipt_evidence", "notes"],
+ "fields": [
+  {"fieldname": "source_section", "fieldtype": "Section Break", "label": "Source"},
+  {"fieldname": "processing_handoff", "fieldtype": "Link", "label": "Seed Processing Handoff", "options": "Seed Processing Handoff", "reqd": 1},
+  {"fieldname": "harvest_lot", "fieldtype": "Link", "label": "Seed Field Harvest Lot", "options": "Seed Field Harvest Lot", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "batch_section", "fieldtype": "Section Break", "label": "Finished Batch"},
+  {"fieldname": "item_code", "fieldtype": "Link", "label": "Item", "options": "Item", "reqd": 1},
+  {"fieldname": "batch_no", "fieldtype": "Link", "label": "Batch", "options": "Batch", "reqd": 1, "unique": 1, "in_list_view": 1},
+  {"fieldname": "received_date", "fieldtype": "Date", "label": "Received Date", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "received_qty_kg", "fieldtype": "Float", "label": "Received Quantity (kg)", "reqd": 1, "precision": "1"},
+  {"fieldname": "stock_voucher_type", "fieldtype": "Select", "label": "Stock Voucher Type", "options": "\nPurchase Receipt\nStock Entry\nStock Reconciliation", "reqd": 1, "description": "ERPNext remains the source of stock quantities."},
+  {"fieldname": "stock_voucher", "fieldtype": "Dynamic Link", "label": "Submitted Stock Voucher", "options": "stock_voucher_type", "reqd": 1},
+  {"fieldname": "external_receipt_reference", "fieldtype": "Data", "label": "External Receipt Reference"},
+  {"fieldname": "receipt_evidence", "fieldtype": "Attach", "label": "Receipt Evidence"},
+  {"fieldname": "notes", "fieldtype": "Small Text", "label": "Notes"}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "report": 1},
+  {"role": "Parent Seed Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "report": 1},
+  {"role": "Outgrower Manager", "read": 1, "report": 1}
+ ]
+}
