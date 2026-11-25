@@ -502,6 +502,20 @@ frappe.ui.form.on("Crop Recipe Variety", {
 });
 
 frappe.ui.form.on("Recipe Stage", {
+  async stage_definition(frm, cdt, cdn) {
+    const row = locals[cdt][cdn];
+    if (!row.stage_definition) return;
+    const { message } = await frappe.db.get_value("Stage Definition", row.stage_definition,
+      ["stage_code", "stage_name", "active"]);
+    if (!message || !message.active) {
+      frappe.msgprint(__("Select an active Stage Definition."));
+      return;
+    }
+    await frappe.model.set_value(cdt, cdn, "stage_code", message.stage_code);
+    await frappe.model.set_value(cdt, cdn, "stage_name", message.stage_name);
+    set_stage_options(frm);
+    sync_input_stage_indexes(frm);
+  },
   stage_name(frm) {
     set_stage_options(frm);
     sync_input_stage_indexes(frm);

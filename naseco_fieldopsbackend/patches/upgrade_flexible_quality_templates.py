@@ -118,7 +118,7 @@ def _create_applicability_child():
 			"editable_grid": 1,
 			"fields": [
 				{"fieldname": "crop", "label": "Crop", "fieldtype": "Link", "options": "Crop", "in_list_view": 1},
-				{"fieldname": "variety", "label": "Variety", "fieldtype": "Link", "options": "Variety"},
+				{"fieldname": "variety", "label": "Variety", "fieldtype": "Link", "options": "Crop Variety"},
 				{"fieldname": "production_category", "label": "Production Category", "fieldtype": "Link", "options": "Seed Category"},
 				{"fieldname": "seed_class", "label": "Seed Class", "fieldtype": "Link", "options": "Seed Class"},
 				{"fieldname": "region", "label": "Region", "fieldtype": "Link", "options": "Region", "in_list_view": 1},
