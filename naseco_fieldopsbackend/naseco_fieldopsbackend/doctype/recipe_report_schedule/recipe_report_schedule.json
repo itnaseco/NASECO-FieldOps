@@ -1,0 +1,47 @@
+{
+ "doctype": "DocType",
+ "name": "Recipe Report Schedule",
+ "module": "NASECO FieldOpsBackend",
+ "istable": 1,
+ "editable_grid": 1,
+ "field_order": [
+  "stage_definition",
+  "sequence",
+  "required",
+  "report_template",
+  "due_day_offset"
+ ],
+ "fields": [
+  {
+   "fieldname": "stage_definition",
+   "label": "Stage",
+   "fieldtype": "Link",
+   "options": "Stage Definition",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sequence",
+   "label": "Sequence",
+   "fieldtype": "Int",
+   "reqd": 1
+  },
+  {
+   "fieldname": "required",
+   "label": "Required",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "report_template",
+   "label": "Report Template",
+   "fieldtype": "Link",
+   "options": "Agronomy Report Template",
+   "reqd": 1
+  },
+  {
+   "fieldname": "due_day_offset",
+   "label": "Due Day Offset",
+   "fieldtype": "Int"
+  }
+ ],
+ "permissions": []
+}

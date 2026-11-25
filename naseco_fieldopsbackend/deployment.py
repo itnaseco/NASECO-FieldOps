@@ -272,12 +272,21 @@ def after_sync():
 	"""Reconcile generated permissions after the first fixture import."""
 	configure_site()
 	_update_season_statuses()
+	_ensure_agronomy_authoring_permission()
 
 
 def after_migrate():
 	"""Keep generated ERPNext integration artifacts aligned after upgrades."""
 	configure_site()
 	_update_season_statuses()
+	_ensure_agronomy_authoring_permission()
+
+
+def _ensure_agronomy_authoring_permission():
+	name = frappe.db.exists("Custom DocPerm", {"parent": "Agronomy Report Template", "role": "Outgrower Manager", "permlevel": 0})
+	if name:
+		frappe.db.set_value("Custom DocPerm", name, {"read": 1, "create": 1, "write": 1}, update_modified=False)
+		frappe.clear_cache(doctype="Agronomy Report Template")
 
 
 def _update_season_statuses():

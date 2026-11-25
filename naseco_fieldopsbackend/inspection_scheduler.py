@@ -171,6 +171,12 @@ def ensure_crop_cycle_stages(crop_cycle):
 	return stage_docs
 
 
+def recipe_assignments(crop_cycle, table, fields):
+	if not crop_cycle.recipe or not frappe.db.exists("DocType", table):
+		return None
+	return frappe.get_all(table, filters={"parent": crop_cycle.recipe, "parenttype": "Crop Recipe"}, fields=fields, order_by="idx asc")
+
+
 def create_agronomy_reports(crop_cycle, stages):
 	templates = frappe.get_all(
 		"Agronomy Report Template",
@@ -184,6 +190,58 @@ def create_agronomy_reports(crop_cycle, stages):
 		],
 		order_by="report_number asc",
 	)
+	assignments = recipe_assignments(crop_cycle, "Recipe Report Schedule", ["stage_definition", "report_template", "due_day_offset"])
+	if assignments:
+		by_name = {row.name: row for row in templates}
+		templates = []
+		for assignment in assignments:
+			if assignment.report_template not in by_name:
+				frappe.throw(_("Recipe report template {0} is not active.").format(assignment.report_template))
+			template = frappe._dict(dict(by_name[assignment.report_template]))
+			stage = get_stage(assignment.stage_definition)
+			template.stage_name = stage.name
+			template.window_start_day = assignment.due_day_offset
+			template.window_end_day = assignment.due_day_offset
+			templates.append(template)
+	assignments = recipe_assignments(crop_cycle, "Recipe Report Schedule", ["stage_definition", "report_template", "due_day_offset"])
+	if assignments:
+		by_name = {row.name: row for row in templates}
+		templates = []
+		for assignment in assignments:
+			if assignment.report_template not in by_name:
+				frappe.throw(_("Recipe report template {0} is not active.").format(assignment.report_template))
+			template = frappe._dict(dict(by_name[assignment.report_template]))
+			stage = get_stage(assignment.stage_definition)
+			template.stage_name = stage.name
+			template.window_start_day = assignment.due_day_offset
+			template.window_end_day = assignment.due_day_offset
+			templates.append(template)
+	assignments = recipe_assignments(crop_cycle, "Recipe Report Schedule", ["stage_definition", "report_template", "due_day_offset"])
+	if assignments:
+		by_name = {row.name: row for row in templates}
+		templates = []
+		for assignment in assignments:
+			if assignment.report_template not in by_name:
+				frappe.throw(_("Recipe report template {0} is not active.").format(assignment.report_template))
+			template = frappe._dict(dict(by_name[assignment.report_template]))
+			stage = get_stage(assignment.stage_definition)
+			template.stage_name = stage.name
+			template.window_start_day = assignment.due_day_offset
+			template.window_end_day = assignment.due_day_offset
+			templates.append(template)
+	assignments = recipe_assignments(crop_cycle, "Recipe Report Schedule", ["stage_definition", "report_template", "due_day_offset"])
+	if assignments:
+		by_name = {row.name: row for row in templates}
+		templates = []
+		for assignment in assignments:
+			if assignment.report_template not in by_name:
+				frappe.throw(_("Recipe report template {0} is not active.").format(assignment.report_template))
+			template = frappe._dict(dict(by_name[assignment.report_template]))
+			stage = get_stage(assignment.stage_definition)
+			template.stage_name = stage.name
+			template.window_start_day = assignment.due_day_offset
+			template.window_end_day = assignment.due_day_offset
+			templates.append(template)
 	for template in templates:
 		if template.report_number > 1 and not crop_cycle.planting_date:
 			continue
@@ -274,6 +332,17 @@ def create_inspections(crop_cycle):
 	templates = select_applicable_inspection_templates(
 		crop_cycle, templates, outgrower=outgrower
 	)
+	assignments = recipe_assignments(crop_cycle, "Recipe Inspection Schedule", ["stage_definition", "inspection_template", "due_day_offset"])
+	if assignments:
+		by_name = {row.name: row for row in templates}
+		templates = []
+		for assignment in assignments:
+			if assignment.inspection_template not in by_name:
+				frappe.throw(_("Recipe inspection template {0} is not published, active, or applicable.").format(assignment.inspection_template))
+			template = frappe._dict(dict(by_name[assignment.inspection_template]))
+			template.stage_definition = assignment.stage_definition
+			template.due_days_from_planting = assignment.due_day_offset
+			templates.append(template)
 	scheduled_dates = []
 	for template in templates:
 		scheduled_date = add_days(crop_cycle.planting_date, template.due_days_from_planting or 0)

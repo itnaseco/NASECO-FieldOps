@@ -26,6 +26,8 @@
   "ux_stages_section",
   "stage_sequence_mode",
   "stages",
+  "report_schedule",
+  "inspection_schedule",
   "ux_inputs_section",
   "inputs",
   "ux_parent_seed_section",
@@ -174,7 +176,7 @@
    "fieldtype": "Select",
    "label": "Stage Sequence",
    "options": "Legacy Nine Stage\nRecipe Stages",
-   "description": "Existing recipes keep their historical nine-stage schedule. Choose Recipe Stages to use this recipe’s ordered stage rows."
+   "description": "Existing recipes keep their historical nine-stage schedule. Choose Recipe Stages to use this recipe\u2019s ordered stage rows."
   },
   {
    "fieldname": "stages",
@@ -332,6 +334,18 @@
    "fieldtype": "Datetime",
    "label": "Approved On",
    "read_only": 1
+  },
+  {
+   "fieldname": "report_schedule",
+   "label": "Stage Report Schedule",
+   "fieldtype": "Table",
+   "options": "Recipe Report Schedule"
+  },
+  {
+   "fieldname": "inspection_schedule",
+   "label": "Stage Inspection Schedule",
+   "fieldtype": "Table",
+   "options": "Recipe Inspection Schedule"
   }
  ],
  "grid_page_length": 50,

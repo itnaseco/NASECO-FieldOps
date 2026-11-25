@@ -156,6 +156,21 @@ class CropRecipe(Document):
 			if sum(bool(s.is_planting_anchor) for s in self.stages) != 1:
 				frappe.throw(_("Select exactly one Planting Anchor stage for this recipe."))
 
+		for table, template_field, template_doctype in (
+			("report_schedule", "report_template", "Agronomy Report Template"),
+			("inspection_schedule", "inspection_template", "Inspection Template"),
+		):
+			seen_assignments = set()
+			for row in self.get(table) or []:
+				if row.stage_definition not in seen_stages:
+					frappe.throw(_("Schedule row {0} refers to a stage outside this recipe.").format(row.idx))
+				key = (row.stage_definition, row.sequence)
+				if not row.sequence or row.sequence < 1 or key in seen_assignments:
+					frappe.throw(_("Schedule rows need a unique positive sequence within each stage."))
+				seen_assignments.add(key)
+				if not frappe.db.exists(template_doctype, row.get(template_field)):
+					frappe.throw(_("Schedule row {0} has no valid template.").format(row.idx))
+
 		for row in self.inputs or []:
 			self.set_input_item_defaults(row)
 			# Migrate old rowname link to stage name if needed
