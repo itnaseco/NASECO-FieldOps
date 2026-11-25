@@ -67,6 +67,7 @@ def sync_crop_cycle_lifecycle(crop_cycle, require_inspection_templates=False):
 def get_recipe_stages(crop_cycle):
 	if not crop_cycle.recipe:
 		return list(LIFECYCLE_STAGES)
+	sequence_mode = frappe.db.get_value("Crop Recipe", crop_cycle.recipe, "stage_sequence_mode")
 	rows = frappe.get_all(
 		"Recipe Stage",
 		filters={
@@ -75,6 +76,7 @@ def get_recipe_stages(crop_cycle):
 			"parentfield": "stages",
 		},
 		fields=[
+			"stage_definition",
 			"stage_code",
 			"stage_name",
 			"order_index",
@@ -85,7 +87,7 @@ def get_recipe_stages(crop_cycle):
 	)
 	resolved = []
 	for row in rows:
-		stage = get_stage(row.stage_code or row.stage_name)
+		stage = get_stage(row.stage_definition or row.stage_code or row.stage_name)
 		if not stage:
 			continue
 		resolved.append(
@@ -107,6 +109,10 @@ def get_recipe_stages(crop_cycle):
 				}
 			)
 		)
+	if sequence_mode == "Recipe Stages" and rows:
+		if len(resolved) != len(rows):
+			frappe.throw(_("The recipe contains a stage without a valid Stage Definition."))
+		return resolved
 	return resolved if len(resolved) == len(LIFECYCLE_STAGES) else list(LIFECYCLE_STAGES)
 
 
@@ -116,7 +122,7 @@ def ensure_crop_cycle_stages(crop_cycle):
 	stage_docs = {}
 	for definition in get_recipe_stages(crop_cycle):
 		stage_anchor = anchor
-		if definition.code == "FIELD_VERIFICATION" and not stage_anchor:
+		if definition.start_day < 0 and not stage_anchor:
 			stage_anchor = planned_anchor
 		start_date = add_days(stage_anchor, definition.start_day) if stage_anchor else None
 		end_date = add_days(stage_anchor, definition.end_day) if stage_anchor else None
@@ -261,7 +267,7 @@ def create_inspections(crop_cycle):
 	templates = frappe.get_all(
 		"Inspection Template",
 		filters={"active": 1},
-		fields=["name", "inspection_type", "crop_stage", "due_days_from_planting", "default_assigned_to", "configuration_version", "lifecycle_status"],
+		fields=["name", "inspection_type", "crop_stage", "stage_definition", "due_days_from_planting", "default_assigned_to", "configuration_version", "lifecycle_status"],
 		order_by="due_days_from_planting asc",
 	)
 	templates = resolve_inspection_templates(templates)
@@ -274,7 +280,8 @@ def create_inspections(crop_cycle):
 		assigned_inspector = get_quality_inspector(
 			crop_cycle, template.default_assigned_to, outgrower
 		)
-		stage_name = inspection_lifecycle_stage_name(template.inspection_type)
+		definition = get_stage(template.stage_definition or template.crop_stage)
+		stage_name = definition.name if definition else inspection_lifecycle_stage_name(template.inspection_type)
 		stage = frappe.db.get_value(
 			"Crop Cycle Stage",
 			{"crop_cycle": crop_cycle.name, "stage_name": stage_name},

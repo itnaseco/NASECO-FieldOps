@@ -98,6 +98,8 @@ def get_parent_seed_input_hash(recipe):
 
 class CropRecipe(Document):
 	def before_validate(self):
+		if not self.stage_sequence_mode:
+			self.stage_sequence_mode = "Recipe Stages" if self.is_new() else "Legacy Nine Stage"
 		self.recipe_version = self.recipe_version or "Legacy-1.0"
 		self.effective_from = self.effective_from or self.creation or now_datetime()
 		if not self.parent_seed_calculation_method:
@@ -117,20 +119,21 @@ class CropRecipe(Document):
 		stage_index = {}
 		stage_name_by_row = {}
 		seen_stages = set()
+		seen_orders = set()
 		for s in self.stages or []:
-			stage = get_stage(s.stage_code or s.stage_name)
+			stage = get_stage(s.stage_definition or s.stage_code or s.stage_name)
 			if not stage:
-				frappe.throw(
-					_("Recipe stage {0} is not an approved crop-cycle stage.").format(
-						frappe.bold(s.stage_name or s.stage_code or s.idx)
-					)
-				)
-			if stage.name in seen_stages:
+				frappe.throw(_("Recipe stage {0} has no valid Stage Definition.").format(frappe.bold(s.stage_name or s.stage_code or s.idx)))
+			if stage.code in seen_stages:
 				frappe.throw(_("Crop-cycle stage {0} is duplicated.").format(stage.name))
-			seen_stages.add(stage.name)
+			seen_stages.add(stage.code)
+			s.stage_definition = stage.code if frappe.db.exists("Stage Definition", stage.code) else None
 			s.stage_code = stage.code
 			s.stage_name = stage.name
-			s.order_index = stage.order
+			s.order_index = s.order_index or stage.order
+			if s.order_index <= 0 or s.order_index in seen_orders:
+				frappe.throw(_("Each recipe stage needs a unique positive Order."))
+			seen_orders.add(s.order_index)
 			if s.start_day_offset in (None, ""):
 				s.start_day_offset = stage.start_day
 			if s.end_day_offset in (None, ""):
@@ -142,6 +145,16 @@ class CropRecipe(Document):
 			stage_index[s.stage_name] = s.order_index
 			if s.name and s.stage_name:
 				stage_name_by_row[s.name] = s.stage_name
+
+		if self.stage_sequence_mode == "Recipe Stages":
+			if not self.stages:
+				frappe.throw(_("Add at least one stage to the recipe stage sequence."))
+			if not any(s.is_planting_anchor for s in self.stages):
+				for s in self.stages:
+					if s.stage_code == "PLANTING":
+						s.is_planting_anchor = 1
+			if sum(bool(s.is_planting_anchor) for s in self.stages) != 1:
+				frappe.throw(_("Select exactly one Planting Anchor stage for this recipe."))
 
 		for row in self.inputs or []:
 			self.set_input_item_defaults(row)

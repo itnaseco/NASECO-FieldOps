@@ -7,10 +7,12 @@
  "engine": "InnoDB",
  "field_order": [
   "ux_details_section",
+  "stage_definition",
   "stage_name",
   "ux_additional_details_section",
   "stage_code",
   "order_index",
+  "is_planting_anchor",
   "ux_additional_details_column_2_column",
   "duration_days",
   "ux_dates_and_location_section",
@@ -32,11 +34,19 @@
    "label": "Details"
   },
   {
+   "fieldname": "stage_definition",
+   "fieldtype": "Link",
+   "label": "Stage Definition",
+   "options": "Stage Definition",
+   "in_list_view": 1
+  },
+  {
    "fieldname": "stage_name",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Stage Name",
-   "reqd": 1
+   "reqd": 1,
+   "read_only": 1
   },
   {
    "fieldname": "ux_additional_details_section",
@@ -45,11 +55,11 @@
   },
   {
    "fieldname": "stage_code",
-   "fieldtype": "Select",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Stage Code",
-   "options": "FIELD_VERIFICATION\nPLANTING\nEMERGENCE\nVEGETATIVE\nPRE_FLOWERING\nFLOWERING\nPRE_HARVEST\nHARVEST\nDELIVERY",
-   "reqd": 1
+   "reqd": 1,
+   "read_only": 1
   },
   {
    "fieldname": "order_index",
@@ -57,6 +67,12 @@
    "in_list_view": 1,
    "label": "Order",
    "reqd": 1
+  },
+  {
+   "fieldname": "is_planting_anchor",
+   "fieldtype": "Check",
+   "label": "Planting Anchor",
+   "default": "0"
   },
   {
    "fieldname": "ux_additional_details_column_2_column",

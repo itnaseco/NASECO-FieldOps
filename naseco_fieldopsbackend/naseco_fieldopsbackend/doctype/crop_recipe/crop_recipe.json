@@ -24,6 +24,7 @@
   "applicable_varieties",
   "expected_yield_kg_per_hectare",
   "ux_stages_section",
+  "stage_sequence_mode",
   "stages",
   "ux_inputs_section",
   "inputs",
@@ -167,6 +168,13 @@
    "fieldname": "ux_stages_section",
    "fieldtype": "Section Break",
    "label": "Stage Schedule"
+  },
+  {
+   "fieldname": "stage_sequence_mode",
+   "fieldtype": "Select",
+   "label": "Stage Sequence",
+   "options": "Legacy Nine Stage\nRecipe Stages",
+   "description": "Existing recipes keep their historical nine-stage schedule. Choose Recipe Stages to use this recipe’s ordered stage rows."
   },
   {
    "fieldname": "stages",

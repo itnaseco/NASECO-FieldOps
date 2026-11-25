@@ -3,6 +3,8 @@
 
 from dataclasses import dataclass
 
+import frappe
+
 
 @dataclass(frozen=True)
 class LifecycleStage:
@@ -50,4 +52,14 @@ def canonical_stage_name(value):
 
 def get_stage(value):
 	value = canonical_stage_name(value)
-	return STAGES_BY_NAME.get(value) or STAGES_BY_CODE.get(value)
+	legacy = STAGES_BY_NAME.get(value) or STAGES_BY_CODE.get(value)
+	if legacy:
+		return legacy
+	if not frappe.db.exists("DocType", "Stage Definition"):
+		return None
+	row = frappe.db.get_value("Stage Definition", value,
+		["stage_code", "stage_name"], as_dict=True)
+	if not row:
+		row = frappe.db.get_value("Stage Definition", {"stage_name": value},
+			["stage_code", "stage_name"], as_dict=True)
+	return LifecycleStage(row.stage_code, row.stage_name, 0, 0, 0, 0) if row else None

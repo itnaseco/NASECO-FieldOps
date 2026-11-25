@@ -1,6 +1,12 @@
 // Copyright (c) 2026, NASECO and contributors
 
 frappe.ui.form.on('Inspection Template', {
+	onload(frm) {
+		if (frm.is_new()) {
+			frm.set_value('lifecycle_status', 'Draft');
+			frm.set_value('active', 0);
+		}
+	},
 	validate(frm) {
 		const seen = new Set();
 		for (const row of frm.doc.quality_parameters || []) {
@@ -13,7 +19,7 @@ frappe.ui.form.on('Inspection Template', {
 		}
 	},
 	refresh(frm) {
-		const status = frm.doc.lifecycle_status || 'Published';
+		const status = frm.is_new() ? 'Draft' : (frm.doc.lifecycle_status || 'Published');
 		const isManager = frappe.user_roles.includes('Quality Manager') || frappe.user_roles.includes('System Manager');
 		frm.set_intro(
 			status === 'Draft'
