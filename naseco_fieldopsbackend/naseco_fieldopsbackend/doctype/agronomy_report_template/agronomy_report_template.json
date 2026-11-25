@@ -136,7 +136,9 @@
   {
    "read": 1,
    "report": 1,
-   "role": "Outgrower Manager"
+   "role": "Outgrower Manager",
+   "create": 1,
+   "write": 1
   },
   {
    "read": 1,

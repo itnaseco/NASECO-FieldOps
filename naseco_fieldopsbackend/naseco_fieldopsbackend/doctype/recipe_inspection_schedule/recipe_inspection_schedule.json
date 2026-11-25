@@ -1,0 +1,47 @@
+{
+ "doctype": "DocType",
+ "name": "Recipe Inspection Schedule",
+ "module": "NASECO FieldOpsBackend",
+ "istable": 1,
+ "editable_grid": 1,
+ "field_order": [
+  "stage_definition",
+  "sequence",
+  "required",
+  "inspection_template",
+  "due_day_offset"
+ ],
+ "fields": [
+  {
+   "fieldname": "stage_definition",
+   "label": "Stage",
+   "fieldtype": "Link",
+   "options": "Stage Definition",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sequence",
+   "label": "Sequence",
+   "fieldtype": "Int",
+   "reqd": 1
+  },
+  {
+   "fieldname": "required",
+   "label": "Required",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "inspection_template",
+   "label": "Inspection Template",
+   "fieldtype": "Link",
+   "options": "Inspection Template",
+   "reqd": 1
+  },
+  {
+   "fieldname": "due_day_offset",
+   "label": "Due Day Offset",
+   "fieldtype": "Int"
+  }
+ ],
+ "permissions": []
+}
